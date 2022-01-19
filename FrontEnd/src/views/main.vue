@@ -1,7 +1,7 @@
 <template>
   <div style="positon: relative">
     <div style="position: relative" class="align-center">
-      <img src="@/assets/main_sky.png" alt="" class="main-sky mx-auto">
+      <img src="@/assets/main_sky.png" alt="" class="main-sky mx-auto my-5">
       <div>
         <img src="@/assets/main_logo.png" alt="" class="main-logo blinking">
       </div>
@@ -11,7 +11,10 @@
         <div class="align-center" style="position: relative">
           <img src="@/assets/main_start.png" alt="">
           <div class="main-enter">
+            <button>
+
             <img src="@/assets/room_point.png" alt="" @click="goToTableList">
+            </button>
           </div>
         </div>
         <div class="main-board">
@@ -95,7 +98,7 @@ export default {
   .main-bottom {
     position: absolute;
     left: 10%;
-    bottom: 10%
+    bottom: 7%
   }
   
   .main-button {
