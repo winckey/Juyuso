@@ -20,8 +20,7 @@ public class Ban {
     private User User;
     /// user 관계 추가 요구
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    @Column(name = "ban_id")
+    @JoinColumn(name = "ban_id" , referencedColumnName = "user_id")
     private User BanUser;
     /// user 관계 추가 요구
 

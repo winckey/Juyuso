@@ -15,12 +15,21 @@ import static javax.persistence.FetchType.LAZY;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Friend {
-    @Id
+
+
+    @Id @GeneratedValue
+    @Column(name = "friend_id")
+    private Long id;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     /// user 관계 추가 요구
 
-    @Column(name = "friend_id")
-    private Long friendId;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "from_id" , referencedColumnName = "user_id")
+    private User friend;
+
+
 }
