@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import javax.persistence.*;
 
 @Getter
-@Table(name = "hash_tag")
+@Table(name = "hashtag")
 @Entity
 public class HashTag {
 
@@ -14,5 +14,7 @@ public class HashTag {
     @ManyToOne
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
-    private String hashTag;
+
+    @Column(name = "hashtag_tags")
+    private String tags;
 }
