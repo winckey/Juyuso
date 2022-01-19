@@ -18,9 +18,10 @@ public class DrinkingHistory {
 
 
     @Id @GeneratedValue
-    @JoinColumn(name = "drinking_id")
+    @Column(name = "drinking_id")
     private Long id;
-    /// user 관계 추가 요구
+
+
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
