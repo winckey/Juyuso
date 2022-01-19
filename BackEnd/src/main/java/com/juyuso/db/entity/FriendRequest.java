@@ -12,19 +12,19 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FriendRequest {
 
-    @Id
+
+    @Id @GeneratedValue
+    @Column(name = "friend_request_id")
+    private Long id;
+
+
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    @Column(name = "from_id")
+    @JoinColumn(name = "from_id" , referencedColumnName = "user_id")
     private User fromUser;
     /// user 관계 추가 요구
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    @Column(name = "to_id")
+    @JoinColumn(name = "to_id" , referencedColumnName = "user_id")
     private User toUser;
     /// user 관계 추가 요구
-
-
-
 
 }
