@@ -19,7 +19,7 @@ public class MeetingHistory {
     private Meeting meeting;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // User 테이블의 pk
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     private String action;
