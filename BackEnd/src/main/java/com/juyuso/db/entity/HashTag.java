@@ -1,20 +1,18 @@
 package com.juyuso.db.entity;
 
-import lombok.Getter;
-
-import javax.annotation.Nullable;
 import javax.persistence.*;
 
-@Getter
-@Table(name = "hashtag")
 @Entity
 public class HashTag {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hash_tag_id")
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
-    @Column(name = "hashtag_tags")
-    private String tags;
+    private String tag;
 }

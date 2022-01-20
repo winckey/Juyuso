@@ -1,24 +1,15 @@
 package com.juyuso.db.entity;
 
-import com.juyuso.db.entity.enums.DrinkingKind;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Entity
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DrinkingCategory {
 
-
-    @Id @GeneratedValue
-    @Column(name = "drinking_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "drinking_category_id")
     private Long id;
-    /// user 관계 추가 요구
 
-    @Enumerated(EnumType.STRING)
-    private DrinkingKind name; //READY, COMP
+    private String name;
 
 }

@@ -1,6 +1,6 @@
 package com.juyuso.api.dto.request;
 
-import com.juyuso.db.entity.Users;
+import com.juyuso.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -34,8 +34,8 @@ public class RegisterReqDto {
     @ApiModelProperty(name="성별", example="M")
     private Character gender;
 
-    public Users toEntity() {
-        return Users.builder()
+    public User toEntity() {
+        return User.builder()
                 .userId(id)
                 .password(password)
                 .nickname(nickname)

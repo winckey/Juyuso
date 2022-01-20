@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "meeting_history")
 public class MeetingHistory {
 
     @Id
@@ -20,12 +19,10 @@ public class MeetingHistory {
     private Meeting meeting;
 
     @ManyToOne
-    @JoinColumn(name = "id") // User 테이블의 pk
+    @JoinColumn(name = "user_id") // User 테이블의 pk
     private User user;
 
-    @Column(name = "meeting_history_action")
     private String action;
 
-//    @Column(name = "meeting_history_inserted_time")
-//    private LocalDateTime insertedTime;
+    private LocalDateTime insertedTime;
 }

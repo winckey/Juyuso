@@ -16,19 +16,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "user")
-public class Users implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userId;
 
     @Column(nullable = false)
@@ -51,10 +48,8 @@ public class Users implements UserDetails {
     @Column(nullable = false)
     private Character gender;
 
-    @Column
     private String description;
 
-    @Column
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
