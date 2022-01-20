@@ -9,15 +9,29 @@
           <p>박씨네</p>
           <p>민쯩</p>
         </div>
-        <v-btn color="green" >프로필 수정</v-btn>
+        <v-btn @click="goProfileEdit" color="green" >프로필 수정</v-btn>
       </div>
 
       <div class="profile-mydata">
-        <img src="@/assets/Group 56.png" alt="mydata">
-
-        <div class="profile-calendar">
-          <img src="@/assets/Group 57.png" alt="calendar">
+        <div class="profile-mydata-card">
+          <img @click="goMyData" src="@/assets/Group 56.png" width="95%" alt="mydata">
         </div>
+
+        <div class="wallet-1">
+          <img src="@/assets/wallet_card_1.png" alt="wallet-card">
+        </div>
+        <div class="profile-calendar">
+          <img @click="goCalendar" src="@/assets/Group 57.png" alt="calendar">
+        </div>
+
+        <div class="wallet-2">
+          <img src="@/assets/wallet_card_2.png" alt="wallet-card">
+        </div>
+
+        <div class="friend-block-btn">
+          <v-btn @click="goBlockedFriend">차단친구 관리</v-btn>
+        </div>
+
       </div>
 
      
@@ -27,7 +41,21 @@
 
 <script>
 export default {
-  name: 'MyPage'
+  name: 'MyPage',
+  methods: {
+    goProfileEdit: function (){
+      this.$router.push({name: 'ProfileEdit'})
+    },
+    goCalendar: function () {
+      this.$router.push({name:'Calendar'})
+    },
+    goMyData: function () {
+      this.$router.push({name: 'MyData'})
+    },
+    goBlockedFriend: function () {
+      this.$router.push({name: 'BlockedFriend'})
+    }
+  }
 }
 </script>
 
@@ -73,9 +101,47 @@ img {
   right: 3%;
 }
 
+
+.profile-mydata-card {
+  cursor: pointer;
+  
+}
+
+.profile-mydata-card:hover {
+  /* transform: scale(1.1); */
+  cursor: pointer;
+}
+
 .profile-calendar {
   position:absolute;
-  top: 40%;
+  top: 50%;
+  width: 95%;
+  cursor: pointer;
+}
+
+.profile-calendar:hover {
+  transform: scale(1.1);
+}
+
+.wallet-1 {
+  position: absolute;
+  top: 35%;
+  right: -2%;
+  width: 110%;
+  
+}
+
+.wallet-2 {
+  position: absolute;
+  top: 85%;
+  width: 96%;
+  
+}
+
+.friend-block-btn {
+  position: absolute;
+  top: 140%;
+  right: 10%;
 }
 
 </style>
