@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "meeting_img")
 public class MeetingImg {
 
     @Id
@@ -19,19 +18,16 @@ public class MeetingImg {
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
-    @Column(name = "meeting_img_file_name")
+    @Column
     private String fileName;
 
-    @Column(name = "file_size")
+    @Column
     private String fileSize;
 
-    @Column(name = "file_url")
+    @Column
+    private String fileContentType;
+
+    @Column
     private String fileUrl;
-
-//    @Column(name = "meeting_img_reg_dt")
-//    private LocalDateTime regDt;
-
-
-
 
 }

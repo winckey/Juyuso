@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name = "user_meeting")
 public class UserMeeting {
 
     @Id
@@ -19,7 +18,7 @@ public class UserMeeting {
     private Meeting meeting;
 
     @ManyToOne
-    @JoinColumn(name = "id") // user 테이블의 pk
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
 }

@@ -14,7 +14,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
- * jwt 토큰 유틸 정의.
+ * jwt 토큰 유틸 정의
  */
 @Component
 public class JwtTokenUtil {
@@ -29,11 +29,6 @@ public class JwtTokenUtil {
 	public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer expirationTime) {
 		this.secretKey = secretKey;
 		this.expirationTime = expirationTime;
-	}
-    
-	public void setExpirationTime() {
-    		//JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);
-    		JwtTokenUtil.expirationTime = expirationTime;
 	}
 
 	public static JWTVerifier getVerifier() {

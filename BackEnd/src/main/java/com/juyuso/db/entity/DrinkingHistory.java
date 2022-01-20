@@ -1,10 +1,5 @@
 package com.juyuso.db.entity;
 
-import com.juyuso.db.entity.enums.DrinkingKind;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
@@ -12,34 +7,23 @@ import java.time.LocalDateTime;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DrinkingHistory {
 
-
-    @Id @GeneratedValue
-    @Column(name = "drinking_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "drinking_history_id")
     private Long id;
 
-
-
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    /// user 관계 추가 요구
 
-    private LocalDateTime drinkingDate; //주문시간
-
+    private LocalDateTime drinkingTime;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "drinking_id")
-    private DrinkingCategory drinkingId;
-    /// user 관계 추가 요구
+    @JoinColumn(name = "drinking_category_id")
+    private DrinkingCategory drinkingCategory;
 
-
-
-    private Long quantity;  //주문량
-
-
+    private Long quantity;
 
 }

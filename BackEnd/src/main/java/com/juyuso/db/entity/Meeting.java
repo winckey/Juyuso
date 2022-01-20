@@ -9,7 +9,6 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(name = "meeting")
 public class Meeting {
 
     @Id
@@ -17,32 +16,25 @@ public class Meeting {
     @Column(name = "meeting_id")
     private Long id;
 
-    @Column(name = "meeting_title", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private User owner;
+
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "meeting_password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-//    @Column(name = "meeting_title", nullable = false)
-//    private LocalDateTime callStartTime;
-//
-//    @Column(nullable = false)
-//    private LocalDateTime callEndTime;
+    @Column(nullable = false)
+    private LocalDateTime callStartTime;
 
-    @Column(name = "meeting_is_active", nullable = false)
+    private LocalDateTime callEndTime;
+
+    @Column(nullable = false)
     private boolean isActive;
 
-    @Column(name = "meeting_is_public", nullable = false)
+    @Column(nullable = false)
     private boolean isPublic;
-
-
-
-
-
-
-
-
-
-
 
 }
