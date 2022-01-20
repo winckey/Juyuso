@@ -16,6 +16,7 @@
             <img src="@/assets/room_point.png" alt="" @click="goToTableList">
             </button>
           </div>
+          <div class="main-text">불빛을 클릭해주세요</div>
         </div>
         <div class="main-board">
           <img src="@/assets/account_board.png">
@@ -71,8 +72,9 @@ export default {
   .main-logo {
     position: absolute;
     top: 20%;
-    left: 47%;
+    left: 50%;
     z-index: 1;
+    transform: translate(-50%);
   }
 
   .main-board {
@@ -84,21 +86,35 @@ export default {
   .main-enter {
     position: absolute;
     top: 15%;
-    left: 44%;
-    opacity: 0.75;
+    left: 50%;
+    opacity: 0.7;
+    transform: translate(-50%);
   }
 
   .main-enter:hover {
     position: absolute;
     top: 15%;
-    left: 44%;
+    left: 50%;
     opacity: 1;
+    transform: translate(-50%);
+  }
+  .main-text {
+    font-size: 24px;
+    color: white;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    animation-name: sparkle;
+    animation-duration: 1.5s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
   }
 
   .main-bottom {
     position: absolute;
-    left: 10%;
-    bottom: 7%
+    left: 50%;
+    bottom: 7%;
+    transform: translate(-50%);
   }
   
   .main-button {
@@ -132,4 +148,12 @@ export default {
     100% {opacity:1;} 
   }
 
+  @keyframes sparkle {
+    from {
+      color: rgb(255, 255, 255);
+    }
+    to {
+      color: rgb(235, 226, 176);
+    }
+  }
 </style>

@@ -4,7 +4,7 @@
       absolute
       color="#11111f"
     >
-    <button class="h-100 sub-logo">
+    <button class="h-100 sub-logo" @click="goToTableList">
       <v-img 
         src="@/assets/sub_logo.png"
         contain
@@ -78,8 +78,8 @@ export default {
     }
   },
   methods: {
-    goToTables: function() {
-      this.$router.push({ name: 'Tables' })
+    goToTableList: function() {
+      this.$router.push({ name: 'TableList' })
     }
   }
 
