@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'MenuPopup'
+  name: 'PasswordFind'
 }
 </script>
 

@@ -1,12 +1,9 @@
 <template>
-    <div class="d-flex justify-content-center my-auto">
-      <div>
-
-      </div>
-      <div class="signup-box rounded-lg">
-        <div style="width: 70;" class="mx-auto p-4">
-          <v-container>
-            <v-form ref="signupForm">
+  <div class="d-flex justify-content-center my-auto">
+    <div class="signup-box rounded-lg">
+      <div style="width: 70;" class="mx-auto p-4">
+        <v-container>
+          <v-form ref="signupForm">
             <v-text-field
               label="닉네임"
               v-model="credentials.nickname"
@@ -106,21 +103,20 @@
               label="휴대전화"
               v-model="credentials.phone"
             ></v-text-field>
-            </v-form>
+          </v-form>
           <span class="d-flex justify-content-end">
             <v-btn 
               @click="signup"
-
               color="indigo lighten-2"
               dark
               rounded>
-              SIGNUP
+              회원가입
             </v-btn>
           </span>
-          </v-container>
-        </div>
+        </v-container>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
