@@ -5,18 +5,18 @@
     <div class="menu-popup">
       <div>방 개설하기</div>
       <div> ∨ </div>
-      <menu-popup/>
+      <TableOrderPopup/>
     </div>
   </div>
 </template>
 
 <script>
-import MenuPopup from '@/components/table_list/menu-popup.vue'
+import TableOrderPopup from '@/components/table_list/table-order-popup.vue'
 
 export default {
   name: 'TableList',
   components: {
-    MenuPopup
+    TableOrderPopup
   }
 }
 </script>
