@@ -1,5 +1,6 @@
 package com.juyuso.db.entity;
 
+
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -32,9 +33,21 @@ public class Meeting {
     private LocalDateTime callEndTime;
 
     @Column(nullable = false)
-    private boolean isActive;
+    private boolean active;
 
     @Column(nullable = false)
-    private boolean isPublic;
+    private boolean common;
 
+    public Meeting(User owner, String title, String password, LocalDateTime callStartTime,
+                   LocalDateTime callEndTime, boolean active, boolean common) {
+        this.owner = owner;
+        this.title = title;
+        this.password = password;
+        this.callStartTime = callStartTime;
+        this.callEndTime = callEndTime;
+        this.active = active;
+        this.common = common;
+    }
+
+    
 }

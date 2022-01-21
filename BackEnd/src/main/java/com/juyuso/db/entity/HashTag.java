@@ -15,4 +15,11 @@ public class HashTag {
     private Meeting meeting;
 
     private String tag;
+
+    public HashTag (Meeting meeting, String tag) {
+        this.meeting = meeting;
+        this.tag = tag;
+    }
+
+
 }
