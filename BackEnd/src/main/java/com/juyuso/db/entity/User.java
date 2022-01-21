@@ -48,7 +48,19 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Character gender;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "region_id", nullable = false)
+    private Region region;
+
+    private String phone;
+
     private String description;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Friend> friends = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+    private List<FriendRequest> friendRequests = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

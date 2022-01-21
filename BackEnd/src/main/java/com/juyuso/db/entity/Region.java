@@ -1,7 +1,10 @@
 package com.juyuso.db.entity;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
+@Getter
 @Entity
 public class Region {
 
