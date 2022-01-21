@@ -17,42 +17,44 @@
             ></v-text-field>
             <v-row>
               <v-col cols="8">
-                <v-text-field
-                  :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="passwordShow ? 'text' : 'password'"
-                  label="비밀번호"
-                  v-model="credentials.password"
-                  :rules="rules.passwordRule"
-                  hint="영어, 숫자, 특수문자를 모두 포함해야합니다 (9-16자)"
-                  @click:append="passwordShow = !passwordShow"
-                ></v-text-field>
-                <v-text-field
-                  :append-icon="passwordConfirmationShow ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="passwordConfirmationShow ? 'text' : 'password'"
-                  label="비밀번호확인"
-                  v-model="credentials.passwordConfirmation"
-                  :rules="rules.passwordConfirmationRule"
-                  @click:append="passwordConfirmationShow = !passwordConfirmationShow"
-                ></v-text-field>
+            <v-text-field
+              :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="passwordShow ? 'text' : 'password'"
+              label="비밀번호"
+              v-model="credentials.password"
+              :rules="rules.passwordRule"
+              hint="영어, 숫자, 특수문자를 모두 포함해야합니다 (9-16자)"
+              @click:append="passwordShow = !passwordShow"
+            ></v-text-field>
+            <v-text-field
+              :append-icon="passwordConfirmationShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="passwordConfirmationShow ? 'text' : 'password'"
+              label="비밀번호확인"
+              v-model="passwordConfirmation"
+              :rules="rules.passwordConfirmationRule"
+              @click:append="passwordConfirmationShow = !passwordConfirmationShow"
+            ></v-text-field>
               </v-col>
               <v-col>
-                <v-radio-group
-                  label="성별"
-                  :rules="genderRule"
-                  v-model="credentials.gender"
-                  row>
-                  <v-radio
-                    label="남"
-                    value="M"
-                  ></v-radio>
-                  <v-radio
-                    label="여"
-                    value="F"
-                  ></v-radio>
-                </v-radio-group>
+            <v-radio-group
+              label="성별"
+              :rules="rules.genderRule"
+              v-model="credentials.gender"
+              row
+            >
+              <v-radio
+                label="남"
+                value="M"
+              ></v-radio>
+              <v-radio
+                label="여"
+                value="F"
+              ></v-radio>
+            </v-radio-group>
               </v-col>
             </v-row>
             <v-text-field
+              type="email"
               label="이메일"
               v-model="credentials.email"
               :rules="rules.emailRule"
@@ -71,7 +73,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       :rules="rules.birthRule"
-                      v-model="credentials.birth"
+                      v-model="credentials.birthDate"
                       label="생년월일"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -80,7 +82,7 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="credentials.birth"
+                    v-model="credentials.birthDate"
                     @input="datePicker = false"
                   ></v-date-picker>
                 </v-menu>
@@ -88,8 +90,10 @@
               <v-col>
                 <v-select
                   :rules="rules.regionRule"
-                  v-model="credentials.region"
+                  v-model="credentials.regionId"
                   :items="regions"
+                  item-text="name"
+                  item-value="region_id"
                   label="지역"
                 ></v-select>
               </v-col>
@@ -126,17 +130,26 @@ export default {
       passwordShow: false,
       passwordConfirmationShow: false,
       credentials: {
-        id: null,
-        email: null,
-        password: null,
-        passwordConfirmation: null,
-        birth: null,
-        gender: null,
-        nickname: null,
-        region: null,
-        phone: null,
+        id: 'ayoung092',
+        email: 'ayoung0924@naver.com',
+        password: 'dkduddl8*',
+        birthDate: '1997-10-25',
+        gender: 'M',
+        nickname: '성아영',
+        regionId: '2',
+        phone: '01054732511',
       },
-      regions: ['부산시', '서울시'],
+      passwordConfirmation: 'dkduddl8*',
+      regions: [
+        {region_id: 1, name: '서울'},
+        {region_id: 2, name: '부산'},
+        {region_id: 3, name: '대구'},
+        {region_id: 4, name: '인천'},
+        {region_id: 5, name: '광주'},
+        {region_id: 6, name: '대전'},
+        {region_id: 7, name: '울산'},
+        {region_id: 8, name: '세종'},
+      ],
       rules: {
         idRule: [
           v => !!v || "아이디를 입력해주세요.",
@@ -180,14 +193,18 @@ export default {
     signup: function () {
       const validateCheck = this.$refs.signupForm.validate()
       if (validateCheck) {
-        console.log(this.credentials)
+        // console.log(`${process.env.VUE_APP_API_URL}/user`)
         axios({
           method: 'POST',
-          url: `${process.env.VUE_APP_API_URL}/signup`,
+          url: `${process.env.VUE_APP_API_URL}/user`,
           data: this.credentials
         })
-        .then( () => {
-
+        .then(() => {
+          console.log(this.credentials)
+          this.$router.push({ name: 'Main' })
+        })
+        .catch( err => {
+          console.log(err)
         })
       }
     }
