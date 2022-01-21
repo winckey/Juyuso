@@ -1,5 +1,6 @@
 package com.juyuso.api.dto.request;
 
+import com.juyuso.db.entity.Region;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,6 +35,12 @@ public class RegisterReqDto {
     @ApiModelProperty(name="성별", example="M")
     private Character gender;
 
+    @ApiModelProperty(name="전화번호", example="010-1234-5678")
+    private String phone;
+
+    @ApiModelProperty(name="지역 코드")
+    private Long regionId;
+
     public User toEntity() {
         return User.builder()
                 .userId(id)
@@ -43,6 +50,7 @@ public class RegisterReqDto {
                 .birthDate(LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .regDate(LocalDateTime.now())
                 .gender(gender)
+                .phone(phone)
                 .build();
     }
 }
