@@ -4,8 +4,10 @@ package com.juyuso.api.dto.response;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @ApiModel("Meeting Create Response")
 public class MeetingCreateResDto {
 
@@ -21,5 +23,18 @@ public class MeetingCreateResDto {
         this.password = password;
         this.userId = userId;
     }
+    public MeetingCreateResDto() {
+
+    }
+
+    public static MeetingCreateResDto of(String meetingName, String password, String userId) {
+        MeetingCreateResDto res = new MeetingCreateResDto();
+        res.setMeetingName(meetingName);
+        res.setPassword(password);
+        res.setUserId(userId);
+        return res;
+    }
+
+
 
 }
