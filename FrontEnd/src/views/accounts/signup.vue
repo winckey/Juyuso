@@ -197,7 +197,6 @@ export default {
     signup: function () {
       const validateCheck = this.$refs.signupForm.validate()
       if (validateCheck) {
-
         // console.log(`${process.env.VUE_APP_API_URL}/user`)
         axios({
           method: 'POST',
@@ -206,7 +205,7 @@ export default {
         })
         .then(() => {
           console.log(this.credentials)
-          // this.$router.push({ name: 'Main' })
+          this.$router.push({ name: 'Main' })
         })
         .catch( err => {
           console.log(err)
