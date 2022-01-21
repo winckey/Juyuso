@@ -41,6 +41,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    //openVidu 의존성
+    implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.18.0'
+
 }
 
 test {

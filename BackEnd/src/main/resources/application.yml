@@ -29,3 +29,8 @@ spring:
 jwt:
   secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
   expiration: 1296000000 # unit is ms. 15 * 24 * 60 * 60 * 1000 = 15days
+
+############## openvidu
+openvidu:
+  url: https://localhost:4443/
+  secret: SECRET
