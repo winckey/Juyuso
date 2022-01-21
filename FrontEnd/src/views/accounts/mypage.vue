@@ -21,17 +21,26 @@
           <img src="@/assets/wallet_card_1.png" alt="wallet-card">
         </div>
         <div class="profile-calendar">
-          <img @click="goCalendar" src="@/assets/Group 57.png" alt="calendar">
+          <v-dialog>
+            <template v-slot:activator="{ on, attrs }">
+              <img @click="goCalendar" src="@/assets/Group 57.png" alt="calendar"
+              v-bind="attrs"
+              v-on="on">
+            </template>
+            <v-card>
+              <calender-popup></calender-popup>
+            </v-card>
+          </v-dialog>
+          
         </div>
-
         <div class="wallet-2">
           <img src="@/assets/wallet_card_2.png" alt="wallet-card">
         </div>
 
+
         <div class="friend-block-btn">
           <v-btn @click="goBlockedFriend">차단친구 관리</v-btn>
         </div>
-
       </div>
 
      
@@ -40,14 +49,23 @@
 </template>
 
 <script>
+import CalenderPopup from '../../components/accounts/calender-popup.vue'
 export default {
   name: 'MyPage',
+  components:{
+    CalenderPopup,
+  },
+  data(){
+    return{
+      dialog:false,
+    }
+  },
   methods: {
     goProfileEdit: function (){
       this.$router.push({name: 'ProfileEdit'})
     },
     goCalendar: function () {
-      this.$router.push({name:'Calendar'})
+      
     },
     goMyData: function () {
       this.$router.push({name: 'MyData'})
@@ -108,7 +126,7 @@ img {
 }
 
 .profile-mydata-card:hover {
-  /* transform: scale(1.1); */
+  transform: translateY(-30%);
   cursor: pointer;
 }
 
@@ -120,7 +138,7 @@ img {
 }
 
 .profile-calendar:hover {
-  transform: scale(1.1);
+  transform: translateY(-30%);
 }
 
 .wallet-1 {
