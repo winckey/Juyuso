@@ -8,6 +8,8 @@ import com.juyuso.db.repository.HashTagRepository;
 import com.juyuso.db.repository.MeetingRepository;
 import com.juyuso.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -38,6 +40,19 @@ public class MeetingService {
                 hashTagRepository.save(new HashTag(meeting, list.get(i)));
         }
         meetingRepository.save(meeting);
+    }
+
+    public Page<Meeting> findAllByTag(String tags, Pageable pageable) {
+        return meetingRepository.findListByHashTag(tags, pageable);
+
+    }
+
+    public Page<Meeting> findAllByTitle(String title, Pageable pageable) {
+        return meetingRepository.findAllByTitleContaining(title, pageable);
+    }
+
+    public Page<Meeting> findAll(Pageable pageable) {
+        return meetingRepository.findAll(pageable);
     }
 
 }

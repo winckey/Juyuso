@@ -38,6 +38,10 @@ public class Meeting {
     @Column(nullable = false)
     private boolean common;
 
+    public Meeting() {
+
+    }
+
     public Meeting(User owner, String title, String password, LocalDateTime callStartTime,
                    LocalDateTime callEndTime, boolean active, boolean common) {
         this.owner = owner;
@@ -48,6 +52,8 @@ public class Meeting {
         this.active = active;
         this.common = common;
     }
+
+
 
     
 }
