@@ -68,7 +68,7 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url: `${process.env.VUE_APP_API_URL}/api/v1/auth/login`,
+        url: `${process.env.VUE_APP_API_URL}/user/login`,
         data: this.credentials
       })
         .then(res => {

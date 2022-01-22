@@ -23,7 +23,7 @@
         <div class="profile-calendar">
           <v-dialog>
             <template v-slot:activator="{ on, attrs }">
-              <img @click="goCalendar" src="@/assets/Group 57.png" alt="calendar"
+              <img src="@/assets/Group 57.png" alt="calendar"
               v-bind="attrs"
               v-on="on">
             </template>
@@ -64,11 +64,8 @@ export default {
     goProfileEdit: function (){
       this.$router.push({name: 'ProfileEdit'})
     },
-    goCalendar: function () {
-      
-    },
     goMyData: function () {
-      this.$router.push({name: 'MyData'})
+      this.$router.push({name: 'MyData', params: {userId: 1}})
     },
     goBlockedFriend: function () {
       this.$router.push({name: 'BlockedFriend'})
