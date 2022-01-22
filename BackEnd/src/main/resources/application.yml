@@ -50,6 +50,11 @@ logging:
         security: DEBUG
       apache:
         tiles: INFO
+
+app:
+  fileUpload:
+    path: C:\\Users\\park\\git\\S06P12E101\\BackEnd\\src\\main\\resources\\static
+    dir: upload
 ############## openvidu
 openvidu:
   url: https://localhost:4443/

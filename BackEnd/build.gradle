@@ -45,7 +45,8 @@ dependencies {
 
     //openVidu 의존성
     implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.18.0'
-
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation 'commons-io:commons-io:2.11.0'
 }
 
 test {

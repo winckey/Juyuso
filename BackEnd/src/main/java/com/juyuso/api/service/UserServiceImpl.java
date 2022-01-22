@@ -2,21 +2,40 @@ package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.RegisterReqDto;
 import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.UserImg;
 import com.juyuso.db.repository.RegionRepository;
+import com.juyuso.db.repository.UserImgRepository;
 import com.juyuso.db.repository.UserRepository;
+import org.apache.commons.io.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository usersRepository;
+    private final UserRepository userRepository;
+    private final UserImgRepository userImgRepository;
     private final RegionRepository regionRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository usersRepository, RegionRepository regionRepository, @Lazy PasswordEncoder passwordEncoder) {
-        this.usersRepository = usersRepository;
+    @Value("${app.fileUpload.dir}")
+    private String uploadFolder;
+
+    @Value("${app.fileUpload.path}")
+    private String uploadPath;
+
+    public UserServiceImpl(UserRepository userRepository, UserImgRepository userImgRepository, RegionRepository regionRepository, @Lazy PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userImgRepository = userImgRepository;
         this.regionRepository = regionRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -26,12 +45,52 @@ public class UserServiceImpl implements UserService {
         User userEntity = registerRequestDto.toEntity();
         userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         userEntity.setRegion(regionRepository.getById(registerRequestDto.getRegionId()));
-        return usersRepository.save(userEntity);
+        return userRepository.save(userEntity);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserByUserId(String userId) {
         // Optional 용법 체크 필요 (warning 참조)
-        return usersRepository.findByUserId(userId).get();
+        return userRepository.findByUserId(userId).get();
+    }
+
+    @Override
+    public void saveImg(User user, MultipartFile multipartFile) {
+        // find file upload directory
+        File uploadDir = new File(uploadPath + File.separator + uploadFolder);
+        if (!uploadDir.exists()) uploadDir.mkdir();
+
+        // if the img file already exists, then delete file
+        UserImg img = user.getUserImg();
+        if (img != null) {
+            System.out.println("등록된 이미지가 있음!!");
+            String fileUrl = img.getFileUrl();
+            File file = new File(uploadPath + File.separator, fileUrl);
+            if (file.exists()) file.delete();
+            userImgRepository.deleteByUserId(user.getId());
+        }
+
+        String fileName = multipartFile.getOriginalFilename();
+        UUID uuid = UUID.randomUUID();
+        String extension = FilenameUtils.getExtension(fileName);
+        String savingFileName = uuid + "." + extension;
+        File destFile = new File(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
+
+        try {
+            multipartFile.transferTo(destFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        UserImg userImg = UserImg.builder()
+                .user(user)
+                .fileContentType(multipartFile.getContentType())
+                .fileName(fileName)
+                .fileSize(multipartFile.getSize())
+                .fileUrl("/" + uploadFolder + "/" + savingFileName)
+                .build();
+
+        userImgRepository.save(userImg);
     }
 }
