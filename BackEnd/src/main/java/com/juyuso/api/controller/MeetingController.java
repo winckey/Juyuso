@@ -72,7 +72,7 @@ public class MeetingController {
             @ApiResponse(code = 500, message = " 서버에러")
     })
     public ResponseEntity getMeetingListByTag(@RequestParam(required = false) String tags,
-                                                       @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable) {
+                                              @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable) {
         if(tags != null) {
             Page<Meeting> list = meetingService.findAllByTag(tags, pageable);
             return new ResponseEntity(list, HttpStatus.OK);
