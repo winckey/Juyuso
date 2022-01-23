@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 @Data
-@ApiModel("UserDto")
+@ApiModel("User")
 public class UserResDto extends BaseResponseBody {
 
     private UserInfoDto user;
