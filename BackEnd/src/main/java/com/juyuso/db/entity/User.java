@@ -56,6 +56,9 @@ public class User implements UserDetails {
 
     private String description;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserImg userImg;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Friend> friends = new ArrayList<>();
 

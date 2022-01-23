@@ -10,10 +10,13 @@ import com.juyuso.common.util.JwtTokenUtil;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "유저 API", tags = {"User"})
@@ -86,5 +89,15 @@ public class UserController {
         User user = userService.getUserByUserId(userId);
 
         return ResponseEntity.status(200).body(UserResDto.of(200, "Success", user));
+    }
+
+    @PostMapping(value = "/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation(value = "프로필 이미지 업로드")
+    public ResponseEntity<? extends BaseResponseBody> insertImg(@ApiIgnore Authentication authentication, @RequestPart("img") MultipartFile img) {
+        User userDetails = (User) authentication.getDetails();
+
+        userService.saveImg(userDetails, img);
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 }
