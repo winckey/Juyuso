@@ -1,6 +1,8 @@
 package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.RegisterReqDto;
+import com.juyuso.api.dto.request.UserModifyReqDto;
+import com.juyuso.api.dto.response.UserIdCheckResDto;
 import com.juyuso.db.entity.User;
 import com.juyuso.db.entity.UserImg;
 import com.juyuso.db.repository.RegionRepository;
@@ -55,6 +57,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserId(userId).get();
     }
 
+    @Override
+    public Boolean checkDuplicateUserId(String userId) {
+        return userRepository.existsByUserId(userId);
+    }
+
+    @Override
+    public User modifyUser(User user, UserModifyReqDto userModifyReqDto) {
+        user.setPassword(passwordEncoder.encode(userModifyReqDto.getPassword()));
+        user.setPhone(userModifyReqDto.getPhone());
+        user.setEmail(userModifyReqDto.getEmail());
+        if (user.getRegion().getId() != userModifyReqDto.getRegionId())
+            user.setRegion(regionRepository.findById(userModifyReqDto.getRegionId()).get());
+        user.setDescription(userModifyReqDto.getDescription());
+        user.setNickname(userModifyReqDto.getNickname());
+        userRepository.save(user);
+
+        return user;
+    }
     @Override
     public void saveImg(User user, MultipartFile multipartFile) {
         // find file upload directory

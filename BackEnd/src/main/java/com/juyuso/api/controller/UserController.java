@@ -2,7 +2,9 @@ package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.LoginReqDto;
 import com.juyuso.api.dto.request.RegisterReqDto;
+import com.juyuso.api.dto.request.UserModifyReqDto;
 import com.juyuso.api.dto.response.LoginResDto;
+import com.juyuso.api.dto.response.UserIdCheckResDto;
 import com.juyuso.api.dto.response.UserResDto;
 import com.juyuso.api.service.UserService;
 import com.juyuso.common.model.response.BaseResponseBody;
@@ -64,20 +66,32 @@ public class UserController {
         if (passwordEncoder.matches(password, user.getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             String token = JwtTokenUtil.getToken(userId);
-            System.out.println("Token : " + token);
-            return ResponseEntity.ok(LoginResDto.of(200, "Success", token));
+            return ResponseEntity.ok(LoginResDto.of(200, "Success", token, user));
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
         return ResponseEntity.status(401).body(LoginResDto.of(401, "Invalid Password", null));
     }
 
+    @GetMapping("/id/{userId}")
+    @ApiOperation(value = "아이디 중복 체크", notes = "아이디 중복 여부를 알려준다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = UserIdCheckResDto.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<UserIdCheckResDto> checkDuplicateUserId(@PathVariable String userId) {
+
+        Boolean result = userService.checkDuplicateUserId(userId);
+
+        return ResponseEntity.status(200).body(UserIdCheckResDto.of(200, "Success", userId, result));
+    }
+
     @GetMapping("/info")
     @ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
-            @ApiResponse(code = 500, message = "서버 오류")
+            @ApiResponse(code = 200, message = "성공", response = UserResDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<UserResDto> getUserInfo(@ApiIgnore Authentication authentication) {
         /**
@@ -85,10 +99,24 @@ public class UserController {
          * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
          */
         User userDetails = (User) authentication.getDetails();
-        String userId = userDetails.getUsername();
-        User user = userService.getUserByUserId(userId);
 
-        return ResponseEntity.status(200).body(UserResDto.of(200, "Success", user));
+        return ResponseEntity.status(200).body(UserResDto.of(200, "Success", userDetails));
+    }
+
+    @PutMapping("/info")
+    @ApiOperation(value = "회원 본인 정보 수정")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = UserResDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<UserResDto> modifyUser(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="수정 정보", required = true) UserModifyReqDto userModifyReqDto) {
+        User userDetails = (User) authentication.getDetails();
+
+        User result = userService.modifyUser(userDetails, userModifyReqDto);
+
+        return ResponseEntity.status(200).body(UserResDto.of(200, "Success", result));
     }
 
     @PostMapping(value = "/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
