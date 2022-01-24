@@ -5,7 +5,8 @@
       <v-col 
         :key="table.id"
         v-for="table in tableList">
-        <TableDetailPopup/>
+        <TableDetailPopup
+          :roomInfo="table"/>
       </v-col>
     </v-row>
   </v-container>
@@ -31,13 +32,15 @@ export default {
   },
   methods: {
     getTableList () {
+      const token = localStorage.getItem('jwt')
       axios({
         method: 'GET',
-        url: `${process.env.VUE_APP_API_URL}/meeting/search`
+        url: `${process.env.VUE_APP_API_URL}/meeting/search`,
+        headers: { Authorization: `Bearer ${token}`}
       })
       .then( res => {
         this.tableList = res.data.content
-        console.log(res)
+        console.log(res.data.content)
       })
       .catch( err => {
         console.log(err)

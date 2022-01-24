@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div class="table-list">
     
-
     <!-- 방 목록 -->
     <table-matrix></table-matrix>
     <!-- 방 개설 팝업창 -->
@@ -48,5 +47,8 @@ export default {
     color: white;
   }
 
+  .table-list {
+    margin-top: 60px;
+  }
 
 </style>

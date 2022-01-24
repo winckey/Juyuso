@@ -96,7 +96,7 @@ const openviduStore = {
               data.publisher = publisher;
               // --- Publish your stream ---
               data.session.publish(publisher);
-              dispatch('enterRoom', sessionId)
+              // dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
             })
             .catch(error => {
@@ -123,7 +123,7 @@ const openviduStore = {
               data.publisher = publisher;
               // --- Publish your stream ---
               data.session.publish(publisher);
-              dispatch('enterRoom', sessionId)
+              // dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
             })
             .catch(error => {
@@ -189,17 +189,19 @@ const openviduStore = {
 		},
 
     enterRoom (context, sessionId) {
-      axios({
-        method: 'POST', 
-        url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
-      })
+      console.log(sessionId)
+      // axios({
+      //   method: 'POST', 
+      //   url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
+      // })
 
     },
     leaveRoom (context, sessionId) {
-      axios({
-        method: 'POST', 
-        url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
-      })
+      console.log(sessionId)
+      // axios({
+      //   method: 'POST', 
+      //   url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
+      // })
 
     }
   },

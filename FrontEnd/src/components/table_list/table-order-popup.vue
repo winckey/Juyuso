@@ -204,7 +204,6 @@ export default {
     ]),
     addHastag: function () {
       console.log(this.$refs.tableOrderForm.validate())
-      console.log(this.hashtagInput)
       if (this.$refs.tableOrderForm.validate() && this.hashtagInput != '') {
         this.roomInfo.hashTag.push(this.hashtagInput)
         this.hashtagInput = ''
@@ -227,6 +226,7 @@ export default {
         data: this.roomInfo,
       })
       .then( res => {
+        console.log(res)
         const roomInfo = {
           sessionId: res.data.meetingId,
           isCreate: true,
@@ -237,6 +237,12 @@ export default {
       .catch( err => {
         console.log(err)
       })
+      // const roomInfo = {
+      //     sessionId: '1',
+      //     isCreate: true,
+      //   }
+      // this.joinSession(roomInfo)
+      // this.$router.push({ name: 'Table', params: { roomId: res.data.meetingId }})
     }
   }
 

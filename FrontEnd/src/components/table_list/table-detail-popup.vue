@@ -18,7 +18,7 @@
     <v-card>
       <v-card-title class="grey lighten-2 d-flex justify-content-center">
         <span>
-        {{ roomInfo.meetingName }}
+        {{ roomInfo.title }}
         </span>
       </v-card-title>
       <v-form ref="tableOrderForm">
