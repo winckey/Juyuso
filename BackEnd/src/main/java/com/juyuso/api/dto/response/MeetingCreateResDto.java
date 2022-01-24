@@ -11,6 +11,9 @@ import lombok.Setter;
 @ApiModel("Meeting Create Response")
 public class MeetingCreateResDto {
 
+    @ApiModelProperty(name = "방 번호", example = "1")
+    private Long meetingId;
+
     @ApiModelProperty(name = "방 이름" , example = "술한잔 하실분")
     private String meetingName;
     @ApiModelProperty(name = "방 비밀번호" , example = "12345")
@@ -27,8 +30,10 @@ public class MeetingCreateResDto {
 
     }
 
-    public static MeetingCreateResDto of(String meetingName, String password, String userId) {
+    public static MeetingCreateResDto of(Long meetingId, String meetingName, String password, String userId) {
+
         MeetingCreateResDto res = new MeetingCreateResDto();
+        res.setMeetingId(meetingId);
         res.setMeetingName(meetingName);
         res.setPassword(password);
         res.setUserId(userId);
