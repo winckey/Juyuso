@@ -4,6 +4,7 @@ import com.juyuso.api.dto.request.MeetingCreateReqDto;
 import com.juyuso.api.dto.response.MeetingLeaveResDto;
 import com.juyuso.api.dto.response.MeetingCreateResDto;
 import com.juyuso.api.dto.response.MeetingEnterResDto;
+import com.juyuso.api.dto.response.MeetingListResDto;
 import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
 import com.juyuso.db.entity.Meeting;
@@ -77,19 +78,17 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public ResponseEntity getMeetingListByTag(@RequestParam(required = false) String tags,
-                                              @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable) {
+    public Page<MeetingListResDto> getMeetingListByTag(@RequestParam(required = false) String tags,
+                                                       @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable) {
         if(tags != null) {
-            Page<Meeting> list = meetingService.findAllByTag(tags, pageable);
-            return new ResponseEntity(list, HttpStatus.OK);
+            return MeetingListResDto.of(meetingService.findAllByTag(tags, pageable));
         }
         else if(title != null){
-            return new ResponseEntity(meetingService.findAllByTitle(title, pageable), HttpStatus.OK);
+            return MeetingListResDto.of(meetingService.findAllByTitle(title, pageable));
         }
         else {
-            return new ResponseEntity(meetingService.findAll(pageable), HttpStatus.OK);
+            return MeetingListResDto.of(meetingService.findAll(pageable));
         }
-
     }
 
     @PostMapping("/enter/{meetingId}")
@@ -131,7 +130,6 @@ public class MeetingController {
         } else {
             this.mapSessions.put(meetingId, cnt -1);
         }
-
         return MeetingLeaveResDto.of(meetingId);
 
     }
