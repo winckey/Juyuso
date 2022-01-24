@@ -1,7 +1,7 @@
 package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
-import com.juyuso.api.dto.request.MeetingLeaveReqDto;
+import com.juyuso.api.dto.response.MeetingLeaveResDto;
 import com.juyuso.api.dto.response.MeetingCreateResDto;
 import com.juyuso.api.dto.response.MeetingEnterResDto;
 import com.juyuso.api.service.MeetingService;
@@ -109,6 +109,7 @@ public class MeetingController {
          }
         int cnt = mapSessions.get(meetingId);
 
+
         return MeetingEnterResDto.of(meetingId, cnt);
     }
 
@@ -120,24 +121,20 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public MeetingLeaveReqDto leaveMeeting (@PathVariable Long meetingId) {
-
+    public MeetingLeaveResDto leaveMeeting (@PathVariable Long meetingId) {
         int cnt = this.mapSessions.get(meetingId);
-
         if(cnt == 1) {
-            meetingService.deleteMeetingByMeetingId(meetingId);
-            this.mapSessions.remove(meetingId); //방 삭제
-
+            meetingService.changeActiveMeetingByMeetingId(meetingId);
+            this.mapSessions.remove(meetingId);
+            //한명남았을때 active false 로 바꿈
+            //미팅방은 삭제안함
         } else {
             this.mapSessions.put(meetingId, cnt -1);
         }
 
-        return MeetingLeaveReqDto.of(meetingId, this.mapSessions.get(meetingId));
+        return MeetingLeaveResDto.of(meetingId);
 
     }
-
-
-
 
 
 
