@@ -22,7 +22,8 @@
             hint="영어, 숫자, 특수문자를 모두 포함해야합니다 (9-16자)"
             :rules="passwordRules"
             label="비밀번호"
-            required></v-text-field>
+            required
+            @keyup.enter="login"></v-text-field>
             
             <span class="d-flex justify-content-center my-3">
               <v-btn @click="login" color="#1CFD9F" rounded>로그인</v-btn>
@@ -41,6 +42,9 @@
 
 <script>
 import axios from 'axios'
+import {mapActions} from 'vuex'
+
+const accounts = 'accounts' 
 
 export default {
   name: 'Login',
@@ -65,20 +69,21 @@ export default {
     }
   },
   methods: {
+    ...mapActions(accounts, ['logIn']),
     login: function () {
       axios({
         method: 'post',
-        url: `${process.env.VUE_APP_API_URL}/api/v1/auth/login`,
+        url: `${process.env.VUE_APP_API_URL}/user/login`,
         data: this.credentials
       })
         .then(res => {
-          console.log(res)
+          console.log(res.data.user.age)
           localStorage.setItem('jwt', res.data.accessToken)
+          this.logIn(res.data.user)
           this.$router.push({name:'Main'})
         })
         .catch(err => {
           console.log(err)
-          // alert('아이디와 비밀번호를 정확히 입력해 주세요 ')
           this.credentials.id = null
           this.credentials.password = null
         })
