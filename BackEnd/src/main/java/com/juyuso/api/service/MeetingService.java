@@ -59,11 +59,14 @@ public class MeetingService {
         return meetingRepository.findById(meetingId).get();
     }
 
+
     @Transactional
-    public Long deleteMeetingByMeetingId(Long meetingId) {
-        hashTagRepository.deleteByMeetingId(meetingId);
-        meetingRepository.deleteById(meetingId);
+    public Long changeActiveMeetingByMeetingId(Long meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId).get();
+        meeting.changeActive();
         return meetingId;
     }
+
+
 
 }

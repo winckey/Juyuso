@@ -17,8 +17,10 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             "on m.meeting_id = h.meeting_id WHERE h.tag LIKE %:tag%", nativeQuery = true)
     Page<Meeting> findListByHashTag(@Param("tag")String tags, Pageable pageable);
 
-    Page<Meeting> findAllByTitleContaining(String title, Pageable pageable);
+    @Query("SELECT m FROM Meeting m WHERE m.active = true and m.title LIKE CONCAT('%',:title, '%')")
+    Page<Meeting> findAllByTitleContaining(@Param("title") String title, Pageable pageable);
 
+    @Query("SELECT m FROM Meeting m WHERE m.active = true")
     Page<Meeting> findAll(Pageable pageable);
 
 

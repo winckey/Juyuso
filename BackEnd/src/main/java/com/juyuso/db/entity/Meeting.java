@@ -38,6 +38,9 @@ public class Meeting {
     @Column(nullable = false)
     private boolean common;
 
+    @Column(nullable = false)
+    private String url;
+
     public Meeting() {
 
     }
@@ -53,7 +56,19 @@ public class Meeting {
         this.common = common;
     }
 
+    public Meeting(User owner, String title, String password, LocalDateTime callStartTime,
+                   LocalDateTime callEndTime, boolean active, boolean common, String url) {
+        this.owner = owner;
+        this.title = title;
+        this.password = password;
+        this.callStartTime = callStartTime;
+        this.callEndTime = callEndTime;
+        this.active = active;
+        this.common = common;
+        this.url = url;
+    }
 
-
-    
+    public void changeActive() {
+        this.active = false;
+    }
 }
