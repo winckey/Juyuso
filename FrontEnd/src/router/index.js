@@ -9,7 +9,7 @@ import Signup from '@/views/accounts/signup.vue'
 
 //tables
 import TableList from '@/views/tables/table-list.vue'
-// import Table from '@/views/tables/table.vue'
+import Table from '@/views/tables/table.vue'
 
 //main
 import Main from '@/views/main.vue'
@@ -46,6 +46,11 @@ const routes = [
     path: '/mydata/:userId',
     name: 'MyData',
     component: MyData
+  },
+  {
+    path: '/table/:roomId',
+    name: 'Table',
+    component: Table,
   }
 ]
 
