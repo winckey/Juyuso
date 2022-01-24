@@ -21,4 +21,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
     Page<Meeting> findAll(Pageable pageable);
 
+
+
+
+
 }

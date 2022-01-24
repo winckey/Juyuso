@@ -20,6 +20,9 @@ public class HashTag {
         this.meeting = meeting;
         this.tag = tag;
     }
+    public HashTag() {
+
+    }
 
 
 }

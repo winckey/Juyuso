@@ -1,7 +1,9 @@
 package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
+import com.juyuso.api.dto.request.MeetingLeaveReqDto;
 import com.juyuso.api.dto.response.MeetingCreateResDto;
+import com.juyuso.api.dto.response.MeetingEnterResDto;
 import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
 import com.juyuso.db.entity.Meeting;
@@ -32,9 +34,10 @@ public class MeetingController {
     private final UserService userService;
     private OpenVidu openVidu;
 
-    private Map<String, Integer> mapSessions = new ConcurrentHashMap<>();
+    private Map<Long, Integer> mapSessions = new ConcurrentHashMap<>();
 
 
+    private int LIMIT_MEETING = 10; // 인원 제한
 
     private String OPENVIDU_URL;
     private String SECRET;
@@ -59,8 +62,11 @@ public class MeetingController {
     })
     public MeetingCreateResDto createMeeting(@RequestBody MeetingCreateReqDto reqDto, Principal principal) {
         String userId = principal.getName();
-        meetingService.createMeeting(reqDto, userId);
-        return MeetingCreateResDto.of(reqDto.getMeetingName(), reqDto.getMeetingPassword(), userId);
+        Long meetingId = meetingService.createMeeting(reqDto, userId);
+
+        this.mapSessions.put(meetingId, 1);
+
+        return MeetingCreateResDto.of(meetingId,reqDto.getMeetingName(), reqDto.getMeetingPassword(), userId);
     }
 
     @GetMapping("/search")
@@ -85,6 +91,68 @@ public class MeetingController {
         }
 
     }
+
+    @PostMapping("/enter/{meetingId}")
+    @ApiOperation(value = "미팅방 들어가기" , notes = "<strong>방 들어가기 </strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "방 들어가기 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public MeetingEnterResDto enterMeeting(@PathVariable Long meetingId) {
+
+         if(this.mapSessions.get(meetingId) == null || this.mapSessions.get(meetingId) >= LIMIT_MEETING) {
+             //
+         } else {
+             this.mapSessions.put(meetingId, this.mapSessions.get(meetingId) + 1);
+         }
+        int cnt = mapSessions.get(meetingId);
+
+        return MeetingEnterResDto.of(meetingId, cnt);
+    }
+
+    @PostMapping("/leave/{meetingId}")
+    @ApiOperation(value = "미팅방 나가기" , notes = "<strong>방 나가기 </strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "방 나가기 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public MeetingLeaveReqDto leaveMeeting (@PathVariable Long meetingId) {
+
+        int cnt = this.mapSessions.get(meetingId);
+
+        if(cnt == 1) {
+            meetingService.deleteMeetingByMeetingId(meetingId);
+            this.mapSessions.remove(meetingId); //방 삭제
+
+        } else {
+            this.mapSessions.put(meetingId, cnt -1);
+        }
+
+        return MeetingLeaveReqDto.of(meetingId, this.mapSessions.get(meetingId));
+
+    }
+
+    @DeleteMapping("/leave2/{meetingId}")
+    @ApiOperation(value = "미팅방 나가기" , notes = "<strong>방 나가기 </strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "방 나가기 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public MeetingLeaveReqDto leaveMeeting2 (@PathVariable Long meetingId) {
+
+       meetingService.deleteMeetingByMeetingId(meetingId);
+
+        return MeetingLeaveReqDto.of(meetingId, 1);
+
+    }
+
+
 
 
 }
