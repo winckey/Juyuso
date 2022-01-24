@@ -136,21 +136,7 @@ public class MeetingController {
 
     }
 
-    @DeleteMapping("/leave2/{meetingId}")
-    @ApiOperation(value = "미팅방 나가기" , notes = "<strong>방 나가기 </strong>")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "방 나가기 "),
-            @ApiResponse(code = 400, message = "오류"),
-            @ApiResponse(code = 401, message = "권한없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
-    })
-    public MeetingLeaveReqDto leaveMeeting2 (@PathVariable Long meetingId) {
 
-       meetingService.deleteMeetingByMeetingId(meetingId);
-
-        return MeetingLeaveReqDto.of(meetingId, 1);
-
-    }
 
 
 
