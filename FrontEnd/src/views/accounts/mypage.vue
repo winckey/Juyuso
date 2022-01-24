@@ -6,24 +6,42 @@
       <div class="profile-card">
         <img src="@/assets/profile.png" alt="profile-card">
         <div class="profile-card-info">
-          <p>박씨네</p>
-          <p>민쯩</p>
+          <v-container>
+            <v-row >
+              <v-col cols="8">
+                <div v-if="user">
+                  <p>주민등록증</p>
+                  <p>별명: {{ user.nickname }}</p>
+                  <p>성별: {{ user.gender }}</p>
+                  <p>생년월일: {{ user.age }}</p>
+                </div>
+              </v-col>
+              <v-col v-if="user" cols="4">
+                <div>
+                  <img :src="imgUrl" alt="profile_img">
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+         
         </div>
-        <v-btn @click="goProfileEdit" color="green" >프로필 수정</v-btn>
+        <v-btn @click="isProfileEdit != isProfileEdit" color="green" >프로필 수정</v-btn>
+        <ProfileEditPopup/>
       </div>
 
       <div class="profile-mydata">
         <div class="profile-mydata-card">
-          <img @click="goMyData" src="@/assets/Group 56.png" width="95%" alt="mydata">
+          <img @click="goMyData" src="@/assets/Group 56.png" width="90%" alt="mydata">
         </div>
 
         <div class="wallet-1">
           <img src="@/assets/wallet_card_1.png" alt="wallet-card">
         </div>
+
         <div class="profile-calendar">
           <v-dialog>
             <template v-slot:activator="{ on, attrs }">
-              <img @click="goCalendar" src="@/assets/Group 57.png" alt="calendar"
+              <img src="@/assets/Group 57.png" alt="calendar"
               v-bind="attrs"
               v-on="on">
             </template>
@@ -39,8 +57,9 @@
 
 
         <div class="friend-block-btn">
-          <v-btn @click="goBlockedFriend">차단친구 관리</v-btn>
+          <v-btn @click="isBlockedFriend != isBlockedFriend">차단친구 관리</v-btn>
         </div>
+        <BlockedFriend/>
       </div>
 
      
@@ -50,28 +69,72 @@
 
 <script>
 import CalenderPopup from '../../components/accounts/calender-popup.vue'
+import ProfileEditPopup from '@/components/accounts/profile-edit-popup.vue'
+import BlockedFriend from '@/components/accounts/blocked-friend.vue'
+import axios from 'axios'
+
 export default {
   name: 'MyPage',
   components:{
     CalenderPopup,
+    ProfileEditPopup,
+    BlockedFriend
   },
   data(){
     return{
+      user: null,
       dialog:false,
+      isProfileEdit: false,
+      isBlockedFriend: false
     }
   },
   methods: {
-    goProfileEdit: function (){
-      this.$router.push({name: 'ProfileEdit'})
-    },
-    goCalendar: function () {
-      
-    },
     goMyData: function () {
-      this.$router.push({name: 'MyData'})
+      this.$router.push({name: 'MyData', params: {userId: 1}})
     },
-    goBlockedFriend: function () {
-      this.$router.push({name: 'BlockedFriend'})
+    setToken: function (){
+      const token = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `Bearer ${token}`
+      }
+      return config
+    }
+  },
+  created: function (){
+    axios({
+      method: 'get',
+      url: `${process.env.VUE_APP_API_URL}/user/info`,
+      headers: this.setToken()
+    })
+      .then(res => {
+        console.log(res.data.user)
+        const userInfo = res.data.user
+        this.user = userInfo
+        console.log(this.user.age)
+
+        // if (userInfo.img) {
+        //   console.log('yess')
+        //   this.img = userInfo.imgUrl
+        // } else {
+        //   console.log('noo')
+        //   this.img = '@/assets/chat.png'
+        // }
+
+
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  computed: {
+    imgUrl: function () {
+      if (this.user.img) {
+        return this.user.imgUrl
+      } else {
+        console.log("@")
+        return require('@/assets/chat.png')
+      }
+
     }
   }
 }
@@ -106,6 +169,7 @@ img {
 }
 
 .profile-card-info {
+  width: 90%;
   position: absolute;
   top: 10%;
   left: 10%;
@@ -122,6 +186,7 @@ img {
 
 .profile-mydata-card {
   cursor: pointer;
+  
   
 }
 
