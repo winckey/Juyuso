@@ -1,5 +1,7 @@
 <template>
-
+    <div class="white">
+        
+    </div>
 </template>
 
 <script>
