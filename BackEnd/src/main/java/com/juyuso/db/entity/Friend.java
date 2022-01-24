@@ -1,10 +1,13 @@
 package com.juyuso.db.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
+@Data
 public class Friend {
 
     @Id
