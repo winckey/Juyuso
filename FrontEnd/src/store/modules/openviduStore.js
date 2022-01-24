@@ -96,6 +96,7 @@ const openviduStore = {
               data.publisher = publisher;
               // --- Publish your stream ---
               data.session.publish(publisher);
+              dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
             })
             .catch(error => {
@@ -122,6 +123,7 @@ const openviduStore = {
               data.publisher = publisher;
               // --- Publish your stream ---
               data.session.publish(publisher);
+              dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
             })
             .catch(error => {
@@ -131,8 +133,9 @@ const openviduStore = {
       }
     },
 
-    leaveSession ({ commit }) {
+    leaveSession ({ dispatch, commit }, sessionId) {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
+      dispatch('leaveRoom', sessionId)
       commit('LEAVE_SESSION')
 		},
 
@@ -184,9 +187,24 @@ const openviduStore = {
 					.catch(error => reject(error.response));
 			});
 		},
+
+    enterRoom (context, sessionId) {
+      axios({
+        method: 'POST', 
+        url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
+      })
+
+    },
+    leaveRoom (context, sessionId) {
+      axios({
+        method: 'POST', 
+        url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
+      })
+
+    }
   },
   getters: {
-    
+
   },
   modules: {
   }

@@ -1,6 +1,9 @@
 <template>
   <div>
     
+
+    <!-- 방 목록 -->
+    <table-matrix></table-matrix>
     <!-- 방 개설 팝업창 -->
     <div class="menu-popup">
       <div>방 개설하기</div>
@@ -12,11 +15,13 @@
 
 <script>
 import TableOrderPopup from '@/components/table_list/table-order-popup.vue'
+import TableMatrix from '@/components/table_list/table-matrix.vue'
 
 export default {
   name: 'TableList',
   components: {
-    TableOrderPopup
+    TableOrderPopup,
+    TableMatrix
   }
 }
 </script>
