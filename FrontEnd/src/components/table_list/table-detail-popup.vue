@@ -86,7 +86,7 @@ export default {
       }
       console.log(roomInfo)
       this.joinSession(roomInfo)
-      this.$router.push({ name: 'Table', params: { roomId: this.roomInfo.meetingId }})
+      this.$router.push({ name: 'Table', params: { roomId: this.roomInfo.meetingId, roomInfo: this.roomInfo }})
     }
   }
 }

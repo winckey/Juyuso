@@ -18,6 +18,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  video {
+    -moz-border-radius:20px;
+    -webkit-border-radius:20px;
+    border-radius:20px;
+  }
 </style>

@@ -51,6 +51,7 @@ const routes = [
     path: '/table/:roomId',
     name: 'Table',
     component: Table,
+    props: true,
   }
 ]
 

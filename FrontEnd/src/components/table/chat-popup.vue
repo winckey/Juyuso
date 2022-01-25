@@ -15,42 +15,40 @@
       right
       height="85%"
       width="300px"
-      class="p-3"
+      class="p-3 chat-box"
     >
       <!-- 채팅 목록 -->
       <div class="chat-list">
         <div
           :key="idx" 
           v-for="(message, idx) in messages">
-          <span :class="JSON.parse(message.from.data).clientData == userInfo.nickname ? 'my-chat': 'other-chat'">
-            
-            {{ JSON.parse(message.from.data).clientData }}
-            <!-- {{ message.data }} -->
-          </span>
+          <div :class="JSON.parse(message.from.data).clientData == userInfo.nickname ? 'my-chat': 'other-chat'">
+            <div>
+              <div class="chat-name">
+                <!-- {{ JSON.parse(message.from.data).clientData }} -->
+                {{ '성아영' }}
+              </div>
+              <div class="other-chat-bubble">
+                {{ message.data }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- 채팅 보내기 -->
-      <div class="chat-input">
-        <v-row>
-          <v-col cols="8">
-            <v-textarea
-              v-model="chatInput"
-              no-resize
-              outlined
-              rows="3"
-              row-height="15"
-              @keyup.enter.exact.prevent="sendMessage"
-            ></v-textarea>
-
-          </v-col>
-          <v-col cols="4">
-            <v-btn 
-              @click="sendMessage">
-              전송
-            </v-btn>
-
-          </v-col>
-        </v-row>
+      <div class="chat-input-box d-flex justify-content-around">
+        <textarea
+        placeholder="채팅을 입력해주세요."
+          class="chat-input"
+          v-model="chatInput"
+          @keyup.enter.exact.prevent="sendMessage"
+        ></textarea>
+        <v-btn
+          dark
+          color="blue-grey"
+          @click="sendMessage">
+          전송
+        </v-btn>
       </div>
     </v-navigation-drawer>
   </div>
@@ -105,24 +103,56 @@ export default {
     bottom: 10px;
   }
 
-  .chat-input {
+  .chat-input-box {
+    box-shadow: 0 -1px 0 #000;
+    width: 90%;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    background: white;
     position: fixed;
-    bottom: 0
+    bottom: 0;
+    /* width: 100% */
+  }
+
+  .chat-input {
+    resize: none;
   }
 
   .chat-list {
     height: 85%;
   }
 
-  .my-chat {
-    color: green
-
-  }
-
   .other-chat {
-    padding: 2px;
-    background-color: yellow
+    padding: 5px;
   }
 
+  .chat-name {
+    font-size: 0.85em
+  }
+
+  .other-chat-bubble {
+    display: inline-block;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 0.9em;
+    padding: 10px 10px 10px 12px;
+    border-radius: 20px;
+    background: rgb(95, 159, 196);
+  }
+
+  .my-chat {
+    padding: 5px;
+    text-align: right;
+  }
+
+  .my-chat-bubble {
+    display: inline-block;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 0.9em;
+    padding: 10px 10px 10px 12px;
+    border-radius: 20px;
+    background: rgb(196, 136, 219);
+  }
 
 </style>

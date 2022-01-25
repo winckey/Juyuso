@@ -2,8 +2,7 @@
   <div>
     <div id="session" v-if="session">
       <div id="session-header">
-        <h1 id="session-title">{{ roomId }}</h1>
-        <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveTable" value="Leave session">
+        <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
       </div>
       <!-- <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager"/>
@@ -32,6 +31,14 @@
         <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
         <v-icon>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
       </v-btn>
+
+      <v-btn
+        color="error"
+        fab
+        @click="leaveTable">
+        <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
+        <v-icon dark>mdi-application-export</v-icon>
+      </v-btn>
     </v-sheet>
       
   </div>
@@ -54,7 +61,9 @@ export default {
     UserVideo,
     ChatPopup
   },
-
+  props: {
+    roomInfo: Object,
+  },
   data: function () {
     return {
       menuBar: false,
@@ -71,11 +80,11 @@ export default {
       event.returnValue = "안녕"
       this.leaveSession(this.roomId)
     });
-    console.log(this.mainStreamManager)
+    console.log(this.publisher)
     // console.log(this.publisher)
     console.log(this.subscribers)
-    this.publishAudio = this.mainStreamManager.stream.audioActive
-    this.publishVideo = this.mainStreamManager.stream.videoActive
+    this.publishAudio = this.publisher.stream.audioActive
+    this.publishVideo = this.publisher.stream.videoActive
     const token = localStorage.getItem('jwt')
     axios({
       method: 'GET',
@@ -134,12 +143,12 @@ export default {
 		},
 
     audioToggle () {
-      this.mainStreamManager.publishAudio(!this.publishAudio)
+      this.publisher.publishAudio(!this.publishAudio)
       this.publishAudio = !this.publishAudio
     },
 
     videoToggle () {
-      this.mainStreamManager.publishVideo(!this.publishVideo)
+      this.publisher.publishVideo(!this.publishVideo)
       this.publishVideo = !this.publishVideo
     },
   }
@@ -148,6 +157,11 @@ export default {
 </script>
 
 <style scoped>
+  .session-title {
+    color: white;
+    text-align: center;
+  }
+
   .menu-bar {
     position: fixed;
     background: white;

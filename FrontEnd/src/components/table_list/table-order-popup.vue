@@ -237,7 +237,7 @@ export default {
           isCreate: true,
         }
         this.joinSession(roomInfo)
-        this.$router.push({ name: 'Table', params: { roomId: res.data.meetingId }})
+        this.$router.push({ name: 'Table', params: { roomId: res.data.meetingId, roomInfo: this.roomInfo }})
       })
       .catch( err => {
         console.log(err)
