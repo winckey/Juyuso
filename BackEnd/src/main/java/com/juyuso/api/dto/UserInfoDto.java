@@ -18,6 +18,7 @@ public class UserInfoDto {
     private String nickname;
     private String description;
     private String phone;
+    private String email;
     private Boolean img;
     private String imgUrl;
     private Long age;
@@ -33,6 +34,7 @@ public class UserInfoDto {
         userInfoDto.setNickname(user.getNickname());
         userInfoDto.setDescription(user.getDescription());
         userInfoDto.setPhone(user.getPhone());
+        userInfoDto.setEmail(user.getEmail());
         userInfoDto.setBirthDate(user.getBirthDate());
         userInfoDto.setRegDate(user.getRegDate());
         userInfoDto.setGender(user.getGender());
