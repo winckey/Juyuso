@@ -1,6 +1,6 @@
 server:
   port: 8080
-  address: i6e101.p.ssafy.io
+  address: localhost
   servlet:
     context-path: /
     encoding:
