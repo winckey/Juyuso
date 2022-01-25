@@ -10,10 +10,11 @@
             <v-row >
               <v-col cols="8">
                 <div v-if="user">
-                  <p>주민등록증</p>
+                  <h1>주민등록증</h1>
                   <p>별명: {{ user.nickname }}</p>
+                  <p>소개: {{ user.description }}</p>
                   <p>성별: {{ user.gender }}</p>
-                  <p>생년월일: {{ user.age }}</p>
+                  <p>나이: {{ user.age }}</p>
                 </div>
               </v-col>
               <v-col v-if="user" cols="4">
@@ -25,8 +26,10 @@
           </v-container>
          
         </div>
-        <v-btn @click="isProfileEdit != isProfileEdit" color="green" >프로필 수정</v-btn>
-        <ProfileEditPopup/>
+        <div class="profile-edit-popup">
+          <ProfileEditPopup :user = "user" v-if="user"/>
+        </div>
+          
       </div>
 
       <div class="profile-mydata">
@@ -56,10 +59,10 @@
         </div>
 
 
-        <div class="friend-block-btn">
-          <v-btn @click="isBlockedFriend != isBlockedFriend">차단친구 관리</v-btn>
+        <div class="friend-block">
+          <BlockedFriend/>
         </div>
-        <BlockedFriend/>
+        
       </div>
 
      
@@ -84,8 +87,7 @@ export default {
     return{
       user: null,
       dialog:false,
-      isProfileEdit: false,
-      isBlockedFriend: false
+      
     }
   },
   methods: {
@@ -221,10 +223,14 @@ img {
   
 }
 
-.friend-block-btn {
+.friend-block {
   position: absolute;
   top: 140%;
   right: 10%;
+}
+
+.profile-edit-popup {
+  width: 100px;
 }
 
 </style>
