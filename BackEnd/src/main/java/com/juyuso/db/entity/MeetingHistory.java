@@ -1,5 +1,6 @@
 package com.juyuso.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ public class MeetingHistory {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
@@ -24,4 +26,17 @@ public class MeetingHistory {
     private String action;
 
     private LocalDateTime insertedTime;
+
+    public MeetingHistory () {
+
+    }
+
+    public MeetingHistory (Meeting meeting, User user, String action) {
+        this.meeting = meeting;
+        this.user = user;
+        this.action = action;
+        this.insertedTime = LocalDateTime.now();
+    }
+
+
 }

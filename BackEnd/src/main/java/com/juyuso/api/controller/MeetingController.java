@@ -5,6 +5,7 @@ import com.juyuso.api.dto.response.MeetingLeaveResDto;
 import com.juyuso.api.dto.response.MeetingCreateResDto;
 import com.juyuso.api.dto.response.MeetingEnterResDto;
 import com.juyuso.api.dto.response.MeetingListResDto;
+import com.juyuso.api.service.MeetingHistoryService;
 import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
 import com.juyuso.db.entity.Meeting;
@@ -33,6 +34,7 @@ public class MeetingController {
 
     private final MeetingService meetingService;
     private final UserService userService;
+    private final MeetingHistoryService historyService;
     private OpenVidu openVidu;
 
     private Map<Long, Integer> mapSessions = new ConcurrentHashMap<>();
@@ -44,9 +46,11 @@ public class MeetingController {
     private String SECRET;
 
     @Autowired
-    public MeetingController(MeetingService meetingService, @Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl, UserService userService){
+    public MeetingController(MeetingService meetingService, @Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl,
+                             UserService userService, MeetingHistoryService historyService){
         this.meetingService = meetingService;
         this.userService = userService;
+        this.historyService = historyService;
         this.SECRET = secret;
         this.OPENVIDU_URL = openviduUrl;
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
@@ -64,9 +68,8 @@ public class MeetingController {
     public MeetingCreateResDto createMeeting(@RequestBody MeetingCreateReqDto reqDto, Principal principal) {
         String userId = principal.getName();
         Long meetingId = meetingService.createMeeting(reqDto, userId);
-
         this.mapSessions.put(meetingId, 1);
-
+        historyService.saveMeetingHistory(meetingId, userId, "생성");
         return MeetingCreateResDto.of(meetingId,reqDto.getMeetingName(), reqDto.getMeetingPassword(), userId);
     }
 
@@ -78,7 +81,7 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public Page<MeetingListResDto> getMeetingListByTag(@RequestParam(required = false) String tags,
+    public Page<MeetingListResDto> getMeetingListByParam(@RequestParam(required = false) String tags,
                                                        @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable) {
         if(tags != null) {
             return MeetingListResDto.of(meetingService.findAllByTag(tags, pageable));
@@ -99,11 +102,12 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public MeetingEnterResDto enterMeeting(@PathVariable Long meetingId) {
-
+    public MeetingEnterResDto enterMeeting(@PathVariable Long meetingId, Principal principal) {
+        String userId = principal.getName();
          if(this.mapSessions.get(meetingId) == null || this.mapSessions.get(meetingId) >= LIMIT_MEETING) {
              //
          } else {
+             historyService.saveMeetingHistory(meetingId, userId, "입장");
              this.mapSessions.put(meetingId, this.mapSessions.get(meetingId) + 1);
          }
         int cnt = mapSessions.get(meetingId);
@@ -120,8 +124,10 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public MeetingLeaveResDto leaveMeeting (@PathVariable Long meetingId) {
+    public MeetingLeaveResDto leaveMeeting (@PathVariable Long meetingId, Principal principal) {
         int cnt = this.mapSessions.get(meetingId);
+        String userId = principal.getName();
+        historyService.saveMeetingHistory(meetingId, userId, "퇴장");
         if(cnt == 1) {
             meetingService.changeActiveMeetingByMeetingId(meetingId);
             this.mapSessions.remove(meetingId);
