@@ -1,5 +1,6 @@
 package com.juyuso.api.controller;
 
+import com.juyuso.api.dto.UserInfoDto;
 import com.juyuso.api.dto.request.FriendReqDto;
 import com.juyuso.api.dto.response.*;
 import com.juyuso.api.service.FriendService;
@@ -36,16 +37,37 @@ public class FriendController {
     public ResponseEntity<FriendListResDto> findFriendList(@ApiIgnore Authentication authentication) {
         User userDetails = (User) authentication.getDetails();
         List<User> friendList = friendService.friendList(userDetails);
-        List<User> RequestList = friendService.RequestList(userDetails);
 
+        for (int i =0 ; i < friendList.size() ; i ++){
+            System.out.println("friendList id : " +friendList.get(i).getUserId());
+        }
+        List<User> requestList = friendService.RequestList(userDetails);
+        for (int i =0 ; i < requestList.size() ; i ++){
+            System.out.println("RequestList id : " +requestList.get(i).getUserId());
+        }
 
+        return ResponseEntity.ok(FriendListResDto.of(200, "Success", friendList ,requestList));
+    }
 
-        return ResponseEntity.ok(FriendListResDto.of(200, "Success", friendList , null,RequestList));
+    @DeleteMapping()
+    @ApiOperation(value = "친구 삭제", notes = "<strong>친구를 삭제한다. 삭제하고자 하는 유저 id</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한 없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<FriendRequestResDto> deleteFriend(@ApiIgnore Authentication authentication , @RequestBody FriendReqDto friendReqDto) {
+        User userDetails = (User) authentication.getDetails();
+
+        friendService.deleteFriend(userDetails, friendReqDto);
+
+        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
     }
 
 
     @PostMapping("/request")
-    @ApiOperation(value = "친구 추가 신청", notes = "<strong>친구를 추가신청을 한다.</strong>")
+    @ApiOperation(value = "친구 추가 신청", notes = "<strong>친구를 추가신청을 한다. 신청하는 사람의 id</strong>")
     @ApiResponses({
             @ApiResponse(code = 200, message = "리스트조회 성공 "),
             @ApiResponse(code = 400, message = "오류"),
@@ -61,7 +83,7 @@ public class FriendController {
     }
 
     @PostMapping("/agree")
-    @ApiOperation(value = "친구 신청 동의", notes = "<strong>친구를 추가신청을 한다.</strong>")
+    @ApiOperation(value = "친구 신청 동의", notes = "<strong>친구를 추가신청을 한다. 신청 보낸사람의 사람의 id</strong>")
     @ApiResponses({
             @ApiResponse(code = 200, message = "리스트조회 성공 "),
             @ApiResponse(code = 400, message = "오류"),
@@ -89,7 +111,8 @@ public class FriendController {
     }
 
     @GetMapping("/{keyword}")
-    @ApiOperation(value = "유저 검색", notes = "<strong>친구추가를 위한 전체 유저 검색.</strong>")
+    @ApiOperation(value = "유저 검색", notes = "<strong>친구추가를 위한 전체 유저 검색.</strong>" +
+                                                  "<strong> keyword를 포함하는 별명을 가진 유저 검색")
     @ApiResponses({
             @ApiResponse(code = 200, message = "리스트조회 성공 "),
             @ApiResponse(code = 400, message = "오류"),

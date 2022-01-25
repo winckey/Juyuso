@@ -64,7 +64,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<User> friendList(User user) {
-        return  userRepository.findListByUserId(user.getUserId());
+        return  userRepository.findListByUserId(user.getId());
     }
 
     @Override
@@ -74,12 +74,22 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<User> RequestList(User user) {
-        return  userRepository.findRequestListByUserId(user.getUserId());
+        return  userRepository.findRequestListByUserId(user.getId());
     }
 
     @Override
     public List<User> userSearch(String keyword) {
         return  userRepository.findALLByNickname(keyword);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFriend(User userDetails, FriendReqDto friendReqDto) {
+
+        Long from = Long.parseLong(friendReqDto.getId());
+        Long to   = (userDetails.getId());
+        friendRepository.deleteBothByUserId(from  , to);
+        friendRepository.deleteBothByUserId(to  , from);
     }
 
 

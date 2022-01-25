@@ -19,4 +19,5 @@ public interface FriendService {
     List<User> userSearch(String keyword);
 
 
+    void deleteFriend(User userDetails, FriendReqDto friendReqDto);
 }

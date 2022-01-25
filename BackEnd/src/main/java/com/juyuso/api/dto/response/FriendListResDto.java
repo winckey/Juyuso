@@ -17,16 +17,15 @@ public class FriendListResDto extends BaseResponseBody {
 
     private List<UserInfoDto> friendList;
     private List<UserInfoDto> friendRequestList;
-    private List<UserInfoDto> banList;
 
 
-    public static FriendListResDto of(Integer statusCode, String message, List<User> user , List<User> ban , List<User> request) {
+    public static FriendListResDto of(Integer statusCode, String message, List<User> user ,  List<User> request) {
         FriendListResDto res = new FriendListResDto();
         res.setStatusCode(statusCode);
         res.setMessage(message);
         res.setFriendList(user);
-        //res.setBanList(ban);
-        //res.setFriendRequestList(request);
+
+        res.setFriendRequestList(request);
         return res;
     }
 
@@ -37,16 +36,11 @@ public class FriendListResDto extends BaseResponseBody {
         }
     }
 
-    public void setBanList(List<User> user) {
-        friendList = new ArrayList<>();
-        for (int i =0 ; i < 0 ; i ++){
-            friendList.add(UserInfoDto.of(user.get(i)));
-        }
-    }
-    public void setFriendRequestList(List<User> user) {
-        friendList = new ArrayList<>();
-        for (int i =0 ; i < 0 ; i ++){
-            friendList.add(UserInfoDto.of(user.get(i)));
+
+    public void setFriendRequestList(List<User> request) {
+        friendRequestList = new ArrayList<>();
+        for (int i =0 ; i < request.size() ; i ++){
+            friendRequestList.add(UserInfoDto.of(request.get(i)));
         }
     }
 

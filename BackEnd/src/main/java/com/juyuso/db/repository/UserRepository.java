@@ -23,14 +23,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
                         "(SELECT f.user_id " +
                         "FROM  Friend f " +
                         " WHERE f.from_id = :id)", nativeQuery = true)
-    List<User> findListByUserId(@Param("id")String id);
+    List<User> findListByUserId(@Param("id")Long id);
 
 
     @Query(value = "select * from user " +
             " u where id in " +
             "(SELECT f.from_id " +
             "FROM  Friend_request f " +
-            " WHERE f.user_id = :id)", nativeQuery = true)
-    List<User> findRequestListByUserId(@Param("id")String id);
+            " WHERE f.to_id = :id)", nativeQuery = true)
+    List<User> findRequestListByUserId(@Param("id")Long id);
 
 }
