@@ -23,4 +23,13 @@ public class Friend {
     @JoinColumn(name = "from_id" , referencedColumnName = "id")
     private User friend;
 
+
+    public void setFriend(User friend) {
+        user.getFriends().add(this);
+        this.friend = friend;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
