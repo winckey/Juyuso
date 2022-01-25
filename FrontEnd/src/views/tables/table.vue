@@ -13,7 +13,8 @@
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
       </div>
     </div>
-    <ChatPopup/>
+    <ChatPopup
+      :userInfo="userInfo"/>
     <!-- 메뉴바 -->
     <v-sheet 
       class="menu-bar p-5"
@@ -61,22 +62,46 @@ export default {
       roomId: this.$route.params.roomId,
       publishAudio: true,
       publishVideo: true,
+      userInfo: null,
     }
   },
 
   mounted: function () {
-    window.addEventListener('beforeunload', this.leaveSession(this.roomId))
+    window.addEventListener('beforeunload', function (event) {
+      event.returnValue = "안녕"
+      this.leaveSession(this.roomId)
+    });
     console.log(this.mainStreamManager)
     // console.log(this.publisher)
     console.log(this.subscribers)
     this.publishAudio = this.mainStreamManager.stream.audioActive
     this.publishVideo = this.mainStreamManager.stream.videoActive
+    const token = localStorage.getItem('jwt')
+    axios({
+      method: 'GET',
+      url: `${process.env.VUE_APP_API_URL}/user/info`,
+      headers: { Authorization: `Bearer ${token}`}
+    })
+    .then( res => {
+      this.userInfo = res.data.user
+    })
   },
 
 
-  // beforeRouteLeave (to, from, next) {
-  //   // 경고창 띄우기
-  // },
+  beforeRouteLeave (to, from, next) {
+    const answer = window.confirm('정말로 방을 떠나시겠습니까?')
+    if (answer) {
+        this.leaveSession(this.roomId)
+        window.removeEventListener('beforeunload', function () {
+        this.leaveSession(this.roomId)
+      });
+      next()
+    }
+    else {
+      next(false)
+    }
+    // 경고창 띄우기
+  },
 
   computed: {
     ...mapState(openviduStore, [
@@ -97,7 +122,9 @@ export default {
 
     leaveTable () {
       this.leaveSession(this.roomId)
-			window.removeEventListener('beforeunload', this.leaveSession(this.roomId));
+			window.removeEventListener('beforeunload', function () {
+        this.leaveSession(this.roomId)
+      });
       this.$router.push({ name: 'TableList' })
 		},
 

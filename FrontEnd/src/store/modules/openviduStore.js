@@ -30,19 +30,43 @@ const openviduStore = {
 			state.subscribers = [];
       state.messages = [];
 			state.OV = undefined;
+    },
+    SET_MESSAGE(state, data) {
+      state.messages = data.messages
     }
   },
   actions: {
     joinSession: function ({ dispatch, commit }, roomInfo) {
+      let isLogin = localStorage.getItem('jwt') ? true : false
+      if (!isLogin) {
+        $router.push({ name: 'Login' })
+        return
+      }
+
+      // let token = localStorage.getItem('jwt')
+
+      // let userInfo = null
+
+      // axios({
+      //   method: 'GET',
+      //   url: `${process.env.VUE_APP_API_URL}/user/info`,
+      //   headers: { Authorization: `Bearer ${token}`}
+      // })
+      // .then( res => {
+      //   userInfo = res.data.user
+      //   console.log(userInfo)
+      // })
+
       let data = {
-        OV: null,
-        session: null,
-        mainStreamManager: null,
-        publisher: null,
+        OV: undefined,
+        session: undefined,
+        mainStreamManager: undefined,
+        publisher: undefined,
         subscribers: [],
         messages: [],
       }
       const sessionId = roomInfo.sessionId
+
       data.OV = new OpenVidu();
 			// --- Init a session ---
 			data.session = data.OV.initSession();
@@ -53,7 +77,8 @@ const openviduStore = {
 				const subscriber = data.session.subscribe(stream);
 				data.subscribers.push(subscriber);
 			});
-			// On every Stream destroyed...
+			
+      // On every Stream destroyed...
 			data.session.on('streamDestroyed', ({ stream }) => {
         const index = data.subscribers.indexOf(stream.streamManager, 0);
 				if (index >= 0) {
@@ -63,6 +88,8 @@ const openviduStore = {
 
       data.session.on('signal:my-chat', (event) => {
         data.messages.push(event)
+        console.log(data.messages)
+        commit('SET_MESSAGE', data)
         console.log(event.data); // Message
         console.log(event.from); // Connection object of the sender
         console.log(event.type); // The type of message ("my-chat")
@@ -140,12 +167,13 @@ const openviduStore = {
 		},
 
     getToken ({ dispatch }, sessionId) {
+      console.log('getToken: ', sessionId)
 			return dispatch('createSession', sessionId).then(sessionId => dispatch('createToken', sessionId));
 		},
 
 		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
 		createSession (context, sessionId) {
-      console.log('createSession:', sessionId)
+      console.log(sessionId)
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions`, JSON.stringify({
@@ -159,11 +187,12 @@ const openviduStore = {
 					.then(response => response.data)
 					.then(data => resolve(data.id))
 					.catch(error => {
+            console.log(error)
 						if (error.response.status === 409) {
 							resolve(sessionId);
 						} else {
 							console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${process.env.VUE_APP_OPENVIDU_URL}`);
-							if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${process.env.VUE_APP_OPENVIDU_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
+							if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${process.env.VUE_APP_OPENVIDU_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${process.env.VUE_APP_OPENVIDU_URL}"`)) {
 								location.assign(`${process.env.VUE_APP_OPENVIDU_URL}/accept-certificate`);
 							}
 							reject(error.response);
