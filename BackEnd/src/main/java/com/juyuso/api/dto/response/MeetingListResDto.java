@@ -19,6 +19,7 @@ public class MeetingListResDto {
     private String meetingTitle;
     private List<String> hashtag = new ArrayList<>();
     private boolean common;
+    private String nickName;
 
     public MeetingListResDto(Long meetingId, String meetingTitle,
                              List<String> hashtag, boolean common) {
@@ -40,6 +41,7 @@ public class MeetingListResDto {
                 dto.setMeetingTitle(entity.getTitle());
                 dto.setHashtag(Meeting.toList(entity));
                 dto.setCommon(entity.isCommon());
+                dto.setNickName(entity.getOwner().getNickname());
                 return dto;
             }
         });
