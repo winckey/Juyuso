@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @ApiModel("FrinedRequest")
 public class FriendReqDto {
-    @ApiModelProperty(name = "유저 ID", example = "your_id")
+    @ApiModelProperty(name = "유저/신청 ID", example = "id(pk)")
     private String id;
 
     @ApiModelProperty(name = "유저 별명", example = "search_nick_name")

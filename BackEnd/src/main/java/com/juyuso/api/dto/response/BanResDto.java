@@ -4,6 +4,7 @@ import com.juyuso.common.model.response.BaseResponseBody;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @ApiModel("BanResponse")
