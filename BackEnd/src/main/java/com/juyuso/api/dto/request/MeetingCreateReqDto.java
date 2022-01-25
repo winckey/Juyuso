@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@ApiModel("Create Meeting")
+@ApiModel("Create Meeting Request")
 public class MeetingCreateReqDto {
 
     @ApiModelProperty(name = "방 이름", example = "프로젝트 째고 술마실분")

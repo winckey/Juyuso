@@ -7,11 +7,12 @@ import com.juyuso.api.service.UserService;
 import com.juyuso.db.entity.MeetingHistory;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.mappers.ModelMapperImpl;
 
 import java.util.List;
@@ -35,9 +36,16 @@ public class MeetingHistoryController {
     }
 
     @GetMapping("/{userId}")
-    public List<MeetingHistoryListResDto> getMeetingHistoryList(@PathVariable String userId) {
+    @ApiOperation(value = "미팅 접속 기록 보기" , notes = "<strong>미팅 접속기록 </strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "방 접속기록"),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<List<MeetingHistoryListResDto>> getMeetingHistoryList(@PathVariable String userId) {
         List<MeetingHistory> list =  historyService.getMeetingHistoryList(userId);
-        return MeetingHistoryListResDto.of(list);
+        return ResponseEntity.ok(MeetingHistoryListResDto.of(list));
     }
 
 

@@ -10,10 +10,7 @@ import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
 import com.juyuso.db.entity.Meeting;
 import io.openvidu.java.client.OpenVidu;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -56,7 +53,6 @@ public class MeetingController {
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
     }
 
-
     @PostMapping("/create")
     @ApiOperation(value = "미팅방 만들기", notes = "<strong>방만들기</strong>")
     @ApiResponses({
@@ -65,12 +61,13 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한 없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public MeetingCreateResDto createMeeting(@RequestBody MeetingCreateReqDto reqDto, Principal principal) {
+    public ResponseEntity<MeetingCreateResDto> createMeeting(@RequestBody @ApiParam(value = "방만들기 정보") MeetingCreateReqDto reqDto, Principal principal) {
         String userId = principal.getName();
         Long meetingId = meetingService.createMeeting(reqDto, userId);
         this.mapSessions.put(meetingId, 1);
         historyService.saveMeetingHistory(meetingId, userId, "생성");
-        return MeetingCreateResDto.of(meetingId,reqDto.getMeetingName(), reqDto.getMeetingPassword(), userId);
+
+        return ResponseEntity.ok(MeetingCreateResDto.of(meetingId, reqDto.getMeetingName(), reqDto.getMeetingPassword(), userId));
     }
 
     @GetMapping("/search")
@@ -81,16 +78,16 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public Page<MeetingListResDto> getMeetingListByParam(@RequestParam(required = false) String tags,
+    public ResponseEntity<Page<MeetingListResDto>> getMeetingListByParam(@RequestParam(required = false) String tags,
                                                        @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable) {
         if(tags != null) {
-            return MeetingListResDto.of(meetingService.findAllByTag(tags, pageable));
+            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
         }
         else if(title != null){
-            return MeetingListResDto.of(meetingService.findAllByTitle(title, pageable));
+            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitle(title, pageable)));
         }
         else {
-            return MeetingListResDto.of(meetingService.findAll(pageable));
+            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAll(pageable)));
         }
     }
 
@@ -102,7 +99,7 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public MeetingEnterResDto enterMeeting(@PathVariable Long meetingId, Principal principal) {
+    public ResponseEntity<MeetingEnterResDto> enterMeeting(@PathVariable Long meetingId, Principal principal) {
         String userId = principal.getName();
          if(this.mapSessions.get(meetingId) == null || this.mapSessions.get(meetingId) >= LIMIT_MEETING) {
              //
@@ -111,9 +108,7 @@ public class MeetingController {
              this.mapSessions.put(meetingId, this.mapSessions.get(meetingId) + 1);
          }
         int cnt = mapSessions.get(meetingId);
-
-
-        return MeetingEnterResDto.of(meetingId, cnt);
+        return ResponseEntity.ok(MeetingEnterResDto.of(meetingId, cnt));
     }
 
     @PostMapping("/leave/{meetingId}")
@@ -124,7 +119,7 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public MeetingLeaveResDto leaveMeeting (@PathVariable Long meetingId, Principal principal) {
+    public ResponseEntity<MeetingLeaveResDto> leaveMeeting (@PathVariable Long meetingId, Principal principal) {
         int cnt = this.mapSessions.get(meetingId);
         String userId = principal.getName();
         historyService.saveMeetingHistory(meetingId, userId, "퇴장");
@@ -136,8 +131,7 @@ public class MeetingController {
         } else {
             this.mapSessions.put(meetingId, cnt -1);
         }
-        return MeetingLeaveResDto.of(meetingId);
-
+        return ResponseEntity.ok(MeetingLeaveResDto.of(meetingId));
     }
 
 
