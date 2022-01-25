@@ -93,6 +93,7 @@
                 :key="hashtag"
                 class="ma-2"
                 close
+                color="#FAC372"
                 @click:close="deleteHashtag(hashtag)"
               >
                 {{ hashtag }}
@@ -189,6 +190,9 @@ export default {
     } 
   },
   computed: {
+    ...mapState('accounts', [
+      'user'
+    ]),
     ...mapState('openviduStore', [
       'OV',
       'session',
@@ -228,11 +232,12 @@ export default {
       .then( res => {
         console.log(res)
         const roomInfo = {
-          sessionId: res.data.meetingId,
+          userName: '성아영',
+          sessionId: String(res.data.meetingId),
           isCreate: true,
         }
         this.joinSession(roomInfo)
-        this.$router.push({ name: 'Table', params: { roomId: res.data.meetingId }})
+        this.$router.push({ name: 'Table', params: { roomId: res.data.meetingId, roomInfo: this.roomInfo }})
       })
       .catch( err => {
         console.log(err)
