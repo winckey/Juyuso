@@ -1,7 +1,6 @@
 package com.juyuso.db.entity;
 
 import lombok.Getter;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

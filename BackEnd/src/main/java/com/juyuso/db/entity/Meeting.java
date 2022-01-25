@@ -41,6 +41,9 @@ public class Meeting {
     @Column(nullable = false)
     private String url;
 
+    @OneToMany(mappedBy = "meeting")
+    private List<HashTag> hashtags = new ArrayList<>();
+
     public Meeting() {
 
     }
@@ -71,4 +74,13 @@ public class Meeting {
     public void changeActive() {
         this.active = false;
     }
+
+    public static List<String> toList(Meeting meeting) {
+        List<String> list = new ArrayList<>();
+        for(int i = 0; i < meeting.getHashtags().size(); i++) {
+            list.add(meeting.getHashtags().get(i).getTag());
+        }
+        return list;
+    }
+
 }
