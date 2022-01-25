@@ -1,6 +1,6 @@
 server:
   port: 8080
-  address: localhost
+  address: i6e101.p.ssafy.io
   servlet:
     context-path: /
     encoding:
@@ -10,11 +10,11 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S06P12E101?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mysql://i6e101.p.ssafy.io:8802/juyuso?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      username: S06P12E101@stg-yswa-kr-practice-db-master.mariadb.database.azure.com
-      password: ilVSylHMnt
+      username: ssafy
+      password: ssafy_juyuso!@
   jpa:
     hibernate:
       naming:
@@ -53,9 +53,9 @@ logging:
 
 app:
   fileUpload:
-    path: C:\\Users\\park\\git\\S06P12E101\\BackEnd\\src\\main\\resources\\static
+    path: C:\\Users\\SSAFY\\git\\S06P12E101\\BackEnd\\src\\main\\resources\\static
     dir: upload
-############## openvidu
+
 openvidu:
-  url: https://localhost:4443/
-  secret: SECRET
+  url: https://i6e101.p.ssafy.io:4443/
+  secret: SSAFY
