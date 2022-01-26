@@ -45,8 +45,7 @@ public class FriendServiceImpl implements FriendService {
     public void agreeRequest(FriendReqDto friendReqDto , User to) {
 
         FriendRequest friendRequest = friendRequestRepository
-                                        .findRequestByfromId(Long.parseLong(friendReqDto.getId()) , to.getId())
-                                        .get();
+                                        .findRequestByfromId(Long.parseLong(friendReqDto.getId()) , to.getId());
 
         User user1 = friendRequest.getFromUser();
         User user2 = friendRequest.getToUser();

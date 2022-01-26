@@ -15,12 +15,10 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
 
 
 
-    @Query(value = "select * from user " +
-            " u where id in " +
-            "(SELECT f.from_id " +
-            "FROM  Friend_request f " +
+    @Query(value = "(SELECT * " +
+            "FROM  friend_request f " +
             " WHERE f.from_id = :from" +
             " and f.to_id = :to)", nativeQuery = true)
-    Optional<FriendRequest> findRequestByfromId(@Param("from")long from  , @Param("to")long to);
+   FriendRequest findRequestByfromId(@Param("from")long from  , @Param("to")long to);
 
 }
