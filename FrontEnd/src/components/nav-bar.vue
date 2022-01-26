@@ -12,20 +12,7 @@
         alt=""/>
     </button>
       <v-spacer></v-spacer>
-      <span class="my-auto">
-      <v-text-field
-        v-model="searchInput"
-        class="shrink my-2" 
-        solo
-        clearable
-        rounded
-        dense
-        style="width: 300px"
-      ></v-text-field>
-      </span>
-      <v-btn icon dark>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      <table-search/>
       <v-btn icon dark>
         <v-icon>mdi-bell-outline</v-icon>
       </v-btn>
@@ -87,6 +74,7 @@
 </template>
 
 <script>
+import TableSearch from '@/components/table_list/table-search.vue'
 import FriendListMenu from '@/components/side_bar/friend-list-menu.vue'
 import FriendList from '@/components/side_bar/friend-list.vue'
 import FriendSearch from '@/components/side_bar/friend-search.vue'
@@ -95,6 +83,7 @@ import SideBarProfile from '@/components/side_bar/side-bar-profile.vue'
 export default {
   name: 'NavBar',
   components:{
+    TableSearch,
     FriendListMenu,
     FriendList,
     FriendSearch,
@@ -109,18 +98,13 @@ export default {
   methods: {
     goToTableList: function() {
       this.$router.push({ name: 'TableList' })
-    }
+    },
   }
 
 }
 </script>
 
 <style scoped>
-  .search-bar {
-    width: 200px;
-    background: white;
-  }
-
   .sub-logo {
     position: absolute;
     left: 50%;
