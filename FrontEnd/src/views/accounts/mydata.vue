@@ -13,8 +13,8 @@
              <div id="app">
                 <calendar-heatmap
                   :values="[{ date: '2021-9-27', count: 6 },{ date: '2021-9-21', count: 6 }]"
-                  :start-date="2021-1-22"
-                  end-date="2022-1-22"
+                  :start-date="2021-1-22" 
+                  :end-date="end_date"
                   :range-color="[
                     '#ebedf0',
                     '#dae2ef',
@@ -51,7 +51,6 @@ export default {
   },
   data: function() {
     return {
-    
     }
   },
   methods: {
@@ -59,6 +58,18 @@ export default {
       this.$router.push({name:'TodayAlcohol'})
     },
     
+  },
+  computed: {
+    end_date: function () {
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+      var dateString = year + '-' + month  + '-' + day;   
+
+      console.log(dateString)
+      return dateString
+    }
   }
 }
 </script>

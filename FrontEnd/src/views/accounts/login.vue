@@ -28,6 +28,12 @@
             <span class="d-flex justify-content-center my-3">
               <v-btn @click="login" color="#1CFD9F" rounded>로그인</v-btn>
             </span>
+
+            <span class="d-flex justify-content-center my-3">
+              <v-btn @click="goSignup" color="indigo lighten-2"  rounded>회원가입</v-btn>
+            </span>
+
+            
           </v-form>
 
           <span class="d-flex justify-content-center">
@@ -90,6 +96,9 @@ export default {
     },
     goPasswordFind: function () {
       this.$router.push({name:'PasswordFind'})
+    },
+    goSignup: function () {
+      this.$router.push({name: 'Signup'})
     }
   }
 }

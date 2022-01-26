@@ -17,6 +17,22 @@
         </v-btn>
       </template>
 
+      <v-alert
+      :value="isAlert"
+        dense
+        type="error"
+      >
+        정보를 다시 확인해주세요!
+      </v-alert>
+
+
+      <v-alert
+      :value="isSuccess"
+        dense
+        type="success"
+      >
+        정보가 저장되었습니다
+      </v-alert>
 
       <v-card class="p-2" >
         <v-card-title class="justify-content-center">
@@ -123,7 +139,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="[dialog = false, isSuccess=false, isAlert=false]"
           >
             닫기
           </v-btn>
@@ -156,6 +172,8 @@ export default {
   },
   data: function () {
     return {
+      isAlert: false,
+      isSuccess: false,
       userInfo: null,
       dialog: false,
       passwordShow: false,
@@ -230,30 +248,8 @@ export default {
                   password: this.password
       }}
 
-      // if (this.password) {
-      //   axios({
-      //       method: 'PUT',
-      //       url: `${process.env.VUE_APP_API_URL}/user/info`,
-      //       data: item.credentials,
-      //       headers: this.setToken()
-      //     })
-      //       .then(res => {
-      //         console.log('axios들어옴 하하하')
-      //         alert('수정완료되었습니다!')
-      //         console.log(res.data.user)
-      //         this.userUpdate(res.data.user)
-  
-      //       })
-      //       .catch(err => {
-      //         alert('필수항목을 입력해주세요!')
-      //         console.log('axios 틀렸잖앙')
-      //         console.log(err)
-      //       })
-      // } else {
-      //   alert('비밀번호를 입력해주세요')
-      // }
-
-      console.log('호잇')
+     
+      console.log('업데이트 요청 직전')
 
       const validation = this.$refs.update.validate()
       if (validation) {
@@ -265,18 +261,22 @@ export default {
           })
             .then(res => {
               console.log('axios들어옴 하하하')
-              alert('수정완료되었습니다!')
+              this.isSuccess=true
+              this.isAlert=false
               console.log(res.data.user)
               this.userUpdate(res.data.user)
   
             })
             .catch(err => {
-              alert('필수항목을 입력해주세요!')
+              this.isAlert = true
+              this.isSuccess = false
               console.log('axios 틀렸잖앙')
               console.log(err)
             })
+
       } else {
-        alert('비밀번호를 제대로 입력해주세요')
+        this.isAlert=true
+        this.isSuccess=false
     }
   }
 }
