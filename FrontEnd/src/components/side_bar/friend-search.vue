@@ -1,20 +1,22 @@
 <template>
     <div>
         <v-text-field
-            class="shrink my-2" 
+            class="shrink my-2"
             solo
-            clearable
             rounded
             dense
-            style="width: 300px"
-            >   
+            @keyup.enter="friendsSearch">   
             </v-text-field>           
     </div>
 </template>
 
 <script>
 export default {
-
+    methods:{
+        freiendsSearch: function(){
+            this.$store.dispatch('searchUserData',)
+        }
+    }
 }
 </script>
 

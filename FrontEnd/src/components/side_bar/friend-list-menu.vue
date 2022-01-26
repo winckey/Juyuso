@@ -1,16 +1,18 @@
 <template>
     <div>
-        <v-bottom-navigation>
-            <v-btn>
+        <v-col
+            align="center"
+            justify="space-around">
+            <v-btn text>
                 <img src="@/assets/friends.png" alt="">
             </v-btn>
-            <v-btn>
+            <v-btn text>
                 <img src="@/assets/chat.png" alt="">
             </v-btn>
-            <v-btn>
+            <v-btn text>
                 <img src="@/assets/search.png" alt="">
             </v-btn>
-        </v-bottom-navigation>
+        </v-col>
     </div>
 </template>
 

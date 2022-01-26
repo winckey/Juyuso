@@ -2,7 +2,7 @@
     <div>
         <v-card
             class="p-3"
-            >
+            v-if="isLogin">
             <div class="card-style">
                 <div>
                     <v-avatar
@@ -13,35 +13,85 @@
                 <div>
                     <v-list-item-content>
                         <v-list-item-title class="text-h5 mb-1">
-                        박씨네
+                            <p>{{ user.nickname }}</p>
                         </v-list-item-title>
-                        <v-list-item-subtitle>자기소개를 자유롭게 입력합니다. 나는 멋쟁이</v-list-item-subtitle>
+                        <v-list-item-subtitle>자기소개</v-list-item-subtitle>
                     </v-list-item-content>  
                 </div>
 
                 <v-card-actions>
-                <v-btn @click="goMyPage"
-                    plain>
-                    마이페이지
-                </v-btn>
-                <v-btn class="logout-btn"
-                    plain>
-                    로그아웃
-                </v-btn>
+                    <v-btn @click="goMyPage"
+                        plain>
+                        마이페이지
+                    </v-btn>
+                    <v-btn class="logout-btn"
+                        plain
+                        @click="logout">
+                        로그아웃
+                    </v-btn>
                 </v-card-actions>
             </div>
-
+        </v-card>
+        <v-card
+            v-else
+            class="card-style">
+            <v-btn
+                class="m-3 p-3"
+                @click="goToLogin">로그인해주세요</v-btn>
         </v-card>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
+    data(){
+        return{
+            user: null,
+            isLogin: false,
+        }
+    },
     methods:{
         goMyPage: function () {
             this.$router.push({name: 'MyPage'})
-            },        
-    }
+            },
+        goToLogin: function () {
+            this.$router.push({ name: 'Login' })
+            },
+        logout: function(){
+            console.log('isLogin')
+            this.isLogin = false
+            localStorage.removeItem('jwt')
+            
+        },
+        setToken : function(){
+            const token = localStorage.getItem('jwt')
+            const config = {
+                Authorization: `Bearer ${token}`
+            }
+            return config
+        },
+    },
+    created: function(){
+        axios({
+            method: 'get',
+            url: `${process.env.VUE_APP_API_URL}/user/info`,
+            headers: this.setToken()
+        })
+            .then(res =>{
+                console.log(res.data.user)
+                const userInfo = res.data.user
+                this.user = userInfo
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        const token = localStorage.getItem('jwt')
+        if(token){
+            this.isLogin=true
+        }
+    },
 
 }
 </script>

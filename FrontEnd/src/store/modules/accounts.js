@@ -10,6 +10,7 @@ const accounts = {
         LOGIN: (state, userInfo) => {
             state.user = userInfo
             state.isLogin = true
+            console.log(state.isLogin)
         }
     },
     actions: {

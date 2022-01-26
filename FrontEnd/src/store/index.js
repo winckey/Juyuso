@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import openviduStore from './modules/openviduStore'
 Vue.use(Vuex)
 import accounts from '@/store/modules/accounts.js'
+import friends from '@/store/modules/friends.js'
 
 export default new Vuex.Store({
   state: {
@@ -13,6 +14,7 @@ export default new Vuex.Store({
   },
   modules: {
     accounts: accounts,
-    openviduStore: openviduStore
+    openviduStore: openviduStore,
+    friends: friends,
   }
 })
