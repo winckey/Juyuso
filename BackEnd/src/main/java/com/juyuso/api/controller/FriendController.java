@@ -104,9 +104,9 @@ public class FriendController {
             @ApiResponse(code = 401, message = "권한 없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public ResponseEntity<FriendRequestResDto> friendReject(@RequestBody FriendReqDto friendReqDto) {
-
-        friendService.rejectRequest(friendReqDto);
+    public ResponseEntity<FriendRequestResDto> friendReject(@RequestBody FriendReqDto friendReqDto , @ApiIgnore Authentication authentication) {
+        User userDetails = (User) authentication.getDetails();
+        friendService.rejectRequest(friendReqDto , userDetails);
 
         return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
     }

@@ -94,9 +94,10 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void rejectRequest(FriendReqDto friendReqDto) {
+    public void rejectRequest(FriendReqDto friendReqDto , User to) {
 
-        FriendRequest friendRequest = friendRequestRepository.findById(Long.parseLong(friendReqDto.getId())).get();
+        FriendRequest friendRequest = friendRequestRepository
+                .findRequestByfromId(Long.parseLong(friendReqDto.getId()) , to.getId());
 
         friendRequestRepository.delete(friendRequest);
 
