@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background: #1B1B32">
+  <v-app style="background: #1B1B32" >
     <transition 
       name="fade">
     <NavBar v-if="$route.name != 'Main'"/>
@@ -13,7 +13,10 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import NavBar from '@/components/nav-bar.vue' 
+const accounts = 'accounts'
+
 export default {
   name: 'App',
   components: {
@@ -21,10 +24,17 @@ export default {
   },
   created: function () {
     console.log(this.$route.name)
+    if (!localStorage.getItem('jwt')) {
+      this.$router.push({name: 'Login'})
+    }
   },
   data: () => ({
     //
   }),
+  computed: {
+    ...mapState(accounts, ['isLogin'])
+  },
+
 };
 </script>
 <style scoped>
