@@ -42,9 +42,11 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void agreeRequest(FriendReqDto friendReqDto) {
+    public void agreeRequest(FriendReqDto friendReqDto , User to) {
 
-        FriendRequest friendRequest = friendRequestRepository.findById(Long.parseLong(friendReqDto.getId())).get();
+        FriendRequest friendRequest = friendRequestRepository
+                                        .findRequestByfromId(Long.parseLong(friendReqDto.getId()) , to.getId())
+                                        .get();
 
         User user1 = friendRequest.getFromUser();
         User user2 = friendRequest.getToUser();
@@ -90,6 +92,15 @@ public class FriendServiceImpl implements FriendService {
         Long to   = (userDetails.getId());
         friendRepository.deleteBothByUserId(from  , to);
         friendRepository.deleteBothByUserId(to  , from);
+    }
+
+    @Override
+    public void rejectRequest(FriendReqDto friendReqDto) {
+
+        FriendRequest friendRequest = friendRequestRepository.findById(Long.parseLong(friendReqDto.getId())).get();
+
+        friendRequestRepository.delete(friendRequest);
+
     }
 
 
