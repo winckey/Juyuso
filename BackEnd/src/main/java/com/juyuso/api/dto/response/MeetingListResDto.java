@@ -27,8 +27,10 @@ public class MeetingListResDto {
     private List<String> hashtag = new ArrayList<>();
     @ApiModelProperty(name = "공개방 여부", example = "true")
     private boolean common;
-
+    @ApiModelProperty(name = "유저 닉네임", example = "부산박보검")
     private String nickName;
+    @ApiModelProperty(name = "방 비밀번호", example = "1323")
+    private String meetingPassword;
 
     public MeetingListResDto(Long meetingId, String meetingTitle,
                              List<String> hashtag, boolean common) {
@@ -51,6 +53,7 @@ public class MeetingListResDto {
                 dto.setHashtag(Meeting.toList(entity));
                 dto.setCommon(entity.isCommon());
                 dto.setNickName(entity.getOwner().getNickname());
+                dto.setMeetingPassword(entity.getPassword());
                 return dto;
             }
         });
