@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select * from user " +
                    " u where id in " +
                         "(SELECT f.user_id " +
-                        "FROM  Friend f " +
+                        "FROM  friend f " +
                         " WHERE f.from_id = :id)", nativeQuery = true)
     List<User> findListByUserId(@Param("id")Long id);
 
@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select * from user " +
             " u where id in " +
             "(SELECT f.from_id " +
-            "FROM  Friend_request f " +
+            "FROM  friend_request f " +
             " WHERE f.to_id = :id)", nativeQuery = true)
     List<User> findRequestListByUserId(@Param("id")Long id);
 
