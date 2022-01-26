@@ -4,7 +4,7 @@
     v-model="dialog"
     width="600"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template v-slot:activator="{ on, attrs }" v-if="!search">
       <button
         v-on="on"
         v-bind="attrs">
@@ -64,6 +64,7 @@ export default {
   name: 'TableDetailPopup',
   props: {
     roomInfo: Object,
+    search: Boolean,
   },
   data: function () {
     return {
