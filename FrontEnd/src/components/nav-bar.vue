@@ -12,20 +12,7 @@
         alt=""/>
     </button>
       <v-spacer></v-spacer>
-      <span class="my-auto">
-      <v-text-field
-        v-model="searchInput"
-        class="shrink my-2" 
-        solo
-        clearable
-        rounded
-        dense
-        style="width: 300px"
-      ></v-text-field>
-      </span>
-      <v-btn icon dark>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      <table-search/>
       <v-btn icon dark>
         <v-icon>mdi-bell-outline</v-icon>
       </v-btn>
@@ -40,75 +27,102 @@
       right
       temporary
     >
-    <div class="grey">
+    <div class="grey lighten-4">
       <div>
         <side-bar-profile></side-bar-profile>
       </div>
-      <div class="m-2">
-        <friend-search></friend-search>
+      <div>
+        <!-- 검색창 -->
+        <div>
+            <v-text-field
+                class="shrink my-2"
+                solo
+                rounded
+                dense
+                v-model="username"
+                @keyup.enter="[friendsSearch(), openSearchList()]">   
+                </v-text-field>           
+        </div>
       </div>
       <div>
-        <friend-list-menu></friend-list-menu>
+        <div>
+            <v-col
+                align="center"
+                justify="space-around">
+                <v-btn text
+                  @click="openFriendsList">
+                    <img src="@/assets/friends.png" alt="">
+                </v-btn>
+                <v-btn text
+                  @click="openChat">
+                    <img src="@/assets/chat.png" alt="">
+                </v-btn>
+                <v-btn text
+                  @click="openSearchList">
+                    <img src="@/assets/search.png" alt="">
+                </v-btn>
+            </v-col>
+        </div>
       </div>
-      <div>
+      <div v-if="menu=='friendList'">
         <friend-list
           class="list-size">
         </friend-list>
       </div>
+      <div v-else-if="menu=='chat'">
+        <div>chat list</div>
+      </div>
+      <div v-else-if="menu=='searchList'">
+        <div>searchList</div>
+      </div>
     </div>
-    
-      <!-- <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          active-class="deep-purple--text text--accent-4"
-        >
-          <v-list-item>
-            <v-list-item-title>profile</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title><friend-search></friend-search></v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title><friend-list-menu></friend-list-menu></v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title><friend-list></friend-list></v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list> -->
     </v-navigation-drawer>
     
   </div>
 </template>
 
 <script>
-import FriendListMenu from '@/components/side_bar/friend-list-menu.vue'
+
+import TableSearch from '@/components/table_list/table-search.vue'
 import FriendList from '@/components/side_bar/friend-list.vue'
-import FriendSearch from '@/components/side_bar/friend-search.vue'
 import SideBarProfile from '@/components/side_bar/side-bar-profile.vue'
 
 export default {
   name: 'NavBar',
   components:{
-    FriendListMenu,
+
+    TableSearch,
     FriendList,
-    FriendSearch,
     SideBarProfile
   },
   data: function () {
     return {
       searchInput: null,
       drawer: false,
+      menu:'friendList',
+      username:'',
     }
   },
   methods: {
     goToTableList: function() {
       this.$router.push({ name: 'TableList' })
+    },
+    friendsSearch: function(){
+      const username = this.username
+      console.log(username)
+      this.$store.dispatch('searchUserData',username)
+    },
+    openFriendsList:function(){
+      this.menu = 'friendList'
+      console.log(this.menu)
+    },
+    openChat:function(){
+      this.menu = 'chat'
+      console.log(this.menu)
+    },
+    openSearchList:function(){
+      this.menu = 'searchList'
+      console.log(this.menu)
     }
   }
 
@@ -116,11 +130,6 @@ export default {
 </script>
 
 <style scoped>
-  .search-bar {
-    width: 200px;
-    background: white;
-  }
-
   .sub-logo {
     position: absolute;
     left: 50%;
