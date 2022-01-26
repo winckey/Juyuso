@@ -18,7 +18,7 @@
       </template>
 
 
-      <v-card class="p-2" ref="update">
+      <v-card class="p-2" >
         <v-card-title class="justify-content-center">
           <span class="h2">프로필 수정</span>
         </v-card-title>
@@ -27,7 +27,7 @@
         <v-card-text>
           <v-container class="rounded-lg">
 
-            <v-form class="form-box">
+            <v-form class="form-box" ref="update">
 
               <v-row>
                 
@@ -230,7 +230,33 @@ export default {
                   password: this.password
       }}
 
-      if (this.password) {
+      // if (this.password) {
+      //   axios({
+      //       method: 'PUT',
+      //       url: `${process.env.VUE_APP_API_URL}/user/info`,
+      //       data: item.credentials,
+      //       headers: this.setToken()
+      //     })
+      //       .then(res => {
+      //         console.log('axios들어옴 하하하')
+      //         alert('수정완료되었습니다!')
+      //         console.log(res.data.user)
+      //         this.userUpdate(res.data.user)
+  
+      //       })
+      //       .catch(err => {
+      //         alert('필수항목을 입력해주세요!')
+      //         console.log('axios 틀렸잖앙')
+      //         console.log(err)
+      //       })
+      // } else {
+      //   alert('비밀번호를 입력해주세요')
+      // }
+
+      console.log('호잇')
+
+      const validation = this.$refs.update.validate()
+      if (validation) {
         axios({
             method: 'PUT',
             url: `${process.env.VUE_APP_API_URL}/user/info`,
@@ -250,30 +276,10 @@ export default {
               console.log(err)
             })
       } else {
-        alert('비밀번호를 입력해주세요')
-      }
-
-      console.log('호잇')
-
-      // const validation = this.$refs.update[0].validate()
-      // if (validation) {
-      //   axios({
-      //     method: 'PUT',
-      //     url: `${process.env.VUE_APP_API_URL}/user`,
-      //     data: this.userInfo
-      //   })
-      //     .then(res => {
-      //       console.log(res)
-
-      //     })
-      //     .catch(err => {
-      //       console.log(err)
-      //     })
-      //   console.log('ddd')
-      // }
-      // console.log('앙대자나')
+        alert('비밀번호를 제대로 입력해주세요')
     }
   }
+}
 }
 </script>
 
