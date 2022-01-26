@@ -1,8 +1,10 @@
 <template>
-  <v-container>
-    <v-row
-      class="mb-4">
-      <v-col 
+  <v-container 
+    fluid>
+    <v-row>
+      <v-col
+      align-self-center
+        cols="3"
         :key="table.id"
         v-for="table in tableList">
         <TableDetailPopup

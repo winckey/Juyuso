@@ -7,7 +7,7 @@
     <transition 
       name="fade"
       mode="out-in">
-    <router-view></router-view>
+    <router-view :class="{'nav-margin' : $route.name != 'Main'}"></router-view>
     </transition>
   </v-app>
 </template>
@@ -33,5 +33,9 @@ export default {
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+  }
+
+  .nav-margin {
+    margin-top: 65px;
   }
 </style>

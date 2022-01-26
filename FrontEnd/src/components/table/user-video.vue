@@ -1,9 +1,13 @@
 <template>
-  <div v-if="streamManager">
+  <div 
+    v-if="streamManager"
+    class="video-box">
+    <div class="user-name">{{ clientData }}</div>
     <ov-video :streamManager="streamManager"></ov-video>
-    <v-icon dark>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
-    <v-icon dark>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
-    <div>{{ clientData }}</div>
+    <div style="text-align: center">
+      <v-icon dark class="mx-2">{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
+      <v-icon dark class="mx-2">{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
+    </div>
   </div>
 </template>
 
@@ -46,6 +50,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .video-box {
+    display: inline-block;
+  }
+
+  .user-name {
+    color: white
+  }
 
 </style>
