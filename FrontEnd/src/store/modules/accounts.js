@@ -7,14 +7,14 @@ const accounts = {
         isLogin: false
     },
     mutations: {
-        LOGIN: (state, userInfo) => {
+        USER_UPDATE: (state, userInfo) => {
             state.user = userInfo
             state.isLogin = true
         }
     },
     actions: {
-        logIn: ({ commit }, userInfo) => {
-            commit('LOGIN', userInfo)
+        userUpdate: ({ commit }, userInfo) => {
+            commit('USER_UPDATE', userInfo)
         }
     }
 }

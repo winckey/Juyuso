@@ -69,7 +69,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(accounts, ['logIn']),
+    ...mapActions(accounts, ['userUpdate']),
     login: function () {
       axios({
         method: 'post',
@@ -79,7 +79,7 @@ export default {
         .then(res => {
           console.log(res.data.user.age)
           localStorage.setItem('jwt', res.data.accessToken)
-          this.logIn(res.data.user)
+          this.userUpdate(res.data.user)
           this.$router.push({name:'Main'})
         })
         .catch(err => {
