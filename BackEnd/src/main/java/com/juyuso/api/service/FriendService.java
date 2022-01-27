@@ -11,6 +11,8 @@ public interface FriendService {
     User getFriendInfo(Long userId);
 
     void addRequest(User from , FriendReqDto friendReqDto);
+    void banRequest(User from , FriendReqDto friendReqDto);
+
     void agreeRequest(FriendReqDto friendReqDto , User userDetails);
 
     List<User> friendList(User user);
@@ -22,4 +24,6 @@ public interface FriendService {
     void deleteFriend(User userDetails, FriendReqDto friendReqDto);
 
     void rejectRequest(FriendReqDto friendReqDto , User to);
+
+    void banCancelRequest(User userDetails, FriendReqDto friendReqDto);
 }
