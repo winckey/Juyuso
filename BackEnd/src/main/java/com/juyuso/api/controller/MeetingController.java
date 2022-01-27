@@ -1,14 +1,17 @@
 package com.juyuso.api.controller;
 
+import com.juyuso.api.dto.request.DrinkingHistoryAddReqDto;
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
 import com.juyuso.api.dto.response.MeetingLeaveResDto;
 import com.juyuso.api.dto.response.MeetingCreateResDto;
 import com.juyuso.api.dto.response.MeetingEnterResDto;
 import com.juyuso.api.dto.response.MeetingListResDto;
+import com.juyuso.api.service.DrinkingHistoryService;
 import com.juyuso.api.service.MeetingHistoryService;
 import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
 import com.juyuso.db.entity.Meeting;
+import com.juyuso.db.entity.User;
 import io.openvidu.java.client.OpenVidu;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.util.Map;
@@ -33,6 +38,7 @@ public class MeetingController {
     private final UserService userService;
     private final MeetingHistoryService historyService;
     private OpenVidu openVidu;
+    private final DrinkingHistoryService drinkingHistoryService;
 
     private Map<Long, Integer> mapSessions = new ConcurrentHashMap<>();
 
@@ -44,13 +50,16 @@ public class MeetingController {
 
     @Autowired
     public MeetingController(MeetingService meetingService, @Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl,
-                             UserService userService, MeetingHistoryService historyService){
+                             UserService userService, MeetingHistoryService historyService,
+                             DrinkingHistoryService drinkingHistoryService)
+    {
         this.meetingService = meetingService;
         this.userService = userService;
         this.historyService = historyService;
         this.SECRET = secret;
         this.OPENVIDU_URL = openviduUrl;
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
+        this.drinkingHistoryService = drinkingHistoryService;
     }
 
     @PostMapping("/create")
@@ -79,7 +88,8 @@ public class MeetingController {
             @ApiResponse(code = 500, message = " 서버에러")
     })
     public ResponseEntity<Page<MeetingListResDto>> getMeetingListByParam(@RequestParam(required = false) String tags,
-                                                       @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable) {
+                                                       @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable
+                                                                         ) {
         if(tags != null) {
             return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
         }
@@ -119,10 +129,14 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public ResponseEntity<MeetingLeaveResDto> leaveMeeting (@PathVariable Long meetingId, Principal principal) {
+    public ResponseEntity<MeetingLeaveResDto> leaveMeeting (@PathVariable Long meetingId, Principal principal,
+                                                            @RequestBody DrinkingHistoryAddReqDto reqDto) {
         int cnt = this.mapSessions.get(meetingId);
         String userId = principal.getName();
+        User user = userService.getUserByUserId(userId);
         historyService.saveMeetingHistory(meetingId, userId, "퇴장");
+        drinkingHistoryService.addDrinking(reqDto, user);
+
         if(cnt == 1) {
             meetingService.changeActiveMeetingByMeetingId(meetingId);
             this.mapSessions.remove(meetingId);
