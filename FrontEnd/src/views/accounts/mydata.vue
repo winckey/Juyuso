@@ -34,12 +34,12 @@
               </div>
           </div>
         </div>
-
+        
         <div class="d-flex justify-content-center p-4">
           <h1>너의 간은 녹는 중ㅋ</h1>   
         </div>
-        <div class="d-flex justify-content-center p-3">
-          <v-btn  @click="goTodayAlcohol">오늘 주량 추가</v-btn>
+        <div class="d-flex justify-content-center p-3 mx-auto" style="width:100px;">
+          <TodayAlcohol/>
         </div>
 
       </div>
@@ -49,24 +49,25 @@
 </template>
 
 <script>
-import axios from 'axios'
-
+// import axios from 'axios'
+import TodayAlcohol from '@/components/accounts/today-alcohol.vue'
 export default {
   name: 'MyData',
   props: {
     user: Object
   },
+  components: {
+    TodayAlcohol
+  },
   data: function() {
     return {
-      date: [{ date: '2021-6-27', count: 6 },{ date: '2021-9-21', count: 6 }],
+      date: [{ date: '2021-6-27', count: 6 },{ date: '2021-9-21', count: 6 }, { date: '2021-2-21', count: 4 }],
     }
   },
   methods: {
-    goTodayAlcohol: function () {
-      this.$router.push({name:'TodayAlcohol'})
-    },
     goMyPage: function () {
       console.log('goWallet')
+      console.log(this.user.id)
       this.$router.push({name: 'MyPage', params: this.user.id})
     }
     
@@ -83,20 +84,20 @@ export default {
       return dateString
     }
   },
-  created: function () {
-    axios({
-      method: 'get',
-      url: `${process.env.VUE_APP_API_URL}/drinking/${this.user.id}`,
-      headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
-    })
-      .then(res => {
-        console.log(res.data)
-        this.date = res.data
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
+  // created: function () {
+  //   axios({
+  //     method: 'get',
+  //     url: `${process.env.VUE_APP_API_URL}/drinking/${this.user.id}`,
+  //     headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+  //   })
+  //     .then(res => {
+  //       console.log(res.data)
+  //       this.date = res.data
+  //     })
+  //     .catch(err => {
+  //       console.log(err)
+  //     })
+  // }
 }
 </script>
 
@@ -122,4 +123,5 @@ export default {
   color: #2c3ea0;
   margin-top: 60px;
 }
+
 </style>
