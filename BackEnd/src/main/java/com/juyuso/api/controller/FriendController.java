@@ -110,6 +110,10 @@ public class FriendController {
 
         return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
     }
+
+
+
+
     @GetMapping("/info/{freindId}")
     @ApiOperation(value = "친구 정보 조회", notes = "<strong>친구정보를 조회한다.</strong>")
     @ApiResponses({
@@ -139,4 +143,38 @@ public class FriendController {
         }
         return ResponseEntity.ok(FriendResDto.of(200, "Success", userList));
     }
+
+    @PostMapping("/ban")
+    @ApiOperation(value = "차단 추가", notes = "<strong>친구를 차단하고 삭제 한다. 차단하고자하는 사람의 id</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한 없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<FriendRequestResDto> friendBan(@ApiIgnore Authentication authentication,@RequestBody FriendReqDto friendReqDto) {
+
+        User userDetails = (User) authentication.getDetails();
+
+        friendService.banRequest(userDetails, friendReqDto);
+        friendService.deleteFriend(userDetails, friendReqDto);
+
+        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+    }
+
+    @DeleteMapping("/ban")
+    @ApiOperation(value = "차단 취소", notes = "<strong>친구를 차단 취소 한다. 차단취소 하고자하는 사람의 id</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한 없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<FriendRequestResDto> friendBanCancel(@ApiIgnore Authentication authentication,@RequestBody FriendReqDto friendReqDto) {
+
+        User userDetails = (User) authentication.getDetails();
+        friendService.banCancelRequest(userDetails, friendReqDto);
+        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+    }
+
 }

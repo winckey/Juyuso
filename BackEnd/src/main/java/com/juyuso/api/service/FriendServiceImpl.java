@@ -1,9 +1,11 @@
 package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.FriendReqDto;
+import com.juyuso.db.entity.Ban;
 import com.juyuso.db.entity.Friend;
 import com.juyuso.db.entity.FriendRequest;
 import com.juyuso.db.entity.User;
+import com.juyuso.db.repository.BanRepository;
 import com.juyuso.db.repository.FriendRepository;
 import com.juyuso.db.repository.FriendRequestRepository;
 import com.juyuso.db.repository.UserRepository;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,8 @@ public class FriendServiceImpl implements FriendService {
     private final UserRepository userRepository;
     private final FriendRequestRepository friendRequestRepository;
     private final FriendRepository friendRepository;
+    private final BanRepository banRepository;
+
     @Override
     public User getFriendInfo(Long userId) {
         return userRepository.findById(userId).get();
@@ -39,6 +42,18 @@ public class FriendServiceImpl implements FriendService {
         friendRequest.addRequest(from , to);
         friendRequestRepository.save(friendRequest);
 
+    }
+
+    @Override
+    public void banRequest(User from, FriendReqDto friendReqDto) {
+        User toBan =  userRepository.findById(Long.parseLong(friendReqDto.getId())).get();
+
+        System.out.println("----------- user id : " + toBan.getNickname());
+
+        Ban ban = new Ban();
+        System.out.println("----------- from user id : " + from.getNickname());
+        ban.addBan(from , toBan);
+        banRepository.save(ban);
     }
 
     @Override
@@ -100,6 +115,14 @@ public class FriendServiceImpl implements FriendService {
                 .findRequestByfromId(Long.parseLong(friendReqDto.getId()) , to.getId());
 
         friendRequestRepository.delete(friendRequest);
+
+    }
+
+    @Override
+    public void banCancelRequest(User userDetails, FriendReqDto friendReqDto) {
+        Long from = Long.parseLong(friendReqDto.getId());
+        Long to   = (userDetails.getId());
+        banRepository.deleteByBothUserId(from  , to);
 
     }
 
