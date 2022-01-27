@@ -7,7 +7,7 @@
     <transition 
       name="fade"
       mode="out-in">
-    <router-view :class="{'nav-margin' : $route.name != 'Main'}"></router-view>
+    <router-view :class="{'nav-margin' : $route.name != 'Main'}" oncontextmenu="return false"></router-view>
     </transition>
   </v-app>
 </template>

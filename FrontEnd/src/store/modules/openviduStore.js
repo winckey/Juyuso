@@ -173,7 +173,7 @@ const openviduStore = {
 
 		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
 		createSession (context, sessionId) {
-      console.log(sessionId)
+      console.log('createSession')
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions`, JSON.stringify({
@@ -203,6 +203,7 @@ const openviduStore = {
 
 		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
 		createToken (context, sessionId) {
+      console.log('createToken')
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
