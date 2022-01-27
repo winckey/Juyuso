@@ -61,6 +61,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
     private List<FriendRequest> friendRequests = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Ban> Bans = new ArrayList<>();
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
