@@ -9,7 +9,7 @@
       </div> -->
       <div class="container">
         <div class="row">
-          <div id="video-container" class="col-md-4">
+          <div id="video-container">
             <user-video class="col-md-4" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
             <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
           </div>
