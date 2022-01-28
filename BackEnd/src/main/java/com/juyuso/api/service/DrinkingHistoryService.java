@@ -15,6 +15,9 @@ import java.util.List;
 @Service
 public class DrinkingHistoryService {
 
+    private final String soju = "소주";
+    private final String beer = "맥주";
+
     private final DrinkingHistoryRepository drinkingHistoryRepository;
     private final DrinkingCategoryRepository drinkingCategoryRepository;
 
@@ -33,11 +36,11 @@ public class DrinkingHistoryService {
     public void addDrinking (DrinkingHistoryAddReqDto reqDto, User user) {
         DrinkingCategory drinkingCategory;
         if(reqDto.getSoju() != 0) {
-            drinkingCategory = drinkingCategoryRepository.findByName("소주").get();
+            drinkingCategory = drinkingCategoryRepository.findByName(soju).get();
             drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory));
         }
         if(reqDto.getBeer() != 0) {
-            drinkingCategory = drinkingCategoryRepository.findByName("맥주").get();
+            drinkingCategory = drinkingCategoryRepository.findByName(beer).get();
             drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory));
         }
     }
