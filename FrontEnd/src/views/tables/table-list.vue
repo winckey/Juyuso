@@ -31,7 +31,7 @@ export default {
     position: fixed;
     transition-property: all;
     transition-duration: .3s;
-    bottom: -15px;
+    bottom: -100px;
     left: 50%;
     text-align: center;
     color: #1B1B32;
@@ -40,7 +40,7 @@ export default {
 
   .menu-popup:hover {
     position: fixed;
-    bottom: 20px;
+    bottom: -40px;
     left: 50%;
     transform: translate(-50%);
     text-align: center;
