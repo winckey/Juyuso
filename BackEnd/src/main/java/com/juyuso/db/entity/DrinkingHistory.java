@@ -1,11 +1,15 @@
 package com.juyuso.db.entity;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+@Getter
 @Entity
 public class DrinkingHistory {
 
@@ -26,4 +30,22 @@ public class DrinkingHistory {
 
     private Long quantity;
 
+    public DrinkingHistory() {
+
+    }
+
+    public DrinkingHistory(User user, LocalDateTime drinkingTime, DrinkingCategory drinkingCategory, Long quantity) {
+        this.user = user;
+        this.drinkingTime = drinkingTime;
+        this.drinkingCategory = drinkingCategory;
+        this.quantity = quantity;
+    }
+
+    public DrinkingHistory(Long id, User user, LocalDateTime drinkingTime, DrinkingCategory drinkingCategory, Long quantity) {
+        this.id = id;
+        this.user = user;
+        this.drinkingTime = drinkingTime;
+        this.drinkingCategory = drinkingCategory;
+        this.quantity = quantity;
+    }
 }
