@@ -7,10 +7,22 @@
       <!-- <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager"/>
       </div> -->
-      <div id="video-container" class="col-md-6">
-        <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+      <div class="container">
+        <div class="row">
+          <div id="video-container" class="col-md-4">
+            <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+            <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="people-list" v-show="peopleListShow">
+      <p>{{ JSON.parse(publisher.stream.connection.data).clientData }}</p>
+      <p 
+        v-for="sub in subscribers" 
+        :key="sub.stream.connection.connectionId">
+        {{ JSON.parse(sub.stream.connection.data).clientData }}
+      </p>
     </div>
     <ChatPopup
       :userInfo="userInfo"/>
@@ -39,6 +51,10 @@
         <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
         <v-icon dark>mdi-application-export</v-icon>
       </v-btn>
+      <v-btn
+        @click="peopleListShow = !peopleListShow">
+        참가자 명단 보기
+      </v-btn>
     </v-sheet>
       
   </div>
@@ -66,6 +82,7 @@ export default {
   },
   data: function () {
     return {
+      peopleListShow: false,
       menuBar: false,
       myUserName: '성아영',
       roomId: this.$route.params.roomId,
@@ -130,10 +147,10 @@ export default {
     ]),
 
     leaveTable () {
-      this.leaveSession(this.roomId)
 			window.removeEventListener('beforeunload', function () {
         this.leaveSession(this.roomId)
       });
+      this.leaveSession(this.roomId)
       this.$router.push({ name: 'TableList' })
 		},
 
@@ -182,6 +199,17 @@ export default {
     bottom: -100px;
     left: 50%;
     transform: translate(-50%);
+  }
+  
+  .people-list {
+    position: fixed;
+    background: white;
+    height: 300px;
+    width: 200px;
+    border-radius: 2em;
+    padding: 1em;
+    right: 2em;
+    top: 6em
   }
 
 </style>

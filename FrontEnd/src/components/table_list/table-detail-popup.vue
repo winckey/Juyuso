@@ -84,6 +84,7 @@ export default {
       let roomInfo = {
         sessionId: String(this.roomInfo.meetingId),
         isCreate: true,
+        userName: this.user.nickname
       }
       console.log(roomInfo)
       this.joinSession(roomInfo)

@@ -13,8 +13,9 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import NavBar from '@/components/nav-bar.vue' 
+import { mapState, mapActions } from 'vuex'
+import NavBar from '@/components/nav-bar.vue'
+import axios from 'axios'
 const accounts = 'accounts'
 
 export default {
@@ -27,10 +28,29 @@ export default {
     if (!localStorage.getItem('jwt')) {
       this.$router.push({name: 'Login'})
     }
+    else {
+      const token = localStorage.getItem('jwt')
+      axios({
+        method: 'get',
+        url: `${process.env.VUE_APP_API_URL}/user/info`,
+        headers: { Authorization: `Bearer ${token}`}
+      })
+      .then(res =>{
+        this.userUpdate(res.data.user)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
   },
   data: () => ({
     //
   }),
+  methods: {
+    ...mapActions('accounts', [
+      'userUpdate'
+    ])
+  },
   computed: {
     ...mapState(accounts, ['isLogin'])
   },

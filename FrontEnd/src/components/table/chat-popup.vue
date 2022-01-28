@@ -24,11 +24,10 @@
           v-for="(message, idx) in messages">
           <div :class="JSON.parse(message.from.data).clientData == userInfo.nickname ? 'my-chat': 'other-chat'">
             <div>
-              <div class="chat-name">
-                <!-- {{ JSON.parse(message.from.data).clientData }} -->
-                {{ '성아영' }}
+              <div v-if="JSON.parse(message.from.data).clientData != userInfo.nickname" class="chat-name">
+                {{ JSON.parse(message.from.data).clientData }}
               </div>
-              <div class="other-chat-bubble">
+              <div :class="JSON.parse(message.from.data).clientData == userInfo.nickname ? 'my-chat-bubble': 'other-chat-bubble'">
                 {{ message.data }}
               </div>
             </div>
@@ -73,19 +72,21 @@ export default {
       this.chatBox = !this.chatBox
     },
     sendMessage() {
-      this.session.signal({
-        data: this.chatInput,
-        to: [],
-        type: 'my-chat'
-      })
-      .then( () => {
-        console.log('success')
-      })
-      .catch( () => {
-        console.log('fail')
-      })
+      if (this.chatInput.trim() != '') {
+        this.session.signal({
+          data: this.chatInput,
+          to: [],
+          type: 'my-chat'
+        })
+        .then( () => {
+          console.log('success')
+        })
+        .catch( () => {
+          console.log('fail')
+        })
+      }
       this.chatInput=''
-    }
+    },
   },
   computed: {
     ...mapState('openviduStore', [

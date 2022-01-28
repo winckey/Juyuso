@@ -232,7 +232,7 @@ export default {
       .then( res => {
         console.log(res)
         const roomInfo = {
-          userName: '성아영',
+          userName: this.user.nickname,
           sessionId: String(res.data.meetingId),
           isCreate: true,
         }
@@ -242,12 +242,6 @@ export default {
       .catch( err => {
         console.log(err)
       })
-      // const roomInfo = {
-      //     sessionId: '1',
-      //     isCreate: true,
-      //   }
-      // this.joinSession(roomInfo)
-      // this.$router.push({ name: 'Table', params: { roomId: res.data.meetingId }})
     }
   }
 

@@ -75,6 +75,7 @@ const openviduStore = {
 			// On every new Stream received...
 			data.session.on('streamCreated', ({ stream }) => {
 				const subscriber = data.session.subscribe(stream);
+        console.log(data.session)
 				data.subscribers.push(subscriber);
 			});
 			
@@ -101,7 +102,6 @@ const openviduStore = {
 			});
 
 			// --- Connect to the session with a valid user token ---
-
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
       if (roomInfo.isCreate) {
@@ -187,7 +187,7 @@ const openviduStore = {
 					.then(response => response.data)
 					.then(data => resolve(data.id))
 					.catch(error => {
-            console.log(error)
+            console.log('error', error)
 						if (error.response.status === 409) {
 							resolve(sessionId);
 						} else {
@@ -203,6 +203,7 @@ const openviduStore = {
 
 		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
 		createToken (context, sessionId) {
+      console.log('createToken', sessionId)
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
