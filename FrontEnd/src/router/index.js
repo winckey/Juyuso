@@ -62,7 +62,8 @@ const routes = [
   {
     path: '/mydata/:userId',
     name: 'MyData',
-    component: MyData 
+    component: MyData,
+    props: true
   },
   {
     path: '/table/:roomId',
