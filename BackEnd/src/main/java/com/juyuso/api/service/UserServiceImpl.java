@@ -2,7 +2,6 @@ package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.RegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
-import com.juyuso.api.dto.response.UserIdCheckResDto;
 import com.juyuso.db.entity.User;
 import com.juyuso.db.entity.UserImg;
 import com.juyuso.db.repository.RegionRepository;
@@ -28,9 +27,6 @@ public class UserServiceImpl implements UserService {
     private final UserImgRepository userImgRepository;
     private final RegionRepository regionRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Value("${app.fileUpload.dir}")
-    private String uploadFolder;
 
     @Value("${app.fileUpload.path}")
     private String uploadPath;
@@ -78,13 +74,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveImg(User user, MultipartFile multipartFile) {
         // find file upload directory
-        File uploadDir = new File(uploadPath + File.separator + uploadFolder);
+        File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdir();
 
         // if the img file already exists, then delete file
         UserImg img = user.getUserImg();
         if (img != null) {
-            System.out.println("등록된 이미지가 있음!!");
             String fileUrl = img.getFileUrl();
             File file = new File(uploadPath + File.separator, fileUrl);
             if (file.exists()) file.delete();
@@ -95,7 +90,7 @@ public class UserServiceImpl implements UserService {
         UUID uuid = UUID.randomUUID();
         String extension = FilenameUtils.getExtension(fileName);
         String savingFileName = uuid + "." + extension;
-        File destFile = new File(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
+        File destFile = new File(uploadPath + File.separator + savingFileName);
 
         try {
             multipartFile.transferTo(destFile);
@@ -108,7 +103,7 @@ public class UserServiceImpl implements UserService {
                 .fileContentType(multipartFile.getContentType())
                 .fileName(fileName)
                 .fileSize(multipartFile.getSize())
-                .fileUrl("/" + uploadFolder + "/" + savingFileName)
+                .fileUrl(savingFileName)
                 .build();
 
         userImgRepository.save(userImg);

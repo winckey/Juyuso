@@ -43,7 +43,7 @@ logging:
         type:
           descriptor:
             sql: trace
-        SQL: DEBUG
+#        SQL: DEBUG
       springframework:
         web: DEBUG
         boot: DEBUG
@@ -53,8 +53,7 @@ logging:
 
 app:
   fileUpload:
-    path: /spring
-    dir: upload
+    path: /upload
 
 openvidu:
   url: https://i6e101.p.ssafy.io:4443/
