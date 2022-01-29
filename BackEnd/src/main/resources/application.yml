@@ -53,7 +53,7 @@ logging:
 
 app:
   fileUpload:
-    path: C:\\Users\\SSAFY\\git\\S06P12E101\\BackEnd\\src\\main\\resources\\static
+    path: /spring
     dir: upload
 
 openvidu:
