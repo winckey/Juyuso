@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div oncontextmenu="return false">
     <v-app-bar
       absolute
       color="#11111f"
@@ -22,59 +22,33 @@
 
     <!-- 사이드 바 -->
     <v-navigation-drawer
+      oncontextmenu="return false"
+      width="400"
       v-model="drawer"
       absolute
       right
       temporary
     >
-    <div class="grey lighten-4">
+      
+    <div class="grey lighten-4" @contextmenu.prevent>
       <div>
         <side-bar-profile></side-bar-profile>
       </div>
       <div>
         <!-- 검색창 -->
         <div>
-            <v-text-field
-                class="shrink my-2"
-                solo
-                rounded
-                dense
-                v-model="username"
-                @keyup.enter="[friendsSearch(), openSearchList()]">   
-                </v-text-field>           
+          <v-text-field
+            class="shrink my-2"
+            solo
+            rounded
+            dense
+            v-model="searchInput"
+            @keyup.enter="friendsSearch">   
+            </v-text-field>           
         </div>
       </div>
-      <div>
-        <div>
-            <v-col
-                align="center"
-                justify="space-around">
-                <v-btn text
-                  @click="openFriendsList">
-                    <img src="@/assets/friends.png" alt="">
-                </v-btn>
-                <v-btn text
-                  @click="openChat">
-                    <img src="@/assets/chat.png" alt="">
-                </v-btn>
-                <v-btn text
-                  @click="openSearchList">
-                    <img src="@/assets/search.png" alt="">
-                </v-btn>
-            </v-col>
-        </div>
-      </div>
-      <div v-if="menu=='friendList'">
-        <friend-list
-          class="list-size">
-        </friend-list>
-      </div>
-      <div v-else-if="menu=='chat'">
-        <div>chat list</div>
-      </div>
-      <div v-else-if="menu=='searchList'">
-        <div>searchList</div>
-      </div>
+      <FriendTab ref="Friendtab"/>
+
     </div>
     </v-navigation-drawer>
     
@@ -84,46 +58,48 @@
 <script>
 
 import TableSearch from '@/components/table_list/table-search.vue'
-import FriendList from '@/components/side_bar/friend-list.vue'
 import SideBarProfile from '@/components/side_bar/side-bar-profile.vue'
+import FriendTab from '@/components/side_bar/friend-tab.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'NavBar',
   components:{
-
+    FriendTab,
     TableSearch,
-    FriendList,
+    // FriendList,
     SideBarProfile
   },
   data: function () {
     return {
       searchInput: null,
       drawer: false,
-      menu:'friendList',
       username:'',
     }
   },
   methods: {
+    ...mapActions('friends', [
+      'friendList',
+      'searchUserData'
+    ]),
     goToTableList: function() {
       this.$router.push({ name: 'TableList' })
     },
     friendsSearch: function(){
-      const username = this.username
-      console.log(username)
-      this.$store.dispatch('searchUserData',username)
+      if (this.searchInput != null) {
+        console.log(this.searchInput)
+        this.searchUserData(this.searchInput)
+        this.$refs.Friendtab.tab = 2
+      }
     },
-    openFriendsList:function(){
-      this.menu = 'friendList'
-      console.log(this.menu)
-    },
-    openChat:function(){
-      this.menu = 'chat'
-      console.log(this.menu)
-    },
-    openSearchList:function(){
-      this.menu = 'searchList'
-      console.log(this.menu)
-    }
+  },
+  watch: {
+    drawer: function (val) {
+      const token = localStorage.getItem('jwt') ? true : false
+      if (token && val) {
+        this.friendList()
+      }
+    } 
   }
 
 }

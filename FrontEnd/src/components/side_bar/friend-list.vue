@@ -1,15 +1,26 @@
 <template>
     <div class="white">
-        <p>friend list</p>
-        <div v-for="friend in friendsList"
-        :key='friend'>
-            <div>{{ friend }}</div>
-        </div>
+        <v-list>
+            <friend-list-detail
+                v-for="friend in friends"
+                :key="friend.id"
+                :userInfo="friend"
+                :tab="tab"></friend-list-detail>
+        </v-list>
     </div>
 </template>
 
 <script>
+import FriendListDetail from '@/components/side_bar/friend-list-detail.vue'
 export default {
+    components:{
+        FriendListDetail
+    },
+    props:{
+        tab: Number,
+        friends: Array,
+    },
+    name: 'FriendList',
     methods:{
         setToken : function(){
             const token = localStorage.getItem('jwt')
@@ -20,7 +31,7 @@ export default {
         },
     },
     created: function(){
-        this.$store.dispatch('friendList',this.setToken())
+        this.$store.dispatch('friendList')
     }
 }
 </script>
