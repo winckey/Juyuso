@@ -64,9 +64,7 @@
         </div>
         
       </div>
-      <!-- <div v-if="isMyData">
-        <MyData :user="user" v-if="user"/>
-      </div> -->
+      
      
     </div> 
   </div>
@@ -76,7 +74,6 @@
 import CalenderPopup from '../../components/accounts/calender-popup.vue'
 import ProfileEditPopup from '@/components/accounts/profile-edit-popup.vue'
 import BlockedFriend from '@/components/accounts/blocked-friend.vue'
-// import MyData from '@/views/accounts/mydata.vue'
 import axios from 'axios'
 
 export default {
@@ -85,7 +82,6 @@ export default {
     CalenderPopup,
     ProfileEditPopup,
     BlockedFriend,
-    // MyData
   },
   data(){
     return{
@@ -98,21 +94,16 @@ export default {
   methods: {
     goMyData: function () {
       console.log('goMydata')
-      this.$router.push({name: 'MyData', params: {userId: 1, user:this.user}})
-    },
-    setToken: function (){
-      const token = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `Bearer ${token}`
-      }
-      return config
+      // this.$router.push({name: 'MyData', params: {userId: this.user.id}, query: {user:this.user}})
+      this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
     }
+   
   },
   created: function (){
     axios({
       method: 'get',
       url: `${process.env.VUE_APP_API_URL}/user/info`,
-      headers: this.setToken()
+      headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
         console.log(res.data.user)

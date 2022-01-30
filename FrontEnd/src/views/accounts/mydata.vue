@@ -5,9 +5,9 @@
 
         <div class="d-flex justify-content-between" >
           <!-- <p>{{user.nickname}}</p> -->
-          <h2>니 음주 기록</h2>
+          <h2>음주 기록</h2>
           <div @click="goMyPage" style="cursor:pointer">
-            <h2 style="display:inline">마이 페이지로 돌아가기</h2>
+            <h2 style="display:inline">마이 페이지 돌아가기</h2>
             <v-icon large color="white" class="pb-3">
               mdi-arrow-up-bold
             </v-icon>
@@ -61,14 +61,13 @@ export default {
   },
   data: function() {
     return {
+      userInfo: null,
       date: [{ date: '2021-6-27', count: 6 },{ date: '2021-9-21', count: 6 }, { date: '2021-2-21', count: 4 }],
     }
   },
   methods: {
     goMyPage: function () {
-      console.log('goWallet')
-      console.log(this.user.id)
-      this.$router.push({name: 'MyPage', params: this.user.id})
+      this.$router.push({name: 'MyPage', params: {userId: this.user.id}})
     }
     
   },
@@ -79,25 +78,29 @@ export default {
       var month = ('0' + (today.getMonth() + 1)).slice(-2);
       var day = ('0' + today.getDate()).slice(-2);
       var dateString = year + '-' + month  + '-' + day;   
-
-      console.log(dateString)
       return dateString
     }
   },
-  // created: function () {
-  //   axios({
-  //     method: 'get',
-  //     url: `${process.env.VUE_APP_API_URL}/drinking/${this.user.id}`,
-  //     headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
-  //   })
-  //     .then(res => {
-  //       console.log(res.data)
-  //       this.date = res.data
-  //     })
-  //     .catch(err => {
-  //       console.log(err)
-  //     })
-  // }
+  created: function () {
+    // console.log('created')
+    // if (this.$route.params.user) {
+    //   this.userInfo = this.$route.params.user
+    //   console.log('왕료')
+    //   console.log(this.userInfo)
+    // }
+    // axios({
+    //   method: 'get',
+    //   url: `${process.env.VUE_APP_API_URL}/drinking/${this.user.id}`,
+    //   headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+    // })
+    //   .then(res => {
+    //     console.log(res.data)
+    //     this.date = res.data
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //   })
+  }
 }
 </script>
 
