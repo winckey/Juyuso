@@ -2,6 +2,7 @@ package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.RegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
+import com.juyuso.api.dto.request.UserPwCheckReqDto;
 import com.juyuso.db.entity.User;
 import com.juyuso.db.entity.UserImg;
 import com.juyuso.db.repository.RegionRepository;
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
         return user;
     }
+
     @Override
     public String saveImg(User user, MultipartFile multipartFile) {
         // find file upload directory
@@ -109,5 +111,10 @@ public class UserServiceImpl implements UserService {
         userImgRepository.save(userImg);
 
         return savingFileName;
+    }
+
+    @Override
+    public Boolean checkPw(User userDetails, UserPwCheckReqDto userPwCheckReqDto) {
+        return passwordEncoder.matches(userPwCheckReqDto.getPassword(), userDetails.getPassword());
     }
 }

@@ -3,10 +3,8 @@ package com.juyuso.api.controller;
 import com.juyuso.api.dto.request.LoginReqDto;
 import com.juyuso.api.dto.request.RegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
-import com.juyuso.api.dto.response.LoginResDto;
-import com.juyuso.api.dto.response.UserIdCheckResDto;
-import com.juyuso.api.dto.response.UserImgPostResDto;
-import com.juyuso.api.dto.response.UserResDto;
+import com.juyuso.api.dto.request.UserPwCheckReqDto;
+import com.juyuso.api.dto.response.*;
 import com.juyuso.api.service.UserService;
 import com.juyuso.common.model.response.BaseResponseBody;
 import com.juyuso.common.util.JwtTokenUtil;
@@ -122,11 +120,33 @@ public class UserController {
 
     @PostMapping(value = "/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "프로필 이미지 업로드")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = UserImgPostResDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
     public ResponseEntity<UserImgPostResDto> insertImg(@ApiIgnore Authentication authentication, @RequestPart("img") MultipartFile img) {
         User userDetails = (User) authentication.getDetails();
 
         String imgUrl = userService.saveImg(userDetails, img);
 
         return ResponseEntity.status(200).body(UserImgPostResDto.of(200, "Success", imgUrl));
+    }
+
+    @PostMapping(value = "/pw/check")
+    @ApiOperation(value = "패스워드 체크", notes = "로그인된 계정의 패스워드 일치 여부를 반환한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = UserPwCheckResDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<UserPwCheckResDto> checkPw(@ApiIgnore Authentication authentication, @RequestBody UserPwCheckReqDto userPwCheckReqDto) {
+        User userDetails = (User) authentication.getDetails();
+
+        Boolean valid = userService.checkPw(userDetails, userPwCheckReqDto);
+
+        return ResponseEntity.status(200).body(UserPwCheckResDto.of(200, "Success", valid));
     }
 }
