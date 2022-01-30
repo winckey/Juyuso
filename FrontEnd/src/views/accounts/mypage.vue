@@ -8,7 +8,7 @@
         <div class="profile-card-info">
           <v-container>
             <v-row >
-              <v-col cols="8">
+              <v-col cols="7">
                 <div v-if="user">
                   <h1>주민등록증</h1>
                   <p>별명: {{ user.nickname }}</p>
@@ -26,7 +26,7 @@
           </v-container>
          
         </div>
-        <div class="profile-edit-popup">
+        <div class="profile-edit-popup my-2">
           <ProfileEditPopup :user = "user" v-if="user"/>
         </div>
           
@@ -109,17 +109,6 @@ export default {
         console.log(res.data.user)
         const userInfo = res.data.user
         this.user = userInfo
-        console.log(this.user.age)
-
-        // if (userInfo.img) {
-        //   console.log('yess')
-        //   this.img = userInfo.imgUrl
-        // } else {
-        //   console.log('noo')
-        //   this.img = '@/assets/chat.png'
-        // }
-
-
       })
       .catch(err => {
         console.log(err)
@@ -142,14 +131,16 @@ export default {
 <style scoped>
 
 .wallet-container {
-  width: 80vw;
-  margin: 150px auto;
+  height: 90vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-img {
+/* img {
  max-width: 100%;
  max-height: 100%;
-}
+} */
 
 .wallet {
   position: relative;
@@ -159,7 +150,7 @@ img {
   width: 41%;
   position: absolute;
   top: 18%;
-  left: 4.5%;
+  left: 5%;
   transform: rotate(6deg);
 }
 
@@ -185,8 +176,6 @@ img {
 
 .profile-mydata-card {
   cursor: pointer;
-  
-  
 }
 
 .profile-mydata-card:hover {

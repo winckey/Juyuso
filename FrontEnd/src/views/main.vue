@@ -24,42 +24,26 @@
           <div class="main-button">
             <div class="d-flex flex-column">
             
-            <!-- <div class="d-flex flex-column" v-if="!isLogin">
-              <v-btn
-                class="mx-auto my-1"
-                color="#E6D8B2"
-                @click="goToLogin"
-              >로그인</v-btn>
-              <v-btn 
-                class="mx-auto my-1"
-                color="#E6D8B2"
-                @click="goToSignup"
-              >회원가입</v-btn>
-            </div> -->
+              <div class="d-flex flex-column" v-if="isJwt">
+                <v-btn
+                  class="mx-auto my-1"
+                  color="#E6D8B2"
+                  @click="goToLogin"
+                >로그인</v-btn>
+                <v-btn 
+                  class="mx-auto my-1"
+                  color="#E6D8B2"
+                  @click="goToSignup"
+                >회원가입</v-btn>
+              </div>
 
-            <div class="d-flex flex-column" v-if="isJwt">
-              <v-btn
-                class="mx-auto my-1"
-                color="#E6D8B2"
-                @click="goToLogin"
-              >로그인</v-btn>
-              <v-btn 
-                class="mx-auto my-1"
-                color="#E6D8B2"
-                @click="goToSignup"
-              >회원가입</v-btn>
-            </div>
-
-
-            
-
-            <div v-else>
-              <v-btn
-                class="mx-auto my-1"
-                color="#E6D8B2"
-                @click="logout"
-              >로그아웃</v-btn>
-            </div>
+              <div v-else>
+                <v-btn
+                  class="mx-auto my-1"
+                  color="#E6D8B2"
+                  @click="logout"
+                >로그아웃</v-btn>
+              </div>
 
 
             </div>
@@ -73,8 +57,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
-const accounts = 'accounts'
+import {mapActions} from 'vuex'
 
 export default {
   name: 'Main',
@@ -82,9 +65,7 @@ export default {
     return {
     }
   },
-  computed: {
-    ...mapState(accounts, ['isLogin']),
-   
+  computed: {   
     isJwt: function () {
       if (localStorage.getItem('jwt')) {
         console.log(this.isLogin)
@@ -98,7 +79,7 @@ export default {
 
   },
   methods: {
-    ...mapActions(accounts, ['logout']),
+    ...mapActions('accounts', ['logout']),
     goToLogin: function () {
       this.$router.push({ name: 'Login' })
     },
