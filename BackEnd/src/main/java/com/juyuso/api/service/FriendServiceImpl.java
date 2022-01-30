@@ -1,6 +1,7 @@
 package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.FriendReqDto;
+import com.juyuso.api.exception.FriendException;
 import com.juyuso.db.entity.Ban;
 import com.juyuso.db.entity.Friend;
 import com.juyuso.db.entity.FriendRequest;
@@ -27,40 +28,55 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public User getFriendInfo(Long userId) {
-        return userRepository.findById(userId).get();
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 id 유저가 존재하지 않습니다."));
     }
 
     @Override
     public void addRequest(User from, FriendReqDto friendReqDto) {
 
-        User to =  userRepository.findById(Long.parseLong(friendReqDto.getId())).get();
+        User to = userRepository.findById(Long.parseLong(friendReqDto.getId()))
+                .orElseThrow(() -> new IllegalArgumentException("친구신청 id의 유저가 존재하지 않습니다."));
 
-        System.out.println("----------- user id : " + to.getNickname());
+
+        //친구 요청이 있는가??
+        FriendRequest check1FR = friendRequestRepository.findRequestByfromId(from.getId(), to.getId()).orElse(null);
+        FriendRequest check2FR = friendRequestRepository.findRequestByfromId(to.getId(), from.getId()).orElse(null);
+        if (check1FR != null || check2FR != null) {
+            throw new FriendException("이미 친구요청이 있습니다.");
+        }
+
+        // 이미 친구인가?
+        Friend checkFriend = friendRepository.findFriendByFromToId(from.getId(), to.getId()).orElse(null);
+        if(checkFriend != null)
+        {
+            throw new FriendException("이미 친구입니다.");
+        }
+
 
         FriendRequest friendRequest = new FriendRequest();
-        System.out.println("----------- from user id : " + from.getNickname());
-        friendRequest.addRequest(from , to);
+        friendRequest.addRequest(from, to);
         friendRequestRepository.save(friendRequest);
 
     }
 
     @Override
     public void banRequest(User from, FriendReqDto friendReqDto) {
-        User toBan =  userRepository.findById(Long.parseLong(friendReqDto.getId())).get();
+        User toBan = userRepository.findById(Long.parseLong(friendReqDto.getId()))
+                                   .orElseThrow(() -> new IllegalArgumentException("해당 id 유저가 존재하지 않습니다."));
 
-        System.out.println("----------- user id : " + toBan.getNickname());
+
+
 
         Ban ban = new Ban();
-        System.out.println("----------- from user id : " + from.getNickname());
-        ban.addBan(from , toBan);
+        ban.addBan(from, toBan);
         banRepository.save(ban);
     }
 
     @Override
-    public void agreeRequest(FriendReqDto friendReqDto , User to) {
+    public void agreeRequest(FriendReqDto friendReqDto, User to) {
 
         FriendRequest friendRequest = friendRequestRepository
-                                        .findRequestByfromId(Long.parseLong(friendReqDto.getId()) , to.getId());
+                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId()).get();
 
         User user1 = friendRequest.getFromUser();
         User user2 = friendRequest.getToUser();
@@ -80,7 +96,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<User> friendList(User user) {
-        return  userRepository.findListByUserId(user.getId());
+        return userRepository.findListByUserId(user.getId());
     }
 
     @Override
@@ -90,12 +106,12 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<User> RequestList(User user) {
-        return  userRepository.findRequestListByUserId(user.getId());
+        return userRepository.findRequestListByUserId(user.getId());
     }
 
     @Override
     public List<User> userSearch(String keyword) {
-        return  userRepository.findALLByNickname(keyword);
+        return userRepository.findALLByNickname(keyword);
     }
 
     @Override
@@ -103,16 +119,16 @@ public class FriendServiceImpl implements FriendService {
     public void deleteFriend(User userDetails, FriendReqDto friendReqDto) {
 
         Long from = Long.parseLong(friendReqDto.getId());
-        Long to   = (userDetails.getId());
-        friendRepository.deleteBothByUserId(from  , to);
-        friendRepository.deleteBothByUserId(to  , from);
+        Long to = (userDetails.getId());
+        friendRepository.deleteBothByUserId(from, to);
+        friendRepository.deleteBothByUserId(to, from);
     }
 
     @Override
-    public void rejectRequest(FriendReqDto friendReqDto , User to) {
+    public void rejectRequest(FriendReqDto friendReqDto, User to) {
 
         FriendRequest friendRequest = friendRequestRepository
-                .findRequestByfromId(Long.parseLong(friendReqDto.getId()) , to.getId());
+                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId()).get();
 
         friendRequestRepository.delete(friendRequest);
 
@@ -121,8 +137,8 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void banCancelRequest(User userDetails, FriendReqDto friendReqDto) {
         Long from = Long.parseLong(friendReqDto.getId());
-        Long to   = (userDetails.getId());
-        banRepository.deleteByBothUserId(from  , to);
+        Long to = (userDetails.getId());
+        banRepository.deleteByBothUserId(from, to);
 
     }
 

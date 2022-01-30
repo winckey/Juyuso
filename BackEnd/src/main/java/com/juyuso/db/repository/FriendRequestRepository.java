@@ -19,6 +19,6 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
             "FROM  friend_request f " +
             " WHERE f.from_id = :from" +
             " and f.to_id = :to)", nativeQuery = true)
-   FriendRequest findRequestByfromId(@Param("from")long from  , @Param("to")long to);
+   Optional<FriendRequest> findRequestByfromId(@Param("from")long from  , @Param("to")long to);
 
 }
