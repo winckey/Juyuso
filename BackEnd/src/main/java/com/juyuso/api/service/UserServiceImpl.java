@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
     @Override
-    public void saveImg(User user, MultipartFile multipartFile) {
+    public String saveImg(User user, MultipartFile multipartFile) {
         // find file upload directory
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdir();
@@ -107,5 +107,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userImgRepository.save(userImg);
+
+        return savingFileName;
     }
 }

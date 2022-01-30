@@ -10,5 +10,5 @@ public interface UserService {
     User getUserByUserId(String userId);
     Boolean checkDuplicateUserId(String userId);
     User modifyUser(User user, UserModifyReqDto userModifyReqDto);
-    void saveImg(User user, MultipartFile multipartFile);
+    String saveImg(User user, MultipartFile multipartFile);
 }
