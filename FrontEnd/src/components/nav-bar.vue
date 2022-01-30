@@ -47,8 +47,9 @@
             </v-text-field>           
         </div>
       </div>
+      <!-- <friend-tab
+        ref="FriendTab"></friend-tab> -->
       <FriendTab ref="Friendtab"/>
-
     </div>
     </v-navigation-drawer>
     
@@ -67,7 +68,6 @@ export default {
   components:{
     FriendTab,
     TableSearch,
-    // FriendList,
     SideBarProfile
   },
   data: function () {
@@ -101,7 +101,6 @@ export default {
       }
     } 
   }
-
 }
 </script>
 

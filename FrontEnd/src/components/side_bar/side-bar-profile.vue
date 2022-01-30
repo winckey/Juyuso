@@ -44,27 +44,24 @@
 
 <script>
 import axios from 'axios'
+// import { mapGetters } from 'vuex'
 
 export default {
     data(){
         return{
-            user: null,
             isLogin: false,
+            user : ''
         }
     },
     methods:{
-        goMyPage: function () {
-            this.$router.push({name: 'MyPage', params: {userId: this.user.id}})
-            },
-        goToLogin: function () {
-            this.$router.push({ name: 'Login' })
-            },
+        goMyPage: function(){
+            this.$router.push({name: 'MyPage', params: {userId:this.user}})
+        },
         logout: function(){
             console.log('isLogin')
             this.isLogin = false
             localStorage.removeItem('jwt')
-            this.$router.push({ name: 'Main' })
-            
+            this.$router.push({ name: 'Main' })    
         },
         setToken : function(){
             const token = localStorage.getItem('jwt')
@@ -73,7 +70,23 @@ export default {
             }
             return config
         },
+        // ...mapActions('accounts', [
+        // 'friendList',
+        // 'searchUserData'
+        // ]),
     },
+    // computed:{
+    //     ...mapGetters('accounts',[
+    //         'user',
+    //         'isLogin'
+    //     ])
+    //     // user: function(){
+    //     //     return this.$store.accounts.state.user
+    //     // },
+    //     // isLogin: function(){
+    //     //     return this.$store.state.isLogin
+    //     // }
+    // },
     created: function(){
         axios({
             method: 'get',
