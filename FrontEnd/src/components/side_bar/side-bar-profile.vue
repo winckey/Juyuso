@@ -54,7 +54,7 @@ export default {
     },
     methods:{
         goMyPage: function () {
-            this.$router.push({name: 'MyPage'})
+            this.$router.push({name: 'MyPage', params: {userId: this.user.id}})
             },
         goToLogin: function () {
             this.$router.push({ name: 'Login' })

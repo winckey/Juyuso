@@ -23,7 +23,7 @@
         dense
         type="success"
       >
-        저장되었습니다
+        저장되었습니다!
       </v-alert>
 
 
@@ -34,8 +34,37 @@
         <v-spacer></v-spacer>
 
         <v-card-text>
-          <v-container class="rounded-lg">
-        
+          <v-container>
+            <v-row >
+
+              <v-col cols="4">
+                <div>
+                  <h2>{{ sojuBottle }}</h2>
+                </div>
+                <div>
+                  <img src="@/assets/add_soju.png" alt="bottle" @click="addSojuBottle">
+                </div>
+              </v-col>
+
+              <v-col cols="4">
+                <div>
+                  <h2>{{ sojuGlass }}</h2>
+                </div>
+                <div>
+                  <img src="@/assets/add_soju_glass.png" alt="glass" @click="addSojuGlass">
+                </div>
+              </v-col>
+
+              <v-col cols="4">
+                <div>
+                  <h2>{{ beer }}</h2>
+                </div>
+                <div>
+                  <img src="@/assets/add_beer.png" alt="beer" @click="addBeer">
+                </div>
+              </v-col>
+
+            </v-row>
           </v-container>
         </v-card-text>
 
@@ -44,15 +73,24 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="[dialog = false, isSuccess=false]"
+            @click="[resetCount(), dialog = false, isSuccess=false]"
           >
             닫기
           </v-btn>
+
           <v-btn
             color="blue darken-1"
             text
-            @click="updateUser"
-            
+            @click="resetCount"
+          >
+            초기화
+          </v-btn>
+
+
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="drinking"
           >
             저장
           </v-btn>
@@ -65,18 +103,62 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
     name: 'TodayAlcohol',
     data: function () {
         return {
             dialog: false,
-            isSuccess: false
-
+            isSuccess: false,
+            sojuBottle: 0,
+            sojuGlass: 0,
+            beer: 0
         }
+    },
+    methods: {
+      ...mapActions('drinking', ['addDrinking']),
+      addSojuBottle: function (){
+        this.sojuBottle += 1
+      },
+      addSojuGlass: function (){
+        this.sojuGlass += 1
+      },
+      addBeer: function (){
+        this.beer += 1
+      },
+      resetCount: function (){
+        this.sojuBottle = 0
+        this.sojuGlass = 0
+        this.beer = 0
+      },
+      drinking: function () {
+        const item = {
+          soju: (this.sojuBottle * 7) + this.sojuGlass,
+          beer: this.beer * 3
+        }
+        console.log(item)
+        this.addDrinking(item)
+      }
     }
 }
 </script>
 
-<style>
+<style scoped>
 
+div h2 {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+div img {
+  display: block;
+  margin: auto;
+  cursor: pointer;
+}
+
+div img:hover {
+  transform: scale(1.2);
+}
 </style>
