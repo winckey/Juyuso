@@ -5,6 +5,7 @@ import com.juyuso.api.dto.request.RegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
 import com.juyuso.api.dto.response.LoginResDto;
 import com.juyuso.api.dto.response.UserIdCheckResDto;
+import com.juyuso.api.dto.response.UserImgPostResDto;
 import com.juyuso.api.dto.response.UserResDto;
 import com.juyuso.api.service.UserService;
 import com.juyuso.common.model.response.BaseResponseBody;
@@ -121,11 +122,11 @@ public class UserController {
 
     @PostMapping(value = "/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "프로필 이미지 업로드")
-    public ResponseEntity<? extends BaseResponseBody> insertImg(@ApiIgnore Authentication authentication, @RequestPart("img") MultipartFile img) {
+    public ResponseEntity<UserImgPostResDto> insertImg(@ApiIgnore Authentication authentication, @RequestPart("img") MultipartFile img) {
         User userDetails = (User) authentication.getDetails();
 
-        userService.saveImg(userDetails, img);
+        String imgUrl = userService.saveImg(userDetails, img);
 
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        return ResponseEntity.status(200).body(UserImgPostResDto.of(200, "Success", imgUrl));
     }
 }
