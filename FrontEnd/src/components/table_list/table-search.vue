@@ -15,7 +15,7 @@
           <v-icon class="mx-2" color="grey">mdi-magnify</v-icon>
         </v-btn>
       </template>
-      <v-card>
+      <v-card width="300">
         <v-card-title>
           <v-text-field
             @input="roomSearch(tab)"
@@ -43,15 +43,19 @@
             :key="item.tab"
           >
             <v-card flat>
-              <button>
+              <button style="text-align: left">
               <v-card-text
                 @click="openDetailPopup(result)"
                   v-for="result in searchResult[items[tab].value]"
                   :key="result.meetingId">
                 {{ result.meetingTitle }}
-                <v-chip v-if="tab==1">
-                {{ searchInput }}  
-                </v-chip>
+                <span v-if="tab==1">
+                  <v-chip
+                    :key="hashtag"
+                    v-for="hashtag in filterHastag(result.hashtag)">
+                  {{ hashtag }}  
+                  </v-chip>
+                </span>
               </v-card-text>
               </button>
             </v-card>
@@ -77,7 +81,7 @@ export default {
   },
   data: function () {
     return {
-      searchInput: null,
+      searchInput: "",
       items: [
         {name: '방 제목', value: 'title',},
         {name: '해시태그', value: 'tags'},
@@ -102,24 +106,31 @@ export default {
   },
   methods: {
     roomSearch: function (tab) {
-      const token = localStorage.getItem('jwt')
-      console.log(this.searchInput)
-      axios({
-        method: 'GET',
-        url: `${process.env.VUE_APP_API_URL}/meeting/search`,
-        headers: { Authorization: `Bearer ${token}`},
-        params :{
-          [this.items[tab].value] : this.searchInput 
-        }
-      }).then( res => {
-        console.log(res.data)
-        this.searchResult[this.items[tab].value] = res.data.content
-      })
+      if (this.searchInput != "") {
+        const token = localStorage.getItem('jwt')
+        console.log(this.searchInput)
+        axios({
+          method: 'GET',
+          url: `${process.env.VUE_APP_API_URL}/meeting/search`,
+          headers: { Authorization: `Bearer ${token}`},
+          params :{
+            [this.items[tab].value] : this.searchInput 
+          }
+        }).then( res => {
+          console.log(res.data)
+          this.searchResult[this.items[tab].value] = res.data.content
+        })
+      }
     },
     openDetailPopup: function (roomInfo) {
       console.log(this.$refs.detailpopup)
       this.propsRoomInfo = roomInfo
       this.$refs.detailpopup.dialog = true
+    },
+    filterHastag: function (hashtags) {
+      console.log(hashtags)
+      let results = hashtags.filter( hashtag => hashtag.indexOf(this.searchInput) != -1)
+      return results
     }
   }
 }

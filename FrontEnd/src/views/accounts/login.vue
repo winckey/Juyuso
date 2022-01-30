@@ -28,6 +28,12 @@
             <span class="d-flex justify-content-center my-3">
               <v-btn @click="login" color="#1CFD9F" rounded>로그인</v-btn>
             </span>
+
+            <span class="d-flex justify-content-center my-3">
+              <v-btn @click="goSignup" color="indigo lighten-2"  rounded>회원가입</v-btn>
+            </span>
+
+            
           </v-form>
 
           <span class="d-flex justify-content-center">
@@ -58,13 +64,9 @@ export default {
       },
       idRules: [
         v => !!v || "아이디를 입력해주세요.",
-        v => /^[a-zA-Z0-9]*$/.test(v) || "아이디는 영문+숫자만 입력 가능합니다.",
-        v => !(v && v.length > 15) || "아이디는 15자까지 입력 가능합니다."
       ],
       passwordRules: [
         v => !!v || "비밀번호를 입력해주세요.",
-        v => !(v && v.length < 9 && v.length > 15) || "비밀번호는 9자에서 16자 사이로 입력가능합니다.",
-        v => /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(v) || "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다."
       ]
     }
   },
@@ -90,6 +92,9 @@ export default {
     },
     goPasswordFind: function () {
       this.$router.push({name:'PasswordFind'})
+    },
+    goSignup: function () {
+      this.$router.push({name: 'Signup'})
     }
   }
 }

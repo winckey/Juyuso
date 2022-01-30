@@ -14,7 +14,23 @@ import Table from '@/views/tables/table.vue'
 //main
 import Main from '@/views/main.vue'
 
+//store
+import store from '@/store/modules/accounts.js'
 Vue.use(VueRouter)
+
+
+const rejectAuthUser = (to, from, next) => {
+  if (localStorage.getItem('jwt')) {
+    console.log('로그인 접근을 reject함')
+    console.log('router_page')
+    console.log(store.state.isLogin)
+    alert('이미 로그인을 하셨습니다')
+    next('/')
+  }else {
+    next()
+  }
+}
+
 
 const routes = [
   {
@@ -25,6 +41,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
+    beforeEnter: rejectAuthUser,
     component: Login
   },
   {
@@ -45,7 +62,8 @@ const routes = [
   {
     path: '/mydata/:userId',
     name: 'MyData',
-    component: MyData
+    component: MyData,
+    props: true
   },
   {
     path: '/table/:roomId',
@@ -60,5 +78,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+
 
 export default router

@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background: #1B1B32">
+  <v-app style="background: #1B1B32" >
     <transition 
       name="fade">
     <NavBar v-if="$route.name != 'Main'"/>
@@ -13,7 +13,11 @@
 </template>
 
 <script>
-import NavBar from '@/components/nav-bar.vue' 
+import { mapState, mapActions } from 'vuex'
+import NavBar from '@/components/nav-bar.vue'
+import axios from 'axios'
+const accounts = 'accounts'
+
 export default {
   name: 'App',
   components: {
@@ -21,10 +25,36 @@ export default {
   },
   created: function () {
     console.log(this.$route.name)
+    if (!localStorage.getItem('jwt')) {
+      this.$router.push({name: 'Login'})
+    }
+    else {
+      const token = localStorage.getItem('jwt')
+      axios({
+        method: 'get',
+        url: `${process.env.VUE_APP_API_URL}/user/info`,
+        headers: { Authorization: `Bearer ${token}`}
+      })
+      .then(res =>{
+        this.userUpdate(res.data.user)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
   },
   data: () => ({
     //
   }),
+  methods: {
+    ...mapActions('accounts', [
+      'userUpdate'
+    ])
+  },
+  computed: {
+    ...mapState(accounts, ['isLogin'])
+  },
+
 };
 </script>
 <style scoped>

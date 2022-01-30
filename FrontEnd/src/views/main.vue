@@ -23,17 +23,45 @@
         </div>
           <div class="main-button">
             <div class="d-flex flex-column">
+            
+            <!-- <div class="d-flex flex-column" v-if="!isLogin">
+              <v-btn
+                class="mx-auto my-1"
+                color="#E6D8B2"
+                @click="goToLogin"
+              >로그인</v-btn>
+              <v-btn 
+                class="mx-auto my-1"
+                color="#E6D8B2"
+                @click="goToSignup"
+              >회원가입</v-btn>
+            </div> -->
 
-            <v-btn
-              class="mx-auto my-1"
-              color="#E6D8B2"
-              @click="goToLogin"
-            >로그인</v-btn>
-            <v-btn 
-              class="mx-auto my-1"
-              color="#E6D8B2"
-              @click="goToSignup"
-            >회원가입</v-btn>
+            <div class="d-flex flex-column" v-if="isJwt">
+              <v-btn
+                class="mx-auto my-1"
+                color="#E6D8B2"
+                @click="goToLogin"
+              >로그인</v-btn>
+              <v-btn 
+                class="mx-auto my-1"
+                color="#E6D8B2"
+                @click="goToSignup"
+              >회원가입</v-btn>
+            </div>
+
+
+            
+
+            <div v-else>
+              <v-btn
+                class="mx-auto my-1"
+                color="#E6D8B2"
+                @click="logout"
+              >로그아웃</v-btn>
+            </div>
+
+
             </div>
           </div>
       </div>
@@ -45,9 +73,32 @@
 </template>
 
 <script>
+import {mapState, mapActions} from 'vuex'
+const accounts = 'accounts'
+
 export default {
   name: 'Main',
+  data: function () {
+    return {
+    }
+  },
+  computed: {
+    ...mapState(accounts, ['isLogin']),
+   
+    isJwt: function () {
+      if (localStorage.getItem('jwt')) {
+        console.log(this.isLogin)
+        return false
+      } else {
+        console.log("@")
+        return true
+      }
+
+    }
+
+  },
   methods: {
+    ...mapActions(accounts, ['logout']),
     goToLogin: function () {
       this.$router.push({ name: 'Login' })
     },
