@@ -12,6 +12,7 @@
 
 <script>
 import FriendListDetail from '@/components/side_bar/friend-list-detail.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'FriendList',
@@ -24,24 +25,6 @@ export default {
   },
   data: function () {
     return {
-      userInfo: {
-        id: 1,
-        userId: "ayoung0924",
-        nickname: "성아영",
-        description: null,
-        phone: "01054732511",
-        email: "ayoung0924@naver.com",
-        img: false,
-        imgUrl: "default img url",
-        age: 24,
-        birthDate: "1997-10-25",
-        regDate: "2022-01-24T14:53:18.304",
-        gender: "F",
-        region: {
-            id: 2,
-            name: "부산"
-          }
-      }
     }
   },
   methods:{
@@ -53,6 +36,11 @@ export default {
       return config
     },
   },
+  computed: {
+    ...mapState('friends', [
+      'banList',
+    ])
+  }
 }
 </script>
 

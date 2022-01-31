@@ -95,7 +95,7 @@ export default {
       })
     },
     banFriend: function () {
-    //친구차단
+      //친구차단
     },
     agreeFriend: function () {
       const token = localStorage.getItem('jwt')

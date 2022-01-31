@@ -5,6 +5,7 @@ const friends = {
   state: {
     friendsList:[],
     searchList:[],
+    banList:[],
   },
   mutations: {
     SEARCH_USER_DATA:function(state, data){
@@ -19,6 +20,9 @@ const friends = {
     DELETE_FRIEND_LIST: function (state, userInfo) {
       let index = state.friendList.indexOf(userInfo)
       state.friendList.splice(index, 1)
+    },
+    BAN_FIREND: function(state, userId){
+      state.banList = userId
     }
 
 
@@ -71,10 +75,25 @@ const friends = {
           console.log(err)
       })
     },
+    // 친구 추가
     addFriendList: function({ commit }, userInfo ) {
       commit('ADD_FRIEND_LIST', userInfo)
+    },
+    // 친구 차단
+    banFriend : function({commit},friendId){
+      const token = localStorage.getItem('jwt')
+      axios({
+        method:'post',
+        url:`${process.env.VUE_APP_API_URL}/friend/ban/${friendId}`,
+        headers: { Authorization: `Bearer ${token}`,}
+      })
+        .then(res => {
+          commit('BAN_FIREND',res.data)
+        })
+        .catch(err =>{
+          console.log(err)
+        })
     }
-
   },
 }
 
