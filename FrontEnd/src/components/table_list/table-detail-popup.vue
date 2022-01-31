@@ -1,70 +1,79 @@
 <template>
-  <v-dialog
-    transition="dialog-bottom-transition"
-    v-model="dialog"
-    width="600"
-  >
-    <template v-slot:activator="{ on, attrs }" v-if="!search">
-      <button
-        v-on="on"
-        v-bind="attrs">
-        <div class="table-container">
-          <img 
-            src="@/assets/table.png" 
-            alt=""
-            >
-          <div class="table-info">
-            {{ roomInfo.meetingTitle }}
+  <div>
+    <v-dialog
+      transition="dialog-bottom-transition"
+      v-model="dialog"
+      width="600"
+    >
+      <template v-slot:activator="{ on, attrs }" v-if="!search">
+        <button
+          v-on="on"
+          v-bind="attrs">
+          <div class="table-container">
+            <img 
+              src="@/assets/table.png" 
+              alt=""
+              >
+            <div class="table-info">
+              {{ roomInfo.meetingTitle }}
+            </div>
+            <div class="table-hashtag">
+              <v-chip
+                class="ma-2"
+                color=""
+              >
+                {{ roomInfo.hashtag[0] }}
+              </v-chip>
+            </div>
           </div>
-          <div class="table-hashtag">
-            <v-chip
-              class="ma-2"
-              color=""
-            >
-              {{ roomInfo.hashtag[0] }}
-            </v-chip>
-          </div>
-        </div>
-      </button>
-    </template>
+        </button>
+      </template>
 
-    <v-card height="500">
-      <v-card-title class="d-flex justify-content-center">
-        <span>
-        {{ roomInfo.meetingTitle }}
-        </span>
-      </v-card-title>
-      <v-chip
-        v-for="hashtag in roomInfo.hashtag"
-        :key="hashtag"
-        class="ma-2"
-        color="#FAC372"
-      >
-        {{ hashtag }}
-      </v-chip>
-
-      <!-- <v-divider></v-divider> -->
-      <v-card-actions class="enter-btn">
-        <v-btn
-          color="#1CFD9F"
-          rounded
-          @click="enterRoom"
+      <v-card height="500">
+        <v-card-title class="d-flex justify-content-center">
+          <span>
+          {{ roomInfo.meetingTitle }}
+          </span>
+        </v-card-title>
+        <v-chip
+          v-for="hashtag in roomInfo.hashtag"
+          :key="hashtag"
+          class="ma-2"
+          color="#FAC372"
         >
-          입장
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+          {{ hashtag }}
+        </v-chip>
+
+        <!-- <v-divider></v-divider> -->
+        <v-card-actions class="enter-btn">
+          <v-btn
+            color="#1CFD9F"
+            rounded
+            @click="enterRoom"
+          >
+            입장
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <TablePreview
+    :roomInfo="roomInfo"
+    ref="tablepreview"/>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import TablePreview from '@/components/table_list/table-preview.vue'
 
 export default {
   name: 'TableDetailPopup',
   props: {
     roomInfo: Object,
     search: Boolean,
+  },
+  components: {
+    TablePreview
   },
   data: function () {
     return {
@@ -81,14 +90,7 @@ export default {
       'joinSession'
     ]),
     enterRoom: function () {
-      let roomInfo = {
-        sessionId: String(this.roomInfo.meetingId),
-        isCreate: true,
-        userName: this.user.nickname
-      }
-      console.log(roomInfo)
-      this.joinSession(roomInfo)
-      this.$router.push({ name: 'Table', params: { roomId: this.roomInfo.meetingId, roomInfo: this.roomInfo }})
+      this.$refs.tablepreview.dialog = true
     }
   }
 }

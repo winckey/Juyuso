@@ -3,6 +3,7 @@
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
+        <h5 class="session-title">{{ gameMode }}</h5>
       </div>
       <!-- <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager"/>
@@ -31,30 +32,65 @@
       class="menu-bar p-5"
       rounded="xl"
       elevation="18">
-      <v-btn
-        fab
-        @click="audioToggle">
-        <!-- <span>{{ publishAudio ? '오디오 중지' : '오디오 시작'}}</span> -->
-        <v-icon>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        @click="videoToggle">
-        <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
-        <v-icon>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
-      </v-btn>
-
-      <v-btn
-        color="error"
-        fab
-        @click="leaveTable">
-        <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
-        <v-icon dark>mdi-application-export</v-icon>
-      </v-btn>
-      <v-btn
-        @click="peopleListShow = !peopleListShow">
-        참가자 명단 보기
-      </v-btn>
+      <div style="position: relative;">
+        <v-btn
+          fab
+          @click="audioToggle">
+          <!-- <span>{{ publishAudio ? '오디오 중지' : '오디오 시작'}}</span> -->
+          <v-icon>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
+        </v-btn>
+        <v-btn
+          fab
+          @click="videoToggle">
+          <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
+          <v-icon>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
+        </v-btn>
+        <v-btn
+          color="error"
+          fab
+          @click="leaveTable">
+          <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
+          <v-icon dark>mdi-application-export</v-icon>
+        </v-btn>
+        <v-btn
+          @click="peopleListShow = !peopleListShow">
+          참가자 명단 보기
+        </v-btn>
+        <v-speed-dial
+          v-model="fab"
+          right
+          direction="top"
+          fab
+          absolute
+        >
+          <template v-slot:activator>
+            <v-btn
+              v-model="fab"
+              color="blue darken-2"
+              dark
+              fab
+            >
+              <v-icon v-if="fab">
+                mdi-close
+              </v-icon>
+              <v-icon v-else>
+                mdi-controller-classic-outline
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-btn
+            v-for="(game, idx) in games"
+            :key="idx"
+            dark
+            small
+            color="green"
+            @click="switchGameMode(game.name)"
+          >
+            {{ game.name }}
+          </v-btn>
+        </v-speed-dial>
+        <input type="text" @keyup.enter="sendWholeMessage" v-model="messageInput">
+      </div>
     </v-sheet>
       
   </div>
@@ -82,6 +118,8 @@ export default {
   },
   data: function () {
     return {
+      fab: false,
+      messageInput: '',
       peopleListShow: false,
       menuBar: false,
       myUserName: '성아영',
@@ -89,6 +127,11 @@ export default {
       publishAudio: true,
       publishVideo: true,
       userInfo: null,
+      games: [
+        {name: '이순신'},
+        {name: '타이타닉'},
+        {name: '밸런스'}
+      ]
     }
   },
 
@@ -131,12 +174,16 @@ export default {
 
   computed: {
     ...mapState(openviduStore, [
+      'Chat_OV',
+      'Chat_session',
+      'Chat_messages',
       'OV',
       'session',
       'mainStreamManager',
       'publisher',
       'subscribers',
       'messages',
+      'gameMode',
     ])
   },
 
@@ -144,13 +191,14 @@ export default {
     ...mapActions(openviduStore, [
       // 'joinSession',
       'leaveSession',
+      'switchGameMode',
     ]),
 
     leaveTable () {
+      this.leaveSession(this.roomId)
 			window.removeEventListener('beforeunload', function () {
         this.leaveSession(this.roomId)
       });
-      this.leaveSession(this.roomId)
       this.$router.push({ name: 'TableList' })
 		},
 
@@ -168,6 +216,22 @@ export default {
       this.publisher.publishVideo(!this.publishVideo)
       this.publishVideo = !this.publishVideo
     },
+    sendWholeMessage() {
+      if (this.messageInput.trim() != '') {
+        this.Chat_session.signal({
+          data: this.messageInput,
+          to: [],
+          type: 'whole-chat'
+        })
+        .then( () => {
+          console.log('success')
+        })
+        .catch( () => {
+          console.log('fail')
+        })
+      }
+      this.messageInput=''
+    }
   }
 }
 
@@ -183,8 +247,8 @@ export default {
     position: fixed;
     background: white;
     height: 300px;
-    width: 60%;
-    bottom: -250px;
+    width: 70%;
+    bottom: -100px;
     left: 50%;
     transition-property: all;
     transition-duration: .3s;
@@ -195,7 +259,7 @@ export default {
     position: fixed;
     background: white;
     height: 300px;
-    width: 60%;
+    width: 70%;
     bottom: -100px;
     left: 50%;
     transform: translate(-50%);
