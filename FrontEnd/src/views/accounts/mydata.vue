@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between" >
           <!-- <p>{{user.nickname}}</p> -->
           <h2>음주 기록</h2>
-          <div @click="goMyPage" style="cursor:pointer">
+          <div @click="goMyPage" style="cursor:pointer" v-if="isUser">
             <h2 style="display:inline">마이 페이지 돌아가기</h2>
             <v-icon large color="white" class="pb-3">
               mdi-arrow-up-bold
@@ -35,10 +35,10 @@
           </div>
         </div>
         
-        <div class="d-flex justify-content-center p-4">
+        <div class="d-flex justify-content-center p-4" v-if="isUser">
           <h1>너의 간은 녹는 중ㅋ</h1>   
         </div>
-        <div class="d-flex justify-content-center p-3 mx-auto" style="width:100px;">
+        <div class="d-flex justify-content-center p-3 mx-auto" style="width:100px;" v-if="isUser">
           <TodayAlcohol/>
         </div>
 
@@ -49,8 +49,10 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import TodayAlcohol from '@/components/accounts/today-alcohol.vue'
+import {mapState} from 'vuex'
+
 export default {
   name: 'MyData',
   props: {
@@ -72,6 +74,7 @@ export default {
     
   },
   computed: {
+    ...mapState('accounts', {stateUser:'user'}),
     end_date: function () {
       var today = new Date();
       var year = today.getFullYear();
@@ -79,27 +82,33 @@ export default {
       var day = ('0' + today.getDate()).slice(-2);
       var dateString = year + '-' + month  + '-' + day;   
       return dateString
+    },
+    isUser: function (){
+      if (this.stateUser.id === this.userInfo.id) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   created: function () {
-    // console.log('created')
-    // if (this.$route.params.user) {
-    //   this.userInfo = this.$route.params.user
-    //   console.log('왕료')
-    //   console.log(this.userInfo)
-    // }
-    // axios({
-    //   method: 'get',
-    //   url: `${process.env.VUE_APP_API_URL}/drinking/${this.user.id}`,
-    //   headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
-    // })
-    //   .then(res => {
-    //     console.log(res.data)
-    //     this.date = res.data
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //   })
+    console.log('created시작')
+    if (this.$route.params.user) {
+      this.userInfo = this.$route.params.user
+      console.log('유저 정보 담기 완료')
+    }
+    axios({
+      method: 'get',
+      url: `${process.env.VUE_APP_API_URL}/drinking/history/${this.userInfo.id}`,
+      headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+    })
+      .then(res => {
+        console.log(res.data)
+        this.date = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
@@ -114,7 +123,6 @@ export default {
 .outer-box{
   border: 1px solid white;
   border-radius: 10px;
-  /* background-color: whitesmoke; */
   color: purple;
 }
 

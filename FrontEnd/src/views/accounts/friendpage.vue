@@ -9,15 +9,13 @@
           <v-container>
             <v-row >
               <v-col cols="7">
-                <div v-if="user">
+                <div v-if="friend">
                   <h1>주민등록증</h1>
-                  <p>별명: {{ user.nickname }}</p>
-                  <p>소개: {{ user.description }}</p>
-                  <p>성별: {{ user.gender }}</p>
-                  <p>나이: {{ user.age }}</p>
+                  <p>별명: {{ friend.nickname }}</p>
+                  <p>소개: {{ friend.description }}</p>
                 </div>
               </v-col>
-              <v-col v-if="user" cols="4">
+              <v-col v-if="friend" cols="4">
                 <div>
                   <img :src="imgUrl" alt="profile_img">
                 </div>
@@ -26,15 +24,13 @@
           </v-container>
          
         </div>
-        <div class="profile-edit-popup my-2">
-          <ProfileEditPopup :user = "user" v-if="user"/>
-        </div>
+    
           
       </div>
 
       <div class="profile-mydata">
         <div class="profile-mydata-card">
-          <img @click="goMyData" src="@/assets/Group 56.png" width="90%" alt="mydata">
+          <img @click="goFriendData" src="@/assets/Group 56.png" width="90%" alt="friendData">
         </div>
 
         <div class="wallet-1">
@@ -58,11 +54,6 @@
           <img src="@/assets/wallet_card_2.png" alt="wallet-card">
         </div>
 
-
-        <div class="friend-block">
-          <BlockedFriend/>
-        </div>
-        
       </div>
       
      
@@ -72,58 +63,54 @@
 
 <script>
 import CalenderPopup from '../../components/accounts/calender-popup.vue'
-import ProfileEditPopup from '@/components/accounts/profile-edit-popup.vue'
-import BlockedFriend from '@/components/accounts/blocked-friend.vue'
+
 import axios from 'axios'
 
 export default {
-  name: 'MyPage',
-  components:{
-    CalenderPopup,
-    ProfileEditPopup,
-    BlockedFriend,
-  },
-  data(){
-    return{
-      user: null      
-    }
-  },
-  methods: {
-    goMyData: function () {
-      console.log('goMydata')
-      // this.$router.push({name: 'MyData', params: {userId: this.user.id}, query: {user:this.user}})
-      this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
-    }
-   
-  },
-  created: function (){
-    axios({
-      method: 'get',
-      url: `${process.env.VUE_APP_API_URL}/user/info`,
-      headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
-    })
-      .then(res => {
-        console.log(res.data.user)
-        const userInfo = res.data.user
-        this.user = userInfo
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  },
-  computed: {
-    imgUrl: function () {
-      if (this.user.img) {
-        return this.user.imgUrl
-      } else {
-        console.log("@")
-        return require('@/assets/chat.png')
+    name: 'FriendPage',
+    components: {
+        CalenderPopup,
+    },
+    data(){
+      return{
+        friend: null,
       }
-
+    },
+    methods: {
+      goFriendData: function() {
+        this.$router.push({name: 'MyData', params: {userId: this.friend.id, user: this.friend}})
+      }
+    },
+    created: function (){
+      axios({
+        method: 'get',
+        // url: `${process.env.VUE_APP_API_URL}/friend/info/${this.$route.history.params.friend.id}`,
+        url: `${process.env.VUE_APP_API_URL}/friend/info/${1}`,
+        headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+      })
+        .then(res => {
+          console.log(res.data)
+          this.friend = res.data.friend
+          
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    computed: {
+      imgUrl: function (){
+        if (this.friend.img) {
+          return this.friend.imgUrl
+        } else {
+          console.log("@")
+          return require('@/assets/chat.png')
+        }
+      }
     }
-  }
 }
 </script>
+
+
 
 <style scoped>
 
@@ -133,11 +120,6 @@ export default {
   justify-content:center;
   align-items:center;
 }
-
-/* img {
- max-width: 100%;
- max-height: 100%;
-} */
 
 .wallet {
   position: relative;
@@ -215,5 +197,4 @@ export default {
 .profile-edit-popup {
   width: 100px;
 }
-
 </style>
