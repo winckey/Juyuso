@@ -41,7 +41,7 @@
                 <div>
                   <h2>{{ sojuBottle }}</h2>
                 </div>
-                <div>
+                <div class="img-container">
                   <img src="@/assets/add_soju.png" alt="bottle" @click="addSojuBottle">
                 </div>
               </v-col>
@@ -50,7 +50,7 @@
                 <div>
                   <h2>{{ sojuGlass }}</h2>
                 </div>
-                <div>
+                <div class="img-container">
                   <img src="@/assets/add_soju_glass.png" alt="glass" @click="addSojuGlass">
                 </div>
               </v-col>
@@ -59,7 +59,7 @@
                 <div>
                   <h2>{{ beer }}</h2>
                 </div>
-                <div>
+                <div class="img-container">
                   <img src="@/assets/add_beer.png" alt="beer" @click="addBeer">
                 </div>
               </v-col>
@@ -133,7 +133,9 @@ export default {
         this.beer = 0
       },
       drinking: function () {
+        console.log(this.endDate)
         const item = {
+          date: new Date(), 
           soju: (this.sojuBottle * 7) + this.sojuGlass,
           beer: this.beer * 3
         }
@@ -159,6 +161,11 @@ div img {
 }
 
 div img:hover {
-  transform: scale(1.2);
+  transform: scale(1.3);
+}
+
+.img-container {
+  height: 322px;
+  display: flex;
 }
 </style>

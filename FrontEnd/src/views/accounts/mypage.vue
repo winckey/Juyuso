@@ -85,10 +85,7 @@ export default {
   },
   data(){
     return{
-      user: null,
-      dialog:false,
-      isMyData: false
-      
+      user: null      
     }
   },
   methods: {
@@ -161,8 +158,8 @@ export default {
 .profile-card-info {
   width: 90%;
   position: absolute;
-  top: 10%;
-  left: 10%;
+  top: 5%;
+  left: 5%;
   font-size: 1.5rem;
 }
 
