@@ -25,7 +25,8 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(FriendException.class)
     public ResponseEntity<ErrorResponseEntity> handleFriend(FriendException ex){
-        ErrorResponseEntity response = new ErrorResponseEntity(ErrorCode.FRIEND_LOGIC_ERROR , ex.getMessage());
+        ErrorResponseEntity response = new ErrorResponseEntity(ErrorCode.FRIEND_LOGIC_ERROR , ex.getMessage());//커스텀할 에러 메세지 상수로 정의하고
+                                                                                                                //서비스 단에서 가져온 메세지 저장
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

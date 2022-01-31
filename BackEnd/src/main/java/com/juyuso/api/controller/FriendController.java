@@ -38,13 +38,9 @@ public class FriendController {
         User userDetails = (User) authentication.getDetails();
         List<User> friendList = friendService.friendList(userDetails);
 
-        for (int i =0 ; i < friendList.size() ; i ++){
-            System.out.println("friendList id : " +friendList.get(i).getUserId());
-        }
+
         List<User> requestList = friendService.RequestList(userDetails);
-        for (int i =0 ; i < requestList.size() ; i ++){
-            System.out.println("RequestList id : " +requestList.get(i).getUserId());
-        }
+
 
         return ResponseEntity.ok(FriendListResDto.of(200, "Success", friendList ,requestList));
     }

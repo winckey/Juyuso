@@ -28,14 +28,14 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public User getFriendInfo(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 id 유저가 존재하지 않습니다."));
+        return userRepository.findById(userId).orElseThrow(() -> new FriendException("해당 id 유저가 존재하지 않습니다."));
     }
 
     @Override
     public void addRequest(User from, FriendReqDto friendReqDto) {
 
         User to = userRepository.findById(Long.parseLong(friendReqDto.getId()))
-                .orElseThrow(() -> new IllegalArgumentException("친구신청 id의 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new FriendException("친구신청 id의 유저가 존재하지 않습니다."));
 
 
         //친구 요청이 있는가??
@@ -62,7 +62,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void banRequest(User from, FriendReqDto friendReqDto) {
         User toBan = userRepository.findById(Long.parseLong(friendReqDto.getId()))
-                                   .orElseThrow(() -> new IllegalArgumentException("해당 id 유저가 존재하지 않습니다."));
+                                   .orElseThrow(() -> new FriendException("해당 id 유저가 존재하지 않습니다."));
 
 
 
@@ -76,7 +76,8 @@ public class FriendServiceImpl implements FriendService {
     public void agreeRequest(FriendReqDto friendReqDto, User to) {
 
         FriendRequest friendRequest = friendRequestRepository
-                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId()).get();
+                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
+                .orElseThrow(() -> new FriendException("잘못된 요청입니다."));;
 
         User user1 = friendRequest.getFromUser();
         User user2 = friendRequest.getToUser();
@@ -88,6 +89,8 @@ public class FriendServiceImpl implements FriendService {
         Friend friend2 = new Friend();
         friend2.setUser(user2);
         friend2.setFriend(user1);
+
+
         friendRequestRepository.delete(friendRequest);
 
         friendRepository.save(friend);
@@ -128,7 +131,8 @@ public class FriendServiceImpl implements FriendService {
     public void rejectRequest(FriendReqDto friendReqDto, User to) {
 
         FriendRequest friendRequest = friendRequestRepository
-                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId()).get();
+                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
+                .orElseThrow(() -> new FriendException("잘못된 요청입니다."));
 
         friendRequestRepository.delete(friendRequest);
 
