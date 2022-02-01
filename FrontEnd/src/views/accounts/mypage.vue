@@ -64,7 +64,9 @@
         </div>
         
       </div>
-
+      <!-- <div v-if="isMyData">
+        <MyData :user="user" v-if="user"/>
+      </div> -->
      
     </div> 
   </div>
@@ -74,6 +76,7 @@
 import CalenderPopup from '../../components/accounts/calender-popup.vue'
 import ProfileEditPopup from '@/components/accounts/profile-edit-popup.vue'
 import BlockedFriend from '@/components/accounts/blocked-friend.vue'
+// import MyData from '@/views/accounts/mydata.vue'
 import axios from 'axios'
 
 export default {
@@ -81,18 +84,21 @@ export default {
   components:{
     CalenderPopup,
     ProfileEditPopup,
-    BlockedFriend
+    BlockedFriend,
+    // MyData
   },
   data(){
     return{
       user: null,
       dialog:false,
+      isMyData: false
       
     }
   },
   methods: {
     goMyData: function () {
-      this.$router.push({name: 'MyData', params: {userId: 1}})
+      console.log('goMydata')
+      this.$router.push({name: 'MyData', params: {userId: 1, user:this.user}})
     },
     setToken: function (){
       const token = localStorage.getItem('jwt')

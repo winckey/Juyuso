@@ -1,27 +1,46 @@
 <template>
-    <div class="white">
-        <p>friend list</p>
-        <div v-for="friend in friendsList"
-        :key='friend'>
-            <div>{{ friend }}</div>
-        </div>
-    </div>
+  <div class="white" v-if="friends">
+    <v-list>
+      <friend-list-detail
+        :key="friend.id"
+        v-for="friend in friends"
+        :userInfo="friend"
+        :tab="tab"/>
+    </v-list>
+  </div>
 </template>
 
 <script>
+import FriendListDetail from '@/components/side_bar/friend-list-detail.vue'
+import { mapState } from 'vuex'
+
 export default {
-    methods:{
-        setToken : function(){
-            const token = localStorage.getItem('jwt')
-            const config = {
-                Authorization: `Bearer ${token}`
-            }
-            return config
-        },
-    },
-    created: function(){
-        this.$store.dispatch('friendList',this.setToken())
+  name: 'FriendList',
+  components: {
+    FriendListDetail
+  },
+  props: {
+    tab: Number,
+    friends: Array,
+  },
+  data: function () {
+    return {
     }
+  },
+  methods:{
+    setToken : function(){
+      const token = localStorage.getItem('jwt')
+      const config = {
+          Authorization: `Bearer ${token}`
+      }
+      return config
+    },
+  },
+  computed: {
+    ...mapState('friends', [
+      'banList',
+    ])
+  }
 }
 </script>
 

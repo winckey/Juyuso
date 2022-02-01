@@ -56,6 +56,7 @@ export default {
   }
 
   .user-name {
+    text-align: center;
     color: white
   }
 
