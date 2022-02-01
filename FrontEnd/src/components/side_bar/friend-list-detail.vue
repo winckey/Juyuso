@@ -94,8 +94,9 @@ export default {
         console.log(res)
       })
     },
+    // 차단
     banFriend: function () {
-      //친구차단
+        this.$store.dispatch('')
     },
     agreeFriend: function () {
       const token = localStorage.getItem('jwt')
