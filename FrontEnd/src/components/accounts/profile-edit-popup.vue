@@ -163,7 +163,6 @@
 import axios from 'axios'
 import {mapActions} from 'vuex'
 
-const accounts = 'accounts'
 
 export default {
   name: 'ProfileEditPopup',
@@ -225,14 +224,8 @@ export default {
     this.userInfo = this.user
   },
   methods: {
-    ...mapActions(accounts, ['userUpdate']),
-    setToken: function (){
-      const token = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `Bearer ${token}`
-      }
-      return config
-    },
+    ...mapActions('accounts', ['userUpdate']),
+    
 
 // 유효성 검사가 안되고 바로 정보가 update된다는 점~~~~~~~~~
 
@@ -257,7 +250,7 @@ export default {
             method: 'PUT',
             url: `${process.env.VUE_APP_API_URL}/user/info`,
             data: item.credentials,
-            headers: this.setToken()
+            headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
           })
             .then(res => {
               console.log('axios들어옴 하하하')
@@ -268,9 +261,9 @@ export default {
   
             })
             .catch(err => {
+              console.log('axios 틀렸잖앙')
               this.isAlert = true
               this.isSuccess = false
-              console.log('axios 틀렸잖앙')
               console.log(err)
             })
 

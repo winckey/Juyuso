@@ -51,7 +51,6 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="updateUser"
             
           >
             저장
