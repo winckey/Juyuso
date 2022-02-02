@@ -45,5 +45,22 @@ public class DrinkingHistoryService {
         }
     }
 
+    @Transactional
+    public void addLocalDrinkingHistory(DrinkingHistoryAddReqDto reqDto, User user) {
+        DrinkingCategory drinkingCategory;
+        if(reqDto.getSoju() != 0) {
+            drinkingCategory = drinkingCategoryRepository.findByName(soju).get();
+            drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory, reqDto.getDate()));
+        }
+        if(reqDto.getBeer() != 0) {
+            drinkingCategory = drinkingCategoryRepository.findByName(beer).get();
+            drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory, reqDto.getDate()));
+        }
+
+
+
+
+    }
+
 
 }
