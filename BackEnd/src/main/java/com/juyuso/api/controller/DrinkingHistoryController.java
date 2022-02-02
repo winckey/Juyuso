@@ -1,5 +1,7 @@
 package com.juyuso.api.controller;
 
+import com.juyuso.api.dto.request.DrinkingHistoryAddReqDto;
+import com.juyuso.api.dto.response.DrinkingHistoryAddResDto;
 import com.juyuso.api.dto.response.DrinkingHistoryListResDto;
 import com.juyuso.api.service.DrinkingHistoryService;
 import com.juyuso.api.service.UserService;
@@ -41,12 +43,25 @@ public class DrinkingHistoryController {
             @ApiResponse(code = 500, message = " 서버에러")
     })
     public ResponseEntity<List<DrinkingHistoryListResDto>> getDrinkingHistoryList (@PathVariable String userId) {
-
-//        User user = (User) authentication.getDetails();
-
         User user = userService.getUserByUserId(userId);
         return ResponseEntity.ok(DrinkingHistoryListResDto.of(drinkingService.findAll(user)));
     }
+
+
+    @PostMapping("/history")
+    @ApiOperation(value = "사용자의 음주 기록 등록", notes = "<strong>음주 등록</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "등록 성공 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한 없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<DrinkingHistoryAddResDto> addDrinkingHistory(@RequestBody DrinkingHistoryAddReqDto reqDto, Authentication authentication) {
+        User user = (User) authentication.getDetails();
+        drinkingService.addLocalDrinkingHistory(reqDto, user);
+        return ResponseEntity.ok(DrinkingHistoryAddResDto.of(user.getNickname(), reqDto));
+    }
+
 
 
 

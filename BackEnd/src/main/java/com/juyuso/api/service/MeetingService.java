@@ -34,21 +34,16 @@ public class MeetingService {
         this.meetingRepository = meetingRepository;
         this.userRepository = userRepository;
         this.hashTagRepository = hashTagRepository;
-
     }
 
     @Transactional
     public Long createMeeting(MeetingCreateReqDto dto, String username) {
         User user = userRepository.findByUserId(username).get();
         Meeting meeting = dto.toEntity(user);
-
         List<String> list = dto.getHashTag();
-
-
 
         for(int i = 0; i < list.size(); i++) {
                 hashTagRepository.save(new HashTag(meeting, list.get(i)));
-//                meeting.getHashtags().add(new HashTag(meeting, list.get(i)));
         }
         return meetingRepository.save(meeting).getId();
     }
@@ -64,11 +59,9 @@ public class MeetingService {
     public Page<Meeting> findAll(Pageable pageable) {
         return meetingRepository.findAll(pageable);
     }
-
     public Meeting findByMeetingId(Long meetingId) {
         return meetingRepository.findById(meetingId).get();
     }
-
 
     @Transactional
     public Long changeActiveMeetingByMeetingId(Long meetingId) {
