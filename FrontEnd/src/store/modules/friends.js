@@ -102,6 +102,7 @@ const friends = {
         console.log(err)
       })
     },
+    // 친구 신청 수락
     agreeFriends: function ({commit},userId) {
       const token = localStorage.getItem('jwt')
       axios({
@@ -139,6 +140,18 @@ const friends = {
       .then( res => {
         commit('FRIEND_LIST', res.data)
         console.log(res)
+        axios({
+          method:'get',
+          url:`${process.env.VUE_APP_API_URL}/friend`,
+          headers: { Authorization: `Bearer ${token}`, },
+        })
+        .then(res => {
+          commit('FRIEND_LIST', res.data)
+          console.log(res)
+        })
+        .catch(err =>{
+          console.log(err)
+        })
       })
       .catch(err =>{
         console.log(err)

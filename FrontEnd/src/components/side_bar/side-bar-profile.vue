@@ -18,18 +18,19 @@
                         <v-list-item-subtitle>자기소개</v-list-item-subtitle>
                     </v-list-item-content>  
                 </div>
-
-                <v-card-actions>
+                <div class="mypage">
                     <v-btn @click="goMyPage"
                         plain>
                         마이페이지
                     </v-btn>
-                    <v-btn class="logout-btn"
+                </div>
+                <div class="logout">
+                    <v-btn
                         plain
                         @click="logout">
                         로그아웃
                     </v-btn>
-                </v-card-actions>
+                </div>
             </div>
         </v-card>
         <v-card
@@ -113,12 +114,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .card-style{
     text-align: center;
 }
 .logout-btn{
     float: right;
+    text-align: right;
+}
+.mypage{
+    position :relative;
+}
+.logout{
+    position : relative;top: -36px;
+    /* float: right; */
     text-align: right;
 }
 </style>

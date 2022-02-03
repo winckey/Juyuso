@@ -39,9 +39,11 @@
           </template>
           <v-list @contextmenu.prevent>
             <v-list-item><button>방에 초대</button></v-list-item>
-            <v-list-item><button>프로필 보기</button></v-list-item>
-            <v-list-item v-if="tab == 2" @click="addFriend">
-                <button>친구추가</button></v-list-item>
+            <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
+            <span v-if="userInfo">
+              <v-list-item v-if="tab == 2" @click="addFriend">
+                  <button>친구추가</button></v-list-item>
+            </span>
             <v-list-item v-if="tab === 0" @click="deleteFriend"><button>친구삭제</button></v-list-item>
             <v-list-item v-if="tab === 0" @click="banFriend"><button>차단</button></v-list-item>
           </v-list>
@@ -136,6 +138,9 @@ export default {
         nickName: this.userInfo.nickname
       }
       this.rejectFriends(userId)
+    },
+    goFriendProfile: function(){
+      this.$router.push({name: 'MyPage', params: {userId: this.userInfo.id}})
     },
     prevent: function (e) {
       e.preventDefault()
