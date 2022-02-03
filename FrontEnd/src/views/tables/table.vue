@@ -8,7 +8,11 @@
       <!-- <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager"/>
       </div> -->
-      <div class="container">
+      <TitanicGame
+        v-if="gameMode == '타이타닉'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
+      <div v-else class="container">
         <div class="row">
           <div id="video-container">
             <user-video class="col-md-4" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
@@ -84,7 +88,7 @@
             dark
             small
             color="green"
-            @click="switchGameMode(game.name)"
+            @click="sendGameMode(game)"
           >
             {{ game.name }}
           </v-btn>
@@ -100,6 +104,8 @@
 import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
+import TitanicGame from '@/components/game/titanic-game.vue'
+
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -111,7 +117,8 @@ export default {
 
   components: {
     UserVideo,
-    ChatPopup
+    ChatPopup,
+    TitanicGame
   },
   props: {
     roomInfo: Object,
@@ -223,16 +230,33 @@ export default {
           to: [],
           type: 'whole-chat'
         })
-        .then( () => {
-          console.log('success')
-        })
-        .catch( () => {
-          console.log('fail')
-        })
       }
       this.messageInput=''
+    },
+    sendGameMode(gameMode) {
+      // 게임 초기 세팅
+      if (gameMode.name === '타이타닉') {
+        let members = []
+        this.session.streamManagers.forEach(stream => {
+          members.push(stream.stream.connection.connectionId)
+        })
+        let gameInfo = {
+          type: 'Titanic',
+          members: members.sort(() => Math.random() - 0.5),
+          curMember: 0,
+          curAmount: 0,
+          maxAmount: Math.random() * 50,
+        }
+        this.switchGameMode(gameMode.name)
+        this.session.signal({
+          data: JSON.stringify(gameInfo),
+          to: [],
+          type: 'game-info'
+        })
+      }
     }
-  }
+  },
+
 }
 
 </script>

@@ -15,7 +15,8 @@ const openviduStore = {
     publisher: undefined,
     subscribers: [],
     messages: [],
-    gameMode: undefined
+    gameMode: undefined,
+    gameInfo: undefined
   },
   mutations: {
     SET_SESSION_INFO(state, data) {
@@ -45,6 +46,8 @@ const openviduStore = {
 			state.subscribers = [];
       state.messages = [];
 			state.OV = undefined;
+      state.gameMode = undefined;
+      state.gameInfo = undefined;
     },
     SET_MESSAGE(state, data) {
       state.messages = data.messages
@@ -52,13 +55,17 @@ const openviduStore = {
     SET_WHOLE_MESSAGE(state, data) {
       state.Chat_messages = data.messages
     },
+    SET_GAME_INFO(state, data) {
+      state.gameInfo = data.gameInfo
+    },
+
     SET_GAME_MODE(state, data) {
       state.gameMode = data.gameMode
     }
   },
   actions: {
     initSession: function ({ state, dispatch, commit }, userInfo) {
-      if (state.OV) {
+      if (state.Chat_OV != undefined) {
         return
       }
       let data = {
@@ -102,7 +109,8 @@ const openviduStore = {
         publisher: undefined,
         subscribers: [],
         messages: [],
-        gameMode: undefined
+        gameMode: undefined,
+        gameInfo: undefined,
       }
       const sessionId = roomInfo.sessionId
 
@@ -135,10 +143,16 @@ const openviduStore = {
         console.log(event.type); // The type of message ("my-chat")
       });
       
+      data.session.on('signal:game-info', event => {
+        data.gameInfo = event.data
+        commit('SET_GAME_INFO', data)
+      })
+
       data.session.on('signal:game-mode', event => {
         data.gameMode = event.data
         commit('SET_GAME_MODE', data)
       })
+
 			// On every asynchronous exception...
 			data.session.on('exception', ({ exception }) => {
 				console.warn(exception);
@@ -249,20 +263,21 @@ const openviduStore = {
         type: 'game-mode'
       })
     },
+
     enterRoom (context, sessionId) {
       console.log(sessionId)
-      // axios({
-      //   method: 'POST', 
-      //   url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
-      // })
+      axios({
+        method: 'POST', 
+        url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
+      })
 
     },
     leaveRoom (context, sessionId) {
       console.log(sessionId)
-      // axios({
-      //   method: 'POST', 
-      //   url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
-      // })
+      axios({
+        method: 'POST', 
+        url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
+      })
 
     }
   },

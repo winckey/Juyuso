@@ -125,6 +125,12 @@ export default {
       }
       console.log(roomInfo)
       this.joinSession(roomInfo)
+      try {
+        this.videoSrc.getTracks()[0].stop()
+      }
+      catch {
+        roomInfo
+      }
       this.$router.push({ name: 'Table', params: { roomId: this.roomInfo.meetingId, roomInfo: this.roomInfo }})
     }
   },

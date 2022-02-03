@@ -16,6 +16,7 @@
               >
             <div class="table-info">
               {{ roomInfo.meetingTitle }}
+              <v-icon>{{ roomInfo.common ? '' : 'mdi-lock-outline'}}</v-icon>
             </div>
             <div class="table-hashtag">
               <v-chip
@@ -29,12 +30,16 @@
         </button>
       </template>
 
-      <v-card height="500">
+      <v-card height="500" class="p-4">
         <v-card-title class="d-flex justify-content-center">
           <span>
           {{ roomInfo.meetingTitle }}
+          <v-icon>{{ roomInfo.common ? '' : 'mdi-lock-outline'}}</v-icon>
           </span>
         </v-card-title>
+        <v-card-text>
+          방장 : {{ roomInfo.nickName }}
+        </v-card-text>
         <v-chip
           v-for="hashtag in roomInfo.hashtag"
           :key="hashtag"
@@ -59,12 +64,17 @@
     <TablePreview
     :roomInfo="roomInfo"
     ref="tablepreview"/>
+    <TablePassword
+    :password="roomInfo.meetingPassword"
+    ref="tablepassword"
+    @passwordConfirm="passwordConfirm"/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 import TablePreview from '@/components/table_list/table-preview.vue'
+import TablePassword from '@/components/table_list/table-password.vue'
 
 export default {
   name: 'TableDetailPopup',
@@ -73,7 +83,8 @@ export default {
     search: Boolean,
   },
   components: {
-    TablePreview
+    TablePreview,
+    TablePassword
   },
   data: function () {
     return {
@@ -90,6 +101,14 @@ export default {
       'joinSession'
     ]),
     enterRoom: function () {
+      if (!this.roomInfo.common) {
+        this.$refs.tablepassword.dialog = true
+      }
+      else {
+        this.$refs.tablepreview.dialog = true
+      }
+    },
+    passwordConfirm: function () {
       this.$refs.tablepreview.dialog = true
     }
   }
