@@ -13,7 +13,6 @@
 <script>
 import FriendListDetail from '@/components/side_bar/friend-list-detail.vue'
 
-
 export default {
   name: 'FriendList',
   components: {
