@@ -6,6 +6,7 @@ import Login from '@/views/accounts/login.vue'
 import MyData from '@/views/accounts/mydata.vue'
 import MyPage from '@/views/accounts/mypage.vue'
 import Signup from '@/views/accounts/signup.vue'
+import FriendPage from '@/views/accounts/friendpage.vue'
 
 //tables
 import TableList from '@/views/tables/table-list.vue'
@@ -14,16 +15,13 @@ import Table from '@/views/tables/table.vue'
 //main
 import Main from '@/views/main.vue'
 
-//store
-import store from '@/store/modules/accounts.js'
+
 Vue.use(VueRouter)
 
 
 const rejectAuthUser = (to, from, next) => {
   if (localStorage.getItem('jwt')) {
     console.log('로그인 접근을 reject함')
-    console.log('router_page')
-    console.log(store.state.isLogin)
     alert('이미 로그인을 하셨습니다')
     next('/')
   }else {
@@ -58,6 +56,11 @@ const routes = [
     path: '/mypage/:userId',
     name: 'MyPage',
     component: MyPage
+  },
+  {
+    path: '/friendpage/:userId',
+    name: 'FriendPage',
+    component: FriendPage
   },
   {
     path: '/mydata/:userId',
