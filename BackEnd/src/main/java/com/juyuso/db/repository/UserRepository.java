@@ -33,4 +33,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " WHERE f.to_id = :id)", nativeQuery = true)
     List<User> findRequestListByUserId(@Param("id")Long id);
 
+
+    @Query(value = "select * from user " +
+            " u where id in " +
+            "(SELECT b.user_id " +
+            "FROM  ban b " +
+            " WHERE b.ban_user_id = :id)", nativeQuery = true)
+    List<User> findBanListByUserId(Long id);
 }

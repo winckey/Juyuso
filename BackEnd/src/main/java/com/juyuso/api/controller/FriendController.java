@@ -173,4 +173,23 @@ public class FriendController {
         return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
     }
 
+
+
+    @GetMapping("/ban")
+    @ApiOperation(value = "차단 리스트 조회", notes = "<strong>차단리스트를 조회한다.</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한 없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<BanResDto> findBanList(@ApiIgnore Authentication authentication) {
+        User userDetails = (User) authentication.getDetails();
+        List<User> banList = friendService.banList(userDetails);
+
+
+
+        return ResponseEntity.ok(BanResDto.of(200, "Success", banList));
+    }
+
 }
