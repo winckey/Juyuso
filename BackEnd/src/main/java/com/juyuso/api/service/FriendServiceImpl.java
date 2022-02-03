@@ -1,7 +1,8 @@
 package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.FriendReqDto;
-import com.juyuso.api.exception.FriendException;
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.db.entity.Ban;
 import com.juyuso.db.entity.Friend;
 import com.juyuso.db.entity.FriendRequest;
@@ -28,30 +29,29 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public User getFriendInfo(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new FriendException("해당 id 유저가 존재하지 않습니다."));
+        return userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
     public void addRequest(User from, FriendReqDto friendReqDto) {
 
         User to = userRepository.findById(Long.parseLong(friendReqDto.getId()))
-                .orElseThrow(() -> new FriendException("친구신청 id의 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
 
         //친구 요청이 있는가??
         FriendRequest check1FR = friendRequestRepository.findRequestByfromId(from.getId(), to.getId()).orElse(null);
         FriendRequest check2FR = friendRequestRepository.findRequestByfromId(to.getId(), from.getId()).orElse(null);
         if (check1FR != null || check2FR != null) {
-            throw new FriendException("이미 친구요청이 있습니다.");
+            throw new CustomException(ErrorCode.FRIEND_REQUEST_DUPLICATE);
         }
 
         // 이미 친구인가?
         Friend checkFriend = friendRepository.findFriendByFromToId(from.getId(), to.getId()).orElse(null);
         if(checkFriend != null)
         {
-            throw new FriendException("이미 친구입니다.");
+            throw new CustomException(ErrorCode.FRIEND_DUPLICATE);
         }
-
 
         FriendRequest friendRequest = new FriendRequest();
         friendRequest.addRequest(from, to);
@@ -62,10 +62,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void banRequest(User from, FriendReqDto friendReqDto) {
         User toBan = userRepository.findById(Long.parseLong(friendReqDto.getId()))
-                                   .orElseThrow(() -> new FriendException("해당 id 유저가 존재하지 않습니다."));
-
-
-
+                                   .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Ban ban = new Ban();
         ban.addBan(from, toBan);
@@ -74,10 +71,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void agreeRequest(FriendReqDto friendReqDto, User to) {
-
         FriendRequest friendRequest = friendRequestRepository
                 .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
-                .orElseThrow(() -> new FriendException("잘못된 요청입니다."));;
+                .orElseThrow(() -> new CustomException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));;
 
         User user1 = friendRequest.getFromUser();
         User user2 = friendRequest.getToUser();
@@ -132,7 +128,7 @@ public class FriendServiceImpl implements FriendService {
 
         FriendRequest friendRequest = friendRequestRepository
                 .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
-                .orElseThrow(() -> new FriendException("잘못된 요청입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
 
         friendRequestRepository.delete(friendRequest);
 
@@ -143,8 +139,5 @@ public class FriendServiceImpl implements FriendService {
         Long from = Long.parseLong(friendReqDto.getId());
         Long to = (userDetails.getId());
         banRepository.deleteByBothUserId(from, to);
-
     }
-
-
 }

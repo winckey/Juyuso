@@ -1,7 +1,7 @@
 package com.juyuso.api.controller;
 
-import com.juyuso.api.dto.request.LoginReqDto;
-import com.juyuso.api.dto.request.RegisterReqDto;
+import com.juyuso.api.dto.request.UserLoginReqDto;
+import com.juyuso.api.dto.request.UserRegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
 import com.juyuso.api.dto.request.UserPwCheckReqDto;
 import com.juyuso.api.dto.response.*;
@@ -11,15 +11,18 @@ import com.juyuso.common.util.JwtTokenUtil;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+
+@Slf4j
 @Api(value = "유저 API", tags = {"User"})
 @RestController
 @RequestMapping("/api/user")
@@ -38,13 +41,10 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> register(
-            @RequestBody @ApiParam(value="회원가입 정보<br>birthDate 칼럼은 yyyy-MM-dd 포맷<br>gender 칼럼은 M 또는 F 값으로 전달", required = true) RegisterReqDto registerInfo) {
-
+            @Valid @RequestBody @ApiParam(value="회원가입 정보<br>birthDate 칼럼은 yyyy-MM-dd 포맷<br>gender 칼럼은 M 또는 F 값으로 전달", required = true) UserRegisterReqDto registerInfo) {
         //임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
-        System.out.println("JOIN");
-        System.out.println(registerInfo);
+        log.info("SIGN UP", registerInfo);
         User user = userService.createUser(registerInfo);
-        System.out.println(user);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -56,7 +56,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<LoginResDto> login(@RequestBody @ApiParam(value="로그인 정보", required = true) LoginReqDto loginInfo) {
+    public ResponseEntity<LoginResDto> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReqDto loginInfo) {
         String userId = loginInfo.getId();
         String password = loginInfo.getPassword();
 
@@ -142,7 +142,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<UserPwCheckResDto> checkPw(@ApiIgnore Authentication authentication, @RequestBody UserPwCheckReqDto userPwCheckReqDto) {
+    public ResponseEntity<UserPwCheckResDto> checkPw(@ApiIgnore Authentication authentication, @Valid @RequestBody UserPwCheckReqDto userPwCheckReqDto) {
         User userDetails = (User) authentication.getDetails();
 
         Boolean valid = userService.checkPw(userDetails, userPwCheckReqDto);
