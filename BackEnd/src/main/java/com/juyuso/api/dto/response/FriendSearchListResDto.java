@@ -2,7 +2,6 @@ package com.juyuso.api.dto.response;
 
 import com.juyuso.api.dto.UserInfoDto;
 import com.juyuso.common.model.response.BaseResponseBody;
-import com.juyuso.db.entity.Friend;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -11,21 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@ApiModel("FriendResponse")
-public class FriendListResDto extends BaseResponseBody {
+@ApiModel("FriendSearchListResDto")
+public class FriendSearchListResDto extends BaseResponseBody {
 
 
     private List<UserInfoDto> friendList;
-    private List<UserInfoDto> friendRequestList;
+    private List<UserInfoDto> notFriendList;
 
 
-    public static FriendListResDto of(Integer statusCode, String message, List<User> user ,  List<User> request) {
-        FriendListResDto res = new FriendListResDto();
+    public static FriendSearchListResDto of(Integer statusCode, String message, List<User> user , List<User> not) {
+        FriendSearchListResDto res = new FriendSearchListResDto();
         res.setStatusCode(statusCode);
         res.setMessage(message);
         res.setFriendList(user);
 
-        res.setFriendRequestList(request);
+        res.setNotFriendList(not);
         return res;
     }
 
@@ -38,10 +37,10 @@ public class FriendListResDto extends BaseResponseBody {
     }
 
 
-    public void setFriendRequestList(List<User> request) {
-        friendRequestList = new ArrayList<>();
-        for (int i =0 ; i < request.size() ; i ++){
-            friendRequestList.add(UserInfoDto.of(request.get(i)));
+    public void setNotFriendList(List<User> not) {
+        notFriendList = new ArrayList<>();
+        for (int i =0 ; i < not.size() ; i ++){
+            notFriendList.add(UserInfoDto.of(not.get(i)));
         }
     }
 

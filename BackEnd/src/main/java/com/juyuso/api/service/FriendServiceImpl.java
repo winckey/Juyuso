@@ -140,4 +140,16 @@ public class FriendServiceImpl implements FriendService {
         Long to = (userDetails.getId());
         banRepository.deleteByBothUserId(from, to);
     }
+
+
+    @Override
+    public List<User> userSearchMy(String keyword, User userDetails) {
+        return userRepository.findFriendByNickname(keyword , userDetails.getId());
+    }
+
+    @Override
+    public List<User> userSearchNot(String keyword, User userDetails) {
+        return userRepository.findNotFriendByNickname(keyword , userDetails.getId());
+    }
+
 }

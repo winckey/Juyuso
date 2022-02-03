@@ -124,20 +124,20 @@ public class FriendController {
     }
 
     @GetMapping("/{keyword}")
-    @ApiOperation(value = "유저 검색", notes = "<strong>친구추가를 위한 전체 유저 검색.</strong>" +
-                                                  "<strong> keyword를 포함하는 별명을 가진 유저 검색")
+    @ApiOperation(value = "유저 검색 !!", notes = "<strong>친구추가를 위한 전체 유저 검색.</strong>" +
+            "<strong> keyword를 포함하는 별명을 가진 유저 검색")
     @ApiResponses({
             @ApiResponse(code = 200, message = "리스트조회 성공 "),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public ResponseEntity<FriendResDto> userSearch(@PathVariable String keyword) {
-        List<User> userList = friendService.userSearch(keyword);
-        for (User u : userList) {
-            System.out.println(u.getNickname());
-        }
-        return ResponseEntity.ok(FriendResDto.of(200, "Success", userList));
+    public ResponseEntity<FriendSearchListResDto> userSearch(@ApiIgnore Authentication authentication , @PathVariable String keyword) {
+
+        User userDetails = (User) authentication.getDetails();
+        List<User> userListMyFriend = friendService.userSearchMy(keyword , userDetails);
+        List<User> userListNotFriend = friendService.userSearchNot(keyword , userDetails);
+        return ResponseEntity.ok(FriendSearchListResDto.of(200, "Success", userListMyFriend , userListNotFriend));
     }
 
     @PostMapping("/ban")

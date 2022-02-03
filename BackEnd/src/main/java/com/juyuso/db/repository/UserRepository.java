@@ -18,11 +18,28 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findALLByNickname(@Param("keyword")String keyword);
 
 
+    @Query(value = "SELECT * FROM (SELECT * from user" +
+            " where id in " +
+            "(SELECT f.user_id" +
+            " from friend f " +
+            "WHERE f.from_id = :id)) as u " +
+            "where u.nickname LIKE %:keyword%", nativeQuery = true)
+    List<User> findFriendByNickname(@Param("keyword")String keyword , @Param("id")Long id);
+
+
+    @Query(value = "SELECT * FROM (SELECT * from user" +
+            " where id not in " +
+            "(SELECT f.user_id" +
+            " from friend f " +
+            "WHERE f.from_id = :id)) as u " +
+            "where u.nickname LIKE %:keyword%", nativeQuery = true)
+    List<User> findNotFriendByNickname(@Param("keyword")String keyword , @Param("id")Long id);
+
     @Query(value = "select * from user " +
-                   " u where id in " +
-                        "(SELECT f.user_id " +
-                        "FROM  friend f " +
-                        " WHERE f.from_id = :id)", nativeQuery = true)
+            " u where id in " +
+            "(SELECT f.user_id " +
+            "FROM  friend f " +
+            " WHERE f.from_id = :id)", nativeQuery = true)
     List<User> findListByUserId(@Param("id")Long id);
 
 

@@ -24,4 +24,9 @@ public interface FriendService {
     void rejectRequest(FriendReqDto friendReqDto , User to);
 
     void banCancelRequest(User userDetails, FriendReqDto friendReqDto);
+
+
+    List<User> userSearchMy(String keyword, User userDetails);
+
+    List<User> userSearchNot(String keyword, User userDetails);
 }
