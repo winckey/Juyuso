@@ -1,12 +1,6 @@
 <template>
   <div>
-    <v-btn
-      class="chat-btn"
-      fab
-      @click="toggleChatbox"
-    >
-      <v-icon>mdi-chat-processing</v-icon>
-    </v-btn>
+    
     <v-navigation-drawer
       v-model="chatBox"
       :permanent="chatBox"
