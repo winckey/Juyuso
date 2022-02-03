@@ -3,8 +3,10 @@ package com.juyuso.api.controller;
 import com.juyuso.api.dto.request.UserLoginReqDto;
 import com.juyuso.api.dto.request.UserRegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
-import com.juyuso.api.dto.request.UserPwCheckReqDto;
+import com.juyuso.api.dto.request.UserPwReqDto;
 import com.juyuso.api.dto.response.*;
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.api.service.UserService;
 import com.juyuso.common.model.response.BaseResponseBody;
 import com.juyuso.common.util.JwtTokenUtil;
@@ -16,16 +18,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @Slf4j
-@Api(value = "유저 API", tags = {"User"})
+@Validated
+@Api(value = "유저 API", tags = {"회원 관리"})
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -56,7 +61,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<LoginResDto> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReqDto loginInfo) {
+    public ResponseEntity<LoginResDto> login(@Valid @RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReqDto loginInfo) {
         String userId = loginInfo.getId();
         String password = loginInfo.getPassword();
 
@@ -67,8 +72,7 @@ public class UserController {
             String token = JwtTokenUtil.getToken(userId);
             return ResponseEntity.ok(LoginResDto.of(200, "Success", token, user));
         }
-        // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-        return ResponseEntity.status(401).body(LoginResDto.of(401, "Invalid Password", null));
+        throw new CustomException(ErrorCode.USER_NOT_FOUND);
     }
 
     @GetMapping("/id/{userId}")
@@ -77,14 +81,14 @@ public class UserController {
             @ApiResponse(code = 200, message = "성공", response = UserIdCheckResDto.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<UserIdCheckResDto> checkDuplicateUserId(@PathVariable String userId) {
+    public ResponseEntity<UserIdCheckResDto> checkDuplicateUserId(@NotBlank @PathVariable String userId) {
 
         Boolean result = userService.checkDuplicateUserId(userId);
 
         return ResponseEntity.status(200).body(UserIdCheckResDto.of(200, "Success", userId, result));
     }
 
-    @GetMapping("/info")
+    @GetMapping("/me")
     @ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = UserResDto.class),
@@ -102,7 +106,7 @@ public class UserController {
         return ResponseEntity.status(200).body(UserResDto.of(200, "Success", userDetails));
     }
 
-    @PutMapping("/info")
+    @PutMapping("/me")
     @ApiOperation(value = "회원 본인 정보 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = UserResDto.class),
@@ -110,12 +114,28 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<UserResDto> modifyUser(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="수정 정보", required = true) UserModifyReqDto userModifyReqDto) {
+    public ResponseEntity<UserResDto> modifyUser(@ApiIgnore Authentication authentication, @Valid @RequestBody @ApiParam(value="수정 정보", required = true) UserModifyReqDto userModifyReqDto) {
         User userDetails = (User) authentication.getDetails();
 
         User result = userService.modifyUser(userDetails, userModifyReqDto);
 
         return ResponseEntity.status(200).body(UserResDto.of(200, "Success", result));
+    }
+
+    @PostMapping(value = "/auth")
+    @ApiOperation(value = "패스워드 변경", notes = "로그인된 계정의 패스워드를 변경한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> modifyPw(@ApiIgnore Authentication authentication, @Valid @RequestBody UserPwReqDto userPwReqDto) {
+        User userDetails = (User) authentication.getDetails();
+
+        userService.modifyPw(userDetails, userPwReqDto);
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @PostMapping(value = "/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -134,7 +154,7 @@ public class UserController {
         return ResponseEntity.status(200).body(UserImgPostResDto.of(200, "Success", imgUrl));
     }
 
-    @PostMapping(value = "/pw/check")
+    @PostMapping(value = "/validate")
     @ApiOperation(value = "패스워드 체크", notes = "로그인된 계정의 패스워드 일치 여부를 반환한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = UserPwCheckResDto.class),
@@ -142,10 +162,10 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<UserPwCheckResDto> checkPw(@ApiIgnore Authentication authentication, @Valid @RequestBody UserPwCheckReqDto userPwCheckReqDto) {
+    public ResponseEntity<UserPwCheckResDto> validate(@ApiIgnore Authentication authentication, @Valid @RequestBody UserPwReqDto userPwReqDto) {
         User userDetails = (User) authentication.getDetails();
 
-        Boolean valid = userService.checkPw(userDetails, userPwCheckReqDto);
+        Boolean valid = userService.checkPw(userDetails, userPwReqDto);
 
         return ResponseEntity.status(200).body(UserPwCheckResDto.of(200, "Success", valid));
     }
