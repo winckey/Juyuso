@@ -16,40 +16,46 @@
           </v-list-item>
       </div>
       <div v-else>
-        <v-menu
-        v-model="showMenu"
-        offset-y
-        :position-x="x"
-        :position-y="y"
-        @contextmenu.prevent
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-list-item
-          v-bind="attrs"
-          v-on="on"
-          oncontextmenu="return false">
-            <v-list-item-avatar size=40>
-              <img src="@/assets/logo.png" style="object-fit: cover">
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{ userInfo.nickname }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-        <v-list @contextmenu.prevent>
-          <v-list-item><button>방에 초대</button></v-list-item>
-          <v-list-item><button>프로필 보기</button></v-list-item>
-          <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item>
-          <v-list-item v-if="tab === 0" @click="deleteFriend"><button>친구삭제</button></v-list-item>
-          <v-list-item v-if="tab === 0"><button>차단</button></v-list-item>
-        </v-list>
-      </v-menu>
+        <div v-if="user.id != userInfo.id">
+          <v-menu
+          v-model="showMenu"
+          offset-y
+          :position-x="x"
+          :position-y="y"
+          @contextmenu.prevent
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-list-item
+            v-bind="attrs"
+            v-on="on"
+            oncontextmenu="return false">
+              <v-list-item-avatar size=40>
+                <img src="@/assets/logo.png" style="object-fit: cover">
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ userInfo.nickname }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-list @contextmenu.prevent>
+            <v-list-item><button>방에 초대</button></v-list-item>
+            <v-list-item><button>프로필 보기</button></v-list-item>
+            <v-list-item v-if="tab == 2" @click="addFriend">
+                <button>친구추가</button></v-list-item>
+            <v-list-item v-if="tab === 0" @click="deleteFriend"><button>친구삭제</button></v-list-item>
+            <v-list-item v-if="tab === 0" @click="banFriend"><button>차단</button></v-list-item>
+          </v-list>
+        </v-menu>
+        </div>
+
       </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { mapActions, mapState } from 'vuex'
+
 export default {
   name: 'FriendListDetail',
   props: {
@@ -63,7 +69,19 @@ export default {
       showMenu: false
     }
   },
+  computed: {
+    ...mapState('accounts', [
+      'user',
+    ]),
+    ...mapState('friends',[
+      'friendsList',
+      'banList'
+    ])
+  },
   methods: {
+    ...mapActions('friends', ['blockFriend']),
+    ...mapActions('friends',['agreeFriends']),
+    ...mapActions('friends',['rejectFriends']),
     addFriend: function () {
       const token = localStorage.getItem('jwt')
       axios({
@@ -96,37 +114,28 @@ export default {
     },
     // 차단
     banFriend: function () {
-        this.$store.dispatch('')
+      const userId = {
+        id : this.userInfo.id,
+        nickName: this.userInfo.nickname
+      }
+        //this.$store.friends.dispatch('banFriend',userId)
+        this.blockFriend(userId)
     },
-    agreeFriend: function () {
-      const token = localStorage.getItem('jwt')
-      axios({
-        method: 'POST',
-        url: `${process.env.VUE_APP_API_URL}/friend/agree`,
-        headers: { Authorization: `Bearer ${token}`},
-        data: {
-          id: this.userInfo.id,
-          nickName: this.userInfo.nickname,
-        }
-      })
-      .then( res => {
-        console.log(res)
-      })
+    // 수락
+    agreeFriend: function(){
+      const userId = {
+        id : this.userInfo.id,
+        nickName: this.userInfo.nickname
+      }
+      this.agreeFriends(userId)
     },
+    // 거절
     rejectFriend: function () {
-      const token = localStorage.getItem('jwt')
-      axios({
-        method: 'DELETE',
-        url: `${process.env.VUE_APP_API_URL}/friend/reject`,
-        headers: { Authorization: `Bearer ${token}`},
-        data: {
-          id: this.userInfo.id,
-          nickName: this.userInfo.nickname,
-        }
-      })
-      .then( res => {
-        console.log(res)
-      })
+      const userId={
+        id : this.userInfo.id,
+        nickName: this.userInfo.nickname
+      }
+      this.rejectFriends(userId)
     },
     prevent: function (e) {
       e.preventDefault()

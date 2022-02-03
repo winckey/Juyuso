@@ -7,6 +7,11 @@ const friends = {
     searchList:[],
     banList:[],
   },
+  getters: {
+    FriendsData(state){
+      return state.friendsList
+    }
+  },
   mutations: {
     SEARCH_USER_DATA:function(state, data){
       state.searchList = data
@@ -21,8 +26,11 @@ const friends = {
       let index = state.friendList.indexOf(userInfo)
       state.friendList.splice(index, 1)
     },
-    BAN_FIREND: function(state, userId){
-      state.banList = userId
+    BAN_FIREND: function(state, data){
+      state.banList = data
+    },
+    AGREE_FRIEND: function(state, userId){
+      state.friendsList = userId
     }
 
 
@@ -80,21 +88,63 @@ const friends = {
       commit('ADD_FRIEND_LIST', userInfo)
     },
     // 친구 차단
-    banFriend : function({commit},friendId){
+    blockFriend : function({commit},friendId){
       const token = localStorage.getItem('jwt')
       axios({
         method:'post',
-        url:`${process.env.VUE_APP_API_URL}/friend/ban/${friendId}`,
-        headers: { Authorization: `Bearer ${token}`,}
-      })
-        .then(res => {
+        url:`${process.env.VUE_APP_API_URL}/friend/ban`,
+        headers: { Authorization: `Bearer ${token}`,},
+        data: friendId
+      }).then(res => {
           commit('BAN_FIREND',res.data)
+          console.log('차단리스트',res.data)
+      }).catch(err =>{
+        console.log(err)
+      })
+    },
+    agreeFriends: function ({commit},userId) {
+      const token = localStorage.getItem('jwt')
+      axios({
+        method: 'POST',
+        url: `${process.env.VUE_APP_API_URL}/friend/agree`,
+        headers: { Authorization: `Bearer ${token}`},
+        data: userId
+      })
+      .then( (res) => {
+        console.log(res);
+        commit('AGREE_FRIEND',res);
+        axios({
+          method:'get',
+          url:`${process.env.VUE_APP_API_URL}/friend`,
+          headers: { Authorization: `Bearer ${token}`, },
+        })
+        .then(res => {
+          commit('FRIEND_LIST', res.data)
+          console.log(res)
         })
         .catch(err =>{
           console.log(err)
         })
+      })
+    },
+    // 친구 수락 거절
+    rejectFriends: function({commit}, userId){
+      const token = localStorage.getItem('jwt')
+      axios({
+        method: 'DELETE',
+        url: `${process.env.VUE_APP_API_URL}/friend/reject`,
+        headers: { Authorization: `Bearer ${token}`},
+        data: userId
+      })
+      .then( res => {
+        commit('FRIEND_LIST', res.data)
+        console.log(res)
+      })
+      .catch(err =>{
+        console.log(err)
+      })
     }
-  },
+  }
 }
 
 export default friends
