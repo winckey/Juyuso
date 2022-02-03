@@ -22,7 +22,7 @@
         dense
         type="error"
       >
-        정보를 다시 확인해주세요!
+        입력 형식을 다시 확인해주세요!
       </v-alert>
 
 
@@ -107,29 +107,7 @@
                   ></v-text-field>
                 </v-col>
 
-
-                <!-- <v-col cols="6">
-                  <v-text-field
-                    v-model="password"
-                    :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="passwordShow ? 'text' : 'password'"
-                    label="새 비밀번호*"
-                    :rules="rules.passwordRule"
-                    hint="영어, 숫자, 특수문자를 모두 포함해야합니다 (9-16자)"
-                    required
-                    @click:append="passwordShow = !passwordShow"
-                  ></v-text-field>
-                  <v-text-field
-                    :append-icon="passwordConfirmationShow ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="passwordConfirmationShow ? 'text' : 'password'"
-                    label="새 비밀번호 확인*"
-                    v-model="passwordConfirmation"
-                    @click:append="passwordConfirmationShow = !passwordConfirmationShow"
-                    :rules="rules.passwordConfirmationRule"
-                    required
-                  ></v-text-field>
-                </v-col> -->
-                <v-col cols="6">
+                <v-col cols="12">
                   <v-select
                     v-model="userInfo.regionId"
                     :rules="rules.regionRule"
@@ -162,7 +140,6 @@
             color="blue darken-1"
             text
             @click="updateUser"
-            
           >
             저장
           </v-btn>
@@ -192,10 +169,6 @@ export default {
       userInfo: null,
       dialog: false,
       profileImg: null,
-      passwordShow: false,
-      passwordConfirmationShow: false,
-      passwordConfirmation: '',
-      password: '',
       regions: [
           {region_id: 1, name: '서울'},
           {region_id: 2, name: '부산'},
@@ -211,15 +184,6 @@ export default {
           v => !!v || '이메일을 입력해주세요.',
           v => /.+@.+/.test(v) || '이메일 형식에 맞지않습니다.',
         ],
-        // passwordRule: [
-        //   v => !!v || "비밀번호를 입력해주세요.",
-        //   v => !(v && v.length < 9 && v.length > 15) || "비밀번호는 9자에서 16자 사이로 입력가능합니다.",
-        //   v => /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(v) || "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다."
-        // ],
-        // passwordConfirmationRule: [
-        //   v => !!v || "비밀번호 확인을 입력해주세요.",
-        //   v => v === this.password || "비밀번호가 일치하지 않습니다."
-        // ],
         birthRule: [
           v => !!v || "생년월일을 입력해주세요."
         ],
@@ -245,21 +209,22 @@ export default {
     ...mapActions('accounts', ['userUpdate']),
     updateUser: function () {
       const item = {credentials: {
-                  nickname: this.userInfo.nickname,
-                  description: this.userInfo.description,
-                  email: this.userInfo.email,
-                  regionId: this.userInfo.regionId,
-                  phone: this.userInfo.phone,
+          description: this.userInfo.description,
+          email: this.userInfo.email,
+          nickname: this.userInfo.nickname,
+          phone: this.userInfo.phone,
+          regionId: this.userInfo.regionId,
       }}
 
      
-      console.log('업데이트 요청 직전')
+      
 
       const validation = this.$refs.update.validate()
       if (validation) {
+        console.log('업데이트 요청 직전')
         axios({
             method: 'PUT',
-            url: `${process.env.VUE_APP_API_URL}/user/info`,
+            url: `${process.env.VUE_APP_API_URL}/users/me`,
             data: item.credentials,
             headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
           })
@@ -290,7 +255,6 @@ export default {
   
     uploadImage: function () {
       console.log('uploadㄱㄱ')
-      console.log(this.profileImg)
 
       const image = new FormData()
       image.append('img', this.profileImg)
