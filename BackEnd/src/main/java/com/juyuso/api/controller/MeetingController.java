@@ -75,7 +75,6 @@ public class MeetingController {
         Long meetingId = meetingService.createMeeting(reqDto, userId);
         this.mapSessions.put(meetingId, 1);
         historyService.saveMeetingHistory(meetingId, userId, "생성");
-
         return ResponseEntity.ok(MeetingCreateResDto.of(meetingId, reqDto.getMeetingName(), reqDto.getMeetingPassword(), userId));
     }
 
@@ -87,11 +86,14 @@ public class MeetingController {
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
-    public ResponseEntity<Page<MeetingListResDto>> getMeetingListByParam(@RequestParam(required = false) String tags,
-                                                       @RequestParam(required = false) String title, @PageableDefault(size = 12) Pageable pageable
-                                                                         ) {
+    public ResponseEntity<Page<MeetingListResDto>> getMeetingListByParam(
+            @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) boolean common,
+            @PageableDefault(size = 30) Pageable pageable)
+    {
         if(tags != null) {
-            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
+           return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
         }
         else if(title != null){
             return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitle(title, pageable)));

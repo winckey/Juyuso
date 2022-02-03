@@ -20,8 +20,10 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     @Query("SELECT m FROM Meeting m WHERE m.active = true and m.title LIKE CONCAT('%',:title, '%')")
     Page<Meeting> findAllByTitleContaining(@Param("title") String title, Pageable pageable);
 
-    @Query("SELECT m FROM Meeting m WHERE m.active = true")
+    @Query(value = "SELECT * FROM meeting m LEFT JOIN user_img ui ON m.owner_id = ui.user_id WHERE m.active = TRUE ", nativeQuery = true)
     Page<Meeting> findAll(Pageable pageable);
+
+
 
 
 
