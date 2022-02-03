@@ -25,6 +25,14 @@
         변경되었습니다
       </v-alert>
 
+      <v-alert
+      :value="isAlert"
+        dense
+        type="error"
+      >
+        비밀번호를 다시 확인해주세요!
+      </v-alert>
+
 
       <v-card class="p-2" >
         <v-card-title class="justify-content-center">
@@ -53,7 +61,7 @@
                         </v-col>
                         <v-col cols="4">
                             <div class="d-flex align-self-center">
-                                <v-btn @click="passwordValid">확인하기</v-btn>
+                                <v-btn @click="passwordValid" color="#4DB6AC" dark>확인하기</v-btn>
                             </div>
                         </v-col>
                     </v-row>
@@ -93,14 +101,14 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="[dialog = false, isSuccess=false]"
+            @click="[dialog = false, isSuccess=false, isAlert=false]"
           >
             닫기
           </v-btn>
           <v-btn
             color="blue darken-1"
             text
-            @click="updateUser"
+            @click="updatePassword"
           >
             저장
           </v-btn>
@@ -125,6 +133,7 @@ export default {
     data: function () {
         return {
             isValid: false,
+            isAlert: false,
             dialog: false,
             isSuccess: false,
             passwordShow: false,
@@ -151,45 +160,39 @@ export default {
             console.log(this.nowPassword)
             axios({
                 method: 'POST',
-                url: `${process.env.VUE_APP_API_URL}/user/pw/check`,
+                url: `${process.env.VUE_APP_API_URL}/users/validate`,
                 data: {password: this.nowPassword},
                 headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
             })
                 .then(res => {
                     console.log(res)
                     this.isValid = true
+                    this.isAlert = false
                 })
                 .catch(err => {
                     console.log(err)
+                    this.isAlert = true
                 })
         },
-        updateUser: function () {
-            const item = {credentials: {
-                        nickname: this.user.nickname,
-                        description: this.user.description,
-                        email: this.user.email,
-                        regionId: this.user.regionId,
-                        phone: this.user.phone,
-                        password: this.password
-            }}
-
+        updatePassword: function () {
             console.log('업데이트 요청 직전')
             if (this.password === this.passwordConfirmation) {
                 axios({
                         method: 'PUT',
-                        url: `${process.env.VUE_APP_API_URL}/user/info`,
-                        data: item.credentials,
+                        url: `${process.env.VUE_APP_API_URL}/users/auth`,
+                        data: {password: this.password},
                         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
                     })
                         .then(res => {
                         console.log('axios들어옴 하하하')
                         this.isSuccess=true
+                        this.isAlert = false
                         console.log(res.data.user)
                         this.userUpdate(res.data.user)
                         })
                         .catch(err => {
                         console.log('axios 틀렸잖앙')
-                        this.isSuccess = false
+                        this.isAlert = true
                         console.log(err)
                         })
             } else {
