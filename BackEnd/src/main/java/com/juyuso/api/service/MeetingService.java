@@ -42,7 +42,6 @@ public class MeetingService {
 
     @Transactional
     public Long createMeeting(MeetingCreateReqDto dto, String username) {
-//        User user = userRepository.findByUserId(username).get();
         User user = userRepository.findByUserId(username).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Meeting meeting = dto.toEntity(user);
         List<String> list = dto.getHashTag();
