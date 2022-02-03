@@ -17,6 +17,19 @@
       width="300px"
       class="p-3 chat-box"
     >
+      <div class="whole-chat-list d-flex p-2" v-if="Chat_messages.length > 0">
+        <div>
+          <v-icon>mdi-bullhorn-outline</v-icon>
+        </div>
+        <div>
+          <div>
+            {{ JSON.parse(Chat_messages[Chat_messages.length-1].from.data).clientData }}
+          </div>
+          <div>
+            {{ Chat_messages[Chat_messages.length-1].data }}
+          </div>
+        </div>
+      </div>
       <!-- 채팅 목록 -->
       <div class="chat-list">
         <div
@@ -91,7 +104,8 @@ export default {
   computed: {
     ...mapState('openviduStore', [
       'session',
-      'messages'
+      'messages',
+      'Chat_messages'
     ]),
   },
 }
@@ -113,6 +127,12 @@ export default {
     position: fixed;
     bottom: 0;
     /* width: 100% */
+  }
+  .whole-chat-list {
+    background: rgb(243, 162, 108);
+    border-radius: 10px;
+    text-align: center;
+
   }
 
   .chat-input {
