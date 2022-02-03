@@ -15,22 +15,25 @@
                         <v-list-item-title class="text-h5 mb-1">
                             <p>{{ user.nickname }}</p>
                         </v-list-item-title>
-                        <v-list-item-subtitle>자기소개</v-list-item-subtitle>
+                        <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
                     </v-list-item-content>  
                 </div>
-                <div class="mypage">
-                    <v-btn @click="goMyPage"
-                        plain>
-                        마이페이지
-                    </v-btn>
-                </div>
-                <div class="logout">
-                    <v-btn
-                        plain
-                        @click="logout">
-                        로그아웃
-                    </v-btn>
-                </div>
+
+                <v-card-actions class="d-flex justify-content-evenly">
+                    <div class="mypage">
+                        <v-btn @click="goMyPage"
+                            plain>
+                            마이페이지
+                        </v-btn>
+                    </div>
+                    <div class="logout">
+                        <v-btn
+                            plain
+                            @click="logout">
+                            로그아웃
+                        </v-btn>
+                    </div>
+                </v-card-actions>
             </div>
         </v-card>
         <v-card
@@ -94,7 +97,7 @@ export default {
     created: function(){
         axios({
             method: 'get',
-            url: `${process.env.VUE_APP_API_URL}/user/info`,
+            url: `${process.env.VUE_APP_API_URL}/users/me`,
             headers: this.setToken()
         })
             .then(res =>{
@@ -122,12 +125,12 @@ export default {
     float: right;
     text-align: right;
 }
-.mypage{
+/* .mypage{
     position :relative;
 }
 .logout{
     position : relative;top: -36px;
-    /* float: right; */
+    float: right;
     text-align: right;
-}
+} */
 </style>
