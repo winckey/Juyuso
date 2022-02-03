@@ -100,7 +100,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<User> banList(User user) {
-        return null;
+        return userRepository.findBanListByUserId(user.getId());
     }
 
     @Override
