@@ -311,7 +311,7 @@ export default {
           members: members.sort(() => Math.random() - 0.5),
           curMember: 0,
           curAmount: 0,
-          maxAmount: Math.random() * 300,
+          maxAmount: Math.random() * 50 + members.length * 30,
         }
         this.session.signal({
           data: JSON.stringify(gameInfo),

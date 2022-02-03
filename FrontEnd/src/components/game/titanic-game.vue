@@ -1,11 +1,11 @@
 <template>
   <div>
     <v-progress-linear
-      v-if="this.titanicGame"
+      v-if="titanicGame"
       color="light-blue"
       height="15"
-      width="100"
       :value="titanicGame.curAmount"
+      :buffer-value="titanicGame.maxAmount"
       striped
     ></v-progress-linear>
     <user-video class="col-md-4" :stream-manager="publisher"/>
@@ -36,6 +36,7 @@ export default {
       clickStart: 0,
       MyTurn: false,
       myConnectionId: null,
+      timerId: null,
       titanicGame: {
         type: 'Titanic',
         maxAmount: 0,
@@ -46,29 +47,37 @@ export default {
     }
   },
   mounted: function () {
-    const gameInfo = JSON.parse(this.gameInfo)
-    this.titanicGame = {...gameInfo}
+
     this.myConnectionId = this.publisher.stream.connection.connectionId
+    this.isMyTurn()
+    console.log(this.publisher)
   },
   methods: {
     isMyTurn: function () {
       this.MyTurn = this.myConnectionId == this.titanicGame.members[this.titanicGame.curMember]
     },
     setStartTime: function () {
-      this.clickStart = new Date().getTime()
+      this.titanicGame.curAmount += 1
+      this.timerId = setInterval(this.calculateTime, 100);
+    },
+    calculateTime: function () {
+      this.titanicGame.curAmount += 1
+      if (this.titanicGame.curAmount > this.titanicGame.maxAmount) {
+        clearInterval(this.timerId)
+        alert(this.titanicGame.members[this.titanicGame.curMember] + '넘침')
+      }
+      this.sendGameInfo()
     },
     setEndTime: function () {
-      let diff = (new Date().getTime() - this.clickStart) / 100
-      this.titanicGame.curAmount += diff
+      clearInterval(this.timerId)
       this.titanicGame.curMember = (this.titanicGame.curMember + 1) % this.titanicGame.members.length
-      console.log(diff)
       this.sendGameInfo()
     },
     sendGameInfo: function () {
       this.session.signal({
-        data: this.titanicGame,
+        data: JSON.stringify(this.titanicGame),
         to: [],
-        type: 'gameInfo'
+        type: 'game-info'
       })
     }
   },
@@ -81,7 +90,6 @@ export default {
   watch: {
     gameInfo: function () {
       this.titanicGame = {...JSON.parse(this.gameInfo)}
-      console.log(this.titanicGame)
       this.isMyTurn()
     }
   }

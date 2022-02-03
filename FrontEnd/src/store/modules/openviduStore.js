@@ -74,16 +74,13 @@ const openviduStore = {
         messages: []
       }
       data.OV = new OpenVidu()
+      data.OV.enableProdMode()
+
       data.session = data.OV.initSession()
-      console.log(data.session)
 
       data.session.on('signal:whole-chat', (event) => {
         data.messages.push(event)
-        console.log(data.messages)
         commit('SET_WHOLE_MESSAGE', data)
-        console.log(event.data); // Message
-        console.log(event.from); // Connection object of the sender
-        console.log(event.type); // The type of message ("my-chat")
       });
       
       data.session.on('exception', ({ exception }) => {
@@ -114,15 +111,16 @@ const openviduStore = {
       }
       const sessionId = roomInfo.sessionId
 
-      data.OV = new OpenVidu();
+      data.OV = new OpenVidu()
+      data.OV.enableProdMode()
 			// --- Init a session ---
 			data.session = data.OV.initSession();
 
 			// --- Specify the actions when events take place in the session ---
 			// On every new Stream received...
 			data.session.on('streamCreated', ({ stream }) => {
+        
 				const subscriber = data.session.subscribe(stream);
-        console.log(data.session)
 				data.subscribers.push(subscriber);
 			});
 			
@@ -136,11 +134,7 @@ const openviduStore = {
 
       data.session.on('signal:my-chat', (event) => {
         data.messages.push(event)
-        console.log(data.messages)
         commit('SET_MESSAGE', data)
-        console.log(event.data); // Message
-        console.log(event.from); // Connection object of the sender
-        console.log(event.type); // The type of message ("my-chat")
       });
       
       data.session.on('signal:game-info', event => {
@@ -206,13 +200,11 @@ const openviduStore = {
 		},
 
     getToken ({ dispatch }, sessionId) {
-      console.log('getToken: ', sessionId)
 			return dispatch('createSession', sessionId).then(sessionId => dispatch('createToken', sessionId));
 		},
 
 		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
 		createSession (context, sessionId) {
-      console.log(sessionId)
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions`, JSON.stringify({
@@ -242,7 +234,6 @@ const openviduStore = {
 
 		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
 		createToken (context, sessionId) {
-      console.log('createToken', sessionId)
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
@@ -264,22 +255,20 @@ const openviduStore = {
       })
     },
 
-    enterRoom (context, sessionId) {
-      console.log(sessionId)
-      axios({
-        method: 'POST', 
-        url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
-      })
+    // enterRoom (context, sessionId) {
+    //   // axios({
+    //   //   method: 'POST', 
+    //   //   url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
+    //   // })
 
-    },
-    leaveRoom (context, sessionId) {
-      console.log(sessionId)
-      axios({
-        method: 'POST', 
-        url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
-      })
+    // },
+    // leaveRoom (context, sessionId) {
+    //   // axios({
+    //   //   method: 'POST', 
+    //   //   url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
+    //   // })
 
-    }
+    // }
   },
   getters: {
 
