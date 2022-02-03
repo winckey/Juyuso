@@ -7,6 +7,7 @@ import com.juyuso.db.entity.Meeting;
 import com.juyuso.db.entity.User;
 import com.juyuso.db.repository.HashTagRepository;
 import com.juyuso.db.repository.MeetingRepository;
+import com.juyuso.db.repository.UserImgRepository;
 import com.juyuso.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -30,7 +31,8 @@ public class MeetingService {
     private final HashTagRepository hashTagRepository;
 
     @Autowired
-    public MeetingService (MeetingRepository meetingRepository, UserRepository userRepository, HashTagRepository hashTagRepository) {
+    public MeetingService (MeetingRepository meetingRepository, UserRepository userRepository,
+                           HashTagRepository hashTagRepository ) {
         this.meetingRepository = meetingRepository;
         this.userRepository = userRepository;
         this.hashTagRepository = hashTagRepository;
@@ -57,8 +59,10 @@ public class MeetingService {
     }
 
     public Page<Meeting> findAll(Pageable pageable) {
+
         return meetingRepository.findAll(pageable);
     }
+
     public Meeting findByMeetingId(Long meetingId) {
         return meetingRepository.findById(meetingId).get();
     }

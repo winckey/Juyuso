@@ -1,9 +1,6 @@
 package com.juyuso.api.dto.response;
 
-import com.juyuso.db.entity.HashTag;
 import com.juyuso.db.entity.Meeting;
-import com.juyuso.db.entity.User;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -31,6 +28,8 @@ public class MeetingListResDto {
     private String nickName;
     @ApiModelProperty(name = "방 비밀번호", example = "1323")
     private String meetingPassword;
+    @ApiModelProperty(name = "유저 프로필 사진", example = "5df8d943-66ef-4c00-8481-6f41a32a09e3.PNG")
+    private String userImg;
 
     public MeetingListResDto(Long meetingId, String meetingTitle,
                              List<String> hashtag, boolean common) {
@@ -39,6 +38,18 @@ public class MeetingListResDto {
         this.hashtag = hashtag;
         this.common = common;
     }
+
+    public MeetingListResDto(Long meetingId, String meetingTitle, List<String> hashtag, boolean common,
+                             String nickName, String meetingPassword, String userImg) {
+        this.meetingId = meetingId;
+        this.meetingTitle = meetingTitle;
+        this.hashtag = hashtag;
+        this.common = common;
+        this.nickName = nickName;
+        this.meetingPassword = meetingPassword;
+        this.userImg = userImg;
+    }
+
     public MeetingListResDto() {
 
     }
@@ -54,6 +65,9 @@ public class MeetingListResDto {
                 dto.setCommon(entity.isCommon());
                 dto.setNickName(entity.getOwner().getNickname());
                 dto.setMeetingPassword(entity.getPassword());
+                if(entity.getOwner().getUserImg() != null) {
+                    dto.setUserImg(entity.getOwner().getUserImg().getFileUrl());
+                }
                 return dto;
             }
         });
