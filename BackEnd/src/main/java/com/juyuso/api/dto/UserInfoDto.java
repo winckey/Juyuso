@@ -46,7 +46,7 @@ public class UserInfoDto {
             userInfoDto.setImgUrl(userImg.getFileUrl());
         } else {
             userInfoDto.setImg(false);
-            userInfoDto.setImgUrl("default img url");
+            userInfoDto.setImgUrl("default_profile_img.png");
         }
 
         userInfoDto.setAge(user.getBirthDate().until(LocalDate.now(), ChronoUnit.YEARS));
