@@ -6,6 +6,8 @@ import com.juyuso.api.dto.response.MeetingLeaveResDto;
 import com.juyuso.api.dto.response.MeetingCreateResDto;
 import com.juyuso.api.dto.response.MeetingEnterResDto;
 import com.juyuso.api.dto.response.MeetingListResDto;
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.api.service.DrinkingHistoryService;
 import com.juyuso.api.service.MeetingHistoryService;
 import com.juyuso.api.service.MeetingService;
@@ -106,7 +108,7 @@ public class MeetingController {
     @PostMapping("/enter/{meetingId}")
     @ApiOperation(value = "미팅방 들어가기" , notes = "<strong>방 들어가기 </strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "방 들어가기 "),
+            @ApiResponse(code = 200, message = "방 들어가기"),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
@@ -114,7 +116,7 @@ public class MeetingController {
     public ResponseEntity<MeetingEnterResDto> enterMeeting(@PathVariable Long meetingId, Principal principal) {
         String userId = principal.getName();
          if(this.mapSessions.get(meetingId) == null || this.mapSessions.get(meetingId) >= LIMIT_MEETING) {
-             //
+             throw new CustomException(ErrorCode.CANNOT_ENTER_MEETING);
          } else {
              historyService.saveMeetingHistory(meetingId, userId, "입장");
              this.mapSessions.put(meetingId, this.mapSessions.get(meetingId) + 1);
@@ -133,9 +135,13 @@ public class MeetingController {
     })
     public ResponseEntity<MeetingLeaveResDto> leaveMeeting (@PathVariable Long meetingId, Principal principal,
                                                             @RequestBody DrinkingHistoryAddReqDto reqDto) {
+
         int cnt = this.mapSessions.get(meetingId);
         String userId = principal.getName();
         User user = userService.getUserByUserId(userId);
+        if(user == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
         historyService.saveMeetingHistory(meetingId, userId, "퇴장");
         drinkingHistoryService.addDrinking(reqDto, user);
 
