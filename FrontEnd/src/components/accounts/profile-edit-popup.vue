@@ -42,19 +42,34 @@
 
         <v-card-text>
           <v-container class="rounded-lg">
-
             <v-form class="form-box" ref="update">
 
               <v-row>
                 
                 <v-col>
-                  <div>
-                    <v-img src="@/assets/chat.png" width="30%"></v-img>
+                  <div class="d-flex justify-content-center">
+                    <v-avatar>
+                      <img
+                        :src="userInfo.imgUrl"
+                        :alt="profileImg"
+                      >
+                    </v-avatar>
                   </div>
-                  <div>
-                    <a href="/">이미지 변경하기</a>
+                  <v-file-input
+                    v-model="profileImg"
+                    @click="isShowBtn=true"
+                    accept="image/*"
+                    label="프로필 이미지 업로드"
+                    @change="changeImage"
+                    prepend-icon="mdi-camera"
+                  ></v-file-input>
+
+                  <div v-if="isShowBtn" class="d-flex justify-content-center">
+                    <v-btn @click="uploadImage()" color="primary" class="mx-4">이미지 저장</v-btn>
+                    <!-- <v-btn @click="deleteImage()" color="green" >이미지 제거</v-btn> -->
                   </div>
                 </v-col>
+
                 <v-col>
                     <v-text-field
                       label="닉네임*"
@@ -93,12 +108,12 @@
                 </v-col>
 
 
-                <v-col cols="6">
+                <!-- <v-col cols="6">
                   <v-text-field
                     v-model="password"
                     :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="passwordShow ? 'text' : 'password'"
-                    label="비밀번호*"
+                    label="새 비밀번호*"
                     :rules="rules.passwordRule"
                     hint="영어, 숫자, 특수문자를 모두 포함해야합니다 (9-16자)"
                     required
@@ -107,13 +122,13 @@
                   <v-text-field
                     :append-icon="passwordConfirmationShow ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="passwordConfirmationShow ? 'text' : 'password'"
-                    label="비밀번호 확인*"
+                    label="새 비밀번호 확인*"
                     v-model="passwordConfirmation"
                     @click:append="passwordConfirmationShow = !passwordConfirmationShow"
                     :rules="rules.passwordConfirmationRule"
                     required
                   ></v-text-field>
-                </v-col>
+                </v-col> -->
                 <v-col cols="6">
                   <v-select
                     v-model="userInfo.regionId"
@@ -139,7 +154,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="[dialog = false, isSuccess=false, isAlert=false]"
+            @click="[dialog = false, isSuccess=false, isAlert=false, reloadMypage()]"
           >
             닫기
           </v-btn>
@@ -171,10 +186,12 @@ export default {
   },
   data: function () {
     return {
+      isShowBtn: false,
       isAlert: false,
       isSuccess: false,
       userInfo: null,
       dialog: false,
+      profileImg: null,
       passwordShow: false,
       passwordConfirmationShow: false,
       passwordConfirmation: '',
@@ -194,15 +211,15 @@ export default {
           v => !!v || '이메일을 입력해주세요.',
           v => /.+@.+/.test(v) || '이메일 형식에 맞지않습니다.',
         ],
-        passwordRule: [
-          v => !!v || "비밀번호를 입력해주세요.",
-          v => !(v && v.length < 9 && v.length > 15) || "비밀번호는 9자에서 16자 사이로 입력가능합니다.",
-          v => /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(v) || "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다."
-        ],
-        passwordConfirmationRule: [
-          v => !!v || "비밀번호 확인을 입력해주세요.",
-          v => v === this.password || "비밀번호가 일치하지 않습니다."
-        ],
+        // passwordRule: [
+        //   v => !!v || "비밀번호를 입력해주세요.",
+        //   v => !(v && v.length < 9 && v.length > 15) || "비밀번호는 9자에서 16자 사이로 입력가능합니다.",
+        //   v => /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(v) || "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다."
+        // ],
+        // passwordConfirmationRule: [
+        //   v => !!v || "비밀번호 확인을 입력해주세요.",
+        //   v => v === this.password || "비밀번호가 일치하지 않습니다."
+        // ],
         birthRule: [
           v => !!v || "생년월일을 입력해주세요."
         ],
@@ -222,23 +239,17 @@ export default {
   },
   created: function () {
     this.userInfo = this.user
+    // this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
   },
   methods: {
     ...mapActions('accounts', ['userUpdate']),
-    
-
-// 유효성 검사가 안되고 바로 정보가 update된다는 점~~~~~~~~~
-
     updateUser: function () {
-      console.log('update함수 들어옴')
-
       const item = {credentials: {
                   nickname: this.userInfo.nickname,
                   description: this.userInfo.description,
                   email: this.userInfo.email,
                   regionId: this.userInfo.regionId,
                   phone: this.userInfo.phone,
-                  password: this.password
       }}
 
      
@@ -270,9 +281,42 @@ export default {
       } else {
         this.isAlert=true
         this.isSuccess=false
+      }
+    },
+    changeImage: function () {
+      console.log('changeImage')
+      this.userInfo.imgUrl = this.profileImg
+    },
+  
+    uploadImage: function () {
+      console.log('uploadㄱㄱ')
+      console.log(this.profileImg)
+
+      const image = new FormData()
+      image.append('img', this.profileImg)
+
+      axios({
+        method: 'POST',
+        url: `${process.env.VUE_APP_API_URL}/users/img`,
+        data: image,
+        headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
+      })
+        .then(res => {
+          console.log(res)
+          this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
+          this.$emit('changeProfileImage', res.data.imgUrl)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // deleteImage: function () {
+    //   this.userInfo.imgUrl = require("@/assets/chat.png")
+    // },
+    reloadMypage: function () {
+      this.$router.go()
     }
   }
-}
 }
 </script>
 
