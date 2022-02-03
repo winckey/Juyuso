@@ -39,6 +39,7 @@
         <FriendList
           v-if="searchList"
           :friends="searchList.friendList"
+          :notFriends="searchList.notFriendList"
           :tab="tab"/>
       </v-tab-item>
     </v-tabs-items>

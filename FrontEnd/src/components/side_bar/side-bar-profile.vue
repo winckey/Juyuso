@@ -19,7 +19,8 @@
                     </v-list-item-content>  
                 </div>
                 <div class="mypage">
-                    <v-btn @click="goMyPage"
+                    <v-btn
+                        @click="goMyPage"
                         plain>
                         마이페이지
                     </v-btn>
@@ -74,27 +75,11 @@ export default {
             }
             return config
         },
-        // ...mapActions('accounts', [
-        // 'friendList',
-        // 'searchUserData'
-        // ]),
     },
-    // computed:{
-    //     ...mapGetters('accounts',[
-    //         'user',
-    //         'isLogin'
-    //     ])
-    //     // user: function(){
-    //     //     return this.$store.accounts.state.user
-    //     // },
-    //     // isLogin: function(){
-    //     //     return this.$store.state.isLogin
-    //     // }
-    // },
     created: function(){
         axios({
             method: 'get',
-            url: `${process.env.VUE_APP_API_URL}/user/info`,
+            url: `${process.env.VUE_APP_API_URL}/users/me`,
             headers: this.setToken()
         })
             .then(res =>{

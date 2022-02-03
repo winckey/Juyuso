@@ -6,6 +6,11 @@
         v-for="friend in friends"
         :userInfo="friend"
         :tab="tab"/>
+      <friend-list-detail
+      :key="notFriend.id"
+      v-for="notFriend in notFriends"
+      :notFriendUserInfo="notFriend"
+      :tab="tab"/>
     </v-list>
   </div>
 </template>
@@ -21,6 +26,7 @@ export default {
   props: {
     tab: Number,
     friends: Array,
+    notFriends: Array
   },
   data: function () {
     return {
@@ -35,8 +41,6 @@ export default {
       return config
     },
   },
-  computed: {
-  }
 }
 </script>
 
