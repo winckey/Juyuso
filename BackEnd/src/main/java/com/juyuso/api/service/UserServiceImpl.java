@@ -1,6 +1,6 @@
 package com.juyuso.api.service;
 
-import com.juyuso.api.dto.request.RegisterReqDto;
+import com.juyuso.api.dto.request.UserRegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
 import com.juyuso.api.dto.request.UserPwCheckReqDto;
 import com.juyuso.db.entity.User;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(RegisterReqDto registerRequestDto) {
+    public User createUser(UserRegisterReqDto registerRequestDto) {
         User userEntity = registerRequestDto.toEntity();
         userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         userEntity.setRegion(regionRepository.getById(registerRequestDto.getRegionId()));
