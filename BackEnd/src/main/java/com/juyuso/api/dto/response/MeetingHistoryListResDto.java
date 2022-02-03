@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ApiModel("MeetingHistory List Response")
 public class MeetingHistoryListResDto {
     @ApiModelProperty(name = "유저 닉네임", example = "냠냠")
     private String nickName;

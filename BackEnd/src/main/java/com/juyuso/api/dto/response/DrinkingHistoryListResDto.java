@@ -14,7 +14,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ApiModel("Drinking History List Response")
 public class DrinkingHistoryListResDto {
 
     @ApiModelProperty(name = "날짜 ", example = "2020-02-12")

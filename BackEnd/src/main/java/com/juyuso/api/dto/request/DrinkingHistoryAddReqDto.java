@@ -14,7 +14,6 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Getter
-@ApiModel("DrinkingHistory Add Req Dto")
 public class DrinkingHistoryAddReqDto {
 
     @ApiModelProperty(name = "마신 소주 양(잔)", example = "123")
