@@ -23,7 +23,7 @@ export default {
   components: {
     NavBar
   },
-  created: function () {
+  mounted: function () {
     console.log(this.$route.name)
     if (!localStorage.getItem('jwt')) {
       this.$router.push({name: 'Login'})
@@ -37,6 +37,7 @@ export default {
       })
       .then(res =>{
         this.userUpdate(res.data.user)
+        this.initSession(res.data.user)
       })
       .catch(err => {
         console.log(err)
@@ -49,6 +50,9 @@ export default {
   methods: {
     ...mapActions('accounts', [
       'userUpdate'
+    ]),
+    ...mapActions('openviduStore', [
+      'initSession'
     ])
   },
   computed: {
