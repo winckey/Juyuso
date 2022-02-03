@@ -2,7 +2,9 @@ package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.UserRegisterReqDto;
 import com.juyuso.api.dto.request.UserModifyReqDto;
-import com.juyuso.api.dto.request.UserPwCheckReqDto;
+import com.juyuso.api.dto.request.UserPwReqDto;
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.db.entity.User;
 import com.juyuso.db.entity.UserImg;
 import com.juyuso.db.repository.RegionRepository;
@@ -41,6 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserRegisterReqDto registerRequestDto) {
+        if (checkDuplicateUserId(registerRequestDto.getId())) throw new CustomException(ErrorCode.USER_ID_DUPLICATE);
+
         User userEntity = registerRequestDto.toEntity();
         userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         userEntity.setRegion(regionRepository.getById(registerRequestDto.getRegionId()));
@@ -50,18 +54,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User getUserByUserId(String userId) {
-        // Optional 용법 체크 필요 (warning 참조)
-        return userRepository.findByUserId(userId).get();
+        return userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean checkDuplicateUserId(String userId) {
         return userRepository.existsByUserId(userId);
     }
 
     @Override
     public User modifyUser(User user, UserModifyReqDto userModifyReqDto) {
-        user.setPassword(passwordEncoder.encode(userModifyReqDto.getPassword()));
         user.setPhone(userModifyReqDto.getPhone());
         user.setEmail(userModifyReqDto.getEmail());
         if (user.getRegion().getId() != userModifyReqDto.getRegionId())
@@ -114,7 +117,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean checkPw(User userDetails, UserPwCheckReqDto userPwCheckReqDto) {
-        return passwordEncoder.matches(userPwCheckReqDto.getPassword(), userDetails.getPassword());
+    public void modifyPw(User user, UserPwReqDto userPwReqDto) {
+        user.setPassword(passwordEncoder.encode(userPwReqDto.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean checkPw(User userDetails, UserPwReqDto userPwReqDto) {
+        if (passwordEncoder.matches(userPwReqDto.getPassword(), userDetails.getPassword())) return true;
+        else throw new CustomException(ErrorCode.USER_PW_INVALID);
     }
 }
