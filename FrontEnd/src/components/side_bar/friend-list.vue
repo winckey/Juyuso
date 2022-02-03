@@ -12,7 +12,7 @@
 
 <script>
 import FriendListDetail from '@/components/side_bar/friend-list-detail.vue'
-import { mapState } from 'vuex'
+
 
 export default {
   name: 'FriendList',
@@ -37,9 +37,6 @@ export default {
     },
   },
   computed: {
-    ...mapState('friends', [
-      'banList',
-    ])
   }
 }
 </script>
