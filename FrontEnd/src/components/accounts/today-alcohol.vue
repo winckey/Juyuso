@@ -65,6 +65,9 @@
               </v-col>
 
             </v-row>
+            <div class="mt-5">
+              <h4 class="d-flex justify-content-center">주량 계산 = 소주 {{ sojuBottle }}병 * 7 + 소주 {{ sojuGlass }}잔 + 맥주 {{ beer }}캔 * 3</h4>
+            </div>
           </v-container>
         </v-card-text>
 
@@ -103,7 +106,8 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+// import {mapActions} from 'vuex'
+import axios from 'axios'
 
 export default {
     name: 'TodayAlcohol',
@@ -117,7 +121,7 @@ export default {
         }
     },
     methods: {
-      ...mapActions('drinking', ['addDrinking']),
+      // ...mapActions('drinking', ['addDrinking']),
       addSojuBottle: function (){
         this.sojuBottle += 1
       },
@@ -133,14 +137,35 @@ export default {
         this.beer = 0
       },
       drinking: function () {
-        console.log(this.endDate)
         const item = {
-          date: new Date(), 
-          soju: (this.sojuBottle * 7) + this.sojuGlass,
-          beer: this.beer * 3
+          beer: this.beer * 3,
+          date: this.endDate, 
+          soju: (this.sojuBottle * 7) + this.sojuGlass
         }
         console.log(item)
-        this.addDrinking(item)
+        
+        axios({
+                method: 'POST',
+                url: `${process.env.VUE_APP_API_URL}/drinking/history`,
+                headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` },
+                data: item
+            })
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+      }
+    },
+    computed: {
+      endDate: function () {
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+      var dateString = year + '-' + month  + '-' + day;   
+      return dateString
       }
     }
 }

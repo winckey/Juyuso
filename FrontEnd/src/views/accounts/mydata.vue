@@ -98,13 +98,14 @@ export default {
       console.log('유저 정보 담기 완료')
     }
     axios({
-      method: 'get',
-      url: `${process.env.VUE_APP_API_URL}/drinking/history/${this.userInfo.id}`,
+      method: 'GET',
+      url: `${process.env.VUE_APP_API_URL}/drinking/history/${this.userInfo.userId}`,
       headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
         console.log(res.data)
         this.date = res.data
+        // this.$router.go()
       })
       .catch(err => {
         console.log(err)
