@@ -140,7 +140,7 @@ export default {
       this.rejectFriends(userId)
     },
     goFriendProfile: function(){
-      this.$router.push({name: 'MyPage', params: {userId: this.userInfo.id}})
+      this.$router.push({name: 'FriendPage', params: {userId: this.userInfo.id}})
     },
     prevent: function (e) {
       e.preventDefault()

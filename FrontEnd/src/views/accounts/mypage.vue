@@ -115,7 +115,7 @@ export default {
   created: function (){
     axios({
       method: 'get',
-      url: `${process.env.VUE_APP_API_URL}/user/info`,
+      url: `${process.env.VUE_APP_API_URL}/users/me`,
       headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {

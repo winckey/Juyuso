@@ -196,7 +196,7 @@ export default {
         // console.log(`${process.env.VUE_APP_API_URL}/user`)
         axios({
           method: 'POST',
-          url: `${process.env.VUE_APP_API_URL}/user`,
+          url: `${process.env.VUE_APP_API_URL}/users`,
           data: this.credentials
         })
         .then(() => {

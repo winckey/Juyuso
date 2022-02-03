@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     goMyPage: function () {
-      this.$router.push({name: 'MyPage', params: {userId: this.user.id}})
+      this.$router.push({name: 'MyPage', params: {userId: this.userInfo.id}})
     }
     
   },

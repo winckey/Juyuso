@@ -250,7 +250,6 @@ export default {
                   email: this.userInfo.email,
                   regionId: this.userInfo.regionId,
                   phone: this.userInfo.phone,
-                  password: this.password
       }}
 
      
@@ -298,7 +297,7 @@ export default {
 
       axios({
         method: 'POST',
-        url: `${process.env.VUE_APP_API_URL}/user/img`,
+        url: `${process.env.VUE_APP_API_URL}/users/img`,
         data: image,
         headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
       })
