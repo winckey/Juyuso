@@ -1,6 +1,8 @@
 package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.db.entity.HashTag;
 import com.juyuso.db.entity.Meeting;
 import com.juyuso.db.entity.User;
