@@ -1,27 +1,19 @@
 package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
-import com.juyuso.api.dto.response.MeetingListResDto;
 import com.juyuso.db.entity.HashTag;
 import com.juyuso.db.entity.Meeting;
 import com.juyuso.db.entity.User;
 import com.juyuso.db.repository.HashTagRepository;
 import com.juyuso.db.repository.MeetingRepository;
-import com.juyuso.db.repository.UserImgRepository;
 import com.juyuso.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class MeetingService {
@@ -50,26 +42,23 @@ public class MeetingService {
         return meetingRepository.save(meeting).getId();
     }
 
-    public Page<Meeting> findAllByTag(String tags, Pageable pageable) {
-        return meetingRepository.findListByHashTag(tags, pageable);
+    public Page<Meeting> findAllByTags(String tags, Pageable pageable) {
+        return meetingRepository.findAllByTags(tags, pageable);
     }
 
-    public Page<Meeting> findAllByTagAndCommon(String tags, Pageable pageable, Boolean common) {
-
-
-        return meetingRepository.findAllByTagAndCommon(tags, pageable, common);
+    public Page<Meeting> findAllByTagContainingAndCommon(String tags, Pageable pageable, Boolean common) {
+        return meetingRepository.findAllByTagContainingAndCommon(tags, pageable, common);
     }
 
-    public Page<Meeting> findAllByTitleAndCommon(String title, Pageable pageable, Boolean common) {
-        return meetingRepository.findAllByTitleAndCommon(title, pageable, common);
+    public Page<Meeting> findAllByTitleContainingAndCommon(String title, Pageable pageable, Boolean common) {
+        return meetingRepository.findAllByTitleContainingAndCommon(title, pageable, common);
     }
 
-    public Page<Meeting> findAllByTitle(String title, Pageable pageable) {
+    public Page<Meeting> findAllByTitleContaining(String title, Pageable pageable) {
         return meetingRepository.findAllByTitleContaining(title, pageable);
     }
 
     public Page<Meeting> findAll(Pageable pageable) {
-
         return meetingRepository.findAll(pageable);
     }
 

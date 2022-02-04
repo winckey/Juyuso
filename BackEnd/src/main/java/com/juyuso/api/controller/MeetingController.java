@@ -10,7 +10,6 @@ import com.juyuso.api.service.DrinkingHistoryService;
 import com.juyuso.api.service.MeetingHistoryService;
 import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
-import com.juyuso.db.entity.Meeting;
 import com.juyuso.db.entity.User;
 import io.openvidu.java.client.OpenVidu;
 import io.swagger.annotations.*;
@@ -19,11 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.util.Map;
@@ -94,19 +90,19 @@ public class MeetingController {
     {
         if(tags != null) {
             if(common == null) {
-                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTags(tags, pageable)));
             }
             else {
-                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTagAndCommon(tags, pageable, common)));
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTagContainingAndCommon(tags, pageable, common)));
             }
 
         }
         else if(title != null){
             if(common == null) {
-                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitle(title, pageable)));
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitleContaining(title, pageable)));
             }
             else {
-                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitleAndCommon(title, pageable, common)));
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitleContainingAndCommon(title, pageable, common)));
             }
 
         }

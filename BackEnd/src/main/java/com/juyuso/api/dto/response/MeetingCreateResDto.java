@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel("Meeting Create Response")
 public class MeetingCreateResDto {
 
     @ApiModelProperty(name = "방 번호", example = "1")

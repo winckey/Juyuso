@@ -13,7 +13,6 @@ import java.util.function.Function;
 
 @Getter
 @Setter
-@ApiModel("Meeting List Response")
 public class MeetingListResDto {
 
     @ApiModelProperty(name = "방 번호", example = "12")
@@ -30,6 +29,10 @@ public class MeetingListResDto {
     private String meetingPassword;
     @ApiModelProperty(name = "유저 프로필 사진", example = "5df8d943-66ef-4c00-8481-6f41a32a09e3.PNG")
     private String userImg;
+
+    public MeetingListResDto() {
+
+    }
 
     public MeetingListResDto(Long meetingId, String meetingTitle,
                              List<String> hashtag, boolean common) {
@@ -48,10 +51,6 @@ public class MeetingListResDto {
         this.nickName = nickName;
         this.meetingPassword = meetingPassword;
         this.userImg = userImg;
-    }
-
-    public MeetingListResDto() {
-
     }
 
     public static Page<MeetingListResDto> of (Page<Meeting> list) {
