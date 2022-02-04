@@ -8,7 +8,7 @@
         <div class="profile-card-info">
           <v-container>
             <v-row >
-              <v-col cols="7">
+              <v-col cols="6">
                 <div v-if="user">
                   <h1>주민등록증</h1>
                   <p>별명: {{ user.nickname }}</p>
@@ -18,8 +18,15 @@
                 </div>
               </v-col>
               <v-col v-if="user" cols="4">
-                <div>
-                  <img :src="imgUrl" alt="profile_img">
+                <!-- <div class="d-flex justify-content-center">
+                    <v-avatar size="100">
+                      <img :src="imgUrl" alt="profile_img">
+                      
+                    </v-avatar>
+                  </div> -->
+
+                <div class="d-flex justify-content-center" >
+                  <v-img max-width="200" :src="imgUrl" alt="profile_img"></v-img>
                 </div>
               </v-col>
             </v-row>
@@ -27,9 +34,13 @@
          
         </div>
         <div class="profile-edit-popup my-2">
-          <ProfileEditPopup :user = "user" v-if="user"/>
+          <!-- <ProfileEditPopup :user ="user" v-if="user"/> -->
+          <ProfileEditPopup :user ="user" v-if="user" @changeProfileImage="changeProfileImage"/>
+
         </div>
-          
+        <div class="profile-edit-popup my-6">
+          <PasswordChange :user="user" v-if="user"/>
+        </div>
       </div>
 
       <div class="profile-mydata">
@@ -74,6 +85,7 @@
 import CalenderPopup from '../../components/accounts/calender-popup.vue'
 import ProfileEditPopup from '@/components/accounts/profile-edit-popup.vue'
 import BlockedFriend from '@/components/accounts/blocked-friend.vue'
+import PasswordChange from '@/components/accounts/password-change.vue'
 import axios from 'axios'
 
 export default {
@@ -82,6 +94,7 @@ export default {
     CalenderPopup,
     ProfileEditPopup,
     BlockedFriend,
+    PasswordChange
   },
   data(){
     return{
@@ -93,13 +106,16 @@ export default {
       console.log('goMydata')
       // this.$router.push({name: 'MyData', params: {userId: this.user.id}, query: {user:this.user}})
       this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
+    },
+    changeProfileImage: function (image) {
+      this.imgUrl = `${process.env.VUE_APP_IMG_URL}/${image}`
     }
    
   },
   created: function (){
     axios({
       method: 'get',
-      url: `${process.env.VUE_APP_API_URL}/user/info`,
+      url: `${process.env.VUE_APP_API_URL}/users/me`,
       headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
@@ -114,9 +130,8 @@ export default {
   computed: {
     imgUrl: function () {
       if (this.user.img) {
-        return this.user.imgUrl
+        return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
       } else {
-        console.log("@")
         return require('@/assets/chat.png')
       }
 
@@ -132,12 +147,12 @@ export default {
   display:flex;
   justify-content:center;
   align-items:center;
+
 }
 
-/* img {
+img {
  max-width: 100%;
- max-height: 100%;
-} */
+}
 
 .wallet {
   position: relative;
