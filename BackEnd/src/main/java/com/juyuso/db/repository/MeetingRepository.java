@@ -8,14 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
     @Query(value = "SELECT * FROM meeting m inner join hash_tag h " +
             "on m.meeting_id = h.meeting_id WHERE h.tag LIKE %:tag%", nativeQuery = true)
-    Page<Meeting> findListByHashTag(@Param("tag")String tags, Pageable pageable);
+    Page<Meeting> findAllByTags(@Param("tag")String tags, Pageable pageable);
 
     @Query("SELECT m FROM Meeting m WHERE m.active = true and m.title LIKE CONCAT('%',:title, '%')")
     Page<Meeting> findAllByTitleContaining(@Param("title") String title, Pageable pageable);
@@ -24,11 +22,20 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     Page<Meeting> findAll(Pageable pageable);
 
 
+    @Query(value = "SELECT * FROM meeting m inner join hash_tag h " +
+            "on m.meeting_id = h.meeting_id WHERE h.tag LIKE %:tag% AND m.common = :common ", nativeQuery = true)
+    Page<Meeting> findAllByTagContainingAndCommon(@Param("tag")String tags, Pageable pageable, @Param("common") Boolean common);
+
+    @Query("SELECT m FROM Meeting m WHERE m.active = true and m.title LIKE CONCAT('%',:title, '%') AND m.common = :common ")
+    Page<Meeting> findAllByTitleContainingAndCommon(@Param("title") String title, Pageable pageable, @Param("common")Boolean common);
 
 
+    @Query(value = "SELECT * FROM meeting m LEFT JOIN user_img ui ON m.owner_id = ui.user_id WHERE m.active = TRUE AND m.common = :common ", nativeQuery = true)
+    Page<Meeting> findAllByCommon(Pageable pageable, @Param("common") Boolean common);
 
 
-
+    @Query(value = "UPDATE Meeting m SET m.active = false",nativeQuery = true)
+    void changeActiveMeeting();
 
 
 }

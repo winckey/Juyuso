@@ -12,7 +12,6 @@ import com.juyuso.api.service.DrinkingHistoryService;
 import com.juyuso.api.service.MeetingHistoryService;
 import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
-import com.juyuso.db.entity.Meeting;
 import com.juyuso.db.entity.User;
 import io.openvidu.java.client.OpenVidu;
 import io.swagger.annotations.*;
@@ -21,17 +20,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Api(value = "미팅방 관리 api")
+@Api(value = "미팅방 관리 api", notes = "미팅방 관리")
 @RestController
 @RequestMapping("/api/meeting")
 public class MeetingController {
@@ -91,18 +87,34 @@ public class MeetingController {
     public ResponseEntity<Page<MeetingListResDto>> getMeetingListByParam(
             @RequestParam(required = false) String tags,
             @RequestParam(required = false) String title,
-            @RequestParam(required = false) boolean common,
-            @PageableDefault(size = 30) Pageable pageable)
+            @RequestParam(required = false) Boolean common,
+            @PageableDefault(size = 12) Pageable pageable)
     {
         if(tags != null) {
-           return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
+            if(common == null) {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTags(tags, pageable)));
+            }
+            else {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTagContainingAndCommon(tags, pageable, common)));
+            }
+
         }
         else if(title != null){
-            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitle(title, pageable)));
+            if(common == null) {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitleContaining(title, pageable)));
+            }
+            else {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitleContainingAndCommon(title, pageable, common)));
+            }
+
         }
-        else {
-            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAll(pageable)));
+        else if(tags == null && title == null) {
+            if(common != null) {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByCommon(pageable, common)));
+            }
         }
+        return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAll(pageable)));
+
     }
 
     @PostMapping("/enter/{meetingId}")
