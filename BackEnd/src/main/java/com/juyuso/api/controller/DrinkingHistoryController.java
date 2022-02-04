@@ -19,7 +19,7 @@ import java.util.List;
 
 @RequestMapping("/api/drinking")
 @RestController
-@Api( value = "술 먹은 기록")
+@Api( value = "술 먹은 기록", tags = {"술 커밋 기록"})
 public class DrinkingHistoryController {
 
 

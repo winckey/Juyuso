@@ -2,16 +2,14 @@ package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.DrinkingHistoryAddReqDto;
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
-import com.juyuso.api.dto.response.MeetingLeaveResDto;
-import com.juyuso.api.dto.response.MeetingCreateResDto;
-import com.juyuso.api.dto.response.MeetingEnterResDto;
-import com.juyuso.api.dto.response.MeetingListResDto;
+import com.juyuso.api.dto.response.*;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.api.service.DrinkingHistoryService;
 import com.juyuso.api.service.MeetingHistoryService;
 import com.juyuso.api.service.MeetingService;
 import com.juyuso.api.service.UserService;
+import com.juyuso.db.entity.MeetingHistory;
 import com.juyuso.db.entity.User;
 import io.openvidu.java.client.OpenVidu;
 import io.swagger.annotations.*;
@@ -24,10 +22,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Api(value = "미팅방 관리 api", notes = "미팅방 관리")
+@Api(value = "미팅방 관리 api", tags = {"미팅방 관리"})
 @RestController
 @RequestMapping("/api/meeting")
 public class MeetingController {
@@ -166,6 +165,20 @@ public class MeetingController {
             this.mapSessions.put(meetingId, cnt -1);
         }
         return ResponseEntity.ok(MeetingLeaveResDto.of(meetingId));
+    }
+
+
+    @GetMapping("history/{userId}")
+    @ApiOperation(value = "미팅 접속 기록 보기" , notes = "<strong>미팅 접속기록 </strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "방 접속기록"),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<List<MeetingHistoryListResDto>> getMeetingHistoryList(@PathVariable String userId) {
+        List<MeetingHistory> list =  historyService.getMeetingHistoryList(userId);
+        return ResponseEntity.ok(MeetingHistoryListResDto.of(list));
     }
 
 
