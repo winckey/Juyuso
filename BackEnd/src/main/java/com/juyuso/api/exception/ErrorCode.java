@@ -13,6 +13,7 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다"),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     CANNOT_FOLLOW_MYSELF(BAD_REQUEST, "자기 자신은 팔로우 할 수 없습니다"),
+    CANNOT_ENTER_MEETING(BAD_REQUEST, "방 인원 초과 입니다"),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
@@ -22,6 +23,7 @@ public enum ErrorCode {
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USER_NOT_FOUND(NOT_FOUND, "해당 유저의 정보를 찾을 수 없습니다."),
     FRIEND_REQUEST_NOT_FOUND(NOT_FOUND, "친구 요청 정보를 찾을 수 없습니다."),
+    MEETING_NOT_FOUND(NOT_FOUND, "해당 방을 찾을수 없습니다"),
 
     /* 409 CONFLICT : Resource의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     USER_ID_DUPLICATE(CONFLICT, "중복된 사용자 ID입니다."),

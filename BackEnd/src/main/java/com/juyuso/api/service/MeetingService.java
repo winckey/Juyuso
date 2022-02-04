@@ -33,10 +33,9 @@ public class MeetingService {
 
     @Transactional
     public Long createMeeting(MeetingCreateReqDto dto, String username) {
-        User user = userRepository.findByUserId(username).get();
+        User user = userRepository.findByUserId(username).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Meeting meeting = dto.toEntity(user);
         List<String> list = dto.getHashTag();
-
         for(int i = 0; i < list.size(); i++) {
                 hashTagRepository.save(new HashTag(meeting, list.get(i)));
         }
@@ -68,12 +67,13 @@ public class MeetingService {
     }
 
     public Meeting findByMeetingId(Long meetingId) {
-        return meetingRepository.findById(meetingId).get();
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+        return meeting;
     }
 
     @Transactional
     public Long changeActiveMeetingByMeetingId(Long meetingId) {
-        Meeting meeting = meetingRepository.findById(meetingId).get();
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
         meeting.changeActive();
         return meetingId;
     }
@@ -83,7 +83,5 @@ public class MeetingService {
         System.out.println("종료직전 모든 방 active false 로 바꾸기 !! ");
 //        meetingRepository.changeActiveMeeting();
     }
-
-
 
 }
