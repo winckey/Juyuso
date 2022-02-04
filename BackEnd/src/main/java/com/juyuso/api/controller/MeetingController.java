@@ -25,7 +25,7 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Api(value = "미팅방 관리 api")
+@Api(value = "미팅방 관리 api", notes = "미팅방 관리")
 @RestController
 @RequestMapping("/api/meeting")
 public class MeetingController {
