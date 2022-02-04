@@ -2,6 +2,8 @@ package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
 import com.juyuso.api.dto.response.MeetingListResDto;
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.db.entity.HashTag;
 import com.juyuso.db.entity.Meeting;
 import com.juyuso.db.entity.User;
@@ -40,10 +42,9 @@ public class MeetingService {
 
     @Transactional
     public Long createMeeting(MeetingCreateReqDto dto, String username) {
-        User user = userRepository.findByUserId(username).get();
+        User user = userRepository.findByUserId(username).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Meeting meeting = dto.toEntity(user);
         List<String> list = dto.getHashTag();
-
         for(int i = 0; i < list.size(); i++) {
                 hashTagRepository.save(new HashTag(meeting, list.get(i)));
         }
@@ -59,21 +60,19 @@ public class MeetingService {
     }
 
     public Page<Meeting> findAll(Pageable pageable) {
-
         return meetingRepository.findAll(pageable);
     }
 
     public Meeting findByMeetingId(Long meetingId) {
-        return meetingRepository.findById(meetingId).get();
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+        return meeting;
     }
 
     @Transactional
     public Long changeActiveMeetingByMeetingId(Long meetingId) {
-        Meeting meeting = meetingRepository.findById(meetingId).get();
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
         meeting.changeActive();
         return meetingId;
     }
-
-
 
 }

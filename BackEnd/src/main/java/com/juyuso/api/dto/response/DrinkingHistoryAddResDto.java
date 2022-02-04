@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ApiModel("DrinkingHistory Add Response Dto")
 public class DrinkingHistoryAddResDto {
 
     @ApiModelProperty(name = "마신 소주 양(잔)", example = "123")

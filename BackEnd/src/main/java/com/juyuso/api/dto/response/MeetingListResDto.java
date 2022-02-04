@@ -13,7 +13,6 @@ import java.util.function.Function;
 
 @Getter
 @Setter
-@ApiModel("Meeting List Response")
 public class MeetingListResDto {
 
     @ApiModelProperty(name = "방 번호", example = "12")

@@ -1,5 +1,7 @@
 package com.juyuso.api.service;
 
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.db.entity.Meeting;
 import com.juyuso.db.entity.MeetingHistory;
 import com.juyuso.db.entity.User;
@@ -28,8 +30,8 @@ public class MeetingHistoryService {
 
 
     public Long saveMeetingHistory(Long meetingId, String userId, String action) {
-        Meeting meeting = meetingRepository.findById(meetingId).get();
-        User user = userRepository.findByUserId(userId).get();
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+        User user = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         MeetingHistory meetingHistory;
         if(action.equals("생성")) {
             meetingHistory = new MeetingHistory(meeting, user, "생성");
@@ -38,18 +40,15 @@ public class MeetingHistoryService {
         } else {
             meetingHistory = new MeetingHistory(meeting, user, "퇴장");
         }
-        Long meetingHistoryId = meetingHistoryRepository.save(meetingHistory).getId();
-        return meetingHistoryId;
+        return meetingHistoryRepository.save(meetingHistory).getId();
     }
 
 
 
-
     public List<MeetingHistory> getMeetingHistoryList(String userId) {
-        User user = userRepository.findByUserId(userId).get();
-        List<MeetingHistory> list = meetingHistoryRepository.findByUser(user);
+        User user = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        return list;
+        return  meetingHistoryRepository.findByUser(user);
     }
 
 
