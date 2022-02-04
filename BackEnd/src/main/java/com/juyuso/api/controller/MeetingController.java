@@ -90,7 +90,7 @@ public class MeetingController {
             @RequestParam(required = false) String tags,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Boolean common,
-            @PageableDefault(size = 30) Pageable pageable)
+            @PageableDefault(size = 12) Pageable pageable)
     {
         if(tags != null) {
             if(common == null) {
