@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PreDestroy;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -75,6 +76,12 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).get();
         meeting.changeActive();
         return meetingId;
+    }
+
+    @PreDestroy
+    public void changeActiveMeeting() {
+        System.out.println("종료직전 모든 방 active false 로 바꾸기 !! ");
+//        meetingRepository.changeActiveMeeting();
     }
 
 

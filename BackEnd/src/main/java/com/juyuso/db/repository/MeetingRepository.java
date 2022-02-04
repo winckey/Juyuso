@@ -34,6 +34,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     Page<Meeting> findAllByCommon(Pageable pageable, @Param("common") Boolean common);
 
 
+    @Query(value = "UPDATE Meeting m SET m.active = false",nativeQuery = true)
+    void changeActiveMeeting();
 
 
 }
