@@ -6,12 +6,16 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 const openviduStore = {
   namespaced: true,
   state: {
+    Chat_OV: undefined,
+    Chat_session: undefined,
+    Chat_messages: [],
     OV: undefined,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
     subscribers: [],
     messages: [],
+    gameMode: undefined
   },
   mutations: {
     SET_SESSION_INFO(state, data) {
@@ -21,6 +25,17 @@ const openviduStore = {
       state.publisher = data.publisher
       state.subscribers = data.subscribers
       state.messages = data.messages
+    },
+    SET_WHOLE_SESSION_INFO(state, data) {
+      state.Chat_OV = data.OV
+      state.Chat_session = data.session
+      state.Chat_messages = data.messages
+    },
+    LEAVE_WHOLE_SESSION(state) {
+      if (state.Chat_session) state.Chat_session.disconnect();
+      state.Chat_OV = undefined
+      state.Chat_session = undefined
+      state.Chat_messages = []
     },
     LEAVE_SESSION(state) {
       if (state.session) state.session.disconnect();
@@ -33,30 +48,53 @@ const openviduStore = {
     },
     SET_MESSAGE(state, data) {
       state.messages = data.messages
+    },
+    SET_WHOLE_MESSAGE(state, data) {
+      state.Chat_messages = data.messages
+    },
+    SET_GAME_MODE(state, data) {
+      state.gameMode = data.gameMode
     }
   },
   actions: {
+    initSession: function ({ state, dispatch, commit }, userInfo) {
+      if (state.OV) {
+        return
+      }
+      let data = {
+        OV: undefined,
+        session: undefined,
+        messages: []
+      }
+      data.OV = new OpenVidu()
+      data.session = data.OV.initSession()
+      console.log(data.session)
+
+      data.session.on('signal:whole-chat', (event) => {
+        data.messages.push(event)
+        console.log(data.messages)
+        commit('SET_WHOLE_MESSAGE', data)
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
+      });
+      
+      data.session.on('exception', ({ exception }) => {
+				console.warn(exception);
+			});
+
+      dispatch('getToken', '0').then(token => {
+        data.session.connect(token, { clientData: userInfo.nickname })
+        commit('SET_WHOLE_SESSION_INFO', data)
+      })
+
+    },
     joinSession: function ({ dispatch, commit }, roomInfo) {
       let isLogin = localStorage.getItem('jwt') ? true : false
       if (!isLogin) {
         $router.push({ name: 'Login' })
         return
       }
-
-      // let token = localStorage.getItem('jwt')
-
-      // let userInfo = null
-
-      // axios({
-      //   method: 'GET',
-      //   url: `${process.env.VUE_APP_API_URL}/user/info`,
-      //   headers: { Authorization: `Bearer ${token}`}
-      // })
-      // .then( res => {
-      //   userInfo = res.data.user
-      //   console.log(userInfo)
-      // })
-
       let data = {
         OV: undefined,
         session: undefined,
@@ -64,6 +102,7 @@ const openviduStore = {
         publisher: undefined,
         subscribers: [],
         messages: [],
+        gameMode: undefined
       }
       const sessionId = roomInfo.sessionId
 
@@ -95,7 +134,11 @@ const openviduStore = {
         console.log(event.from); // Connection object of the sender
         console.log(event.type); // The type of message ("my-chat")
       });
-
+      
+      data.session.on('signal:game-mode', event => {
+        data.gameMode = event.data
+        commit('SET_GAME_MODE', data)
+      })
 			// On every asynchronous exception...
 			data.session.on('exception', ({ exception }) => {
 				console.warn(exception);
@@ -109,16 +152,7 @@ const openviduStore = {
           data.session.connect(token, { clientData: roomInfo.userName })
             .then(() => {
               // --- Get your own camera stream with the desired properties ---
-              let publisher = data.OV.initPublisher(undefined, {
-                audioSource: undefined, // The source of audio. If undefined default microphone
-                videoSource: undefined, // The source of video. If undefined default webcam
-                publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
-                publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-                resolution: '640x480',  // The resolution of your video
-                frameRate: 30,			// The frame rate of your video
-                insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
-                mirror: false       	// Whether to mirror your local video or not
-              });
+              let publisher = data.OV.initPublisher(undefined, roomInfo.publishInfo);
               data.mainStreamManager = publisher;
               data.publisher = publisher;
               // --- Publish your stream ---
@@ -136,16 +170,7 @@ const openviduStore = {
           data.session.connect(token, { clientData: roomInfo.userName })
             .then(() => {
               // --- Get your own camera stream with the desired properties ---
-              let publisher = data.OV.initPublisher(undefined, {
-                audioSource: undefined, // The source of audio. If undefined default microphone
-                videoSource: undefined, // The source of video. If undefined default webcam
-                publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
-                publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-                resolution: '640x480',  // The resolution of your video
-                frameRate: 30,			// The frame rate of your video
-                insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
-                mirror: false       	// Whether to mirror your local video or not
-              });
+              let publisher = data.OV.initPublisher(undefined, roomInfo.publishInfo);
               data.mainStreamManager = publisher;
               data.publisher = publisher;
               // --- Publish your stream ---
@@ -217,7 +242,13 @@ const openviduStore = {
 					.catch(error => reject(error.response));
 			});
 		},
-
+    switchGameMode ({ state }, mode) {
+      state.session.signal({
+        data: mode,
+        to: [],
+        type: 'game-mode'
+      })
+    },
     enterRoom (context, sessionId) {
       console.log(sessionId)
       // axios({

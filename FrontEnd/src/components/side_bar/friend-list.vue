@@ -6,13 +6,17 @@
         v-for="friend in friends"
         :userInfo="friend"
         :tab="tab"/>
+      <friend-list-detail
+      :key="notFriend.id"
+      v-for="notFriend in notFriends"
+      :notFriendUserInfo="notFriend"
+      :tab="tab"/>
     </v-list>
   </div>
 </template>
 
 <script>
 import FriendListDetail from '@/components/side_bar/friend-list-detail.vue'
-import { mapState } from 'vuex'
 
 export default {
   name: 'FriendList',
@@ -22,6 +26,7 @@ export default {
   props: {
     tab: Number,
     friends: Array,
+    notFriends: Array
   },
   data: function () {
     return {
@@ -36,11 +41,6 @@ export default {
       return config
     },
   },
-  computed: {
-    ...mapState('friends', [
-      'banList',
-    ])
-  }
 }
 </script>
 

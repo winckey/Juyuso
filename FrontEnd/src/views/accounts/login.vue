@@ -72,6 +72,7 @@ export default {
   },
   methods: {
     ...mapActions(accounts, ['userUpdate']),
+    ...mapActions('openviduStore', ['initSession']),
     login: function () {
       axios({
         method: 'post',
@@ -82,6 +83,7 @@ export default {
           console.log(res.data.user.age)
           localStorage.setItem('jwt', res.data.accessToken)
           this.userUpdate(res.data.user)
+          this.initSession(res.data.user)
           this.$router.push({name:'Main'})
         })
         .catch(err => {

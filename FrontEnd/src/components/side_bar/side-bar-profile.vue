@@ -18,18 +18,20 @@
                         <v-list-item-subtitle>자기소개</v-list-item-subtitle>
                     </v-list-item-content>  
                 </div>
-
-                <v-card-actions>
-                    <v-btn @click="goMyPage"
+                <div class="mypage">
+                    <v-btn
+                        @click="goMyPage"
                         plain>
                         마이페이지
                     </v-btn>
-                    <v-btn class="logout-btn"
+                </div>
+                <div class="logout">
+                    <v-btn
                         plain
                         @click="logout">
                         로그아웃
                     </v-btn>
-                </v-card-actions>
+                </div>
             </div>
         </v-card>
         <v-card
@@ -73,27 +75,11 @@ export default {
             }
             return config
         },
-        // ...mapActions('accounts', [
-        // 'friendList',
-        // 'searchUserData'
-        // ]),
     },
-    // computed:{
-    //     ...mapGetters('accounts',[
-    //         'user',
-    //         'isLogin'
-    //     ])
-    //     // user: function(){
-    //     //     return this.$store.accounts.state.user
-    //     // },
-    //     // isLogin: function(){
-    //     //     return this.$store.state.isLogin
-    //     // }
-    // },
     created: function(){
         axios({
             method: 'get',
-            url: `${process.env.VUE_APP_API_URL}/user/info`,
+            url: `${process.env.VUE_APP_API_URL}/users`,
             headers: this.setToken()
         })
             .then(res =>{
@@ -113,12 +99,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .card-style{
     text-align: center;
 }
 .logout-btn{
     float: right;
+    text-align: right;
+}
+.mypage{
+    position :relative;
+}
+.logout{
+    position : relative;top: -36px;
+    /* float: right; */
     text-align: right;
 }
 </style>
