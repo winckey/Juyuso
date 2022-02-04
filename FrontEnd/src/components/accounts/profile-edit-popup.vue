@@ -248,7 +248,7 @@ export default {
       if (validation) {
         axios({
             method: 'PUT',
-            url: `${process.env.VUE_APP_API_URL}/users/info`,
+            url: `${process.env.VUE_APP_API_URL}/user/info`,
             data: item.credentials,
             headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
           })

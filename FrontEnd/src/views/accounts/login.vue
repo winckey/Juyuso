@@ -76,14 +76,13 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url: `${process.env.VUE_APP_API_URL}/users/login`,
+        url: `${process.env.VUE_APP_API_URL}/user/login`,
         data: this.credentials
       })
         .then(res => {
           console.log(res.data.user.age)
           localStorage.setItem('jwt', res.data.accessToken)
           this.userUpdate(res.data.user)
-          console.log(res)
           this.initSession(res.data.user)
           this.$router.push({name:'Main'})
         })

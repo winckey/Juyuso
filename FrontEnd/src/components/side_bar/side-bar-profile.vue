@@ -79,7 +79,7 @@ export default {
     created: function(){
         axios({
             method: 'get',
-            url: `${process.env.VUE_APP_API_URL}/users/me`,
+            url: `${process.env.VUE_APP_API_URL}/users`,
             headers: this.setToken()
         })
             .then(res =>{
