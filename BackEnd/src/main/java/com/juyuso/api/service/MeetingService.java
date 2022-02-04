@@ -54,6 +54,16 @@ public class MeetingService {
         return meetingRepository.findListByHashTag(tags, pageable);
     }
 
+    public Page<Meeting> findAllByTagAndCommon(String tags, Pageable pageable, Boolean common) {
+
+
+        return meetingRepository.findAllByTagAndCommon(tags, pageable, common);
+    }
+
+    public Page<Meeting> findAllByTitleAndCommon(String title, Pageable pageable, Boolean common) {
+        return meetingRepository.findAllByTitleAndCommon(title, pageable, common);
+    }
+
     public Page<Meeting> findAllByTitle(String title, Pageable pageable) {
         return meetingRepository.findAllByTitleContaining(title, pageable);
     }
@@ -61,6 +71,10 @@ public class MeetingService {
     public Page<Meeting> findAll(Pageable pageable) {
 
         return meetingRepository.findAll(pageable);
+    }
+
+    public Page<Meeting> findAllByCommon(Pageable pageable, Boolean common) {
+        return meetingRepository.findAllByCommon(pageable, common);
     }
 
     public Meeting findByMeetingId(Long meetingId) {

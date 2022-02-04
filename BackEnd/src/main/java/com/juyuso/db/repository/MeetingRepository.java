@@ -24,9 +24,16 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     Page<Meeting> findAll(Pageable pageable);
 
 
+    @Query(value = "SELECT * FROM meeting m inner join hash_tag h " +
+            "on m.meeting_id = h.meeting_id WHERE h.tag LIKE %:tag% AND m.common = :common ", nativeQuery = true)
+    Page<Meeting> findAllByTagAndCommon(@Param("tag")String tags, Pageable pageable, @Param("common") Boolean common);
+
+    @Query("SELECT m FROM Meeting m WHERE m.active = true and m.title LIKE CONCAT('%',:title, '%') AND m.common = :common ")
+    Page<Meeting> findAllByTitleAndCommon(@Param("title") String title, Pageable pageable, @Param("common")Boolean common);
 
 
-
+    @Query(value = "SELECT * FROM meeting m LEFT JOIN user_img ui ON m.owner_id = ui.user_id WHERE m.active = TRUE AND m.common = :common ", nativeQuery = true)
+    Page<Meeting> findAllByCommon(Pageable pageable, @Param("common") Boolean common);
 
 
 

@@ -89,18 +89,34 @@ public class MeetingController {
     public ResponseEntity<Page<MeetingListResDto>> getMeetingListByParam(
             @RequestParam(required = false) String tags,
             @RequestParam(required = false) String title,
-            @RequestParam(required = false) boolean common,
+            @RequestParam(required = false) Boolean common,
             @PageableDefault(size = 30) Pageable pageable)
     {
         if(tags != null) {
-           return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
+            if(common == null) {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTag(tags, pageable)));
+            }
+            else {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTagAndCommon(tags, pageable, common)));
+            }
+
         }
         else if(title != null){
-            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitle(title, pageable)));
+            if(common == null) {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitle(title, pageable)));
+            }
+            else {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByTitleAndCommon(title, pageable, common)));
+            }
+
         }
-        else {
-            return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAll(pageable)));
+        else if(tags == null && title == null) {
+            if(common != null) {
+                return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAllByCommon(pageable, common)));
+            }
         }
+        return ResponseEntity.ok(MeetingListResDto.of(meetingService.findAll(pageable)));
+
     }
 
     @PostMapping("/enter/{meetingId}")
