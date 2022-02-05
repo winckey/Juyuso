@@ -35,7 +35,13 @@
 
         <v-card-text>
           <v-container class="rounded-lg">
-        
+            <v-list>
+              <blocked-friend-detail 
+              v-for="friend in blockedFriends" 
+              :key="friend.id"
+              :friend="friend">
+              </blocked-friend-detail>
+            </v-list>
           </v-container>
         </v-card-text>
 
@@ -64,14 +70,33 @@
 </template>
 
 <script>
+import axios from 'axios'
+import BlockedFriendDetail from '@/components/accounts/blocked-friend-detail.vue'
 export default {
   name: 'BlockedFriend',
   data: function () {
     return {
       dialog: false,
-      isSuccess: false
-      
+      isSuccess: false,
+      blockedFriends: []
     }
+  },
+  components: {
+    BlockedFriendDetail
+  },
+  created: function (){
+    axios({
+      method: 'GET',
+      url: `${process.env.VUE_APP_API_URL}/friend/ban`,
+      headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+    })
+      .then(res => {
+        console.log(res.data.bans)
+        this.blockedFriends = res.data.bans
+      })
+      .catch(err =>{
+        console.log(err)
+      })
   }
 }
 </script>
