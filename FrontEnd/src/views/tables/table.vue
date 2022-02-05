@@ -12,6 +12,10 @@
         v-if="gameMode == '타이타닉'"
         :subscribers="subscribers"
         :publisher="publisher"/>
+      <BalanceGame
+        v-else-if="gameMode == '밸런스'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
       <div v-else class="container">
         <div class="row">
           <div id="video-container">
@@ -159,6 +163,7 @@ import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
+import BalanceGame from '@/components/game/balance-game.vue'
 
 import { mapState, mapActions } from 'vuex'
 
@@ -172,7 +177,8 @@ export default {
   components: {
     UserVideo,
     ChatPopup,
-    TitanicGame
+    TitanicGame,
+    BalanceGame,
   },
   props: {
     roomInfo: Object,
