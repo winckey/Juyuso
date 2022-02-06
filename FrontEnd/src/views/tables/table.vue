@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="backgroun-box"
+  :style="{'background-image':'url('+ require(`@/assets/${themeNum}.jpg`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
@@ -12,6 +13,10 @@
         v-if="gameMode == '타이타닉'"
         :subscribers="subscribers"
         :publisher="publisher"/>
+      <!-- <BalanceGame
+        v-else-if="gameMode == '밸런스'"
+        :subscribers="subscribers"
+        :publisher="publisher"/> -->
       <div v-else class="container">
         <div class="row">
           <div id="video-container">
@@ -124,6 +129,10 @@
             </v-btn>
           </v-speed-dial>
         </div>
+        <!-- 음성변조 -->
+        <div>
+          <v-btn @click="changeVoice">음성변조</v-btn>
+        </div>
         <div>
           <v-btn
             color="error"
@@ -159,6 +168,7 @@ import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
+// import BalanceGame from '@/components/game/balance-game.vue'
 
 import { mapState, mapActions } from 'vuex'
 
@@ -172,7 +182,8 @@ export default {
   components: {
     UserVideo,
     ChatPopup,
-    TitanicGame
+    TitanicGame,
+    // BalanceGame,
   },
   props: {
     roomInfo: Object,
@@ -195,7 +206,7 @@ export default {
         {name: '이순신'},
         {name: '타이타닉'},
         {name: '밸런스'}
-      ]
+      ],
     }
   },
 
@@ -248,7 +259,10 @@ export default {
       'subscribers',
       'messages',
       'gameMode',
-    ])
+    ]),
+    ...mapState('table',[
+      'themeNum',
+    ]) 
   },
   watch: {
     subscribers: function () {
@@ -320,8 +334,15 @@ export default {
         })
       }
     },
-    
+    changeVoice(){
+      const pitchs = ['0.76', '0.77', '0.78', '1.3', '1.4', '1.5']
+      const pitch = pitchs[Math.floor(Math.random() * pitchs.length)]
+      this.publisher.stream.applyFilter("GStreamerFilter",{"command":`pitch pitch=${pitch}`})
+    }
   },
+  created:{
+
+  }
 
 }
 

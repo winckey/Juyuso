@@ -119,14 +119,16 @@
                     dark
                     height="100"
                     width="200"
-                    @click="[toggle(), setTheme(n)]"
+                    @click="[toggle(), selectTheme(n)]"
                   >
+                    <img :src="themeItems[n].themeImg" alt="theme"
+                    height="100"
+                    width="200"> 
                     <v-scroll-y-transition>
                       <div
                         v-if="active"
                         class="text-h2 flex-grow-1 text-center"
                       >
-                        Active
                       </div>
                     </v-scroll-y-transition>
                   </v-card>
@@ -145,7 +147,7 @@
         >
           테이블 예약하기
         </v-btn>
-      </v-card-actions>
+      </v-card-actions>    
     </v-card>
   </v-dialog>
 </template>
@@ -186,7 +188,25 @@ export default {
           () => !(this.roomInfo.hashTag.length > 10) || '해시태그는 10개이상 입력할 수 없습니다.',
           v => this.roomInfo.hashTag.indexOf(v) == -1 || '중복된 해시태그는 입력할 수 없습니다.'
         ]
-      }
+      },
+      themeItems:[
+        {
+          themeImg:require('@/assets/beach.jpg'),
+          themeName:'beach'
+        },
+        {
+          themeImg:require('@/assets/camping.jpg'),
+          themeName:'camping'
+        },
+        {
+          themeImg:require('@/assets/bar.jpg'),
+          themeName:'bar'
+        },
+        {
+          themeImg:require('@/assets/beach.jpg'),
+          themeName:'nothing'
+        }
+      ]
     } 
   },
   computed: {
@@ -206,6 +226,9 @@ export default {
       'joinSession',
       'leaveSession',
     ]),
+    ...mapActions('table',[
+      'setTheme',
+    ]),
     addHastag: function () {
       console.log(this.$refs.tableOrderForm.validate())
       if (this.$refs.tableOrderForm.validate() && this.hashtagInput != '') {
@@ -216,9 +239,10 @@ export default {
     deleteHashtag: function (hashtag) {
       this.roomInfo.hashTag = this.roomInfo.hashTag.filter(v => v != hashtag)
     },
-    setTheme: function (num) {
-      this.roomInfo.img = num
-      // console.log(num)
+    selectTheme: function (num) {
+      this.roomInfo.img = this.themeItems[num].themeName
+      this.setTheme(this.roomInfo.img)
+      // console.log('이거 :',this.roomInfo.img)
     },
     createRoom: function () {
       this.roomInfo.common = !this.isSecret
@@ -243,8 +267,7 @@ export default {
         console.log(err)
       })
     }
-  }
-
+  },
 }
 </script>
 
