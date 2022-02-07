@@ -13,5 +13,6 @@ public interface UserService {
     User modifyUser(User user, UserModifyReqDto userModifyReqDto);
     void modifyPw(User user, UserPwReqDto userPwReqDto);
     String saveImg(User user, MultipartFile multipartFile);
+    void saveFcmToken(User user, String fcmToken);
     Boolean checkPw(User userDetails, UserPwReqDto userPwReqDto);
 }

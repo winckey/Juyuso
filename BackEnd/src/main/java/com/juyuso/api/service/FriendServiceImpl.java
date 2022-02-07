@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,23 +34,21 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void addRequest(User from, FriendReqDto friendReqDto) {
+    public FriendRequest addRequest(User from, FriendReqDto friendReqDto) {
 
         User to = userRepository.findById(Long.parseLong(friendReqDto.getId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-
-        //친구 요청이 있는가??
-        FriendRequest check1FR = friendRequestRepository.findRequestByfromId(from.getId(), to.getId()).orElse(null);
-        FriendRequest check2FR = friendRequestRepository.findRequestByfromId(to.getId(), from.getId()).orElse(null);
-        if (check1FR != null || check2FR != null) {
+        // 친구 요청이 있는가??
+        Optional<FriendRequest> check1FR = friendRequestRepository.findRequestByfromId(from.getId(), to.getId());
+        Optional<FriendRequest> check2FR = friendRequestRepository.findRequestByfromId(to.getId(), from.getId());
+        if (check1FR.isPresent() || check2FR.isPresent()) {
             throw new CustomException(ErrorCode.FRIEND_REQUEST_DUPLICATE);
         }
 
         // 이미 친구인가?
-        Friend checkFriend = friendRepository.findFriendByFromToId(from.getId(), to.getId()).orElse(null);
-        if(checkFriend != null)
-        {
+        Optional<Friend> checkFriend = friendRepository.findFriendByFromToId(from.getId(), to.getId());
+        if (checkFriend.isPresent()) {
             throw new CustomException(ErrorCode.FRIEND_DUPLICATE);
         }
 
@@ -57,6 +56,7 @@ public class FriendServiceImpl implements FriendService {
         friendRequest.addRequest(from, to);
         friendRequestRepository.save(friendRequest);
 
+        return friendRequest;
     }
 
     @Override
@@ -70,27 +70,28 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void agreeRequest(FriendReqDto friendReqDto, User to) {
+    public User agreeRequest(FriendReqDto friendReqDto, User to) {
         FriendRequest friendRequest = friendRequestRepository
                 .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));;
 
-        User user1 = friendRequest.getFromUser();
-        User user2 = friendRequest.getToUser();
+        User fromUser = friendRequest.getFromUser();
+        User toUser = friendRequest.getToUser();
 
         Friend friend = new Friend();
-        friend.setUser(user1);
-        friend.setFriend(user2);
+        friend.setUser(fromUser);
+        friend.setFriend(toUser);
 
         Friend friend2 = new Friend();
-        friend2.setUser(user2);
-        friend2.setFriend(user1);
-
+        friend2.setUser(toUser);
+        friend2.setFriend(fromUser);
 
         friendRequestRepository.delete(friendRequest);
 
         friendRepository.save(friend);
         friendRepository.save(friend2);
+
+        return fromUser;
     }
 
     @Override
@@ -124,14 +125,14 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void rejectRequest(FriendReqDto friendReqDto, User to) {
+    public User rejectRequest(FriendReqDto friendReqDto, User to) {
 
         FriendRequest friendRequest = friendRequestRepository
                 .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
 
         friendRequestRepository.delete(friendRequest);
-
+        return friendRequest.getFromUser();
     }
 
     @Override
