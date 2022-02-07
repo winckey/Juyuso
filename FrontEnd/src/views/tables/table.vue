@@ -12,6 +12,9 @@
         v-if="gameMode == '타이타닉'"
         :subscribers="subscribers"
         :publisher="publisher"/>
+      <DrawGame v-else-if="gameMode == '그림그리기'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
       <div v-else class="container">
         <div class="row">
           <div id="video-container">
@@ -159,7 +162,7 @@ import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
-
+import DrawGame from '@/components/game/draw-game.vue'
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -172,7 +175,8 @@ export default {
   components: {
     UserVideo,
     ChatPopup,
-    TitanicGame
+    TitanicGame,
+    DrawGame
   },
   props: {
     roomInfo: Object,
@@ -194,7 +198,8 @@ export default {
       games: [
         {name: '이순신'},
         {name: '타이타닉'},
-        {name: '밸런스'}
+        {name: '밸런스'},
+        {name: '그림그리기'}
       ]
     }
   },
@@ -339,6 +344,7 @@ export default {
     height: 100px;
     width: 100%;
     bottom: 0;
+    z-index: 3;
   }
   
   .people-list {
