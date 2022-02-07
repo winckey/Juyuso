@@ -75,11 +75,10 @@ export default {
         publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
         resolution: '640x480',  // The resolution of your video
         frameRate: 30,			// The frame rate of your video
-        insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
+        insertMode: 'REPLACE',	// How the video is inserted in the target element 'video-container'
         mirror: false       	// Whether to mirror your local video or not
       },
       dialog: false,
-      OV: undefined,
       videoDevices: [],
       audioDevices: [],
       videoSrc: undefined,
@@ -93,7 +92,7 @@ export default {
       'joinSession'
     ]),
     getUserDevices: function() {
-      this.OV.getDevices().then( devices => {
+      this.Chat_OV.getDevices().then( devices => {
         devices.forEach( device => {
           if(device.kind === 'videoinput') {
             this.videoDevices.push(device)
@@ -105,7 +104,7 @@ export default {
       })
     },
     changeDevice: function () {
-      this.OV.getUserMedia({
+      this.Chat_OV.getUserMedia({
         audioSource: false,
         videoSource: this.publishInfo.videoSource,
         resolution: '640x480',
@@ -125,12 +124,21 @@ export default {
       }
       console.log(roomInfo)
       this.joinSession(roomInfo)
+      try {
+        this.videoSrc.getTracks()[0].stop()
+      }
+      catch {
+        roomInfo
+      }
       this.$router.push({ name: 'Table', params: { roomId: this.roomInfo.meetingId, roomInfo: this.roomInfo }})
     }
   },
   computed: {
     ...mapState('accounts', [
       'user'
+    ]),
+    ...mapState('openviduStore', [
+      'Chat_OV'
     ])
   },
   

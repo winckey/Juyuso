@@ -22,7 +22,7 @@ export default {
   },
   data: function () {
     return {
-
+      videoManager: null
     }
   },
   props: {
@@ -45,8 +45,7 @@ export default {
       const { connection } = this.streamManager.stream
       return JSON.parse(connection.data) 
     }
-  }
-
+  },
 }
 </script>
 

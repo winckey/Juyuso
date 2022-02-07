@@ -8,7 +8,18 @@
       <!-- <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager"/>
       </div> -->
-      <div class="container">
+      
+      <TitanicGame
+        v-if="gameMode == '타이타닉'"
+        :subscribers="session.streamManagers"
+        :publisher="publisher"/>
+      <DrawGame v-else-if="gameMode == '그림그리기'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
+      <TypingGame v-else-if="gameMode == '타자연습'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
+      <div v-else class="container">
         <div class="row">
           <div id="video-container">
             <user-video class="col-md-4" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
@@ -26,73 +37,127 @@
       </p>
     </div>
     <ChatPopup
+      ref="ChatPopup"
       :userInfo="userInfo"/>
     <!-- 메뉴바 -->
     <v-sheet 
-      class="menu-bar p-5"
+      class="menu-bar p-3"
       rounded="xl"
       elevation="18">
-      <div style="position: relative;">
-        <v-btn
-          fab
-          @click="audioToggle">
-          <!-- <span>{{ publishAudio ? '오디오 중지' : '오디오 시작'}}</span> -->
-          <v-icon>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
-        </v-btn>
-        <v-btn
-          fab
-          @click="videoToggle">
-          <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
-          <v-icon>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
-        </v-btn>
-        <v-btn
-          color="error"
-          fab
-          @click="leaveTable">
-          <!-- <span>{{ publishVideo ? '비디오 중지' : '비디오 시작'}}</span> -->
-          <v-icon dark>mdi-application-export</v-icon>
-        </v-btn>
-        <v-btn
-          @click="peopleListShow = !peopleListShow">
-          참가자 명단 보기
-        </v-btn>
-        <v-speed-dial
-          v-model="fab"
-          right
-          direction="top"
-          fab
-          absolute
-        >
-          <template v-slot:activator>
-            <v-btn
-              v-model="fab"
-              color="blue darken-2"
-              dark
-              fab
-            >
-              <v-icon v-if="fab">
-                mdi-close
-              </v-icon>
-              <v-icon v-else>
-                mdi-controller-classic-outline
-              </v-icon>
-            </v-btn>
-          </template>
+      <div class="d-flex justify-content-between align-items-center" style="height: 100%">
+        <div class="d-flex align-items-center" style="height: 100%">
           <v-btn
-            v-for="(game, idx) in games"
-            :key="idx"
-            dark
+            class="m-1"
+            fab
             small
-            color="green"
-            @click="switchGameMode(game.name)"
-          >
-            {{ game.name }}
+            @click="audioToggle">
+            <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
           </v-btn>
-        </v-speed-dial>
-        <input type="text" @keyup.enter="sendWholeMessage" v-model="messageInput">
+          <v-btn
+            class="m-1"
+            fab
+            small
+            @click="videoToggle">
+            <v-icon dense>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
+          </v-btn>
+          <v-btn
+            class="m-1"
+            fab
+            small
+            @click="bullhorn = !bullhorn">
+            <v-icon dense>mdi-bullhorn-outline</v-icon>
+          </v-btn>
+          <transition name="stretch" mode="out-in">
+            <v-text-field
+              class="align-items-center"
+              v-show="bullhorn" 
+              type="text" 
+              dense 
+              hide-details
+              solo
+              rounded
+              @keyup.enter="sendWholeMessage" 
+              v-model="messageInput"/>
+          </transition>
+        </div>
+        <div class="d-flex">
+          <v-btn
+            class="chat-btn m-1"
+            fab
+            small
+            @click="toggleChatbox"
+          >
+            <v-icon>mdi-chat-processing</v-icon>
+          </v-btn>
+          
+          <v-btn
+            class="m-1"
+            fab
+            small
+            @click="peopleListShow = !peopleListShow">
+            <v-icon>mdi-account-group-outline</v-icon>
+          </v-btn>
+          <v-speed-dial
+            v-model="fab"
+            direction="top"
+            fab
+          >
+            <template v-slot:activator>
+              <v-btn
+                v-model="fab"
+                class="m-1"
+                color="blue darken-2"
+                dark
+                small
+                fab
+              >
+                <v-icon dense v-if="fab">
+                  mdi-close
+                </v-icon>
+                <v-icon dense v-else>
+                  mdi-controller-classic-outline
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-btn
+              v-for="(game, idx) in games"
+              :key="idx"
+              dark
+              small
+              color="green"
+              @click="sendGameMode(game)"
+            >
+              {{ game.name }}
+            </v-btn>
+          </v-speed-dial>
+        </div>
+        <div>
+          <v-btn
+            color="error"
+            fab
+            small
+            @click="leaveTable">
+            <v-icon dark dense>mdi-application-export</v-icon>
+          </v-btn>
+        </div>
       </div>
     </v-sheet>
-      
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="2500"
+    >
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+      {{ snackbarText }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -100,6 +165,9 @@
 import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
+import TitanicGame from '@/components/game/titanic-game.vue'
+import DrawGame from '@/components/game/draw-game.vue'
+import TypingGame from '@/components/game/typing-game.vue'
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -111,7 +179,10 @@ export default {
 
   components: {
     UserVideo,
-    ChatPopup
+    ChatPopup,
+    TitanicGame,
+    DrawGame,
+    TypingGame
   },
   props: {
     roomInfo: Object,
@@ -119,6 +190,9 @@ export default {
   data: function () {
     return {
       fab: false,
+      snackbar: false,
+      bullhorn: false,
+      snackbarText: '',
       messageInput: '',
       peopleListShow: false,
       menuBar: false,
@@ -127,10 +201,12 @@ export default {
       publishAudio: true,
       publishVideo: true,
       userInfo: null,
+      titanicMembers: null,
       games: [
-        {name: '이순신'},
+        {name: '타자연습'},
         {name: '타이타닉'},
-        {name: '밸런스'}
+        {name: '밸런스'},
+        {name: '그림그리기'}
       ]
     }
   },
@@ -148,7 +224,11 @@ export default {
     const token = localStorage.getItem('jwt')
     axios({
       method: 'GET',
+<<<<<<< HEAD
       url: `${process.env.VUE_APP_API_URL}/users/info`,
+=======
+      url: `${process.env.VUE_APP_API_URL}/users/me`,
+>>>>>>> 05f0408c998e9e18f806b1d47dbc401c28b08cf4
       headers: { Authorization: `Bearer ${token}`}
     })
     .then( res => {
@@ -186,14 +266,22 @@ export default {
       'gameMode',
     ])
   },
-
+  watch: {
+    subscribers: function () {
+      const username = JSON.parse(this.subscribers[this.subscribers.length - 1].stream.connection.data).clientData
+      this.snackbarText = `${username}님이 입장하셨습니다.`
+      this.snackbar = true
+    }
+  },
   methods: {
     ...mapActions(openviduStore, [
       // 'joinSession',
       'leaveSession',
       'switchGameMode',
     ]),
-
+    toggleChatbox () {
+      this.$refs.ChatPopup.chatBox = !this.$refs.ChatPopup.chatBox
+    },
     leaveTable () {
       this.leaveSession(this.roomId)
 			window.removeEventListener('beforeunload', function () {
@@ -223,16 +311,37 @@ export default {
           to: [],
           type: 'whole-chat'
         })
-        .then( () => {
-          console.log('success')
-        })
-        .catch( () => {
-          console.log('fail')
-        })
       }
       this.messageInput=''
-    }
-  }
+    },
+    sendGameMode(gameMode) {
+      // 게임 초기 세팅
+      if (gameMode.name === '타이타닉') {
+        let members = this.session.streamManagers.map(stream => {
+          return {
+            connectionId: stream.stream.connection.connectionId,
+            username: JSON.parse(stream.stream.connection.data).clientData
+          }
+        })
+        let gameInfo = {
+          type: 'Titanic',
+          members: members.sort(() => Math.random() - 0.5),
+          isEnd: false,
+          curMember: 0,
+          curAmount: 0,
+          maxAmount: Math.random() * 50 + members.length * 30,
+        }
+        this.session.signal({
+          data: JSON.stringify(gameInfo),
+          to: [],
+          type: 'game-info'
+        })
+      }
+      this.switchGameMode(gameMode.name)
+    },
+    
+  },
+
 }
 
 </script>
@@ -246,23 +355,10 @@ export default {
   .menu-bar {
     position: fixed;
     background: white;
-    height: 300px;
-    width: 70%;
-    bottom: -100px;
-    left: 50%;
-    transition-property: all;
-    transition-duration: .3s;
-    transform: translate(-50%);
-  }
-
-  .menu-bar:hover {
-    position: fixed;
-    background: white;
-    height: 300px;
-    width: 70%;
-    bottom: -100px;
-    left: 50%;
-    transform: translate(-50%);
+    height: 100px;
+    width: 100%;
+    bottom: 0;
+    z-index: 3;
   }
   
   .people-list {
@@ -276,4 +372,19 @@ export default {
     top: 6em
   }
 
+
+  .stretch-enter-active {
+    animation: stretch-in .3s;
+  }
+  .stretch-leave-active {
+    animation: stretch-in .3s reverse;
+  }
+  @keyframes stretch-in {
+    0% {
+      width: 0px;
+    }
+    100% {
+      width: 167px;
+    }
+  }
 </style>

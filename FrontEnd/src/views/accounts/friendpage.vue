@@ -84,8 +84,7 @@ export default {
     created: function (){
       axios({
         method: 'get',
-        // url: `${process.env.VUE_APP_API_URL}/friend/info/${this.$route.history.params.friend.id}`,
-        url: `${process.env.VUE_APP_API_URL}/friend/info/${1}`,
+        url: `${process.env.VUE_APP_API_URL}/friend/info/${this.$route.params.userId}`,
         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
         .then(res => {
@@ -99,10 +98,9 @@ export default {
     },
     computed: {
       imgUrl: function (){
-        if (this.friend.img) {
-          return this.friend.imgUrl
+        if (this.friend.imgUrl) {
+          return `${process.env.VUE_APP_IMG_URL}/${this.friend.imgUrl}`
         } else {
-          console.log("@")
           return require('@/assets/chat.png')
         }
       }

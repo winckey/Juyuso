@@ -22,7 +22,15 @@
         dense
         type="error"
       >
-        정보를 다시 확인해주세요!
+        입력 형식을 다시 확인해주세요!
+      </v-alert>
+
+      <v-alert
+      :value="isImage"
+        dense
+        type="error"
+      >
+        이미지 크기가 용량을 초과했습니다!
       </v-alert>
 
 
@@ -42,19 +50,34 @@
 
         <v-card-text>
           <v-container class="rounded-lg">
-
             <v-form class="form-box" ref="update">
 
               <v-row>
                 
                 <v-col>
-                  <div>
-                    <v-img src="@/assets/chat.png" width="30%"></v-img>
+                  <div class="d-flex justify-content-center">
+                    <v-avatar>
+                      <img
+                        :src="userInfo.imgUrl"
+                        :alt="profileImg"
+                      >
+                    </v-avatar>
                   </div>
-                  <div>
-                    <a href="/">이미지 변경하기</a>
+                  <v-file-input
+                    v-model="profileImg"
+                    @click="isShowBtn=true"
+                    accept="image/*"
+                    label="프로필 이미지 업로드"
+                    @change="changeImage"
+                    prepend-icon="mdi-camera"
+                  ></v-file-input>
+
+                  <div v-if="isShowBtn" class="d-flex justify-content-center">
+                    <v-btn @click="uploadImage()" color="primary" class="mx-4">이미지 저장</v-btn>
+                    <!-- <v-btn @click="deleteImage()" color="green" >이미지 제거</v-btn> -->
                   </div>
                 </v-col>
+
                 <v-col>
                     <v-text-field
                       label="닉네임*"
@@ -92,29 +115,7 @@
                   ></v-text-field>
                 </v-col>
 
-
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="password"
-                    :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="passwordShow ? 'text' : 'password'"
-                    label="비밀번호*"
-                    :rules="rules.passwordRule"
-                    hint="영어, 숫자, 특수문자를 모두 포함해야합니다 (9-16자)"
-                    required
-                    @click:append="passwordShow = !passwordShow"
-                  ></v-text-field>
-                  <v-text-field
-                    :append-icon="passwordConfirmationShow ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="passwordConfirmationShow ? 'text' : 'password'"
-                    label="비밀번호 확인*"
-                    v-model="passwordConfirmation"
-                    @click:append="passwordConfirmationShow = !passwordConfirmationShow"
-                    :rules="rules.passwordConfirmationRule"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="6">
+                <v-col cols="12">
                   <v-select
                     v-model="userInfo.regionId"
                     :rules="rules.regionRule"
@@ -139,7 +140,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="[dialog = false, isSuccess=false, isAlert=false]"
+            @click="[dialog = false, isSuccess=false, isAlert=false, reloadMypage()]"
           >
             닫기
           </v-btn>
@@ -147,7 +148,6 @@
             color="blue darken-1"
             text
             @click="updateUser"
-            
           >
             저장
           </v-btn>
@@ -171,14 +171,13 @@ export default {
   },
   data: function () {
     return {
+      isShowBtn: false,
       isAlert: false,
       isSuccess: false,
+      isImage: false,
       userInfo: null,
       dialog: false,
-      passwordShow: false,
-      passwordConfirmationShow: false,
-      passwordConfirmation: '',
-      password: '',
+      profileImg: null,
       regions: [
           {region_id: 1, name: '서울'},
           {region_id: 2, name: '부산'},
@@ -193,15 +192,6 @@ export default {
         emailRule: [
           v => !!v || '이메일을 입력해주세요.',
           v => /.+@.+/.test(v) || '이메일 형식에 맞지않습니다.',
-        ],
-        passwordRule: [
-          v => !!v || "비밀번호를 입력해주세요.",
-          v => !(v && v.length < 9 && v.length > 15) || "비밀번호는 9자에서 16자 사이로 입력가능합니다.",
-          v => /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(v) || "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다."
-        ],
-        passwordConfirmationRule: [
-          v => !!v || "비밀번호 확인을 입력해주세요.",
-          v => v === this.password || "비밀번호가 일치하지 않습니다."
         ],
         birthRule: [
           v => !!v || "생년월일을 입력해주세요."
@@ -222,33 +212,29 @@ export default {
   },
   created: function () {
     this.userInfo = this.user
+    // this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
   },
   methods: {
     ...mapActions('accounts', ['userUpdate']),
-    
-
-// 유효성 검사가 안되고 바로 정보가 update된다는 점~~~~~~~~~
-
     updateUser: function () {
-      console.log('update함수 들어옴')
-
       const item = {credentials: {
-                  nickname: this.userInfo.nickname,
-                  description: this.userInfo.description,
-                  email: this.userInfo.email,
-                  regionId: this.userInfo.regionId,
-                  phone: this.userInfo.phone,
-                  password: this.password
+          description: this.userInfo.description,
+          email: this.userInfo.email,
+          nickname: this.userInfo.nickname,
+          phone: this.userInfo.phone,
+          regionId: this.userInfo.regionId,
       }}
-
-     
-      console.log('업데이트 요청 직전')
 
       const validation = this.$refs.update.validate()
       if (validation) {
+        console.log('업데이트 요청 직전')
         axios({
             method: 'PUT',
+<<<<<<< HEAD
             url: `${process.env.VUE_APP_API_URL}/users/info`,
+=======
+            url: `${process.env.VUE_APP_API_URL}/users/me`,
+>>>>>>> 05f0408c998e9e18f806b1d47dbc401c28b08cf4
             data: item.credentials,
             headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
           })
@@ -270,9 +256,46 @@ export default {
       } else {
         this.isAlert=true
         this.isSuccess=false
+      }
+    },
+    changeImage: function () {
+      console.log('changeImage')
+      console.log(this.profileImg.size)
+      if (this.profileImg.size > 300000) {
+        this.isImage = true
+        setTimeout(() => this.isImage=false, 4000)
+      }
+      this.userInfo.imgUrl = this.profileImg
+    },
+  
+    uploadImage: function () {
+      console.log('uploadㄱㄱ')
+
+      const image = new FormData()
+      image.append('img', this.profileImg)
+
+      axios({
+        method: 'POST',
+        url: `${process.env.VUE_APP_API_URL}/users/img`,
+        data: image,
+        headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
+      })
+        .then(res => {
+          console.log(res)
+          this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
+          this.$emit('changeProfileImage', res.data.imgUrl)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // deleteImage: function () {
+    //   this.userInfo.imgUrl = require("@/assets/chat.png")
+    // },
+    reloadMypage: function () {
+      this.$router.go()
     }
   }
-}
 }
 </script>
 
