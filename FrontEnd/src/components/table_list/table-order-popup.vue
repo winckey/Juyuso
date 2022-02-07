@@ -192,19 +192,15 @@ export default {
       themeItems:[
         {
           themeImg:require('@/assets/beach.jpg'),
-          themeName:'beach'
         },
         {
           themeImg:require('@/assets/camping.jpg'),
-          themeName:'camping'
         },
         {
           themeImg:require('@/assets/bar.jpg'),
-          themeName:'bar'
         },
         {
           themeImg:require('@/assets/beach.jpg'),
-          themeName:'nothing'
         }
       ]
     } 
@@ -240,8 +236,8 @@ export default {
       this.roomInfo.hashTag = this.roomInfo.hashTag.filter(v => v != hashtag)
     },
     selectTheme: function (num) {
-      this.roomInfo.img = this.themeItems[num].themeName
-      this.setTheme(this.roomInfo.img)
+      this.roomInfo.img = this.themeItems[num].themeImg
+      // this.setTheme(this.themeItems[num].themeName)
       // console.log('이거 :',this.roomInfo.img)
     },
     createRoom: function () {
