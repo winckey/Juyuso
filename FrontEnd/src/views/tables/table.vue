@@ -328,15 +328,20 @@ export default {
       if (gameMode.name === '밸런스') {
         let members = []
         this.session.streamManagers.forEach(stream => {
-          members.push(stream.stream.connection.connectionId)
+          members.push({
+            connectionId: stream.stream.connection.connectionId,
+            username: JSON.parse(stream.stream.connection.data).clientData,
+            isSelected: false,
+          })
         })
         let gameInfo = {
           type: 'Balance',
           members: members.sort(() => Math.random() - 0.5),
+          isStart: false,
+          isEnd: false,
           curMember:0,
           totalTime: 60,
-          cardOneData:[],
-          cardTwoData:[],
+          cardData:[[], []],
         }
         this.session.signal({
           data: JSON.stringify(gameInfo),
