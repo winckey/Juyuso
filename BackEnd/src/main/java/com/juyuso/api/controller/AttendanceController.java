@@ -27,7 +27,7 @@ public class AttendanceController {
     @PostMapping()
     @ApiOperation(value = "출석 체크", notes = "오늘 날짜를 기준으로 출석 체크한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -41,7 +41,7 @@ public class AttendanceController {
     @GetMapping()
     @ApiOperation(value = "이번 달 출석체크", notes = "이번 달의 출석체크 일자를 반환한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 200, message = "성공", response = AttendanceResDto.class),
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -56,7 +56,7 @@ public class AttendanceController {
     @GetMapping("/{year}/{month}")
     @ApiOperation(value = "지정 년월 출석체크", notes = "요청한 년, 월의 출석체크 일자를 반환한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 200, message = "성공", response = AttendanceResDto.class),
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")

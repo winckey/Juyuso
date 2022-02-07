@@ -117,6 +117,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void saveFcmToken(User user, String fcmToken) {
+        user.setFcmToken(fcmToken);
+        userRepository.save(user);
+    }
+
+    @Override
     public void modifyPw(User user, UserPwReqDto userPwReqDto) {
         user.setPassword(passwordEncoder.encode(userPwReqDto.getPassword()));
         userRepository.save(user);

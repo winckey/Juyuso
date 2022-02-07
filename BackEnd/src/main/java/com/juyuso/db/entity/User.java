@@ -52,6 +52,8 @@ public class User implements UserDetails {
 
     private String description;
 
+    private String fcmToken;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserImg userImg;
 

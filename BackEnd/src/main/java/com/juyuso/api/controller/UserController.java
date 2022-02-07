@@ -70,6 +70,7 @@ public class UserController {
         if (passwordEncoder.matches(password, user.getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             String token = JwtTokenUtil.getToken(userId);
+            userService.saveFcmToken(user, loginInfo.getFcmToken());
             return ResponseEntity.ok(LoginResDto.of(200, "Success", token, user));
         }
         throw new CustomException(ErrorCode.USER_NOT_FOUND);

@@ -17,4 +17,8 @@ public class UserLoginReqDto {
     @NotBlank
     @ApiModelProperty(name = "유저 Password", example = "your_password")
     private String password;
+
+    @NotBlank
+    @ApiModelProperty(name = "FCM Token")
+    private String fcmToken;
 }

@@ -1,10 +1,11 @@
 package com.juyuso.api.controller;
 
-import com.juyuso.api.dto.UserInfoDto;
 import com.juyuso.api.dto.request.FriendReqDto;
 import com.juyuso.api.dto.response.*;
+import com.juyuso.api.service.FirebaseCloudMessageService;
 import com.juyuso.api.service.FriendService;
-import com.juyuso.db.entity.Friend;
+import com.juyuso.common.model.response.BaseResponseBody;
+import com.juyuso.db.entity.FriendRequest;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,26 +14,33 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
 
-@Api(value = "친구 관리 api")
+@Validated
+@Api(value = "친구 관리 api", tags = {"친구 관리"})
 @RestController
-@RequestMapping("/api/friend")
+@RequestMapping("/api/friends")
 @RequiredArgsConstructor
 public class FriendController {
 
     private final FriendService friendService;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @GetMapping()
     @ApiOperation(value = "친구 리스트 조회", notes = "<strong>친구리스트를 조회한다.</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = FriendListResDto.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<FriendListResDto> findFriendList(@ApiIgnore Authentication authentication) {
         User userDetails = (User) authentication.getDetails();
@@ -48,91 +56,109 @@ public class FriendController {
     @DeleteMapping()
     @ApiOperation(value = "친구 삭제", notes = "<strong>친구를 삭제한다. 삭제하고자 하는 유저 id</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendRequestResDto> deleteFriend(@ApiIgnore Authentication authentication , @RequestBody FriendReqDto friendReqDto) {
+    public ResponseEntity<BaseResponseBody> deleteFriend(@ApiIgnore Authentication authentication, @Valid @RequestBody FriendReqDto friendReqDto) {
         User userDetails = (User) authentication.getDetails();
 
         friendService.deleteFriend(userDetails, friendReqDto);
 
-        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Success"));
     }
-
 
     @PostMapping("/request")
     @ApiOperation(value = "친구 추가 신청", notes = "<strong>친구를 추가신청을 한다. 신청하는 사람의 id</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendRequestResDto> friendRequest(@ApiIgnore Authentication authentication,@RequestBody FriendReqDto friendReqDto) {
-        System.out.println("=================================== friendRequest");
+    public ResponseEntity<BaseResponseBody> friendRequest(@ApiIgnore Authentication authentication, @Valid @RequestBody FriendReqDto friendReqDto) {
         User userDetails = (User) authentication.getDetails();
+        FriendRequest friendRequest = friendService.addRequest(userDetails, friendReqDto);
 
-        friendService.addRequest(userDetails, friendReqDto);
-        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+        User toUser = friendRequest.getToUser();
+        if (!toUser.getFcmToken().isEmpty()) {
+            try {
+                firebaseCloudMessageService.sendMessageTo(toUser.getFcmToken(), "친구 추가 요청", String.format("%s님께서 친구 추가 요청하셨습니다.", userDetails.getNickname()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Success"));
     }
 
-    @PostMapping("/agree")
+    @PostMapping("/accept")
     @ApiOperation(value = "친구 신청 동의", notes = "<strong>친구를 추가신청을 한다. 신청 보낸사람의 사람의 id</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendRequestResDto> friendAgree(@RequestBody FriendReqDto friendReqDto ,@ApiIgnore Authentication authentication ) {
+    public ResponseEntity<BaseResponseBody> friendAgree(@ApiIgnore Authentication authentication, @Valid @RequestBody FriendReqDto friendReqDto) {
         User userDetails = (User) authentication.getDetails();
-        friendService.agreeRequest(friendReqDto , userDetails);
+        User fromUser = friendService.agreeRequest(friendReqDto, userDetails);
 
-        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+        if (!fromUser.getFcmToken().isEmpty()) {
+            try {
+                firebaseCloudMessageService.sendMessageTo(fromUser.getFcmToken(), "친구 추가 완료", String.format("%s님께서 친구 추가 요청을 수락하셨습니다.", fromUser.getNickname()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Success"));
     }
+
     @DeleteMapping("/reject")
     @ApiOperation(value = "친구 신청 거절", notes = "<strong>친구를 추가신청을 거절한다. 신청 보낸사람의 사람의 id</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendRequestResDto> friendReject(@RequestBody FriendReqDto friendReqDto , @ApiIgnore Authentication authentication) {
+    public ResponseEntity<BaseResponseBody> friendReject(@ApiIgnore Authentication authentication, @Valid @RequestBody FriendReqDto friendReqDto) {
         User userDetails = (User) authentication.getDetails();
-        friendService.rejectRequest(friendReqDto , userDetails);
+        User fromUser = friendService.rejectRequest(friendReqDto, userDetails);
 
-        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+        if (!fromUser.getFcmToken().isEmpty()) {
+            try {
+                firebaseCloudMessageService.sendMessageTo(fromUser.getFcmToken(), "친구 추가 거절", String.format("%s님께서 친구 추가 요청을 거절하셨습니다.", fromUser.getNickname()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Success"));
     }
 
-
-
-
-    @GetMapping("/info/{freindId}")
+    @GetMapping("/info/{friendId}")
     @ApiOperation(value = "친구 정보 조회", notes = "<strong>친구정보를 조회한다.</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "정보조회 성공 "),
+            @ApiResponse(code = 200, message = "정보 조회 성공", response = FriendResDto.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendResDto> getFriendInfo(@PathVariable Long freindId) {
-        User user = friendService.getFriendInfo(freindId);
+    public ResponseEntity<FriendResDto> getFriendInfo(@NotNull @PathVariable Long friendId) {
+        User user = friendService.getFriendInfo(friendId);
         return ResponseEntity.ok(FriendResDto.of(200, "Success", user));
     }
 
     @GetMapping("/{keyword}")
-    @ApiOperation(value = "유저 검색 !!", notes = "<strong>친구추가를 위한 전체 유저 검색.</strong>" +
+    @ApiOperation(value = "친구 검색", notes = "<strong>친구추가를 위한 전체 유저 검색.</strong>" +
             "<strong> keyword를 포함하는 별명을 가진 유저 검색")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = FriendSearchListResDto.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendSearchListResDto> userSearch(@ApiIgnore Authentication authentication , @PathVariable String keyword) {
+    public ResponseEntity<FriendSearchListResDto> userSearch(@ApiIgnore Authentication authentication, @NotBlank @PathVariable String keyword) {
 
         User userDetails = (User) authentication.getDetails();
         List<User> userListMyFriend = friendService.userSearchMy(keyword , userDetails);
@@ -143,53 +169,48 @@ public class FriendController {
     @PostMapping("/ban")
     @ApiOperation(value = "차단 추가", notes = "<strong>친구를 차단하고 삭제 한다. 차단하고자하는 사람의 id</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendRequestResDto> friendBan(@ApiIgnore Authentication authentication,@RequestBody FriendReqDto friendReqDto) {
+    public ResponseEntity<BaseResponseBody> friendBan(@ApiIgnore Authentication authentication, @Valid @RequestBody FriendReqDto friendReqDto) {
 
         User userDetails = (User) authentication.getDetails();
 
         friendService.banRequest(userDetails, friendReqDto);
         friendService.deleteFriend(userDetails, friendReqDto);
 
-        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Success"));
     }
 
     @DeleteMapping("/ban")
     @ApiOperation(value = "차단 취소", notes = "<strong>친구를 차단 취소 한다. 차단취소 하고자하는 사람의 id</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendRequestResDto> friendBanCancel(@ApiIgnore Authentication authentication,@RequestBody FriendReqDto friendReqDto) {
+    public ResponseEntity<BaseResponseBody> friendBanCancel(@ApiIgnore Authentication authentication, @Valid @RequestBody FriendReqDto friendReqDto) {
 
         User userDetails = (User) authentication.getDetails();
         friendService.banCancelRequest(userDetails, friendReqDto);
-        return ResponseEntity.ok(FriendRequestResDto.of(200, "Success"));
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Success"));
     }
-
-
 
     @GetMapping("/ban")
     @ApiOperation(value = "차단 리스트 조회", notes = "<strong>차단리스트를 조회한다.</strong>")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "리스트조회 성공 "),
+            @ApiResponse(code = 200, message = "성공", response = FriendBanResDto.class),
             @ApiResponse(code = 400, message = "오류"),
             @ApiResponse(code = 401, message = "권한 없음"),
-            @ApiResponse(code = 500, message = " 서버에러")
+            @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<BanResDto> findBanList(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<FriendBanResDto> findBanList(@ApiIgnore Authentication authentication) {
         User userDetails = (User) authentication.getDetails();
         List<User> banList = friendService.banList(userDetails);
 
-
-
-        return ResponseEntity.ok(BanResDto.of(200, "Success", banList));
+        return ResponseEntity.ok(FriendBanResDto.of(200, "Success", banList));
     }
-
 }

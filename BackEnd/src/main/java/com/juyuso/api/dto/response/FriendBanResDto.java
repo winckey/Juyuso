@@ -5,19 +5,18 @@ import com.juyuso.common.model.response.BaseResponseBody;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @ApiModel("BanResponse")
-public class BanResDto extends BaseResponseBody {
+public class FriendBanResDto extends BaseResponseBody {
 
     private List<UserInfoDto> bans;
 
-    public static BanResDto of(Integer statusCode, String message , List<User> bans) {
-        BanResDto res = new BanResDto();
+    public static FriendBanResDto of(Integer statusCode, String message , List<User> bans) {
+        FriendBanResDto res = new FriendBanResDto();
         res.setStatusCode(statusCode);
         res.setMessage(message);
         res.setBans(bans);
