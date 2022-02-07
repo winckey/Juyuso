@@ -106,7 +106,7 @@ public class FriendController {
 
         if (!fromUser.getFcmToken().isEmpty()) {
             try {
-                firebaseCloudMessageService.sendMessageTo(fromUser.getFcmToken(), "친구 추가 완료", String.format("%s님께서 친구 추가 요청을 수락하셨습니다.", fromUser.getNickname()));
+                firebaseCloudMessageService.sendMessageTo(fromUser.getFcmToken(), "친구 추가 완료", String.format("%s님께서 친구 추가 요청을 수락하셨습니다.", userDetails.getNickname()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -128,7 +128,7 @@ public class FriendController {
 
         if (!fromUser.getFcmToken().isEmpty()) {
             try {
-                firebaseCloudMessageService.sendMessageTo(fromUser.getFcmToken(), "친구 추가 거절", String.format("%s님께서 친구 추가 요청을 거절하셨습니다.", fromUser.getNickname()));
+                firebaseCloudMessageService.sendMessageTo(fromUser.getFcmToken(), "친구 추가 거절", String.format("%s님께서 친구 추가 요청을 거절하셨습니다.", userDetails.getNickname()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
