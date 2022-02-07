@@ -54,13 +54,13 @@
           >
             닫기
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             color="blue darken-1"
             text
             
           >
             저장
-          </v-btn>
+          </v-btn> -->
         </v-card-actions>
 
 
@@ -70,6 +70,7 @@
 </template>
 
 <script>
+// import {mapState} from 'vuex'
 import axios from 'axios'
 import BlockedFriendDetail from '@/components/accounts/blocked-friend-detail.vue'
 export default {
@@ -84,6 +85,9 @@ export default {
   components: {
     BlockedFriendDetail
   },
+  computed: {
+    // ...mapState('friends', ['banList'])
+  },
   created: function (){
     axios({
       method: 'GET',
@@ -91,6 +95,7 @@ export default {
       headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
+        console.log(res.data)
         console.log(res.data.bans)
         this.blockedFriends = res.data.bans
       })
