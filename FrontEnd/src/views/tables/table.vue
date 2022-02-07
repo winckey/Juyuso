@@ -11,7 +11,7 @@
       
       <TitanicGame
         v-if="gameMode == '타이타닉'"
-        :subscribers="subscribers"
+        :subscribers="session.streamManagers"
         :publisher="publisher"/>
       <DrawGame v-else-if="gameMode == '그림그리기'"
         :subscribers="subscribers"
@@ -201,6 +201,7 @@ export default {
       publishAudio: true,
       publishVideo: true,
       userInfo: null,
+      titanicMembers: null,
       games: [
         {name: '타자연습'},
         {name: '타이타닉'},
@@ -311,15 +312,17 @@ export default {
     },
     sendGameMode(gameMode) {
       // 게임 초기 세팅
-      this.switchGameMode(gameMode.name)
       if (gameMode.name === '타이타닉') {
-        let members = []
-        this.session.streamManagers.forEach(stream => {
-          members.push(stream.stream.connection.connectionId)
+        let members = this.session.streamManagers.map(stream => {
+          return {
+            connectionId: stream.stream.connection.connectionId,
+            username: JSON.parse(stream.stream.connection.data).clientData
+          }
         })
         let gameInfo = {
           type: 'Titanic',
           members: members.sort(() => Math.random() - 0.5),
+          isEnd: false,
           curMember: 0,
           curAmount: 0,
           maxAmount: Math.random() * 50 + members.length * 30,
@@ -330,6 +333,7 @@ export default {
           type: 'game-info'
         })
       }
+      this.switchGameMode(gameMode.name)
     },
     
   },

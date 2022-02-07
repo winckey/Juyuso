@@ -8,13 +8,25 @@ export default {
   name: 'OvVideo',
 
   props: {
-    streamManager: Object,
+    streamManager: {
+      type: Object,
+      default() {
+        return {
+
+        }
+      }
+    }
   },
   
   mounted: function () {
+    this.streamManager
     this.streamManager.addVideoElement(this.$el)
   },
-
+  watch: {
+    streamManager: function () {
+      this.streamManager.addVideoElement(this.$el)
+    }
+  }
 }
 </script>
 
