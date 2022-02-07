@@ -16,7 +16,8 @@ const openviduStore = {
     subscribers: [],
     messages: [],
     gameMode: undefined,
-    gameInfo: undefined
+    gameInfo: undefined,
+    changeVoice: undefined
   },
   mutations: {
     SET_SESSION_INFO(state, data) {
@@ -61,6 +62,9 @@ const openviduStore = {
 
     SET_GAME_MODE(state, data) {
       state.gameMode = data.gameMode
+    },
+    SET_CHANGE_VOICE(state, data){
+      state.changeVoice = data.changeVoice
     }
   },
   actions: {
@@ -147,6 +151,11 @@ const openviduStore = {
         commit('SET_GAME_MODE', data)
       })
 
+      data.session.on('signal:change-voice', event =>{
+        data.changeVoice = event.data
+        commit('SET_CHANGE_VOICE',data)
+      })
+
 			// On every asynchronous exception...
 			data.session.on('exception', ({ exception }) => {
 				console.warn(exception);
@@ -209,12 +218,7 @@ const openviduStore = {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions`, JSON.stringify({
 						customSessionId: sessionId,
-            "type":"WEBRTC",
-            "data":"user_data",
-            "role":"PUBLISHER",
-            "kurentoOptions":{
-              "allowedFilters":["GStreamerFilter", "FaceOverlayFilter"]
-            },     
+
 					}), {
 						auth: {
 							username: 'OPENVIDUAPP',
@@ -242,8 +246,14 @@ const openviduStore = {
 		createToken (context, sessionId) {
 			return new Promise((resolve, reject) => {
 				axios
-					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
-
+					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, { 
+            "type":"WEBRTC",
+            "role":"PUBLISHER",
+            "kurentoOptions" : {
+              "allowedFilters": ["GStreamerFilter", "FaceOverlayFilter"]
+            }
+          },
+          {
 						auth: {
 							username: 'OPENVIDUAPP',
 							password: process.env.VUE_APP_OPENVIDU_SECRET,
@@ -261,24 +271,21 @@ const openviduStore = {
         type: 'game-mode'
       })
     },
-    changeSound({ state }){
-      // state.session.on('signal', event=> {
-      //   data.soundChange = event.data
-      //   console.log(event.data)
+    // changeSound(){
+    //     const pitchs = ['0.75', '0.77', '1.3', '1.4']
+    //     const pitch = pitchs[Math.floor(Math.random()*pitchs.length)]
+    //     state.publisher.stream.applyFilter("GStreamerFilter",{ command:`pitch pitch=${pitch}`})
+    //     })
 
-      //   const pitchs = ['0.75', '0.77', '1.3', '1.4']
-      //   const pitch = pitchs[Math.floor(Math.random()*pitchs.length)]
-      //   state.publisher.stream.applyFilter("GStreamerFilter",{ "command":`pitch pitch=${pitch}`})
-      // })
-      console.log(state)
-      state.publisher.stream.applyFilter('GStreamerFilter',{ command :"videoflip method=vertical-flip"})
-        .then(() =>{
-          console.log("video rotated!")
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
+      // console.log(state)
+      // state.publisher.stream.applyFilter('GStreamerFilter',{ command :"videoflip method=vertical-flip"})
+      //   .then(() =>{
+      //     console.log("video rotated!")
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //   })
+    // }
 
     // enterRoom (context, sessionId) {
     //   // axios({
