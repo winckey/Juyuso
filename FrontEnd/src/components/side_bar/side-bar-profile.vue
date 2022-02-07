@@ -7,8 +7,9 @@
                 <div>
                     <v-avatar
                         class="grey"
-                        size="80"
-                    ></v-avatar>
+                        size="80">
+                        <v-img :src="imgUrl" alt="profile_img"></v-img>
+                    </v-avatar>
                 </div>
                 <div>
                     <v-list-item-content>
@@ -81,11 +82,7 @@ export default {
     created: function(){
         axios({
             method: 'get',
-<<<<<<< HEAD
-            url: `${process.env.VUE_APP_API_URL}/users/info`,
-=======
             url: `${process.env.VUE_APP_API_URL}/users/me`,
->>>>>>> 05f0408c998e9e18f806b1d47dbc401c28b08cf4
             headers: this.setToken()
         })
             .then(res =>{
@@ -101,6 +98,15 @@ export default {
             this.isLogin=true
         }
     },
+  computed: {
+    imgUrl: function () {
+      if (this.user.img) {
+        return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
+      } else {
+        return require('@/assets/chat.png')
+      }
+    }
+  }
 
 }
 </script>

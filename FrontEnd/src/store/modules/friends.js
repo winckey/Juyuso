@@ -96,7 +96,7 @@ const friends = {
     blockFriendList: function({commit}) {
       axios({
         method: 'GET',
-        url: `${process.env.VUE_APP_API_URL}/friend/ban`,
+        url: `${process.env.VUE_APP_API_URL}/friends/ban`,
         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
         .then(res => {
@@ -112,13 +112,8 @@ const friends = {
       const token = localStorage.getItem('jwt')
       axios({
         method:'post',
-<<<<<<< HEAD
         url:`${process.env.VUE_APP_API_URL}/friends/ban`,
         headers: { Authorization: `Bearer ${token}`,},
-=======
-        url:`${process.env.VUE_APP_API_URL}/friend/ban`,
-        headers: { Authorization: `Bearer ${token}`},
->>>>>>> 05f0408c998e9e18f806b1d47dbc401c28b08cf4
         data: friendId
       }).then(res => {
           // commit('BAN_FRIEND', res.data)

@@ -84,7 +84,7 @@ export default {
     created: function (){
       axios({
         method: 'get',
-        url: `${process.env.VUE_APP_API_URL}/friend/info/${this.$route.params.userId}`,
+        url: `${process.env.VUE_APP_API_URL}/friends/info/${this.$route.params.userId}`,
         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
         .then(res => {

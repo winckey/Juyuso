@@ -31,10 +31,14 @@
                 v-on="on"
                 oncontextmenu="return false">
                   <v-list-item-avatar size=40>
-                    <img src="@/assets/logo.png" style="object-fit: cover">
+                    <v-img :src="imgUrl" alt="profile_img"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>{{ userInfo.nickname }}</v-list-item-title>
+                    <v-list-item-title>
+                      {{ userInfo.nickname }}
+                      <img src="@/assets/my_friend.png" alt="friend"
+                        class="friendImg">
+                    </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -67,10 +71,14 @@
             v-on="on"
             oncontextmenu="return false">
               <v-list-item-avatar size=40>
-                <img src="@/assets/logo.png" style="object-fit: cover">
+                <v-img :src="imgUrl" alt="profile_img"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title>{{ notFriendUserInfo.nickname }}</v-list-item-title>
+                <v-list-item-title>
+                  {{ notFriendUserInfo.nickname }}
+                  <img src="@/assets/add_friend.png" alt="notfriend"
+                        class="friendImg">
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -113,7 +121,14 @@ export default {
     ...mapState('friends',[
       'friendsList',
       'banList',
-    ])
+    ]),
+    imgUrl: function () {
+      if (this.userInfo.img) {
+        return `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
+      } else {
+        return require('@/assets/chat.png')
+      }
+    }
   },
   methods: {
     ...mapActions('friends', ['blockFriend']),
@@ -191,6 +206,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.friendImg{
+  width: 30px;
+  float:right;
+}
 </style>

@@ -224,11 +224,7 @@ export default {
     const token = localStorage.getItem('jwt')
     axios({
       method: 'GET',
-<<<<<<< HEAD
-      url: `${process.env.VUE_APP_API_URL}/users/info`,
-=======
       url: `${process.env.VUE_APP_API_URL}/users/me`,
->>>>>>> 05f0408c998e9e18f806b1d47dbc401c28b08cf4
       headers: { Authorization: `Bearer ${token}`}
     })
     .then( res => {

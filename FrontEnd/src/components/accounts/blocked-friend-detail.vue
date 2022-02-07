@@ -41,7 +41,7 @@ export default {
         blockCancel: function () {
             axios({
                 method: 'DELETE',
-                url: `${process.env.VUE_APP_API_URL}/friend/ban`,
+                url: `${process.env.VUE_APP_API_URL}/friends/ban`,
                 headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`},
                 data: {
                 id: this.friend.id,
@@ -60,7 +60,7 @@ export default {
         block: function () {
             axios({
                 method: 'POST',
-                url: `${process.env.VUE_APP_API_URL}/friend/ban`,
+                url: `${process.env.VUE_APP_API_URL}/friends/ban`,
                 headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`},
                 data: {
                 id: this.friend.id,
