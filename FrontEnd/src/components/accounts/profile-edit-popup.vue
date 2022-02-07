@@ -25,6 +25,14 @@
         입력 형식을 다시 확인해주세요!
       </v-alert>
 
+      <v-alert
+      :value="isImage"
+        dense
+        type="error"
+      >
+        이미지 크기가 용량을 초과했습니다!
+      </v-alert>
+
 
       <v-alert
       :value="isSuccess"
@@ -166,6 +174,7 @@ export default {
       isShowBtn: false,
       isAlert: false,
       isSuccess: false,
+      isImage: false,
       userInfo: null,
       dialog: false,
       profileImg: null,
@@ -216,9 +225,6 @@ export default {
           regionId: this.userInfo.regionId,
       }}
 
-     
-      
-
       const validation = this.$refs.update.validate()
       if (validation) {
         console.log('업데이트 요청 직전')
@@ -250,6 +256,11 @@ export default {
     },
     changeImage: function () {
       console.log('changeImage')
+      console.log(this.profileImg.size)
+      if (this.profileImg.size > 300000) {
+        this.isImage = true
+        setTimeout(() => this.isImage=false, 4000)
+      }
       this.userInfo.imgUrl = this.profileImg
     },
   

@@ -98,7 +98,7 @@ export default {
     },
     computed: {
       imgUrl: function (){
-        if (this.friend.img) {
+        if (this.friend.imgUrl) {
           return `${process.env.VUE_APP_IMG_URL}/${this.friend.imgUrl}`
         } else {
           return require('@/assets/chat.png')

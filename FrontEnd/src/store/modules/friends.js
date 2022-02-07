@@ -26,9 +26,13 @@ const friends = {
       let index = state.friendList.indexOf(userInfo)
       state.friendList.splice(index, 1)
     },
-    BAN_FIREND: function(state, data){
-      state.banList = data
+    BAN_FRIEND_LIST: function (state, banInfo) {
+      state.banList = banInfo
     },
+    // BAN_FIREND: function(state, data){
+    //   let index = state.friendList.indexOf(data)
+    //   state.friendList.splice(index, 1)
+    // },
     AGREE_FRIEND: function(state, userId){
       state.friendsList = userId
     }
@@ -87,17 +91,36 @@ const friends = {
     addFriendList: function({ commit }, userInfo ) {
       commit('ADD_FRIEND_LIST', userInfo)
     },
+
+    // 친구 차단 목록
+    blockFriendList: function({commit}) {
+      axios({
+        method: 'GET',
+        url: `${process.env.VUE_APP_API_URL}/friend/ban`,
+        headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+      })
+        .then(res => {
+          console.log(res.data.bans)
+          commit('BAN_FRIEND_LIST', res.data.bans)
+        })
+        .catch(err =>{
+          console.log(err)
+        })
+    },
     // 친구 차단
-    blockFriend : function({commit},friendId){
+    blockFriend : function({dispatch},friendId){
       const token = localStorage.getItem('jwt')
       axios({
         method:'post',
         url:`${process.env.VUE_APP_API_URL}/friend/ban`,
-        headers: { Authorization: `Bearer ${token}`,},
+        headers: { Authorization: `Bearer ${token}`},
         data: friendId
       }).then(res => {
-          commit('BAN_FIREND',res.data)
-          console.log('차단리스트',res.data)
+          // commit('BAN_FRIEND', res.data)
+          dispatch('blockFriendList')
+          console.log('차단한 친구',res.data)
+          dispatch('friendList')
+
       }).catch(err =>{
         console.log(err)
       })
