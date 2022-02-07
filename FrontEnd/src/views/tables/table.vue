@@ -325,6 +325,24 @@ export default {
           type: 'game-info'
         })
       }
+      if (gameMode.name === '밸런스') {
+        let members = []
+        this.session.streamManagers.forEach(stream => {
+          members.push(stream.stream.connection.connectionId)
+        })
+        let gameInfo = {
+          type: 'Balance',
+          members: members.sort(() => Math.random() - 0.5),
+          curMember: 0,
+          curAmount: 0,
+          maxAmount: Math.random() * 50 + members.length * 30,
+        }
+        this.session.signal({
+          data: JSON.stringify(gameInfo),
+          to: [],
+          type: 'game-info'
+        })
+      }
     },
     
   },

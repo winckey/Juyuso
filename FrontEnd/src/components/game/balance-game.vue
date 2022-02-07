@@ -21,7 +21,7 @@
             <v-btn @click="cardTwoCount">
               <v-hover>
                 <v-card>
-                  card2 {{ cardTwoData }}
+                  card2 {{ balanceGame.cardTwoData }}
                 </v-card>
               </v-hover>
             </v-btn>
@@ -62,25 +62,33 @@ export default {
       titmer:null,
       resetButton: false,
       balanceGame: {
+        roomNum:'',
         type: 'Balance',
         totalTime: 60,
         cardOneData:[],
         cardTwoData:[],
-      }
+        //gameInfo안에
+        curMember:0,
+        members:[],
+      },
+      player:[],
+      cardclick:false,
+
     }
   },
   methods:{
     gameStart:function(){
       this.balanceGame.totalTime = 60,
       this.balanceGame.cardOneData = [],
-      this.cardTwoData = []
+      this.balanceGame.cardTwoData = []
     },
     cardOneCount:function(){
-      this.balanceGame.cardOneData += this.publisher.stream.connection.connectionId
-      console.log(this.publisher)
+      this.balanceGame.cardOneData += this.publisher.session.connection.data.substr(15,17)
+      console.log(this.this.balanceGame.members[this.balanceGame.curMember])
     },
     cardTwoCount:function(){
-      this.cardTwoData = this.cardTwoData + 1
+      this.balanceGame.cardTwoData += this.balanceGame.members[this.balanceGame.curMember]
+      console.log(this.publisher)
     },
     countTime:function(){
       this.balanceGame.totalTime = this.balanceGame.totalTime - 1
