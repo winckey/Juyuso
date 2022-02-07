@@ -8,11 +8,15 @@
       <!-- <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager"/>
       </div> -->
+      
       <TitanicGame
         v-if="gameMode == '타이타닉'"
         :subscribers="subscribers"
         :publisher="publisher"/>
       <DrawGame v-else-if="gameMode == '그림그리기'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
+      <TypingGame v-else-if="gameMode == '타자연습'"
         :subscribers="subscribers"
         :publisher="publisher"/>
       <div v-else class="container">
@@ -163,6 +167,7 @@ import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
 import DrawGame from '@/components/game/draw-game.vue'
+import TypingGame from '@/components/game/typing-game.vue'
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -176,7 +181,8 @@ export default {
     UserVideo,
     ChatPopup,
     TitanicGame,
-    DrawGame
+    DrawGame,
+    TypingGame
   },
   props: {
     roomInfo: Object,
@@ -196,7 +202,7 @@ export default {
       publishVideo: true,
       userInfo: null,
       games: [
-        {name: '이순신'},
+        {name: '타자연습'},
         {name: '타이타닉'},
         {name: '밸런스'},
         {name: '그림그리기'}
