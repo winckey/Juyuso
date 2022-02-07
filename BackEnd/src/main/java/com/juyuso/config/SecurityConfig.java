@@ -37,10 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService))
                 .authorizeRequests()
-//                .antMatchers("/api/v1/users/me").authenticated()       // 이 주소로 들어오면 인증이 필요하다.
-//                .antMatchers("/api/admin/**").access("hasRole('ADMIN')") // 이 주소로 들어오려면 ADMIN 권한이 필요하다.
-//                .anyRequest().permitAll()
                 .antMatchers("/api/users", "/api/users/id/**", "/api/users/login").permitAll()
+                // 회원가입, 아이디 중복체크 , 로그인
                 .anyRequest().authenticated()
                 .and().cors();
     }
