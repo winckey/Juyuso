@@ -60,6 +60,8 @@
             @click="bullhorn = !bullhorn">
             <v-icon dense>mdi-bullhorn-outline</v-icon>
           </v-btn>
+          <!-- 음성변조 -->
+          <v-btn @click="changeVoice">음성변조</v-btn>
           <transition name="stretch" mode="out-in">
             <v-text-field
               class="align-items-center"
@@ -262,6 +264,7 @@ export default {
       // 'joinSession',
       'leaveSession',
       'switchGameMode',
+      'changeSound'
     ]),
     toggleChatbox () {
       this.$refs.ChatPopup.chatBox = !this.$refs.ChatPopup.chatBox
@@ -297,6 +300,12 @@ export default {
         })
       }
       this.messageInput=''
+    },
+    changeVoice(){
+      this.changeSound()
+      this.session.signal({
+        type: 'sonud-change'
+      })
     },
     sendGameMode(gameMode) {
       // 게임 초기 세팅
