@@ -333,9 +333,10 @@ export default {
         let gameInfo = {
           type: 'Balance',
           members: members.sort(() => Math.random() - 0.5),
-          curMember: 0,
-          curAmount: 0,
-          maxAmount: Math.random() * 50 + members.length * 30,
+          curMember:0,
+          totalTime: 60,
+          cardOneData:[],
+          cardTwoData:[],
         }
         this.session.signal({
           data: JSON.stringify(gameInfo),
