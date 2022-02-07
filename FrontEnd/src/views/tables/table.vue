@@ -325,7 +325,7 @@ export default {
           type: 'game-info'
         })
       }
-      if (gameMode.name === '밸런스') {
+      else if (gameMode.name === '밸런스') {
         let members = []
         this.session.streamManagers.forEach(stream => {
           members.push({
@@ -343,6 +343,7 @@ export default {
           totalTime: 60,
           cardData:[[], []],
         }
+        console.log(gameInfo)
         this.session.signal({
           data: JSON.stringify(gameInfo),
           to: [],
