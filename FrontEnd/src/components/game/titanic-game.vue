@@ -1,13 +1,7 @@
 <template>
-  <div v-if="titanicGame" style="margin-bottom: 200px" class="game-mode">
-    <!-- <v-progress-linear
-      v-if="titanicGame"
-      color="light-blue"
-      height="15"
-      :value="titanicGame.curAmount"
-      :buffer-value="titanicGame.maxAmount"
-      striped
-    ></v-progress-linear> -->
+  <div v-if="titanicGame" style="margin-bottom: 200px" class="game-mode" @mouseover="bgsound.play()">
+    <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
+    <audio class="audio" src="@/assets/sound/pour_sound.mp3"></audio>
     <div class="container-fluid">
       <div class="row" style="height: 100%">
         <div class="col-md-8 video-list-style">
@@ -51,11 +45,31 @@
         </div>
         </div>
     </div>
+    <v-dialog
+      v-if="titanicGame.isEnd"
+      v-model="titanicGame.isEnd"
+      persistent
+      max-width="300">
+      <v-card>
+        <v-card-title>당첨자 확인</v-card-title>
+        <v-card-text>{{ titanicGame.members[titanicGame.curMember].username }}님 당첨</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="[titanicGame.isEnd = false, changeGameMode(undefined)]"
+          >
+            확인
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import UserVideo from '@/components/table/user-video.vue'
 
 export default {
@@ -69,6 +83,8 @@ export default {
   },
   data: function () {
     return {
+      bgsound: null,
+      sound: null,
       turnPublisher: null,
       clickStart: 0,
       MyTurn: false,
@@ -85,12 +101,20 @@ export default {
     }
   },
   mounted: function () {
+    this.bgsound = document.querySelector('.bgaudio')
+    this.bgsound.volume = 0.3
+    console.log(this.bgsound)
+    this.sound = document.querySelector('.audio')
+    this.sound.volume = 0.7
     this.titanicGame = {...JSON.parse(this.gameInfo)}
     this.myConnectionId = this.publisher.stream.connection.connectionId
     this.mainPublisher()
     this.isMyTurn()
   },
   methods: {
+    ...mapActions('openviduStore', [
+      'changeGameMode'
+    ]),
     mainPublisher: function () {
       for(let i=0; i<this.subscribers.length; i++) {
         if(this.subscribers[i].stream.connection.connectionId == this.titanicGame.members[this.titanicGame.curMember].connectionId) {
@@ -106,18 +130,25 @@ export default {
       this.MyTurn = this.myConnectionId == this.titanicGame.members[this.titanicGame.curMember].connectionId
     },
     setStartTime: function () {
+      this.bgsound.play()
       this.titanicGame.curAmount += 1
+      this.sound.play()
       this.timerId = setInterval(this.calculateTime, 100);
     },
     calculateTime: function () {
       this.titanicGame.curAmount += 1
       if (this.titanicGame.curAmount > this.titanicGame.maxAmount) {
         this.titanicGame.isEnd = true
+        this.sound.pause()
+        this.sound.currentTime = 0
       }
       this.sendGameInfo()
+
     },
     setEndTime: function () {
       clearInterval(this.timerId)
+      this.sound.pause()
+      this.sound.currentTime = 0
       this.titanicGame.curMember = (this.titanicGame.curMember + 1) % this.titanicGame.members.length
       this.sendGameInfo()
     },
@@ -144,7 +175,6 @@ export default {
     gameInfo: function () {
       this.titanicGame = {...JSON.parse(this.gameInfo)}
       if(this.titanicGame.isEnd) {
-        alert(`${this.titanicGame.members[this.titanicGame.curMember].username}님 당첨`)
         clearInterval(this.timerId)
       }
       this.mainPublisher()

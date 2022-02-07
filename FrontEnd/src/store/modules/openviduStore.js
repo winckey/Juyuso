@@ -58,7 +58,6 @@ const openviduStore = {
     SET_GAME_INFO(state, data) {
       state.gameInfo = data.gameInfo
     },
-
     SET_GAME_MODE(state, data) {
       state.gameMode = data.gameMode
     }
@@ -254,7 +253,10 @@ const openviduStore = {
         type: 'game-mode'
       })
     },
-
+    changeGameMode ({ commit }, mode) {
+      const data = { gameMode: mode }
+      commit('SET_GAME_MODE', data)
+    }
     // enterRoom (context, sessionId) {
     //   // axios({
     //   //   method: 'POST', 
