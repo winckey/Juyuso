@@ -1,6 +1,6 @@
 <template>
   <div class="backgroun-box"
-  :style="{'background-image':'url('+ require(`img`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
+  :style="{'background-image':'url('+ require(`@/assets/beach.jpg`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
@@ -128,10 +128,6 @@
               {{ game.name }}
             </v-btn>
           </v-speed-dial>
-        </div>
-        <!-- 음성변조 -->
-        <div>
-          <v-btn @click="changeVoice">음성변조</v-btn>
         </div>
         <div>
           <v-btn
@@ -334,11 +330,6 @@ export default {
         })
       }
     },
-    changeVoice(){
-      const pitchs = ['0.76', '0.77', '0.78', '1.3', '1.4', '1.5']
-      const pitch = pitchs[Math.floor(Math.random() * pitchs.length)]
-      this.publisher.stream.applyFilter("GStreamerFilter",{"command":`pitch pitch=${pitch}`})
-    }
   },
   created:{
 

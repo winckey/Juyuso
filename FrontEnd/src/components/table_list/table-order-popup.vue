@@ -108,7 +108,7 @@
           <v-item-group>
             <v-row>
               <v-col
-                v-for="n in 4"
+                v-for="n in 5"
                 :key="n"
                 md="3"
               >
@@ -123,7 +123,7 @@
                   >
                     <img :src="themeItems[n].themeImg" alt="theme"
                     height="100"
-                    width="200"> 
+                    width="200">
                     <v-scroll-y-transition>
                       <div
                         v-if="active"
@@ -202,7 +202,7 @@ export default {
         {
           themeImg:require('@/assets/beach.jpg'),
         }
-      ]
+      ],
     } 
   },
   computed: {
@@ -238,7 +238,7 @@ export default {
     selectTheme: function (num) {
       this.roomInfo.img = this.themeItems[num].themeImg
       // this.setTheme(this.themeItems[num].themeName)
-      // console.log('이거 :',this.roomInfo.img)
+      console.log('이거 :',this.roomInfo.img)
     },
     createRoom: function () {
       this.roomInfo.common = !this.isSecret
