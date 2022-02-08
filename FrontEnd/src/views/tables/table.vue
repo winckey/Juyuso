@@ -46,13 +46,43 @@
       elevation="18">
       <div class="d-flex justify-content-between align-items-center" style="height: 100%">
         <div class="d-flex align-items-center" style="height: 100%">
-          <v-btn
-            class="m-1"
-            fab
-            small
-            @click="audioToggle">
-            <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
-          </v-btn>
+          <!-- 사운드 관련 버튼 -->
+          <v-speed-dial
+            v-model="fab"
+            direction="top"
+            fab>
+            <template v-slot:activator>
+              <v-btn
+                v-model="fab"
+                class="m-1"
+                dark
+                small
+                fab>
+                <v-icon dense v-if="fab">
+                  mdi-close
+                </v-icon>
+                <v-icon dense v-else>
+                  mdi-microphone-variant
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-btn
+              class="m-1"
+              fab
+              small
+              @click="audioToggle">
+              <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
+            </v-btn>
+            <v-btn
+              class="m-1"
+              fab
+              small
+              @click="changeVoice">
+              <v-icon dense>{{ voiceChange ? 'mdi-music-note' : 'mdi-music-note-off' }}</v-icon>
+            </v-btn>
+          </v-speed-dial>
+
+          <!-- 카메라 관련 버튼 -->
           <v-btn
             class="m-1"
             fab
@@ -97,21 +127,22 @@
             @click="peopleListShow = !peopleListShow">
             <v-icon>mdi-account-group-outline</v-icon>
           </v-btn>
+          <!-- 게임 관련 -->
           <v-speed-dial
-            v-model="fab"
+            v-model="game"
             direction="top"
             fab
           >
             <template v-slot:activator>
               <v-btn
-                v-model="fab"
+                v-model="game"
                 class="m-1"
                 color="blue darken-2"
                 dark
                 small
                 fab
               >
-                <v-icon dense v-if="fab">
+                <v-icon dense v-if="game">
                   mdi-close
                 </v-icon>
                 <v-icon dense v-else>
@@ -190,6 +221,7 @@ export default {
   data: function () {
     return {
       fab: false,
+      game: false,
       snackbar: false,
       bullhorn: false,
       snackbarText: '',
@@ -205,9 +237,14 @@ export default {
       games: [
         {name: '타자연습'},
         {name: '타이타닉'},
-        {name: '밸런스'},
-        {name: '그림그리기'}
-      ]
+        {name: '그림그리기'},
+        {name: '밸런스'}
+      ],
+      audios:[
+        {name: 'volume'},
+        {name: 'voice-change'}
+      ],
+      voiceChange:false,
     }
   },
 
@@ -274,6 +311,7 @@ export default {
       // 'joinSession',
       'leaveSession',
       'switchGameMode',
+      'changeSound'
     ]),
     toggleChatbox () {
       this.$refs.ChatPopup.chatBox = !this.$refs.ChatPopup.chatBox
@@ -291,9 +329,10 @@ export default {
 			this.mainStreamManager = stream;
 		},
 
-    audioToggle () {
+    audioToggle() {
       this.publisher.publishAudio(!this.publishAudio)
-      this.publishAudio = !this.publishAudio
+      this.publishAudio = !this.publishAudio        
+
     },
 
     videoToggle () {
@@ -309,6 +348,18 @@ export default {
         })
       }
       this.messageInput=''
+    },
+    changeVoice(){
+      if(this.voiceChange == false){
+        const pitchs = ['0.75', '0.77', '1.5', '1.6']
+        const pitch = pitchs[Math.floor(Math.random()*pitchs.length)]
+        this.publisher.stream.applyFilter("GStreamerFilter", {"command": `pitch pitch=${pitch}`})
+        this.voiceChange = true
+      }
+      else{
+        this.publisher.stream.removeFilter()
+        this.voiceChange = false
+      }
     },
     sendGameMode(gameMode) {
       // 게임 초기 세팅
