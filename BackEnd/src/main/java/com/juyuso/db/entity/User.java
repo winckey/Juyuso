@@ -1,5 +1,7 @@
 package com.juyuso.db.entity;
 
+import com.juyuso.db.entity.chat.ChatRoomUser;
+import com.juyuso.db.entity.chat.Message;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -65,6 +67,14 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Ban> Bans = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Message> messages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ChatRoomUser> chatRoomUsers = new ArrayList<>();
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
