@@ -16,8 +16,8 @@
                 </div>
               </v-col>
               <v-col v-if="friend" cols="4">
-                <div>
-                  <img :src="imgUrl" alt="profile_img">
+                <div class="d-flex justify-content-center">
+                  <v-img max-width="200" :src="imgUrl" alt="profile_img"></v-img>
                 </div>
               </v-col>
             </v-row>

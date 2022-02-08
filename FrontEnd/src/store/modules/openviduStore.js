@@ -249,7 +249,7 @@ const openviduStore = {
             "type":"WEBRTC",
             "role":"PUBLISHER",
             "kurentoOptions" : {
-              "allowedFilters": ["GStreamerFilter", "FaceOverlayFilter"]
+              "allowedFilters": ["ChromaFilter","GStreamerFilter", "FaceOverlayFilter"]
             }
           },
           {

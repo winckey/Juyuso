@@ -245,6 +245,7 @@ export default {
         {name: 'voice-change'}
       ],
       voiceChange:false,
+      isVirtualBackground: false
     }
   },
 
@@ -360,6 +361,25 @@ export default {
         this.publisher.stream.removeFilter()
         this.voiceChange = false
       }
+    },
+    virtualBackground(){
+      if (this.isVirtualBackground) {
+        this.publisher.stream.applyFilter("ChromaFilter",
+        {
+          "window": {
+            "topRightCornerX": 0,
+            "topRightCornerY": 0,
+            "width": 50,
+            "height": 50
+          },
+          "backgroundImage": "https://www.maxpixel.net/static/photo/1x/Cool-Blue-Liquid-Lake-Abstract-Background-Clear-316144.jpg "
+        })
+      } else {
+        this.publisher.stream.removeFilter()
+        this.isVirtualBackground = false
+
+      }
+
     },
     sendGameMode(gameMode) {
       // 게임 초기 세팅
