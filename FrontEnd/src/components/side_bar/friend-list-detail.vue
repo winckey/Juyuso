@@ -71,7 +71,7 @@
             v-on="on"
             oncontextmenu="return false">
               <v-list-item-avatar size=40>
-                <v-img :src="imgUrl" alt="profile_img"></v-img>
+                <v-img :src="notFriendImgUrl" alt="profile_img"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
@@ -125,6 +125,13 @@ export default {
     imgUrl: function () {
       if (this.userInfo.img) {
         return `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
+      } else {
+        return require('@/assets/chat.png')
+      }
+    },
+    notFriendImgUrl:function(){
+      if (this.notFriendUserInfo.img) {
+        return `${process.env.VUE_APP_IMG_URL}/${this.notFriendUserInfo.notFriendImgUrl}`
       } else {
         return require('@/assets/chat.png')
       }
