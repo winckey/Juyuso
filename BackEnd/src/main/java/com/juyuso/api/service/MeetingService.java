@@ -1,6 +1,7 @@
 package com.juyuso.api.service;
 
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
+import com.juyuso.api.dto.request.MeetingModifyReqDto;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.db.entity.HashTag;
@@ -78,6 +79,14 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
         meeting.changeActive();
         return meetingId;
+    }
+
+    @Transactional
+    public Meeting modifyMeeting(Long meetingId, MeetingModifyReqDto reqDto) {
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+        meeting.modifyUrl(reqDto.getUrl());
+        return meeting;
+
     }
 
     @PreDestroy
