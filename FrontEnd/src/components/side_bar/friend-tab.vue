@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <v-tabs
       fixed-tab
       centered
@@ -13,7 +13,8 @@
     </v-tab>
     </v-tabs>
     <v-tabs-items
-      v-model="tab">
+      v-model="tab"
+      class="h-100">
       <v-tab-item>
         <FriendList
           v-if="friendsList"
@@ -26,11 +27,11 @@
           :friends="friendsList.friendList"
           :tab="tab"/>
       </v-tab-item>
-      <v-tab-item>
+      <v-tab-item
+        class="h-100">
         <Chatting
           v-if="tab == 1"
           :tab="tab"/>
-        <v-divider></v-divider>
       </v-tab-item>
       <v-tab-item>
         <!-- <FriendList

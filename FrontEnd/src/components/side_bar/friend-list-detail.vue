@@ -124,7 +124,8 @@ export default {
       'banList',
     ]),
     imgUrl: function () {
-      if (this.userInfo.img) {
+      
+      if (this.userInfo) {
         return `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
       } else {
         return require('@/assets/chat.png')

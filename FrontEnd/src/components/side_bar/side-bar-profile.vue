@@ -1,24 +1,24 @@
 <template>
     <div>
-        <v-card
-            class="p-3"
-            v-if="isLogin">
-            <div class="card-style">
-                <div>
-                    <v-avatar
-                        class="grey"
-                        size="80">
-                        <v-img :src="imgUrl" alt="profile_img"></v-img>
-                    </v-avatar>
-                </div>
-                <div>
-                    <v-list-item-content>
-                        <v-list-item-title class="text-h5 mb-1">
-                            <p>{{ user.nickname }}</p>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
-                    </v-list-item-content>  
-                </div>
+      <v-card
+        class="p-3"
+        v-if="isLogin">
+        <div class="card-style">
+          <div>
+            <v-avatar
+              class="grey"
+              size="80">
+              <v-img :src="imgUrl" alt="profile_img"></v-img>
+            </v-avatar>
+          </div>
+          <div>
+            <v-list-item-content>
+              <v-list-item-title class="text-h5 mb-1">
+                <p>{{ user.nickname }}</p>
+              </v-list-item-title>
+              <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
+            </v-list-item-content>  
+          </div>
 
         <v-card-actions class="d-flex justify-content-evenly">
           <div class="mypage">

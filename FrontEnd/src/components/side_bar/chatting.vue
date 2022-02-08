@@ -1,22 +1,23 @@
 <template>
-  <div>
-    <div class="chat-list">
+  <div v-if="chatFriend">
+    <div style="text-align: center">{{ chatFriend.nickname }} 님과의 채팅방</div>
+    <v-divider></v-divider>
+    <v-card class="chat-list" :style="{height: height}"> 
       <div
         :key="idx" 
         v-for="(message, idx) in messages">
-        <div> {{ message }} </div>
         <div :class="message.writer == user.id ? 'my-chat': 'other-chat'">
-          <!-- <div>
-            <div v-if="JSON.parse(message.from.data).clientData != userInfo.nickname" class="chat-name">
-              {{ JSON.parse(message.from.data).clientData }}
+          <div>
+            <div v-if="message.writer != user.id" class="chat-name">
+              {{ chatFriend.nickname }}
             </div>
-            <div :class="JSON.parse(message.from.data).clientData == userInfo.nickname ? 'my-chat-bubble': 'other-chat-bubble'">
-              {{ message.data }}
+            <div :class="message.writer == user.id ? 'my-chat-bubble': 'other-chat-bubble'">
+              {{ message.message }}
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
-    </div>
+    </v-card>
     <!-- 채팅 보내기 -->
     <div class="chat-input-box d-flex justify-content-around">
       <textarea
@@ -50,6 +51,7 @@ export default {
       client: null,
       roomId: null,
       chatInput: null,
+      height: null,
     }
   },
   computed: {
@@ -57,11 +59,19 @@ export default {
     ...mapState('friends', ['chatFriend'])
   },
   mounted: function () {
+    this.height = `${window.innerHeight - 500}px`
+    window.addEventListener('resize', this.resizeHeight);
     if (this.chatFriend) {
       this.initChat()
     }
   },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeHeight);
+  },
   methods: {
+    resizeHeight () {
+      this.height = `${window.innerHeight - 500}px`
+    },
     initChat() {
       axios({
         method: 'GET',
@@ -84,7 +94,6 @@ export default {
         $client.subscribe(`/subscribe/chat/room/${this.roomId}`, chat => {
           let content = JSON.parse(chat.body);
           this.messages.push(content)
-          console.log(chat)
         })
       })
     },
@@ -112,6 +121,8 @@ export default {
     background: white;
     position: fixed;
     bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
     /* width: 100% */
   }
   .whole-chat-list {
@@ -123,10 +134,12 @@ export default {
   .chat-input {
     resize: none;
   }
-/* 
+
   .chat-list {
-    height: 50%;
-  } */
+    height: 100%;
+    max-height: 100%;
+    overflow-y: scroll;
+  }
 
   .other-chat {
     padding: 5px;

@@ -26,12 +26,12 @@
       oncontextmenu="return false"
       width="400"
       v-model="drawer"
-      absolute
+      fixed
       right
       temporary
     >
       
-    <div class="grey lighten-4" @contextmenu.prevent>
+    <div class="grey lighten-4" @contextmenu.prevent> 
       <div>
         <side-bar-profile></side-bar-profile>
       </div>
