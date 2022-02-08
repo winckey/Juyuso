@@ -49,7 +49,8 @@
 
 <script>
 import { getMessaging, onMessage } from 'firebase/messaging'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: 'NotificationList',
   data: function () {
@@ -75,12 +76,25 @@ export default {
     })
   },
   methods: {
+    ...mapActions('friends', ['friendList']),
     makeToast(payload) {
-      console.log(payload)
-      this.$bvToast.toast(payload.notification.body, {
-        title: payload.notification.title,
-        appendToast: true
-      })
+      if (payload.notification.title == '친구 추가 요청') {
+        this.friendList()
+      }
+      this.$toast(payload.notification.body, {
+        position: "top-right",
+        timeout: 3000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+        rtl: false
+      });
     }
   }
 }
