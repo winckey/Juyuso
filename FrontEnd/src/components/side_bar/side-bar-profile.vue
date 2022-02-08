@@ -7,8 +7,9 @@
                 <div>
                     <v-avatar
                         class="grey"
-                        size="80"
-                    ></v-avatar>
+                        size="80">
+                        <v-img :src="imgUrl" alt="profile_img"></v-img>
+                    </v-avatar>
                 </div>
                 <div>
                     <v-list-item-content>
@@ -19,31 +20,31 @@
                     </v-list-item-content>  
                 </div>
 
-                <v-card-actions class="d-flex justify-content-evenly">
-                    <div class="mypage">
-                        <v-btn @click="goMyPage"
-                            plain>
-                            마이페이지
-                        </v-btn>
-                    </div>
-                    <div class="logout">
-                        <v-btn
-                            plain
-                            @click="logout">
-                            로그아웃
-                        </v-btn>
-                    </div>
-                </v-card-actions>
-            </div>
-        </v-card>
-        <v-card
-            v-else
-            class="card-style">
+        <v-card-actions class="d-flex justify-content-evenly">
+          <div class="mypage">
+            <v-btn @click="goMyPage"
+              plain>
+              마이페이지
+            </v-btn>
+          </div>
+          <div class="logout">
             <v-btn
-                class="m-3 p-3"
-                @click="goToLogin">로그인해주세요</v-btn>
-        </v-card>
-    </div>
+              plain
+              @click="logout">
+              로그아웃
+            </v-btn>
+          </div>
+        </v-card-actions>
+      </div>
+    </v-card>
+    <v-card
+      v-else
+      class="card-style">
+      <v-btn
+        class="m-3 p-3"
+        @click="goToLogin">로그인해주세요</v-btn>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -97,6 +98,15 @@ export default {
             this.isLogin=true
         }
     },
+  computed: {
+    imgUrl: function () {
+      if (this.user.img) {
+        return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
+      } else {
+        return require('@/assets/chat.png')
+      }
+    }
+  }
 
 }
 </script>

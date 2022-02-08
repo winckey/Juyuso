@@ -9,8 +9,15 @@
       <!-- <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager"/>
       </div> -->
+      
       <TitanicGame
         v-if="gameMode == '타이타닉'"
+        :subscribers="session.streamManagers"
+        :publisher="publisher"/>
+      <DrawGame v-else-if="gameMode == '그림그리기'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
+      <TypingGame v-else-if="gameMode == '타자연습'"
         :subscribers="subscribers"
         :publisher="publisher"/>
       <!-- <BalanceGame
@@ -44,13 +51,43 @@
       elevation="18">
       <div class="d-flex justify-content-between align-items-center" style="height: 100%">
         <div class="d-flex align-items-center" style="height: 100%">
-          <v-btn
-            class="m-1"
-            fab
-            small
-            @click="audioToggle">
-            <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
-          </v-btn>
+          <!-- 사운드 관련 버튼 -->
+          <v-speed-dial
+            v-model="fab"
+            direction="top"
+            fab>
+            <template v-slot:activator>
+              <v-btn
+                v-model="fab"
+                class="m-1"
+                dark
+                small
+                fab>
+                <v-icon dense v-if="fab">
+                  mdi-close
+                </v-icon>
+                <v-icon dense v-else>
+                  mdi-microphone-variant
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-btn
+              class="m-1"
+              fab
+              small
+              @click="audioToggle">
+              <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
+            </v-btn>
+            <v-btn
+              class="m-1"
+              fab
+              small
+              @click="changeVoice">
+              <v-icon dense>{{ voiceChange ? 'mdi-music-note' : 'mdi-music-note-off' }}</v-icon>
+            </v-btn>
+          </v-speed-dial>
+
+          <!-- 카메라 관련 버튼 -->
           <v-btn
             class="m-1"
             fab
@@ -95,21 +132,22 @@
             @click="peopleListShow = !peopleListShow">
             <v-icon>mdi-account-group-outline</v-icon>
           </v-btn>
+          <!-- 게임 관련 -->
           <v-speed-dial
-            v-model="fab"
+            v-model="game"
             direction="top"
             fab
           >
             <template v-slot:activator>
               <v-btn
-                v-model="fab"
+                v-model="game"
                 class="m-1"
                 color="blue darken-2"
                 dark
                 small
                 fab
               >
-                <v-icon dense v-if="fab">
+                <v-icon dense v-if="game">
                   mdi-close
                 </v-icon>
                 <v-icon dense v-else>
@@ -164,8 +202,13 @@ import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
+<<<<<<< HEAD
 // import BalanceGame from '@/components/game/balance-game.vue'
 
+=======
+import DrawGame from '@/components/game/draw-game.vue'
+import TypingGame from '@/components/game/typing-game.vue'
+>>>>>>> ad3519de0be9e7d4f24631cbc882ca762a905c6d
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -179,7 +222,12 @@ export default {
     UserVideo,
     ChatPopup,
     TitanicGame,
+<<<<<<< HEAD
     // BalanceGame,
+=======
+    DrawGame,
+    TypingGame
+>>>>>>> ad3519de0be9e7d4f24631cbc882ca762a905c6d
   },
   props: {
     roomInfo: Object,
@@ -187,6 +235,7 @@ export default {
   data: function () {
     return {
       fab: false,
+      game: false,
       snackbar: false,
       bullhorn: false,
       snackbarText: '',
@@ -198,11 +247,21 @@ export default {
       publishAudio: true,
       publishVideo: true,
       userInfo: null,
+      titanicMembers: null,
       games: [
-        {name: '이순신'},
+        {name: '타자연습'},
         {name: '타이타닉'},
+        {name: '그림그리기'},
         {name: '밸런스'}
       ],
+<<<<<<< HEAD
+=======
+      audios:[
+        {name: 'volume'},
+        {name: 'voice-change'}
+      ],
+      voiceChange:false,
+>>>>>>> ad3519de0be9e7d4f24631cbc882ca762a905c6d
     }
   },
 
@@ -272,6 +331,7 @@ export default {
       // 'joinSession',
       'leaveSession',
       'switchGameMode',
+      'changeSound'
     ]),
     toggleChatbox () {
       this.$refs.ChatPopup.chatBox = !this.$refs.ChatPopup.chatBox
@@ -289,9 +349,10 @@ export default {
 			this.mainStreamManager = stream;
 		},
 
-    audioToggle () {
+    audioToggle() {
       this.publisher.publishAudio(!this.publishAudio)
-      this.publishAudio = !this.publishAudio
+      this.publishAudio = !this.publishAudio        
+
     },
 
     videoToggle () {
@@ -308,17 +369,31 @@ export default {
       }
       this.messageInput=''
     },
+    changeVoice(){
+      if(this.voiceChange == false){
+        const pitchs = ['0.75', '0.77', '1.5', '1.6']
+        const pitch = pitchs[Math.floor(Math.random()*pitchs.length)]
+        this.publisher.stream.applyFilter("GStreamerFilter", {"command": `pitch pitch=${pitch}`})
+        this.voiceChange = true
+      }
+      else{
+        this.publisher.stream.removeFilter()
+        this.voiceChange = false
+      }
+    },
     sendGameMode(gameMode) {
       // 게임 초기 세팅
-      this.switchGameMode(gameMode.name)
       if (gameMode.name === '타이타닉') {
-        let members = []
-        this.session.streamManagers.forEach(stream => {
-          members.push(stream.stream.connection.connectionId)
+        let members = this.session.streamManagers.map(stream => {
+          return {
+            connectionId: stream.stream.connection.connectionId,
+            username: JSON.parse(stream.stream.connection.data).clientData
+          }
         })
         let gameInfo = {
           type: 'Titanic',
           members: members.sort(() => Math.random() - 0.5),
+          isEnd: false,
           curMember: 0,
           curAmount: 0,
           maxAmount: Math.random() * 50 + members.length * 30,
@@ -329,6 +404,7 @@ export default {
           type: 'game-info'
         })
       }
+      this.switchGameMode(gameMode.name)
     },
   },
   created:{
@@ -351,6 +427,7 @@ export default {
     height: 100px;
     width: 100%;
     bottom: 0;
+    z-index: 3;
   }
   
   .people-list {

@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <v-navigation-drawer
       v-model="chatBox"
       :permanent="chatBox"
