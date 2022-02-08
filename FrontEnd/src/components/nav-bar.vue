@@ -50,7 +50,7 @@
       </div>
       <!-- <friend-tab
         ref="FriendTab"></friend-tab> -->
-      <FriendTab ref="Friendtab"/>
+      <FriendTab/>
     </div>
     </v-navigation-drawer>
     
@@ -81,8 +81,10 @@ export default {
   },
   methods: {
     ...mapActions('friends', [
+      'changeTab',
       'friendList',
-      'searchUserData'
+      'searchUserData',
+      'setChatFriend'
     ]),
     goToTableList: function() {
       this.$router.push({ name: 'TableList' })
@@ -91,15 +93,18 @@ export default {
       if (this.searchInput != null) {
         console.log(this.searchInput)
         this.searchUserData(this.searchInput)
-        this.$refs.Friendtab.tab = 2
+        this.changeTab(2)
       }
     },
   },
   watch: {
-    drawer: function (val) {
+    drawer: function () {
       const token = localStorage.getItem('jwt') ? true : false
-      if (token && val) {
+      if (token && this.drawer) {
         this.friendList()
+      }
+      else if (!this.drawer) {
+        this.setChatFriend(null)
       }
     } 
   }

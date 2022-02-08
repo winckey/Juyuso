@@ -3,8 +3,10 @@
     <v-tabs
       fixed-tab
       centered
-      v-model="tab">
+      :value="tab">
     <v-tab
+      :value="tab"
+      @click="changeTab(idx)"
       v-for="(item, idx) in items"
       :key="idx">
       <v-icon>{{ item.src }}</v-icon>
@@ -16,7 +18,8 @@
         <FriendList
           v-if="friendsList"
           :friends="friendsList.friendRequestList"
-          :tab="-1"/>
+          :tab="-1"
+          />
         <v-divider></v-divider>
         <FriendList
           v-if="friendsList"
@@ -24,9 +27,8 @@
           :tab="tab"/>
       </v-tab-item>
       <v-tab-item>
-        <FriendList
-          v-if="result"
-          :friends="result"
+        <Chatting
+          v-if="tab == 1"
           :tab="tab"/>
         <v-divider></v-divider>
       </v-tab-item>
@@ -48,15 +50,16 @@
 
 <script>
 import FriendList from '@/components/side_bar/friend-list.vue'
-import { mapState } from 'vuex'
+import Chatting from '@/components/side_bar/chatting.vue'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'FriendTab',
   components: {
-    FriendList
+    FriendList,
+    Chatting
   },
   data: function () {
     return {
-      tab: 0,
       items: [
         {src: 'mdi-account-multiple-outline', name: 'friend'},
         {src: 'mdi-chat-processing-outline', name: 'chat'},
@@ -65,12 +68,18 @@ export default {
       result: []
     }
   },
+  methods: {
+    ...mapActions('friends', [
+      'changeTab'
+    ])
+  },
   computed: {
     ...mapState('friends', [
+      'tab',
       'friendsList',
       'searchList'
     ])
-  }
+  },
 }
 </script>
 
