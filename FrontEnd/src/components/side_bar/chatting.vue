@@ -80,18 +80,25 @@ export default {
       }).then( res => {
         this.roomId = res.data.roomId
       })
-      this.sock = new SockJS('https://i6e101.p.ssafy.io/hello');
-      this.client = Stomp.over(this.sock);
-      this.client.connect({}, function () {
-        this.client.subscribe('/subscribe/chat/room/' + this.roomId, function (chat) {
-          console.log(chat)
+
+      this.sock = new SockJS('https://i6e101.p.ssafy.io/ws')
+      this.client = Stomp.over(this.sock, {
+        protocols: Stomp.VERSIONS.supportedProtocols()
+      });
+
+      let $client = this.client
+
+      this.client.connect({}, () => {
+        console.log('socket connection successful')
+
+        $client.subscribe(`/subscribe/chat/room/${this.roomId}`, chat => {
           let content = JSON.parse(chat.body);
           this.messages.push(content)
         })
       })
     },
-    sendMessage: function () {
-      this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writer': this.user.id}), {});
+    sendMessage() {
+      this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writer': this.user.id}), {})
       this.chatInput = null
     }
     
