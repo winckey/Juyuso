@@ -23,18 +23,23 @@
                         :disabled="!isPlaying"
                     ></v-text-field>
                 </div>
-                <div class="game-info">
+                <div class="my-info">
                     <div>
-                        남은 시간: <span class="time">{{ time }}</span>초
+                        시간: <span class="time">{{ time }}</span>초
                     </div>
                     <div>
-                        획득 점수: <span class="score">{{ score }}</span>점
+                        내 점수: <span class="score">{{ score }}</span>점
                     </div>
                 </div>
                 <v-btn class="button" color="primary" @click="startGame" v-if="isPlaying===false">게임 시작</v-btn>
                 <v-btn class="button loading" color="grey" @click="startGame" v-else>게임 진행 중</v-btn>
         </v-card>
-  </div>
+    </div>
+    <v-dialog v-if="isEnd" width="500px">
+        <v-card>
+            <v-card-title>당첨자 확인</v-card-title>
+        </v-card>
+    </v-dialog>
   </div>
   
 </template>
@@ -59,12 +64,30 @@ export default {
             time: 10,
             score: 0,
             isPlaying: false,
+            isEnd: false,
             timeInterval: null,
-            words: ['쏴주', '맥쥬', '와잉', '으악', '낄낄', '걀걀', '요수 밤봐돠', '막궐리', '청춘은 바로 지금', '해웅데']
+            words: ['쏴주', '맥쥬', '와잉', '으악', '낄낄', '걀걀', '요수 밤봐돠', '막궐리', '청춘은 바로 지금', '해웅데'],
+            typingGame: {
+                type: 'Typing',
+                isEnd: false,
+                score: [],
+                members: []
+            }
         }
     },
     computed: {
-        ...mapState('openviduStore', ['session'])
+        ...mapState('openviduStore', ['session', 'gameInfo']),
+        ...mapState('accounts', ['user'])
+    },
+    mounted: function () {
+        this.typingGame.members = this.session.streamManagers.map(stream => {
+            return {
+                connectionId: stream.stream.connection.connectionId,
+                username: JSON.parse(stream.stream.connection.data).clientData
+            }
+        })
+        console.log(this.typingGame.members)
+        this.sendInfo()
     },
     methods: {
         check: function () {
@@ -88,12 +111,23 @@ export default {
             this.timeInterval=setInterval(this.countDown, 1000)
         },
         endGame: function () {
+            console.log('타자게임 끝')
+            this.isEnd = true
             clearInterval(this.timeInterval)
+            this.typingGame.score.push(this.score, this.user.nickName)
+            this.sendInfo()
         },
         changeWord: function () {
             const index = Math.floor((Math.random() * this.words.length))
             console.log(index)
             this.wordDisplay = this.words[index]
+        },
+        sendInfo: function () {
+            this.session.signal({
+                data: JSON.stringify(this.typingGame),
+                to: [],
+                type: 'game-info'
+            })
         }
        
     }
@@ -141,7 +175,7 @@ export default {
     width: 250px;
 }
 
-.game-info {
+.my-info {
     margin-top: 2rem;
     font-size: 1rem;
     display: flex;
