@@ -83,4 +83,8 @@ public class Meeting {
         return list;
     }
 
+    public void modifyUrl(String url) {
+        this.url = url;
+    }
+
 }

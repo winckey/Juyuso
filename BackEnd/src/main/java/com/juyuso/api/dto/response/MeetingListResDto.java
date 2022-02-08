@@ -29,6 +29,8 @@ public class MeetingListResDto {
     private String meetingPassword;
     @ApiModelProperty(name = "유저 프로필 사진", example = "5df8d943-66ef-4c00-8481-6f41a32a09e3.PNG")
     private String userImg;
+    @ApiModelProperty(name = "방 테마", example = "포창마차 테마")
+    private String theme;
 
     public MeetingListResDto() {
 
@@ -43,7 +45,7 @@ public class MeetingListResDto {
     }
 
     public MeetingListResDto(Long meetingId, String meetingTitle, List<String> hashtag, boolean common,
-                             String nickName, String meetingPassword, String userImg) {
+                             String nickName, String meetingPassword, String userImg, String theme) {
         this.meetingId = meetingId;
         this.meetingTitle = meetingTitle;
         this.hashtag = hashtag;
@@ -51,6 +53,7 @@ public class MeetingListResDto {
         this.nickName = nickName;
         this.meetingPassword = meetingPassword;
         this.userImg = userImg;
+        this.theme = theme;
     }
 
     public static Page<MeetingListResDto> of (Page<Meeting> list) {
@@ -64,6 +67,7 @@ public class MeetingListResDto {
                 dto.setCommon(entity.isCommon());
                 dto.setNickName(entity.getOwner().getNickname());
                 dto.setMeetingPassword(entity.getPassword());
+                dto.setTheme(entity.getUrl());
                 if(entity.getOwner().getUserImg() != null) {
                     dto.setUserImg(entity.getOwner().getUserImg().getFileUrl());
                 }

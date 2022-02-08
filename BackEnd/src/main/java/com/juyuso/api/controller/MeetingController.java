@@ -2,6 +2,7 @@ package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.DrinkingHistoryAddReqDto;
 import com.juyuso.api.dto.request.MeetingCreateReqDto;
+import com.juyuso.api.dto.request.MeetingModifyReqDto;
 import com.juyuso.api.dto.response.*;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
@@ -166,6 +167,19 @@ public class MeetingController {
         }
         return ResponseEntity.ok(MeetingLeaveResDto.of(meetingId));
     }
+
+    @PatchMapping("/modify/{meetingId}")
+    @ApiOperation(value = "미팅 테마 변경 " , notes = "<strong>미팅 테마기록 </strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "방 테마변경"),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 401, message = "권한없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<MeetingModifyResDto> modifyMeeting (@PathVariable Long meetingId, @RequestBody MeetingModifyReqDto reqDto) {
+        return ResponseEntity.ok(MeetingModifyResDto.of(meetingService.modifyMeeting(meetingId, reqDto)));
+    }
+
 
 
     @GetMapping("history/{userId}")
