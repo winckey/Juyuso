@@ -13,9 +13,10 @@
     </button>
       <v-spacer></v-spacer>
       <table-search/>
-      <v-btn icon dark>
+      <NotificationList/>
+      <!-- <v-btn icon dark>
         <v-icon>mdi-bell-outline</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-app-bar-nav-icon dark @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
 
     </v-app-bar>
@@ -57,7 +58,7 @@
 </template>
 
 <script>
-
+import NotificationList from '@/components/side_bar/notification-list.vue'
 import TableSearch from '@/components/table_list/table-search.vue'
 import SideBarProfile from '@/components/side_bar/side-bar-profile.vue'
 import FriendTab from '@/components/side_bar/friend-tab.vue'
@@ -68,7 +69,8 @@ export default {
   components:{
     FriendTab,
     TableSearch,
-    SideBarProfile
+    SideBarProfile,
+    NotificationList
   },
   data: function () {
     return {
