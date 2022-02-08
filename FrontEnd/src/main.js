@@ -6,6 +6,8 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import {CalendarHeatmap} from 'vue-calendar-heatmap'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import Toast from 'vue-toastification'
+import "vue-toastification/dist/index.css";
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -15,6 +17,15 @@ import VCalendar from 'v-calendar'
 Vue.use(VCalendar,{
   componentPrefix: 'vc',
 })
+
+const options = {
+  transition: "Vue-Toastification__bounce",
+  maxToasts: 20,
+  newestOnTop: true
+};
+
+
+Vue.use(Toast, options);
 Vue.config.productionTip = false
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
