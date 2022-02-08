@@ -124,7 +124,7 @@ export default {
       const token = localStorage.getItem('jwt')
       axios({
         method: 'POST',
-        url: `${process.env.VUE_APP_API_URL}/friend/request`,
+        url: `${process.env.VUE_APP_API_URL}/friends/request`,
         headers: { Authorization: `Bearer ${token}`},
         data: {
           id: this.notFriendUserInfo.id,
@@ -139,7 +139,7 @@ export default {
       const token = localStorage.getItem('jwt')
       axios({
         method: 'DELETE',
-        url: `${process.env.VUE_APP_API_URL}/friend`,
+        url: `${process.env.VUE_APP_API_URL}/friends`,
         headers: { Authorization: `Bearer ${token}`},
         data: {
           id: this.userInfo.id,

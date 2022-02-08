@@ -1,49 +1,49 @@
 <template>
-    <div>
-        <v-card
-            class="p-3"
-            v-if="isLogin">
-            <div class="card-style">
-                <div>
-                    <v-avatar
-                        class="grey"
-                        size="80"
-                    ></v-avatar>
-                </div>
-                <div>
-                    <v-list-item-content>
-                        <v-list-item-title class="text-h5 mb-1">
-                            <p>{{ user.nickname }}</p>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
-                    </v-list-item-content>  
-                </div>
+  <div>
+    <v-card
+      class="p-3"
+      v-if="isLogin">
+      <div class="card-style">
+        <div>
+          <v-avatar
+            class="grey"
+            size="80"
+          ></v-avatar>
+        </div>
+        <div>
+          <v-list-item-content>
+            <v-list-item-title class="text-h5 mb-1">
+              <p>{{ user.nickname }}</p>
+            </v-list-item-title>
+            <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
+          </v-list-item-content>  
+        </div>
 
-                <v-card-actions class="d-flex justify-content-evenly">
-                    <div class="mypage">
-                        <v-btn @click="goMyPage"
-                            plain>
-                            마이페이지
-                        </v-btn>
-                    </div>
-                    <div class="logout">
-                        <v-btn
-                            plain
-                            @click="logout">
-                            로그아웃
-                        </v-btn>
-                    </div>
-                </v-card-actions>
-            </div>
-        </v-card>
-        <v-card
-            v-else
-            class="card-style">
+        <v-card-actions class="d-flex justify-content-evenly">
+          <div class="mypage">
+            <v-btn @click="goMyPage"
+              plain>
+              마이페이지
+            </v-btn>
+          </div>
+          <div class="logout">
             <v-btn
-                class="m-3 p-3"
-                @click="goToLogin">로그인해주세요</v-btn>
-        </v-card>
-    </div>
+              plain
+              @click="logout">
+              로그아웃
+            </v-btn>
+          </div>
+        </v-card-actions>
+      </div>
+    </v-card>
+    <v-card
+      v-else
+      class="card-style">
+      <v-btn
+        class="m-3 p-3"
+        @click="goToLogin">로그인해주세요</v-btn>
+    </v-card>
+  </div>
 </template>
 
 <script>

@@ -49,6 +49,7 @@
 <script>
 import axios from 'axios'
 import {mapActions} from 'vuex'
+import { getMessaging, getToken } from 'firebase/messaging'
 
 const accounts = 'accounts' 
 
@@ -60,7 +61,8 @@ export default {
       passwordShow: false,
       credentials: {
         id: null,
-        password: null
+        password: null,
+        fcmToken: null,
       },
       idRules: [
         v => !!v || "아이디를 입력해주세요.",
@@ -73,24 +75,41 @@ export default {
   methods: {
     ...mapActions(accounts, ['userUpdate']),
     ...mapActions('openviduStore', ['initSession']),
+
     login: function () {
-      axios({
-        method: 'post',
-        url: `${process.env.VUE_APP_API_URL}/users/login`,
-        data: this.credentials
-      })
-        .then(res => {
-          console.log(res.data.user.age)
-          localStorage.setItem('jwt', res.data.accessToken)
-          this.userUpdate(res.data.user)
-          this.initSession(res.data.user)
-          this.$router.push({name:'Main'})
-        })
-        .catch(err => {
-          console.log(err)
-          this.credentials.id = null
-          this.credentials.password = null
-        })
+      const messaging = getMessaging();
+      const PUBLIC_VAPID_KEY = 'BNEXCWddmnyA6pokCD8W5cGv9JBI6gA2IeDlf7RbP9VzVoXN23r8J-ULN-bdkAyS6gB0aVw7DUNokhdSUuNfdmU';
+      getToken(messaging, { vapidKey: PUBLIC_VAPID_KEY })
+      .then((currentToken) => {
+        if (currentToken) {
+          this.credentials.fcmToken = currentToken
+          axios({
+            method: 'post',
+            url: `${process.env.VUE_APP_API_URL}/users/login`,
+            data: this.credentials
+          })
+          .then(res => {
+            localStorage.setItem('jwt', res.data.accessToken)
+            this.userUpdate(res.data.user)
+            this.initSession(res.data.user)
+            this.$router.push({name:'Main'})
+          })
+          .catch(err => {
+            console.log(err)
+            this.credentials.id = null
+            this.credentials.password = null
+          })
+          console.log(currentToken);
+        } else {
+          // Show permission request UI
+          console.log('No registration token available. Request permission to generate one.');
+          // ...
+        }
+      }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+        // ...
+      });
+      
     },
     goPasswordFind: function () {
       this.$router.push({name:'PasswordFind'})

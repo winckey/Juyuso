@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import { initializeApp } from "firebase/app";
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
@@ -21,6 +22,17 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 Vue.component('calendarHeatmap', CalendarHeatmap)
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDLDx9b0c8DplnM14-WDEErlHHq5N1Xl6Y",
+  authDomain: "juyuso-ssafy.firebaseapp.com",
+  projectId: "juyuso-ssafy",
+  storageBucket: "juyuso-ssafy.appspot.com",
+  messagingSenderId: "827632160252",
+  appId: "1:827632160252:web:bb51a70eefbaf4f9c9b679"
+};
+
+initializeApp(firebaseConfig);
 
 new Vue({
   router,
