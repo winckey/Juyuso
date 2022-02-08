@@ -16,7 +16,8 @@ const openviduStore = {
     subscribers: [],
     messages: [],
     gameMode: undefined,
-    gameInfo: undefined
+    gameInfo: undefined,
+    changeVoice: undefined
   },
   mutations: {
     SET_SESSION_INFO(state, data) {
@@ -58,9 +59,11 @@ const openviduStore = {
     SET_GAME_INFO(state, data) {
       state.gameInfo = data.gameInfo
     },
-
     SET_GAME_MODE(state, data) {
       state.gameMode = data.gameMode
+    },
+    SET_CHANGE_VOICE(state, data){
+      state.changeVoice = data.changeVoice
     }
   },
   actions: {
@@ -147,6 +150,11 @@ const openviduStore = {
         commit('SET_GAME_MODE', data)
       })
 
+      data.session.on('signal:change-voice', event =>{
+        data.changeVoice = event.data
+        commit('SET_CHANGE_VOICE',data)
+      })
+
 			// On every asynchronous exception...
 			data.session.on('exception', ({ exception }) => {
 				console.warn(exception);
@@ -209,6 +217,7 @@ const openviduStore = {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions`, JSON.stringify({
 						customSessionId: sessionId,
+
 					}), {
 						auth: {
 							username: 'OPENVIDUAPP',
@@ -236,7 +245,14 @@ const openviduStore = {
 		createToken (context, sessionId) {
 			return new Promise((resolve, reject) => {
 				axios
-					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
+					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, { 
+            "type":"WEBRTC",
+            "role":"PUBLISHER",
+            "kurentoOptions" : {
+              "allowedFilters": ["GStreamerFilter", "FaceOverlayFilter"]
+            }
+          },
+          {
 						auth: {
 							username: 'OPENVIDUAPP',
 							password: process.env.VUE_APP_OPENVIDU_SECRET,
@@ -254,7 +270,10 @@ const openviduStore = {
         type: 'game-mode'
       })
     },
-
+    changeGameMode ({ commit }, mode) {
+      const data = { gameMode: mode }
+      commit('SET_GAME_MODE', data)
+    }
     // enterRoom (context, sessionId) {
     //   // axios({
     //   //   method: 'POST', 

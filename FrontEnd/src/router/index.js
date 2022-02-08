@@ -15,6 +15,8 @@ import Table from '@/views/tables/table.vue'
 //main
 import Main from '@/views/main.vue'
 
+//store
+// import openvidu from '@/store/modules/openviduStore'
 
 Vue.use(VueRouter)
 
@@ -29,6 +31,15 @@ const rejectAuthUser = (to, from, next) => {
   }
 }
 
+// const rejectEnter = (to, from, next) => {
+//   if (openvidu.state.session.options.sessionId) {
+//     // next(`/table/${openvidu.state.session.options.sessionId}`)
+//     next('/tables')
+//     // next()
+//   } else {
+//     next()
+//   }
+// }
 
 const routes = [
   {
@@ -73,6 +84,7 @@ const routes = [
     name: 'Table',
     component: Table,
     props: true,
+    // beforeEnter: rejectEnter
   }
 ]
 
