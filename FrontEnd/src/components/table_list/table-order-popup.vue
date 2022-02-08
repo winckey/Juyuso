@@ -108,22 +108,24 @@
           <v-item-group>
             <v-row>
               <v-col
-                v-for="n in 5"
-                :key="n"
+                v-for="n in themeItems"
+                :key="n.imgName"
                 md="3"
               >
                 <v-item v-slot="{ active, toggle }">
                   <v-card
-                    :color="active ? 'primary' : ''"
+                    :color="active ? 'red' : ''"
                     class="d-flex align-center"
                     dark
                     height="100"
                     width="200"
                     @click="[toggle(), selectTheme(n)]"
                   >
-                    <img :src="themeItems[n].themeImg" alt="theme"
+                  
+                    <img :src="require(`@/assets/${n.imgName}.jpg`)" alt="theme"
                     height="100"
-                    width="200">
+                    width="200"
+                    :color="active ? 'red' : ''">
                     <v-scroll-y-transition>
                       <div
                         v-if="active"
@@ -191,16 +193,20 @@ export default {
       },
       themeItems:[
         {
-          themeImg:require('@/assets/beach.jpg'),
+          themeImg:'@/assets/beach.jpg',
+          imgName:'beach'
         },
         {
-          themeImg:require('@/assets/camping.jpg'),
+          themeImg:'@/assets/camping.jpg',
+          imgName:'camping'
         },
         {
-          themeImg:require('@/assets/bar.jpg'),
+          themeImg:'@/assets/bar.jpg',
+          imgName:'bar'
         },
         {
-          themeImg:require('@/assets/beach.jpg'),
+          themeImg:'@/assets/boat.jpg',
+          imgName:'boat'
         }
       ],
     } 
@@ -236,9 +242,8 @@ export default {
       this.roomInfo.hashTag = this.roomInfo.hashTag.filter(v => v != hashtag)
     },
     selectTheme: function (num) {
-      this.roomInfo.img = this.themeItems[num].themeImg
-      // this.setTheme(this.themeItems[num].themeName)
-      console.log('이거 :',this.roomInfo.img)
+      this.roomInfo.img = num.themeImg
+      console.log(this.roomInfo.img)
     },
     createRoom: function () {
       this.roomInfo.common = !this.isSecret

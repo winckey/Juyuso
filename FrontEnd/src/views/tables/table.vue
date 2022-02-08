@@ -1,6 +1,6 @@
 <template>
-  <div class="backgroun-box"
-  :style="{'background-image':'url('+ require(`@/assets/beach.jpg`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
+  <div class="background-box"
+  :style="{'background-image':'url('+ require(`@/assets/bar.jpg`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
@@ -202,13 +202,8 @@ import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
-<<<<<<< HEAD
-// import BalanceGame from '@/components/game/balance-game.vue'
-
-=======
 import DrawGame from '@/components/game/draw-game.vue'
 import TypingGame from '@/components/game/typing-game.vue'
->>>>>>> ad3519de0be9e7d4f24631cbc882ca762a905c6d
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -222,12 +217,8 @@ export default {
     UserVideo,
     ChatPopup,
     TitanicGame,
-<<<<<<< HEAD
-    // BalanceGame,
-=======
     DrawGame,
     TypingGame
->>>>>>> ad3519de0be9e7d4f24631cbc882ca762a905c6d
   },
   props: {
     roomInfo: Object,
@@ -254,14 +245,11 @@ export default {
         {name: '그림그리기'},
         {name: '밸런스'}
       ],
-<<<<<<< HEAD
-=======
       audios:[
         {name: 'volume'},
         {name: 'voice-change'}
       ],
       voiceChange:false,
->>>>>>> ad3519de0be9e7d4f24631cbc882ca762a905c6d
     }
   },
 
@@ -455,5 +443,9 @@ export default {
     100% {
       width: 167px;
     }
+  }
+  .background-box{
+    width: 100vw;
+    height: 100vh;
   }
 </style>
