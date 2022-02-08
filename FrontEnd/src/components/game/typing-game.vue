@@ -25,20 +25,36 @@
                 </div>
                 <div class="my-info">
                     <div>
-                        시간: <span class="time">{{ time }}</span>초
+                        시간: <span class="time">{{ typingGame.time }}</span>초
                     </div>
                     <div>
                         내 점수: <span class="score">{{ score }}</span>점
                     </div>
                 </div>
-                <v-btn class="button" color="primary" @click="startGame" v-if="isPlaying===false">게임 시작</v-btn>
-                <v-btn class="button loading" color="grey" @click="startGame" v-else>게임 진행 중</v-btn>
+                <v-btn class="button" color="primary" @click="startGame" v-if="this.typingGame.allPlaying===false">게임 시작</v-btn>
+                <v-btn class="button loading" color="grey" v-else>게임 진행 중</v-btn>
         </v-card>
     </div>
-    <v-dialog v-if="isEnd" width="500px">
-        <v-card>
-            <v-card-title>당첨자 확인</v-card-title>
-        </v-card>
+    <v-dialog v-model="typingGame.isEnd" width="400px">
+        <div>
+            <v-card  class="p-3">
+                <div class="d-flex flex-column" style="text-align: center">
+                    <h3>축하합니다</h3>
+                    <hr>
+                    <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리란다 얘둘앙🧃</v-card-text>
+                </div>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="typingGame.isEnd = false"
+                >
+                    확인
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </div>
     </v-dialog>
   </div>
   
@@ -59,19 +75,21 @@ export default {
     },
     data: function () {
         return {
-            wordDisplay: '드루와',
+            wordDisplay: '시좍',
             wordInput: null,
-            time: 10,
             score: 0,
             isPlaying: false,
-            isEnd: false,
             timeInterval: null,
-            words: ['쏴주', '맥쥬', '와잉', '으악', '낄낄', '걀걀', '요수 밤봐돠', '막궐리', '청춘은 바로 지금', '해웅데'],
+            words: ['우리가좍','쏴주', '맥쥬', '와잉', '으악', '낄낄', '걀걀', '요수 밤봐돠',
+             '막궐리', '청춘은 바로 지금', '해웅데', '강알리', '웨불러', '드러눕자', '오마이갓김치'],
             typingGame: {
                 type: 'Typing',
+                time: 10,
+                allPlaying: false,
                 isEnd: false,
-                score: [],
-                members: []
+                scoreResult: [],
+                members: [],
+                winner: null
             }
         }
     },
@@ -81,12 +99,12 @@ export default {
     },
     mounted: function () {
         this.typingGame.members = this.session.streamManagers.map(stream => {
+            console.log(stream)
             return {
                 connectionId: stream.stream.connection.connectionId,
                 username: JSON.parse(stream.stream.connection.data).clientData
             }
         })
-        console.log(this.typingGame.members)
         this.sendInfo()
     },
     methods: {
@@ -101,20 +119,31 @@ export default {
             }
         },
         countDown: function () {
-            this.time > 0 ? this.time -= 1 : this.isPlaying=false;
-            if (this.isPlaying===false) {
+            this.typingGame.time > 0 ? this.typingGame.time -= 1 : this.typingGame.allPlaying=false;
+            this.sendInfo()
+            if (this.typingGame.allPlaying===false) {
                 this.endGame()
             }
         },
         startGame: function () {
             this.isPlaying = true
+
+            if (this.isPlaying) {
+                this.typingGame.allPlaying = true
+                this.sendInfo()
+            }
             this.timeInterval=setInterval(this.countDown, 1000)
         },
         endGame: function () {
             console.log('타자게임 끝')
-            this.isEnd = true
+            this.isPlaying = false
             clearInterval(this.timeInterval)
-            this.typingGame.score.push(this.score, this.user.nickName)
+
+            this.typingGame.scoreResult.push([-this.score, this.user.nickname])
+            this.typingGame.isEnd = true
+            
+            console.log(this.typingGame.scoreResult.sort())
+            this.typingGame.winner = this.typingGame.scoreResult.sort()[0][1]
             this.sendInfo()
         },
         changeWord: function () {
@@ -130,6 +159,14 @@ export default {
             })
         }
        
+    },
+    watch: {
+        gameInfo: function () {
+            this.typingGame = {...JSON.parse(this.gameInfo)}
+            if (this.typingGame.allPlaying) {
+                this.isPlaying = true
+            }
+        }
     }
 
 }
