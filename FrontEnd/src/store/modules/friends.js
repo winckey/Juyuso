@@ -113,7 +113,7 @@ const friends = {
       axios({
         method:'post',
         url:`${process.env.VUE_APP_API_URL}/friends/ban`,
-        headers: { Authorization: `Bearer ${token}`,},
+        headers: { Authorization: `Bearer ${token}`},
         data: friendId
       }).then(res => {
           // commit('BAN_FRIEND', res.data)
@@ -126,11 +126,11 @@ const friends = {
       })
     },
     // 친구 신청 수락
-    agreeFriends: function ({commit},userId) {
+    agreeFriends: function ({commit}, userId) {
       const token = localStorage.getItem('jwt')
       axios({
         method: 'POST',
-        url: `${process.env.VUE_APP_API_URL}/friends/agree`,
+        url: `${process.env.VUE_APP_API_URL}/friends/accept`,
         headers: { Authorization: `Bearer ${token}`},
         data: userId
       })

@@ -20,31 +20,31 @@
                     </v-list-item-content>  
                 </div>
 
-                <v-card-actions class="d-flex justify-content-evenly">
-                    <div class="mypage">
-                        <v-btn @click="goMyPage"
-                            plain>
-                            마이페이지
-                        </v-btn>
-                    </div>
-                    <div class="logout">
-                        <v-btn
-                            plain
-                            @click="logout">
-                            로그아웃
-                        </v-btn>
-                    </div>
-                </v-card-actions>
-            </div>
-        </v-card>
-        <v-card
-            v-else
-            class="card-style">
+        <v-card-actions class="d-flex justify-content-evenly">
+          <div class="mypage">
+            <v-btn @click="goMyPage"
+              plain>
+              마이페이지
+            </v-btn>
+          </div>
+          <div class="logout">
             <v-btn
-                class="m-3 p-3"
-                @click="goToLogin">로그인해주세요</v-btn>
-        </v-card>
-    </div>
+              plain
+              @click="logout">
+              로그아웃
+            </v-btn>
+          </div>
+        </v-card-actions>
+      </div>
+    </v-card>
+    <v-card
+      v-else
+      class="card-style">
+      <v-btn
+        class="m-3 p-3"
+        @click="goToLogin">로그인해주세요</v-btn>
+    </v-card>
+  </div>
 </template>
 
 <script>
