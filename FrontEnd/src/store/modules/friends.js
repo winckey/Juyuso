@@ -45,7 +45,7 @@ const friends = {
       const token = localStorage.getItem('jwt')
       axios({
         method:'get',
-        url:`${process.env.VUE_APP_API_URL}/friend/${query}`,
+        url:`${process.env.VUE_APP_API_URL}/friends/${query}`,
         headers: { Authorization: `Bearer ${token}`},
         params: { keyword: query }
       })
@@ -61,7 +61,7 @@ const friends = {
       const token = localStorage.getItem('jwt')
       axios({
         method:'get',
-        url:`${process.env.VUE_APP_API_URL}/friend`,
+        url:`${process.env.VUE_APP_API_URL}/friends`,
         headers: { Authorization: `Bearer ${token}`, },
       })
       .then(res => {
@@ -77,7 +77,7 @@ const friends = {
       const token = localStorage.getItem('jwt')
       axios({
         method:'get',
-        url:`${process.env.VUE_APP_API_URL}/friend/info/${friendId}`,
+        url:`${process.env.VUE_APP_API_URL}/friends/info/${friendId}`,
         headers: { Authorization: `Bearer ${token}`, }
       })
       .then(res => {
@@ -96,7 +96,7 @@ const friends = {
     blockFriendList: function({commit}) {
       axios({
         method: 'GET',
-        url: `${process.env.VUE_APP_API_URL}/friend/ban`,
+        url: `${process.env.VUE_APP_API_URL}/friends/ban`,
         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
         .then(res => {
@@ -112,7 +112,7 @@ const friends = {
       const token = localStorage.getItem('jwt')
       axios({
         method:'post',
-        url:`${process.env.VUE_APP_API_URL}/friend/ban`,
+        url:`${process.env.VUE_APP_API_URL}/friends/ban`,
         headers: { Authorization: `Bearer ${token}`},
         data: friendId
       }).then(res => {
@@ -126,11 +126,11 @@ const friends = {
       })
     },
     // 친구 신청 수락
-    agreeFriends: function ({commit},userId) {
+    agreeFriends: function ({commit}, userId) {
       const token = localStorage.getItem('jwt')
       axios({
         method: 'POST',
-        url: `${process.env.VUE_APP_API_URL}/friend/agree`,
+        url: `${process.env.VUE_APP_API_URL}/friends/accept`,
         headers: { Authorization: `Bearer ${token}`},
         data: userId
       })
@@ -139,7 +139,7 @@ const friends = {
         commit('AGREE_FRIEND',res);
         axios({
           method:'get',
-          url:`${process.env.VUE_APP_API_URL}/friend`,
+          url:`${process.env.VUE_APP_API_URL}/friends`,
           headers: { Authorization: `Bearer ${token}`, },
         })
         .then(res => {
@@ -156,7 +156,7 @@ const friends = {
       const token = localStorage.getItem('jwt')
       axios({
         method: 'DELETE',
-        url: `${process.env.VUE_APP_API_URL}/friend/reject`,
+        url: `${process.env.VUE_APP_API_URL}/friends/reject`,
         headers: { Authorization: `Bearer ${token}`},
         data: userId
       })
@@ -165,7 +165,7 @@ const friends = {
         console.log(res)
         axios({
           method:'get',
-          url:`${process.env.VUE_APP_API_URL}/friend`,
+          url:`${process.env.VUE_APP_API_URL}/friends`,
           headers: { Authorization: `Bearer ${token}`, },
         })
         .then(res => {
