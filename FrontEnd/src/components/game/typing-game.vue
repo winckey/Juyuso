@@ -143,7 +143,10 @@ export default {
             this.typingGame.isEnd = true
             
             console.log(this.typingGame.scoreResult.sort())
+<<<<<<< HEAD
             
+=======
+>>>>>>> 2bf396103ef0495232450cea1a5cab829e50e9e8
             this.typingGame.winner = this.typingGame.scoreResult.sort()[0][1]
             this.sendInfo()
         },
