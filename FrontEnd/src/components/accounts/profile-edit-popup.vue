@@ -1,0 +1,302 @@
+<template>
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="650px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="#4DB6AC"
+          dark
+          v-bind="attrs"
+          v-on="on"
+          rounded
+        >
+          프로필 수정
+        </v-btn>
+      </template>
+
+      <v-alert
+      :value="isAlert"
+        dense
+        type="error"
+      >
+        입력 형식을 다시 확인해주세요!
+      </v-alert>
+
+      <v-alert
+      :value="isImage"
+        dense
+        type="error"
+      >
+        이미지 크기가 용량을 초과했습니다!
+      </v-alert>
+
+
+      <v-alert
+      :value="isSuccess"
+        dense
+        type="success"
+      >
+        정보가 저장되었습니다
+      </v-alert>
+
+      <v-card class="p-2" >
+        <v-card-title class="justify-content-center">
+          <span class="h2">프로필 수정</span>
+        </v-card-title>
+        <v-spacer></v-spacer>
+
+        <v-card-text>
+          <v-container class="rounded-lg">
+            <v-form class="form-box" ref="update">
+
+              <v-row>
+                
+                <v-col>
+                  <div class="d-flex justify-content-center">
+                    <v-avatar>
+                      <img
+                        :src="userInfo.imgUrl"
+                        :alt="profileImg"
+                      >
+                    </v-avatar>
+                  </div>
+                  <v-file-input
+                    v-model="profileImg"
+                    @click="isShowBtn=true"
+                    accept="image/*"
+                    label="프로필 이미지 업로드"
+                    @change="changeImage"
+                    prepend-icon="mdi-camera"
+                  ></v-file-input>
+
+                  <div v-if="isShowBtn" class="d-flex justify-content-center">
+                    <v-btn @click="uploadImage()" color="primary" class="mx-4">이미지 저장</v-btn>
+                    <!-- <v-btn @click="deleteImage()" color="green" >이미지 제거</v-btn> -->
+                  </div>
+                </v-col>
+
+                <v-col>
+                    <v-text-field
+                      label="닉네임*"
+                      v-model="userInfo.nickname"
+                      :rules="rules.nicknameRule"
+                      :counter="10"
+                      required
+                    ></v-text-field>
+
+                    <v-text-field
+                      label="자기소개"
+                      v-model="userInfo.description"
+                      :counter="10"
+                    ></v-text-field>
+                </v-col>
+
+                  
+
+                <v-col cols="12">
+                  <v-text-field
+                    type="email"
+                    label="이메일*"
+                    v-model="userInfo.email"
+                    :rules="rules.emailRule"
+                    required
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-text-field
+                    label="휴대전화* ex) 010-1234-1234"
+                    v-model="userInfo.phone"
+                    :rules="rules.phoneRule"
+                    required
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-select
+                    v-model="userInfo.regionId"
+                    :rules="rules.regionRule"
+                    :items="regions"
+                    label="지역*"
+                    item-text="name"
+                    item-value="region_id"
+                    required
+                  ></v-select>
+                </v-col>
+                
+
+              </v-row>
+              <h5>*필수항목입니다</h5>
+            </v-form>
+        
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="[dialog = false, isSuccess=false, isAlert=false, reloadMypage()]"
+          >
+            닫기
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="updateUser"
+          >
+            저장
+          </v-btn>
+        </v-card-actions>
+
+
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+
+<script>
+import axios from 'axios'
+import {mapActions} from 'vuex'
+
+
+export default {
+  name: 'ProfileEditPopup',
+  props: {
+    user: Object
+  },
+  data: function () {
+    return {
+      isShowBtn: false,
+      isAlert: false,
+      isSuccess: false,
+      isImage: false,
+      userInfo: null,
+      dialog: false,
+      profileImg: null,
+      regions: [
+          {region_id: 1, name: '서울'},
+          {region_id: 2, name: '부산'},
+          {region_id: 3, name: '대구'},
+          {region_id: 4, name: '인천'},
+          {region_id: 5, name: '광주'},
+          {region_id: 6, name: '대전'},
+          {region_id: 7, name: '울산'},
+          {region_id: 8, name: '세종'},
+        ],
+      rules: {
+        emailRule: [
+          v => !!v || '이메일을 입력해주세요.',
+          v => /.+@.+/.test(v) || '이메일 형식에 맞지않습니다.',
+        ],
+        birthRule: [
+          v => !!v || "생년월일을 입력해주세요."
+        ],
+        regionRule: [
+          v => !!v || "지역을 입력해주세요."
+        ],
+        phoneRule: [
+          v => !!v || "휴대전화 번호를 입력해주세요."
+        ],
+        nicknameRule: [
+          v => !!v || "닉네임을 입력해주세요.",
+          v => !(v && v.length > 10) || "닉네임은 10자까지 입력 가능합니다.",
+          v => !/[~!@#$%^&*()_+|<>?:{}]/.test(v) || "닉네임에는 특수문자를 사용할 수 없습니다.",
+        ],
+      }
+    }
+  },
+  created: function () {
+    this.userInfo = this.user
+    // this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
+  },
+  methods: {
+    ...mapActions('accounts', ['userUpdate']),
+    updateUser: function () {
+      const item = {credentials: {
+          description: this.userInfo.description,
+          email: this.userInfo.email,
+          nickname: this.userInfo.nickname,
+          phone: this.userInfo.phone,
+          regionId: this.userInfo.regionId,
+      }}
+
+      const validation = this.$refs.update.validate()
+      if (validation) {
+        console.log('업데이트 요청 직전')
+        axios({
+            method: 'PUT',
+            url: `${process.env.VUE_APP_API_URL}/users/me`,
+            data: item.credentials,
+            headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+          })
+            .then(res => {
+              console.log('axios들어옴 하하하')
+              this.isSuccess=true
+              this.isAlert=false
+              console.log(res.data.user)
+              this.userUpdate(res.data.user)
+  
+            })
+            .catch(err => {
+              console.log('axios 틀렸잖앙')
+              this.isAlert = true
+              this.isSuccess = false
+              console.log(err)
+            })
+
+      } else {
+        this.isAlert=true
+        this.isSuccess=false
+      }
+    },
+    changeImage: function () {
+      console.log('changeImage')
+      console.log(this.profileImg.size)
+      if (this.profileImg.size > 300000) {
+        this.isImage = true
+        setTimeout(() => this.isImage=false, 4000)
+      }
+      this.userInfo.imgUrl = this.profileImg
+    },
+  
+    uploadImage: function () {
+      console.log('uploadㄱㄱ')
+
+      const image = new FormData()
+      image.append('img', this.profileImg)
+
+      axios({
+        method: 'POST',
+        url: `${process.env.VUE_APP_API_URL}/users/img`,
+        data: image,
+        headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
+      })
+        .then(res => {
+          console.log(res)
+          this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
+          this.$emit('changeProfileImage', res.data.imgUrl)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // deleteImage: function () {
+    //   this.userInfo.imgUrl = require("@/assets/chat.png")
+    // },
+    reloadMypage: function () {
+      this.$router.go()
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+
+
+</style>
