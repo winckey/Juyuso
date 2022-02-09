@@ -3,7 +3,9 @@ package com.juyuso.db.entity.chat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.juyuso.db.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatRoomUser {
 
 
