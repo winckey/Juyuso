@@ -45,6 +45,7 @@
               <v-list @contextmenu.prevent>
                 <v-list-item><button>방에 초대</button></v-list-item>
                 <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
+                <v-list-item @click="chatFriend"><button>채팅하기</button></v-list-item>
                 <!-- <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item> -->
                 <v-list-item v-if="tab === 0" @click="deleteFriend"><button>친구삭제</button></v-list-item>
                 <v-list-item v-if="tab === 0" @click="banFriend"><button>차단</button></v-list-item>
@@ -123,7 +124,8 @@ export default {
       'banList',
     ]),
     imgUrl: function () {
-      if (this.userInfo.img) {
+      
+      if (this.userInfo) {
         return `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
       } else {
         return require('@/assets/chat.png')
@@ -138,10 +140,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions('friends', ['blockFriend']),
-    ...mapActions('friends',['agreeFriends']),
-    ...mapActions('friends',['rejectFriends']),
-    ...mapActions('friends',['friendList']),
+    ...mapActions('friends', [
+        'setChatFriend',
+        'blockFriend',
+        'agreeFriends',
+        'rejectFriends',
+        'changeTab',
+        'friendList']),
     addFriend: function () {
       const token = localStorage.getItem('jwt')
       axios({
@@ -156,6 +161,10 @@ export default {
       .then( res => {
         console.log(res)
       })
+    },
+    chatFriend: function () {
+      this.setChatFriend(this.userInfo || this.notFriendUserInfo)
+      this.changeTab(1)
     },
     deleteFriend: function () {
       const token = localStorage.getItem('jwt')

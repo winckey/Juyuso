@@ -6,6 +6,8 @@ const friends = {
     friendsList:[],
     searchList:[],
     banList:[],
+    tab: 0,
+    chatFriend: null,
   },
   getters: {
     FriendsData(state){
@@ -35,8 +37,13 @@ const friends = {
     // },
     AGREE_FRIEND: function(state, userId){
       state.friendsList = userId
+    },
+    CHANGE_TAB: function (state, tab) {
+      state.tab = tab
+    },
+    SET_CHAT_FRIEND: function (state, friend) {
+      state.chatFriend = friend
     }
-
 
   },
   actions: {
@@ -53,7 +60,7 @@ const friends = {
         commit('SEARCH_USER_DATA', res.data)
       })
       .catch(err =>{
-        console.log(err)
+        err
       })
     },
     // 친구 리스트 조회
@@ -66,10 +73,9 @@ const friends = {
       })
       .then(res => {
         commit('FRIEND_LIST', res.data)
-        console.log(res)
       })
       .catch(err =>{
-        console.log(err)
+        err
       })
     },
     // 친구 정보 조회
@@ -84,7 +90,7 @@ const friends = {
           commit('FRIEND_INFO',res.data)
       })
       .catch(err =>{
-          console.log(err)
+        err
       })
     },
     // 친구 추가
@@ -100,11 +106,10 @@ const friends = {
         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
         .then(res => {
-          console.log(res.data.bans)
           commit('BAN_FRIEND_LIST', res.data.bans)
         })
         .catch(err =>{
-          console.log(err)
+          err
         })
     },
     // 친구 차단
@@ -116,13 +121,13 @@ const friends = {
         headers: { Authorization: `Bearer ${token}`},
         data: friendId
       }).then(res => {
+          res
           // commit('BAN_FRIEND', res.data)
           dispatch('blockFriendList')
-          console.log('차단한 친구',res.data)
           dispatch('friendList')
 
       }).catch(err =>{
-        console.log(err)
+        err
       })
     },
     // 친구 신청 수락
@@ -135,7 +140,6 @@ const friends = {
         data: userId
       })
       .then( (res) => {
-        console.log(res);
         commit('AGREE_FRIEND',res);
         axios({
           method:'get',
@@ -144,10 +148,9 @@ const friends = {
         })
         .then(res => {
           commit('FRIEND_LIST', res.data)
-          console.log(res)
         })
         .catch(err =>{
-          console.log(err)
+          err
         })
       })
     },
@@ -162,7 +165,6 @@ const friends = {
       })
       .then( res => {
         commit('FRIEND_LIST', res.data)
-        console.log(res)
         axios({
           method:'get',
           url:`${process.env.VUE_APP_API_URL}/friends`,
@@ -170,15 +172,17 @@ const friends = {
         })
         .then(res => {
           commit('FRIEND_LIST', res.data)
-          console.log(res)
-        })
-        .catch(err =>{
-          console.log(err)
         })
       })
       .catch(err =>{
-        console.log(err)
+        err
       })
+    },
+    changeTab: function ({ commit }, tab) {
+      commit('CHANGE_TAB', tab)
+    },
+    setChatFriend: function ({ commit }, friend) {
+      commit('SET_CHAT_FRIEND', friend)
     }
   }
 }
