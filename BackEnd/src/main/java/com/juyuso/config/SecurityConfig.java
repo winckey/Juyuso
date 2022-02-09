@@ -39,9 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService))
                 .authorizeRequests()
-//                .antMatchers("/api/v1/users/me").authenticated()       // 이 주소로 들어오면 인증이 필요하다.
-//                .antMatchers("/api/admin/**").access("hasRole('ADMIN')") // 이 주소로 들어오려면 ADMIN 권한이 필요하다.
-                .anyRequest().permitAll()
+                .antMatchers("/api/users/login", "/api/users/id/**", "/api/users").permitAll()
+                .antMatchers("/static/res/**").permitAll()
+                .antMatchers("/ws/**").permitAll()
+                .antMatchers("/broadcast/**").permitAll()
+                .antMatchers("/api/chatRoom/**").permitAll()
+                .antMatchers("/subscribe/chat/**", "/publish/chat/message/**").permitAll()
                 .and().cors();
     }
 
@@ -52,5 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/swagger-ui/**");
         web.ignoring().antMatchers("/swagger-resources/**");
         web.ignoring().antMatchers("/webjars/**");
+
     }
 }
