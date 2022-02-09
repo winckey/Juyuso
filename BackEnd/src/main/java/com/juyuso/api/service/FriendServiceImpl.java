@@ -111,7 +111,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<User> userSearch(String keyword) {
-        return userRepository.findALLByNickname(keyword);
+        return userRepository.findByNicknameContaining(keyword);
     }
 
     @Override

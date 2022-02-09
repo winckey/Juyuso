@@ -10,6 +10,7 @@ public interface UserService {
     User createUser(UserRegisterReqDto userRegisterInfo);
     User getUserByUserId(String userId);
     Boolean checkDuplicateUserId(String userId);
+    Boolean checkDuplicateNickname(String nickname);
     User modifyUser(User user, UserModifyReqDto userModifyReqDto);
     void modifyPw(User user, UserPwReqDto userPwReqDto);
     String saveImg(User user, MultipartFile multipartFile);

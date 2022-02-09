@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(UserRegisterReqDto registerRequestDto) {
         if (checkDuplicateUserId(registerRequestDto.getId())) throw new CustomException(ErrorCode.USER_ID_DUPLICATE);
+        if (checkDuplicateNickname(registerRequestDto.getNickname())) throw new CustomException(ErrorCode.USER_NICKNAME_DUPLICATE);
 
         User userEntity = registerRequestDto.toEntity();
         userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
@@ -61,6 +62,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Boolean checkDuplicateUserId(String userId) {
         return userRepository.existsByUserId(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean checkDuplicateNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 
     @Override

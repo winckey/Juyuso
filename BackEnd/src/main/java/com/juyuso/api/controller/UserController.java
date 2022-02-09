@@ -89,6 +89,19 @@ public class UserController {
         return ResponseEntity.status(200).body(UserIdCheckResDto.of(200, "Success", userId, result));
     }
 
+    @GetMapping("/nickname/{nickname}")
+    @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 여부를 알려준다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = UserIdCheckResDto.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<UserNicknameCheckResDto> checkDuplicateNickname(@NotBlank @PathVariable String nickname) {
+
+        Boolean result = userService.checkDuplicateNickname(nickname);
+
+        return ResponseEntity.status(200).body(UserNicknameCheckResDto.of(200, "Success", nickname, result));
+    }
+
     @GetMapping("/me")
     @ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
     @ApiResponses({
