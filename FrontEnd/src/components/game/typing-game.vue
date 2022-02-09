@@ -84,10 +84,11 @@ export default {
              '막궐리', '청춘은 바로 지금', '해웅데', '강알리', '웨불러', '드러눕자', '오마이갓김치'],
             typingGame: {
                 type: 'Typing',
-                time: 10,
+                time: 6,
                 allPlaying: false,
                 isEnd: false,
                 scoreResult: [],
+                scoreResultObject: [],
                 members: [],
                 winner: null
             }
@@ -99,12 +100,20 @@ export default {
     },
     mounted: function () {
         this.typingGame.members = this.session.streamManagers.map(stream => {
-            console.log(stream)
+            console.log('mounted')
             return {
                 connectionId: stream.stream.connection.connectionId,
                 username: JSON.parse(stream.stream.connection.data).clientData
             }
         })
+
+        console.log('for문 전')
+        for(let i=0; i<this.typingGame.members.length; i++) {
+            let item = { [this.typingGame.members[i].username] : 0 }
+            this.typingGame.scoreResultObject.push(item)
+        } 
+        console.log(this.typingGame.scoreResultObject)
+
         this.sendInfo()
     },
     methods: {
@@ -120,8 +129,16 @@ export default {
         },
         countDown: function () {
             this.typingGame.time > 0 ? this.typingGame.time -= 1 : this.typingGame.allPlaying=false;
+            console.log('countdown 진행 중')
+
             this.sendInfo()
+            
             if (this.typingGame.allPlaying===false) {
+                
+                console.log('게임 0초 직후 --> score에 정보 담을 것')
+                this.typingGame.scoreResult.push('나 드러왔따')
+                this.typingGame.scoreResult.push([-this.score, this.user.nickname])
+                this.sendInfo()
                 this.endGame()
             }
         },
@@ -139,20 +156,12 @@ export default {
             this.isPlaying = false
             clearInterval(this.timeInterval)
 
-            this.typingGame.scoreResult.push([-this.score, this.user.nickname])
-            this.typingGame.isEnd = true
+            console.log(this.typingGame.scoreResult)
+            console.log(this.typingGame.scoreResult.length)
             
-            console.log(this.typingGame.scoreResult.sort())
-<<<<<<< HEAD
-            
-=======
->>>>>>> 2bf396103ef0495232450cea1a5cab829e50e9e8
-            this.typingGame.winner = this.typingGame.scoreResult.sort()[0][1]
-            this.sendInfo()
         },
         changeWord: function () {
             const index = Math.floor((Math.random() * this.words.length))
-            console.log(index)
             this.wordDisplay = this.words[index]
         },
         sendInfo: function () {
@@ -170,6 +179,16 @@ export default {
             if (this.typingGame.allPlaying) {
                 this.isPlaying = true
             }
+            console.log('watch')
+            if (this.typingGame.scoreResult) {
+                if (this.typingGame.scoreResult.length === this.typingGame.members.length) {
+                    this.typingGame.isEnd = true
+                    console.log(this.typingGame.scoreResult.sort())
+                    this.typingGame.winner = this.typingGame.scoreResult.sort()[0][1]
+                    this.sendInfo()
+                }
+            }
+            
         }
     }
 
