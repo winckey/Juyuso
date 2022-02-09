@@ -7,11 +7,13 @@
     >
       <template v-slot:activator="{ on, attrs }" v-if="!search">
         <button
+          style="display: block; width: 80%; margin: auto; vertical-align: middle"
           v-on="on"
           v-bind="attrs">
           <div class="table-container">
-            <img 
-              src="@/assets/table.png" 
+            <img
+              class="w-100"
+              :src="require(`@/assets/${imgUrl}.png`)" 
               alt=""
               >
             <div class="table-info">
@@ -94,7 +96,18 @@ export default {
   computed:  {
     ...mapState('accounts', [
       'user'
-    ])
+    ]),
+    imgUrl: function () {
+      let imgList = [
+        'table_beer', 
+        'table_chopsticks', 
+        'table_nothing', 
+        'table_pot', 
+        'table_soju'
+      ]
+      let idx = Math.floor(Math.random() * 5)
+      return imgList[idx]
+    }
   },
   methods: {
     ...mapActions('openviduStore', [

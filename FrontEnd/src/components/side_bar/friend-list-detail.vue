@@ -132,8 +132,8 @@ export default {
       }
     },
     notFriendImgUrl:function(){
-      if (this.notFriendUserInfo.img) {
-        return `${process.env.VUE_APP_IMG_URL}/${this.notFriendUserInfo.notFriendImgUrl}`
+      if (this.notFriendUserInfo.imgUrl) {
+        return `${process.env.VUE_APP_IMG_URL}/${this.notFriendUserInfo.imgUrl}`
       } else {
         return require('@/assets/chat.png')
       }

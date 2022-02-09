@@ -1,8 +1,8 @@
 <template>
-  <div class="table-list">
-    
+  <div class="table-list"
+    :style="{ backgroundImage: 'url(' + require(`@/assets/main_theme.png`) + ')'}">
     <!-- 방 목록 -->
-    <table-matrix></table-matrix>
+    <table-matrix class="h-100" style="padding-bottom: 140px"></table-matrix>
     <!-- 방 개설 팝업창 -->
     <div class="menu-popup">
       <div>방 개설하기</div>
@@ -31,7 +31,7 @@ export default {
     position: fixed;
     transition-property: all;
     transition-duration: .3s;
-    bottom: -100px;
+    bottom: -130px;
     left: 50%;
     text-align: center;
     color: #1B1B32;
@@ -40,7 +40,7 @@ export default {
 
   .menu-popup:hover {
     position: fixed;
-    bottom: -40px;
+    bottom: -70px;
     left: 50%;
     transform: translate(-50%);
     text-align: center;
@@ -48,7 +48,11 @@ export default {
   }
 
   .table-list {
-    margin-top: 60px;
+    padding-top: 64px;
+    width: 100vw;
+    height: 100vh;
+    background-attachment: fixed;
+    background-size : cover;
   }
 
 </style>
