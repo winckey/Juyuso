@@ -47,8 +47,8 @@
                 <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
                 <v-list-item @click="chatFriend"><button>채팅하기</button></v-list-item>
                 <!-- <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item> -->
-                <v-list-item v-if="tab === 0" @click="deleteFriend"><button>친구삭제</button></v-list-item>
-                <v-list-item v-if="tab === 0" @click="banFriend"><button>차단</button></v-list-item>
+                <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
+                <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
               </v-list>
             </v-menu>
           </div>
@@ -87,12 +87,38 @@
             <v-list-item><button>방에 초대</button></v-list-item>
             <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
             <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item>
-            <v-list-item v-if="tab === 0" @click="deleteFriend"><button>친구삭제</button></v-list-item>
-            <v-list-item v-if="tab === 0" @click="banFriend"><button>차단</button></v-list-item>
+            <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
+            <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
           </v-list>
         </v-menu>
         </div>
       </div>
+      <v-dialog
+        v-model="alert"
+        persistent
+        max-width="290"
+      >
+        <v-card>
+          <v-card-title tag="span" class="d-flex justify-content-center">❗ 경고 ❗</v-card-title>
+          <v-card-text class="text-center"><strong>{{ userInfo.nickname }}</strong>{{ alertMessage }}</v-card-text>
+          <v-card-actions class="d-flex justify-content-center">
+            <v-btn
+              color="green darken-1"
+              text
+              @click="[alert = false]"
+            >
+              취소
+            </v-btn>
+            <v-btn
+              color="red darken-1"
+              text
+              @click="[alert = false, doAction()]"
+            >
+              {{ type }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </div>
 
 </template>
@@ -110,9 +136,12 @@ export default {
   },
   data: function () {
     return {
+      alert: false,
       x:0,
       y:0,
-      showMenu: false
+      showMenu: false,
+      alertMessage: null,
+      type: null,
     }
   },
   computed: {
@@ -165,6 +194,25 @@ export default {
     chatFriend: function () {
       this.setChatFriend(this.userInfo || this.notFriendUserInfo)
       this.changeTab(1)
+    },
+    showAlert: function (type) {
+      if (type == '차단') {
+        this.type = '차단'
+        this.alertMessage = '님을 차단하겠습니까?'
+      }
+      else if (type == '삭제') {
+        this.type = '삭제'
+        this.alertMessage = '님을 삭제하겠습니까?'
+      }
+      this.alert = true
+    },
+    doAction: function () {
+      if (this.type == '삭제') {
+        this.deleteFriend()
+      }
+      else {
+        this.banFriend()
+      }
     },
     deleteFriend: function () {
       const token = localStorage.getItem('jwt')
