@@ -136,14 +136,14 @@ export default {
   .table-info {
     position: absolute;
     left: 50%;
-    top: 20%;
+    top: 35%;
     transform: translate(-50%);
   }
   
   .table-hashtag {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 60%;
     transform: translate(-50%)
   }
 
