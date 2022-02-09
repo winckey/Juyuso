@@ -7,19 +7,19 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserIdCheckResDto extends BaseResponseBody {
+public class UserNicknameCheckResDto extends BaseResponseBody {
 
-    @ApiModelProperty(name = "요청한 ID")
-    private String userId;
+    @ApiModelProperty(name = "요청한 닉네임")
+    private String nickname;
 
     @ApiModelProperty(name = "중복 여부")
     private Boolean duplicate;
 
-    public static UserIdCheckResDto of(Integer statusCode, String message, String userId, Boolean duplicate) {
-        UserIdCheckResDto res = new UserIdCheckResDto();
+    public static UserNicknameCheckResDto of(Integer statusCode, String message, String nickname, Boolean duplicate) {
+        UserNicknameCheckResDto res = new UserNicknameCheckResDto();
         res.setStatusCode(statusCode);
         res.setMessage(message);
-        res.setUserId(userId);
+        res.setNickname(nickname);
         res.setDuplicate(duplicate);
         return res;
     }
