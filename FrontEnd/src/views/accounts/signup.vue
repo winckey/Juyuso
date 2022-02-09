@@ -4,11 +4,26 @@
       <div style="width: 70;" class="mx-auto p-4">
         <v-container>
           <v-form ref="signupForm">
-            <v-text-field
-              label="닉네임"
-              v-model="credentials.nickname"
-              :rules="rules.nicknameRule"
-            ></v-text-field>
+            <v-row>
+              <v-col cols="9">
+                <v-text-field
+                  label="닉네임"
+                  v-model="credentials.nickname"
+                  :rules="rules.nicknameRule"
+                  @input="isNameCheck = false"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3">
+                <v-btn
+                  :loading="nameLoading"
+                  :disabled="nameLoading"
+                  @click="nameCheck"
+                  rounded>
+                  <span v-if="!isNameCheck">중복확인</span>
+                  <v-icon v-else large color="#1CFD9F">mdi-check</v-icon>
+                </v-btn> 
+              </v-col>
+            </v-row>
             <v-row>
               <v-col cols="9">
                 <v-text-field
@@ -20,8 +35,8 @@
               </v-col>
               <v-col cols="3">
                   <v-btn
-                    :loading="loading"
-                    :disabled="loading"
+                    :loading="idLoading"
+                    :disabled="idLoading"
                     @click="idCheck"
                     rounded>
                     <span v-if="!isIdCheck">중복확인</span>
@@ -143,8 +158,10 @@ export default {
       datePicker: false,
       passwordShow: false,
       passwordConfirmationShow: false,
-      loading: false,
+      idLoading: false,
+      nameLoading: false,
       isIdCheck: false,
+      isNameCheck: false,
       credentials: {
         id: '',
         email: '',
@@ -208,7 +225,7 @@ export default {
   methods: {
     idCheck: function () {
       if (!this.credentials.id.trim()) {return}
-      this.loading = true
+      this.idLoading = true
       axios({
         method: 'get',
         url: `${process.env.VUE_APP_API_URL}/users/id/${this.credentials.id}`
@@ -227,13 +244,50 @@ export default {
           });
         }
         this.isIdCheck = !res.data.duplicate
-        this.loading = false
+        this.idLoading = false
+      })
+    },
+    nameCheck: function () {
+      if (!this.credentials.nickname.trim()) {return}
+      this.nameLoading = true
+      axios({
+        method: 'get',
+        url: `${process.env.VUE_APP_API_URL}/users/nickname/${this.credentials.nickname}`
+      })
+      .then( res => {
+        if (res.data.duplicate) {
+          this.$toast.error('이미 존재하는 닉네임입니다', {
+            position: "top-center",
+            timeout: 2500,
+            closeOnClick: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            hideProgressBar: true,
+            icon: true,
+            rtl: false
+          });
+        }
+        this.isNameCheck = !res.data.duplicate
+        this.nameLoading = false
       })
     },
     signup: function () {
       const validateCheck = this.$refs.signupForm.validate()
-      if (!this.isIdCheck) {
+      if (validateCheck && !this.isNameCheck) {
         this.$toast.error('아이디 중복체크를 확인해주세요', {
+          position: "top-center",
+          timeout: 2500,
+          closeOnClick: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          hideProgressBar: true,
+          icon: true,
+          rtl: false
+        });
+        return
+      }
+      else if (validateCheck && !this.isIdCheck) {
+        this.$toast.error('닉네임 중복체크를 확인해주세요', {
           position: "top-center",
           timeout: 2500,
           closeOnClick: true,
