@@ -3,6 +3,7 @@ package com.juyuso.db.entity.chat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.juyuso.db.entity.User;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -31,6 +32,21 @@ public class Message {
 
     private String message;
 
+    protected void changeUser(User user) {
+        user.getMessages().add(this);
+        this.user = user;
+    }
+
+    protected void changeChatRoom(ChatRoom chatRoom) {
+        chatRoom.getMessages().add(this);
+        this.chatRoom = chatRoom;
+    }
 
 
+    @Builder
+    public Message(ChatRoom chatRoom, User user, String message) {
+        changeChatRoom(chatRoom);
+        changeUser(user);
+        this.message = message;
+    }
 }
