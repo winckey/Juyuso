@@ -8,6 +8,7 @@ import com.juyuso.db.repository.ChatMessageRepository;
 import com.juyuso.db.repository.ChatRoomRepository;
 import com.juyuso.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
-    public List<Message> getMessageList(Long RoomId) {
-        return null;
+    public List<Message> getMessageList(Long roomId , Pageable  pageable) {
+
+
+
+        return chatMessageRepository.findAllByChatRoomId(roomId , pageable);
     }
 }
