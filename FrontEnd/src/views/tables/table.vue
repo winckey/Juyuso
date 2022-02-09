@@ -201,13 +201,10 @@ import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
-<<<<<<< HEAD
 import BalanceGame from '@/components/game/balance-game.vue'
 
-=======
 import DrawGame from '@/components/game/draw-game.vue'
 import TypingGame from '@/components/game/typing-game.vue'
->>>>>>> 2bf396103ef0495232450cea1a5cab829e50e9e8
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -221,12 +218,9 @@ export default {
     UserVideo,
     ChatPopup,
     TitanicGame,
-<<<<<<< HEAD
     BalanceGame,
-=======
     DrawGame,
     TypingGame
->>>>>>> 2bf396103ef0495232450cea1a5cab829e50e9e8
   },
   props: {
     roomInfo: Object,
@@ -397,7 +391,6 @@ export default {
           type: 'game-info'
         })
       }
-<<<<<<< HEAD
       if (gameMode.name === '밸런스') {
         let members = []
         this.session.streamManagers.forEach(stream => {
@@ -417,9 +410,7 @@ export default {
           type: 'game-info'
         })
       }
-=======
       this.switchGameMode(gameMode.name)
->>>>>>> 2bf396103ef0495232450cea1a5cab829e50e9e8
     },
     
   },
