@@ -30,7 +30,7 @@
       row
       hide-details
       hide-spin-buttons
-      @change="getTableList"
+      @change="[page=1, getTableList()]"
     >
       <v-radio
         label="전체보기"
