@@ -58,7 +58,7 @@
                   <div class="d-flex justify-content-center">
                     <v-avatar>
                       <img
-                        :src="userInfo.imgUrl"
+                        :src="myImage"
                         :alt="profileImg"
                       >
                     </v-avatar>
@@ -177,6 +177,7 @@ export default {
       isImage: false,
       userInfo: null,
       dialog: false,
+      myImage: null,
       profileImg: null,
       regions: [
           {region_id: 1, name: '서울'},
@@ -212,7 +213,10 @@ export default {
   },
   created: function () {
     this.userInfo = this.user
-    // this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
+    this.myImage = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
+  },
+  computed: {
+    
   },
   methods: {
     ...mapActions('accounts', ['userUpdate']),
@@ -261,7 +265,7 @@ export default {
         this.isImage = true
         setTimeout(() => this.isImage=false, 4000)
       }
-      this.userInfo.imgUrl = this.profileImg
+      this.myImage = this.profileImg
     },
   
     uploadImage: function () {
@@ -278,6 +282,7 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.myImage = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
           this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
           this.$emit('changeProfileImage', res.data.imgUrl)
         })
@@ -285,9 +290,6 @@ export default {
           console.log(err)
         })
     },
-    // deleteImage: function () {
-    //   this.userInfo.imgUrl = require("@/assets/chat.png")
-    // },
     reloadMypage: function () {
       this.$router.go()
     }

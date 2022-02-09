@@ -1,5 +1,5 @@
 <template>
-  <div class="wallet-container">
+  <div class="wallet-container mx-auto">
     <div class="wallet">
       <img src="@/assets/wallet_main.png" alt="wallet">
 
@@ -10,6 +10,7 @@
             <v-row >
               <v-col cols="6">
                 <div v-if="user">
+                  <!-- <p style="font-size: 2rem">주민등록증</p> -->
                   <h1>주민등록증</h1>
                   <p>별명: {{ user.nickname }}</p>
                   <p>소개: {{ user.description }}</p>
@@ -17,16 +18,10 @@
                   <p>나이: {{ user.age }}</p>
                 </div>
               </v-col>
-              <v-col v-if="user" cols="4">
-                <!-- <div class="d-flex justify-content-center">
-                    <v-avatar size="100">
-                      <img :src="imgUrl" alt="profile_img">
-                      
-                    </v-avatar>
-                  </div> -->
-
+              <v-col v-if="user" cols="5">
                 <div class="d-flex justify-content-center" >
-                  <v-img max-width="200" :src="imgUrl" alt="profile_img"></v-img>
+                  <!-- <v-img max-width="100%"  height="auto" :src="imgUrl" alt="profile_img"></v-img> -->
+                  <v-img max-width="300px" width="100%" height="auto" :src="imgUrl" alt="profile_img"></v-img>
                 </div>
               </v-col>
             </v-row>
@@ -129,10 +124,10 @@ export default {
   },
   computed: {
     imgUrl: function () {
-      if (this.user.img) {
+      if (this.user.imgUrl) {
         return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
       } else {
-        return require('@/assets/chat.png')
+        return require('@/assets/basic_profile.png')
       }
 
     }
@@ -150,9 +145,9 @@ export default {
 
 }
 
-img {
+/* img {
  max-width: 100%;
-}
+} */
 
 .wallet {
   position: relative;
@@ -182,7 +177,7 @@ img {
   width: 40%;
   position: absolute;
   top: 18%;
-  right: 3%;
+  right: 2.5%;
 }
 
 
@@ -209,7 +204,7 @@ img {
 .wallet-1 {
   position: absolute;
   top: 35%;
-  right: -2%;
+  right: 0.5%;
   width: 110%;
   
 }
@@ -224,7 +219,7 @@ img {
 .friend-block {
   position: absolute;
   top: 140%;
-  right: 10%;
+  right: 13%;
 }
 
 .profile-edit-popup {

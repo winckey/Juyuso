@@ -8,16 +8,19 @@
         <div class="profile-card-info">
           <v-container>
             <v-row >
-              <v-col cols="7">
+              <v-col cols="6">
                 <div v-if="friend">
                   <h1>주민등록증</h1>
-                  <p>별명: {{ friend.nickname }}</p>
-                  <p>소개: {{ friend.description }}</p>
+                  <div class="d-flex flex-column mt-5">
+                    <p>별명: {{ friend.nickname }}</p>
+                    <p>소개: {{ friend.description }}</p>
+                    <p>지역: {{ friend.region.name }}</p>
+                  </div>
                 </div>
               </v-col>
-              <v-col v-if="friend" cols="4">
-                <div>
-                  <img :src="imgUrl" alt="profile_img">
+              <v-col v-if="friend" cols="5">
+                <div class="d-flex justify-content-center" >
+                  <v-img max-width="100%"  height="auto" :src="imgUrl" alt="profile_img"></v-img>
                 </div>
               </v-col>
             </v-row>
@@ -101,7 +104,7 @@ export default {
         if (this.friend.imgUrl) {
           return `${process.env.VUE_APP_IMG_URL}/${this.friend.imgUrl}`
         } else {
-          return require('@/assets/chat.png')
+          return require('@/assets/basic_profile.png')
         }
       }
     }
@@ -147,7 +150,7 @@ export default {
   width: 40%;
   position: absolute;
   top: 18%;
-  right: 3%;
+  right: 2.5%;
 }
 
 
@@ -174,7 +177,7 @@ export default {
 .wallet-1 {
   position: absolute;
   top: 35%;
-  right: -2%;
+  right: 0.5%;
   width: 110%;
   
 }
