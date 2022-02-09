@@ -13,10 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserId(String userId);
 
-    @Query(value = "SELECT * FROM user " +
-            "where nickname LIKE %:keyword%", nativeQuery = true)
-    List<User> findALLByNickname(@Param("keyword")String keyword);
+    boolean existsByNickname(String nickname);
 
+    List<User> findByNicknameContaining(String nickname);
 
     @Query(value = "SELECT * FROM (SELECT * from user" +
             " where id in " +
