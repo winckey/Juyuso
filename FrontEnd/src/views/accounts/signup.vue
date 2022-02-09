@@ -9,12 +9,26 @@
               v-model="credentials.nickname"
               :rules="rules.nicknameRule"
             ></v-text-field>
-
-            <v-text-field
-              label="아이디"
-              v-model="credentials.id"
-              :rules="rules.idRule"
-            ></v-text-field>
+            <v-row>
+              <v-col cols="9">
+                <v-text-field
+                  label="아이디"
+                  v-model="credentials.id"
+                  :rules="rules.idRule"
+                  @input="isIdCheck = false"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3">
+                  <v-btn
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="idCheck"
+                    rounded>
+                    <span v-if="!isIdCheck">중복확인</span>
+                    <v-icon v-else large color="#1CFD9F">mdi-check</v-icon>
+                  </v-btn> 
+              </v-col>
+            </v-row>
             <v-row>
               <v-col cols="8">
             <v-text-field
@@ -129,17 +143,19 @@ export default {
       datePicker: false,
       passwordShow: false,
       passwordConfirmationShow: false,
+      loading: false,
+      isIdCheck: false,
       credentials: {
-        id: 'ayoung092',
-        email: 'ayoung0924@naver.com',
-        password: 'dkduddl8*',
-        birthDate: '1997-10-25',
-        gender: 'M',
-        nickname: '성아영',
-        regionId: '2',
-        phone: '01054732511',
+        id: '',
+        email: '',
+        password: '',
+        birthDate: '',
+        gender: '',
+        nickname: '',
+        regionId: '',
+        phone: '',
       },
-      passwordConfirmation: 'dkduddl8*',
+      passwordConfirmation: '',
       regions: [
         {region_id: 1, name: '서울'},
         {region_id: 2, name: '부산'},
@@ -190,8 +206,45 @@ export default {
     }
   },
   methods: {
+    idCheck: function () {
+      if (!this.credentials.id.trim()) {return}
+      this.loading = true
+      axios({
+        method: 'get',
+        url: `${process.env.VUE_APP_API_URL}/users/id/${this.credentials.id}`
+      })
+      .then( res => {
+        if (res.data.duplicate) {
+          this.$toast.error('이미 존재하는 아이디입니다', {
+            position: "top-center",
+            timeout: 2500,
+            closeOnClick: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            hideProgressBar: true,
+            icon: true,
+            rtl: false
+          });
+        }
+        this.isIdCheck = !res.data.duplicate
+        this.loading = false
+      })
+    },
     signup: function () {
       const validateCheck = this.$refs.signupForm.validate()
+      if (!this.isIdCheck) {
+        this.$toast.error('아이디 중복체크를 확인해주세요', {
+          position: "top-center",
+          timeout: 2500,
+          closeOnClick: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          hideProgressBar: true,
+          icon: true,
+          rtl: false
+        });
+        return
+      }
       if (validateCheck) {
         // console.log(`${process.env.VUE_APP_API_URL}/user`)
         axios({
