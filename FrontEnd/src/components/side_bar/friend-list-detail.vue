@@ -1,124 +1,122 @@
 <template>
   <div>
     <div v-if="userInfo"
-        oncontextmenu="return false"
-        @mousedown.right.stop="showMenu=!showMenu">
-        <div v-if="tab == -1">
-          <v-list-item
-            oncontextmenu="return false">
-              <v-list-item-avatar size=40>
-                <img src="@/assets/logo.png" style="object-fit: cover">
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>{{ userInfo.nickname }}</v-list-item-title>
-              </v-list-item-content>
-              <v-btn class="mx-1" color="primary" @click="agreeFriend">수락</v-btn>
-              <v-btn class="mx-1" color="error" @click="rejectFriend">거절</v-btn>
-            </v-list-item>
-        </div>
-        <div v-else>
-          <div>
-            <v-menu
-              v-model="showMenu"
-              offset-y
-              :position-x="x"
-              :position-y="y"
-              @contextmenu.prevent
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-list-item
-                v-bind="attrs"
-                v-on="on"
-                oncontextmenu="return false">
-                  <v-list-item-avatar size=40>
-                    <v-img :src="imgUrl" alt="profile_img"></v-img>
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{ userInfo.nickname }}
-                      <img src="@/assets/my_friend.png" alt="friend"
-                        class="friendImg">
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-              <v-list @contextmenu.prevent>
-                <v-list-item><button>방에 초대</button></v-list-item>
-                <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
-                <v-list-item @click="chatFriend"><button>채팅하기</button></v-list-item>
-                <!-- <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item> -->
-                <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
-                <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
-          
-        </div>
+      oncontextmenu="return false"
+      @mousedown.right.stop="showMenu=!showMenu">
+      <div v-if="tab == -1">
+        <v-list-item
+          oncontextmenu="return false">
+            <v-list-item-avatar size=40>
+              <img src="@/assets/logo.png" style="object-fit: cover">
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>{{ userInfo.nickname }}</v-list-item-title>
+            </v-list-item-content>
+            <v-btn class="mx-1" color="primary" @click="agreeFriend">수락</v-btn>
+            <v-btn class="mx-1" color="error" @click="rejectFriend">거절</v-btn>
+          </v-list-item>
       </div>
-    <div v-else-if="notFriendUserInfo"
-        oncontextmenu="return false"
-        @mousedown.right.stop="showMenu=!showMenu">
-        <div v-if="notFriendUserInfo.id !== user.id">
+      <div v-else>
+        <div>
           <v-menu
-          v-model="showMenu"
-          offset-y
-          :position-x="x"
-          :position-y="y"
-          @contextmenu.prevent
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-list-item
-            v-bind="attrs"
-            v-on="on"
-            oncontextmenu="return false">
-              <v-list-item-avatar size=40>
-                <v-img :src="notFriendImgUrl" alt="profile_img"></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ notFriendUserInfo.nickname }}
-                  <img src="@/assets/add_friend.png" alt="notfriend"
-                        class="friendImg">
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <v-list @contextmenu.prevent>
-            <v-list-item><button>방에 초대</button></v-list-item>
-            <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
-            <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item>
-            <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
-            <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
-          </v-list>
-        </v-menu>
+            v-model="showMenu"
+            offset-y
+            :position-x="x"
+            :position-y="y"
+            @contextmenu.prevent
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-list-item
+              v-bind="attrs"
+              v-on="on"
+              oncontextmenu="return false">
+                <v-list-item-avatar size=40>
+                  <v-img :src="imgUrl" alt="profile_img"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ userInfo.nickname }}
+                    <img src="@/assets/my_friend.png" alt="friend"
+                      class="friendImg">
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-list @contextmenu.prevent>
+              <v-list-item><button>방에 초대</button></v-list-item>
+              <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
+              <v-list-item @click="chatFriend"><button>채팅하기</button></v-list-item>
+              <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
+              <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </div>
-      <v-dialog
-        v-model="alert"
-        persistent
-        max-width="290"
+    </div>
+  <div v-if="notFriendUserInfo"
+      oncontextmenu="return false"
+      @mousedown.right.stop="showMenu=!showMenu">
+      <div v-if="notFriendUserInfo.id !== user.id">
+        <v-menu
+        v-model="showMenu"
+        offset-y
+        :position-x="x"
+        :position-y="y"
+        @contextmenu.prevent
       >
-        <v-card>
-          <v-card-title tag="span" class="d-flex justify-content-center">❗ 경고 ❗</v-card-title>
-          <v-card-text class="text-center"><strong>{{ userInfo.nickname }}</strong>{{ alertMessage }}</v-card-text>
-          <v-card-actions class="d-flex justify-content-center">
-            <v-btn
-              color="green darken-1"
-              text
-              @click="[alert = false]"
-            >
-              취소
-            </v-btn>
-            <v-btn
-              color="red darken-1"
-              text
-              @click="[alert = false, doAction()]"
-            >
-              {{ type }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item
+          v-bind="attrs"
+          v-on="on"
+          oncontextmenu="return false">
+            <v-list-item-avatar size=40>
+              <v-img :src="notFriendImgUrl" alt="profile_img"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ notFriendUserInfo.nickname }}
+                <img src="@/assets/add_friend.png" alt="notfriend"
+                      class="friendImg">
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <v-list @contextmenu.prevent>
+          <v-list-item><button>방에 초대</button></v-list-item>
+          <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
+          <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item>
+          <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
+          <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
+        </v-list>
+      </v-menu>
+      </div>
+    </div>
+    <v-dialog
+      v-model="alert"
+      persistent
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title tag="span" class="d-flex justify-content-center">❗ 경고 ❗</v-card-title>
+        <v-card-text class="text-center"><strong>{{ userNickName }}</strong>{{ alertMessage }}</v-card-text>
+        <v-card-actions class="d-flex justify-content-center">
+          <v-btn
+            color="green darken-1"
+            text
+            @click="[alert = false]"
+          >
+            취소
+          </v-btn>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="[alert = false, doAction()]"
+          >
+            {{ type }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 
 </template>
@@ -165,6 +163,14 @@ export default {
         return `${process.env.VUE_APP_IMG_URL}/${this.notFriendUserInfo.imgUrl}`
       } else {
         return require('@/assets/chat.png')
+      }
+    },
+    userNickName: function () {
+      if (this.userInfo) {
+        return this.userInfo.nickname
+      }
+      else {
+        return this.notFriendUserInfo.nickname
       }
     }
   },

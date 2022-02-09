@@ -8,6 +8,7 @@ const friends = {
     banList:[],
     tab: 0,
     chatFriend: null,
+    vuexDialog: false,
   },
   getters: {
     FriendsData(state){
@@ -39,12 +40,15 @@ const friends = {
       state.friendsList = userId
     },
     CHANGE_TAB: function (state, tab) {
+      console.log(tab)
       state.tab = tab
     },
     SET_CHAT_FRIEND: function (state, friend) {
       state.chatFriend = friend
-    }
-
+    },
+    CHANGE_DIALOG: function (state, data) {
+      state.vuexDialog = data
+    },
   },
   actions: {
     // 친구 검색
@@ -183,6 +187,9 @@ const friends = {
     },
     setChatFriend: function ({ commit }, friend) {
       commit('SET_CHAT_FRIEND', friend)
+    },
+    changeDialog: function ({ commit }, data) {
+      commit('CHANGE_DIALOG', data)
     }
   }
 }

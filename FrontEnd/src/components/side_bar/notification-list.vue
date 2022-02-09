@@ -57,6 +57,7 @@ export default {
     return {
       notificationList: [],
       menu: false,
+      type: 0,
       test: {
         notification: {
 
@@ -76,25 +77,30 @@ export default {
     })
   },
   methods: {
-    ...mapActions('friends', ['friendList']),
+    ...mapActions('friends', [
+      'friendList',
+      'changeDialog',
+      'changeTab',
+    ]),
     makeToast(payload) {
       if (payload.notification.title == '친구 추가 요청') {
         this.friendList()
+        this.type = 1
       }
-      this.$toast(payload.notification.body, {
-        position: "top-right",
-        timeout: 3000,
-        closeOnClick: true,
-        pauseOnFocusLoss: true,
-        pauseOnHover: true,
-        draggable: true,
-        draggablePercent: 0.6,
-        showCloseButtonOnHover: false,
-        hideProgressBar: true,
-        closeButton: "button",
-        icon: true,
-        rtl: false
-      });
+      this.$toast.open({
+        position: 'top-right',
+        message: payload.notification.body,
+        type: 'info',
+        duration: 2500,
+        onClick: this.openDraw
+      })
+    },
+    hello() {
+      console.log('hello')
+    },
+    openDraw() {
+      this.changeDialog(true)
+      this.changeTab(this.type)
     }
   }
 }

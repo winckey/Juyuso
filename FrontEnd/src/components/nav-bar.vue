@@ -63,7 +63,7 @@ import NotificationList from '@/components/side_bar/notification-list.vue'
 import TableSearch from '@/components/table_list/table-search.vue'
 import SideBarProfile from '@/components/side_bar/side-bar-profile.vue'
 import FriendTab from '@/components/side_bar/friend-tab.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'NavBar',
@@ -80,12 +80,18 @@ export default {
       username:'',
     }
   },
+  computed: {
+    ...mapState('friends', [
+      'vuexDialog'
+    ])
+  },
   methods: {
     ...mapActions('friends', [
       'changeTab',
       'friendList',
       'searchUserData',
-      'setChatFriend'
+      'setChatFriend',
+      'changeDialog'
     ]),
     goToTableList: function() {
       this.$router.push({ name: 'TableList' })
@@ -105,9 +111,15 @@ export default {
         this.friendList()
       }
       else if (!this.drawer) {
+        this.changeDialog(false)
         this.setChatFriend(null)
       }
-    } 
+    },
+    vuexDialog: function () {
+      if (this.vuexDialog) {
+        this.drawer = true
+      }
+    }
   }
 }
 </script>
