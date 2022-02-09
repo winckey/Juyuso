@@ -32,13 +32,21 @@ const rejectAuthUser = (to, from, next) => {
 }
 
 // const rejectEnter = (to, from, next) => {
-//   if (openvidu.state.session.options.sessionId) {
+//   console.log('엥')
+//   if (!openvidu.state.session.options.sessionId) {
+//     console.log(openvidu.state.session.options.sessionId)
+//     alert('어딜가')
 //     // next(`/table/${openvidu.state.session.options.sessionId}`)
+//     alert('어딜가냐고')
 //     next('/tables')
 //     // next()
 //   } else {
 //     next()
 //   }
+// }
+
+// const rejectEnter = (to, from, next) => {
+  
 // }
 
 const routes = [

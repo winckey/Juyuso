@@ -7,7 +7,7 @@
     <div class="game-box">
         <v-card class="typing-game">
             <div class="header">
-                    <h2>🍺술향기 타자 연습🍺</h2>
+                    <h2>🍺술향기 타자 연습dd🍺</h2>
                 </div>
                 <div class="word-display">
                     <h2>{{ wordDisplay }}</h2>
@@ -122,10 +122,33 @@ export default {
                 console.log(this.wordInput)
                 this.score += 1
                 this.wordInput = null
+
+                
+                // this.please().then(()=>{console.log('아아아악')})
+
+                
                 this.changeWord()
+
             } else {
                 this.wordInput = null
             }
+        },
+        please: function () {
+            // return new Promise((resolve) => {
+            //     for(let i=0; i<this.typingGame.members.length; i++){
+            //             console.log('점수야 들어가라 for문')
+            //             if (this.typingGame.scoreResultObject[i][0] === JSON.parse(this.publisher.stream.connection.data).clientData) {
+            //                 console.log(JSON.parse(this.publisher.stream.connection.data).clientData)
+            //                 this.typingGame.scoreResultObject[i][1] += 1
+            //                 this.sendInfo()
+            //                 console.log('점수 들어갔니?')
+            //                 console.log(this.typingGame.scoreResultObject)
+            //             }
+            //             console.log('if문 끝났는디?')
+            //         }
+            //         resolve()
+            // })
+
         },
         countDown: function () {
             this.typingGame.time > 0 ? this.typingGame.time -= 1 : this.typingGame.allPlaying=false;
@@ -158,6 +181,7 @@ export default {
 
             console.log(this.typingGame.scoreResult)
             console.log(this.typingGame.scoreResult.length)
+            console.log(this.typingGame.scoreResultObject)
             
         },
         changeWord: function () {
@@ -189,6 +213,19 @@ export default {
                 }
             }
             
+        },
+        score: function () {
+            for(let i=0; i<this.typingGame.members.length; i++){
+                        console.log('점수야 들어가라 for문')
+                        if (this.typingGame.scoreResultObject[i][0] === JSON.parse(this.publisher.stream.connection.data).clientData) {
+                            console.log(JSON.parse(this.publisher.stream.connection.data).clientData)
+                            this.typingGame.scoreResultObject[i][1] += 1
+                            this.sendInfo()
+                            console.log('점수 들어갔니?')
+                            console.log(this.typingGame.scoreResultObject)
+                        }
+                        console.log('if문 끝났는디?')
+                    }
         }
     }
 
