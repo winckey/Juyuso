@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -50,7 +51,8 @@ public class ChatMessageController {
     @ApiOperation(value = "체팅리스트 ", notes = "//http://localhost:8080/api/chat/message/1?page=0&size=5&sort=id,desc \n " +
                                                     " 다음과 같이 사용 ")
     @GetMapping("/api/chat/message/{roomId}")
-    public ResponseEntity<ChatMessageResDto> getChatList(@NotBlank @PathVariable Long roomId ,@PageableDefault(size = 12) Pageable pageable) {
+    public ResponseEntity<ChatMessageResDto> getChatList(@NotBlank @PathVariable Long roomId ,@PageableDefault(size = 5 ,
+                                                                                sort="id" , direction = Sort.Direction.DESC) Pageable pageable) {
 
        List<Message> messageList =  chatMessageService.getMessageList(roomId , pageable);
         return ResponseEntity.ok(ChatMessageResDto.of(200, "Success", messageList));
