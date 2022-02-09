@@ -1,66 +1,68 @@
 <template>
-  <div class="wallet-container">
-    <div class="wallet">
-      <img src="@/assets/wallet_main.png" alt="wallet">
+  <div class="background">
+    <div class="wallet-container">
+      <div class="wallet">
+        <img src="@/assets/wallet_main.png" alt="wallet">
 
-      <div class="profile-card">
-        <img src="@/assets/profile.png" alt="profile-card">
-        <div class="profile-card-info">
-          <v-container>
-            <v-row >
-              <v-col cols="6">
-                <div v-if="friend">
-                  <h1>주민등록증</h1>
-                  <div class="d-flex flex-column mt-5">
-                    <p>별명: {{ friend.nickname }}</p>
-                    <p>소개: {{ friend.description }}</p>
-                    <p>지역: {{ friend.region.name }}</p>
+        <div class="profile-card">
+          <img src="@/assets/profile.png" alt="profile-card">
+          <div class="profile-card-info">
+            <v-container>
+              <v-row >
+                <v-col cols="6">
+                  <div v-if="friend">
+                    <h1>주민등록증</h1>
+                    <div class="d-flex flex-column mt-5">
+                      <p>별명: {{ friend.nickname }}</p>
+                      <p>소개: {{ friend.description }}</p>
+                      <p>지역: {{ friend.region.name }}</p>
+                    </div>
                   </div>
-                </div>
-              </v-col>
-              <v-col v-if="friend" cols="5">
-                <div class="d-flex justify-content-center" >
-                  <v-img max-width="100%"  height="auto" :src="imgUrl" alt="profile_img"></v-img>
-                </div>
-              </v-col>
-            </v-row>
-          </v-container>
-         
-        </div>
-    
+                </v-col>
+                <v-col v-if="friend" cols="5">
+                  <div class="d-flex justify-content-center" >
+                    <v-img max-width="100%"  height="auto" :src="imgUrl" alt="profile_img"></v-img>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-container>
           
-      </div>
-
-      <div class="profile-mydata">
-        <div class="profile-mydata-card">
-          <img @click="goFriendData" src="@/assets/Group 56.png" width="90%" alt="friendData">
-        </div>
-
-        <div class="wallet-1">
-          <img src="@/assets/wallet_card_1.png" alt="wallet-card">
-        </div>
-
-        <div class="profile-calendar">
-          <v-dialog>
-            <template v-slot:activator="{ on, attrs }">
-              <img src="@/assets/Group 57.png" alt="calendar"
-              v-bind="attrs"
-              v-on="on">
-            </template>
-            <v-card>
-              <calender-popup></calender-popup>
-            </v-card>
-          </v-dialog>
-          
-        </div>
-        <div class="wallet-2">
-          <img src="@/assets/wallet_card_2.png" alt="wallet-card">
-        </div>
-
-      </div>
+          </div>
       
-     
-    </div> 
+            
+        </div>
+
+        <div class="profile-mydata">
+          <div class="profile-mydata-card">
+            <img @click="goFriendData" src="@/assets/Group 56.png" width="90%" alt="friendData">
+          </div>
+
+          <div class="wallet-1">
+            <img src="@/assets/wallet_card_1.png" alt="wallet-card">
+          </div>
+
+          <div class="profile-calendar">
+            <v-dialog>
+              <template v-slot:activator="{ on, attrs }">
+                <img src="@/assets/Group 57.png" alt="calendar"
+                v-bind="attrs"
+                v-on="on">
+              </template>
+              <v-card>
+                <calender-popup></calender-popup>
+              </v-card>
+            </v-dialog>
+            
+          </div>
+          <div class="wallet-2">
+            <img src="@/assets/wallet_card_2.png" alt="wallet-card">
+          </div>
+
+        </div>
+        
+      
+      </div> 
+    </div>
   </div>
 </template>
 
@@ -114,6 +116,12 @@ export default {
 
 
 <style scoped>
+
+.background {
+  height: 100vh;
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7) ), url(https://cdn.pixabay.com/photo/2016/09/18/20/51/cans-1679022_960_720.jpg);
+  background-size : cover;
+}
 
 .wallet-container {
   height: 90vh;
