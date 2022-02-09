@@ -106,7 +106,7 @@ export default {
   },
   methods: {
     roomSearch: function (tab) {
-      if (this.searchInput != "") {
+      if (this.searchInput.trim()) {
         const token = localStorage.getItem('jwt')
         console.log(this.searchInput)
         axios({
@@ -120,6 +120,10 @@ export default {
           console.log(res.data)
           this.searchResult[this.items[tab].value] = res.data.content
         })
+      }
+      else {
+        this.searchResult['title'] = []
+        this.searchResult['tags'] = []
       }
     },
     openDetailPopup: function (roomInfo) {
