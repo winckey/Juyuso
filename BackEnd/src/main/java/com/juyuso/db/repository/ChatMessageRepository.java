@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface ChatMessageRepository extends JpaRepository<Message, Long> {
 
 
-    List<Message> findAllByChatRoomId(Long roomId , Pageable pageable);
+    Optional<List<Message>> findAllByChatRoomId(Long roomId , Pageable pageable);
 
 
 }

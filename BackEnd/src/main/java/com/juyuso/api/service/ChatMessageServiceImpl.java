@@ -44,6 +44,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
 
 
-        return chatMessageRepository.findAllByChatRoomId(roomId , pageable);
+        return chatMessageRepository.findAllByChatRoomId(roomId , pageable).get();
     }
 }
