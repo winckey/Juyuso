@@ -1,6 +1,6 @@
 <template>
   <div class="background-box"
-  :style="{'background-image':'url('+ require(`@/assets/bar.jpg`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
+  :style="{'background-image':'url('+ require(`@/assets/beach.jpg`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
