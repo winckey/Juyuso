@@ -2,16 +2,32 @@
   <div v-if="chatFriend">
     <div style="text-align: center">{{ chatFriend.nickname }} 님과의 채팅방</div>
     <v-divider></v-divider>
-    <v-card class="chat-list" :style="{height: height}"> 
+    <v-card @scroll="scrollEvent" class="chat-list" :style="{height: height}">
+      <!-- 이전 채팅 기록 -->
       <div
-        :key="idx" 
-        v-for="(message, idx) in messages">
-        <div :class="message.writer == user.id ? 'my-chat': 'other-chat'">
+        :key="`historyChat-${idx}`" 
+        v-for="(message, idx) in historyMessages.slice().reverse()">
+        <div :class="message.userId == user.id ? 'my-chat': 'other-chat'">
           <div>
-            <div v-if="message.writer != user.id" class="chat-name">
+            <div v-if="message.userId != user.id" class="chat-name">
               {{ chatFriend.nickname }}
             </div>
-            <div :class="message.writer == user.id ? 'my-chat-bubble': 'other-chat-bubble'">
+            <div :class="message.userId == user.id ? 'my-chat-bubble': 'other-chat-bubble'">
+              {{ message.message }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 새로 한 채팅 -->
+      <div
+        :key="`newChat-${idx}`"
+        v-for="(message, idx) in messages">
+        <div :class="message.writerId == user.id ? 'my-chat': 'other-chat'">
+          <div>
+            <div v-if="message.writerId != user.id" class="chat-name">
+              {{ chatFriend.nickname }}
+            </div>
+            <div :class="message.writerId == user.id ? 'my-chat-bubble': 'other-chat-bubble'">
               {{ message.message }}
             </div>
           </div>
@@ -33,6 +49,12 @@
         전송
       </v-btn>
     </div>
+    <v-overlay :value="loading">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 
@@ -46,12 +68,19 @@ export default {
   name: 'Chatting',
   data: function () {
     return {
+      loading: false,
       messages: [],
+      historyMessages: [],
       sock: null,
       client: null,
       roomId: null,
       chatInput: null,
       height: null,
+      chatDiv: null,
+      page: 0,
+      bottom_flag: true,
+      pre_diffHeight: 0,
+      isEndOfMessage: false
     }
   },
   computed: {
@@ -62,7 +91,12 @@ export default {
     this.height = `${window.innerHeight - 500}px`
     window.addEventListener('resize', this.resizeHeight);
     if (this.chatFriend) {
+      this.chatDiv = document.querySelector('.chat-list')
+      this.chatDiv.scrollTop = this.chatDiv.scrollHeight
       this.initChat()
+      this.$nextTick (() => {
+        this.chatDiv.scrollTop = this.chatDiv.scrollHeight
+      })
     }
   },
   beforeDestroy() {
@@ -72,6 +106,43 @@ export default {
     resizeHeight () {
       this.height = `${window.innerHeight - 500}px`
     },
+    scrollEvent() {
+      if (this.chatDiv.scrollTop == 0 && !this.isEndOfMessage && this.chatDiv.scrollHeight > this.chatDiv.clientHeight) {
+        this.page++
+        this.getChatHistory()
+      }
+      if(this.chatDiv.scrollHeight - (this.chatDiv.scrollTop + this.chatDiv.clientHeight) < 1){
+        this.bottom_flag = true;
+      }
+      else if(this.pre_diffHeight > this.chatDiv.scrollTop + this.chatDiv.clientHeight ){
+        this.bottom_flag = false;  
+      }  
+
+      this.pre_diffHeight = this.chatDiv.scrollTop + this.chatDiv.clientHeight
+    },
+    getChatHistory() {
+      this.loading = true
+      axios({
+        method: 'GET',
+        url: `${process.env.VUE_APP_API_URL}/chat/message/${this.roomId}`,
+        params: {
+          page: this.page,
+          size: 10,
+        }
+      })
+      .then( res => {
+        if (res.data.messageList.length) {
+          this.historyMessages = this.historyMessages.concat(res.data.messageList)
+          this.chatDiv.scrollTop = 20
+        } else {
+          this.isEndOfMessage = true
+        }
+        this.loading = false
+      })
+      .catch( () => {
+        this.isEndOfMessage = true
+      })
+    },
     initChat() {
       axios({
         method: 'GET',
@@ -79,6 +150,7 @@ export default {
         headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       }).then( res => {
         this.roomId = res.data.roomId
+        this.getChatHistory()
       })
 
       this.sock = new SockJS('https://i6e101.p.ssafy.io/ws')
@@ -94,16 +166,20 @@ export default {
         $client.subscribe(`/subscribe/chat/room/${this.roomId}`, chat => {
           let content = JSON.parse(chat.body);
           this.messages.push(content)
+          this.$nextTick (() => {
+            if (this.bottom_flag) {
+              this.chatDiv.scrollTop = this.chatDiv.scrollHeight
+            }
+          })
         })
       })
     },
     sendMessage() {
       if (this.chatInput.trim()) {
-        this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writer': this.user.id}), {})
+        this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writerId': this.user.id}), {})
       }
       this.chatInput = null
     }
-    
   }
 }
 </script>

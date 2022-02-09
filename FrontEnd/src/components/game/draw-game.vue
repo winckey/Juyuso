@@ -141,8 +141,6 @@ export default {
   mounted: function () {
     this.canvas = document.getElementById('canvas')
     this.context = document.getElementById('canvas').getContext("2d")
-    this.canvas.width = window.screen.availWidth
-    this.canvas.height = window.screen.availHeight - 40
     this.drawSession()
   },
   methods: {
@@ -210,6 +208,8 @@ export default {
     background: rgb(97, 97, 97, 0);
     z-index: 1;
     border: solid 2px rgb(255, 255, 255);
+    height: 685px;
+    width: 1530px;
   }
 
   .tool-box {

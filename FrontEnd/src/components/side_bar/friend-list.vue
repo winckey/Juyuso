@@ -7,10 +7,10 @@
         :userInfo="friend"
         :tab="tab"/>
       <friend-list-detail
-      :key="notFriend.id"
-      v-for="notFriend in notFriends"
-      :notFriendUserInfo="notFriend"
-      :tab="tab"/>
+        :key="notFriend.id"
+        v-for="notFriend in notFriends"
+        :notFriendUserInfo="notFriend"
+        :tab="tab"/>
     </v-list>
   </div>
 </template>
@@ -30,6 +30,7 @@ export default {
   },
   data: function () {
     return {
+      
     }
   },
   methods:{
