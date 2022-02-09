@@ -1,18 +1,21 @@
 <template>
 	<div v-if="balanceGame">
+    <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
+    <audio class="audio" src="@/assets/sound/balance_click.wav"></audio>
     <div>
       <user-video class="col-md-4" :stream-manager="publisher"/>
       <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
     </div>
 		<div class="game-box">
       <v-card class="balance-game">
-        <div>
-          <p>타이머</p>
+        <v-container class="game">
+          <p>🍺밸런스 게임🥃</p>
           <v-btn @click="gameStart()" :disabled="balanceGame.isStart">시작</v-btn>
-          <div style="color: rgb(5, 6, 114); font-size:1.2em">
+          <div style="color: rgb(0, 0, 0); font-size:1.2em"
+            v-if="balanceGame.isStart">
             {{ balanceGame.totalTime }}
           </div>
-        </div>
+        </v-container>
         <v-container fluid class="flex">
           <v-row>
             <v-col
@@ -20,9 +23,11 @@
               :key="n"
               cols="12"
               sm="6">
-              <v-hover>
-                <v-card @click="cardCount(n - 1)">
-                  {{gameData[n-1][balanceGame.randomNum]}}
+              <v-hover v-if="balanceGame.isStart">
+                <v-card @click="cardCount(n - 1)"
+                  class="question-box">
+                  <p class="question-text">{{gameData[n-1][balanceGame.randomNum]}}</p>
+                  
                 </v-card>
               </v-hover>
             </v-col>
@@ -30,10 +35,64 @@
         </v-container>
       </v-card>
 		</div>
-    <v-dialog v-model="balanceGame.isEnd">
-      <v-card>얍</v-card>
+    <v-dialog v-model="balanceGame.isEnd"
+      max-width="400">
       <v-card v-if="balanceGame.cardData">
-        {{ winCard }} 를 선택하신 분이 승리하였습니다
+        <!-- A 승리 -->
+        <v-progress-linear
+          :value="((balanceGame.cardData[0].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
+          height="50"
+          v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
+          color="amber">
+          <v-container>
+            <v-row justify="space-between">
+              <v-col cols="auto">
+                A : {{ balanceGame.cardData[0].length }}
+              </v-col>
+              <v-col cols="auto">
+                B : {{ balanceGame.cardData[1].length }}
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-progress-linear>
+
+        <!-- B 승리 -->
+        <v-progress-linear
+          :value="((balanceGame.cardData[1].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
+          height="50"
+          v-else-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length">
+          <v-container>
+            <v-row justify="space-between">
+              <v-col cols="auto">
+                B : {{ balanceGame.cardData[1].length }}
+              </v-col>
+              <v-col cols="auto">
+                A : {{ balanceGame.cardData[0].length }}
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-progress-linear>
+        <div v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
+          class="win-messege">
+          {{ winCard }} 를 선택하신
+          <span class="name-highlignt"
+            v-for="player in balanceGame.cardData[0]"
+            :key="player.username">
+            🎉{{ player.username }}
+          </span>
+          님이 승리하였습니다
+        </div>
+        <div v-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length"
+          class="win-messege">
+          {{ winCard }} 를 선택하신
+          <span class="name-highlignt"
+            v-for="player in balanceGame.cardData[1]"
+            :key="player.username">
+            🎉{{ player.username }}
+          </span>
+          님이 승리하였습니다
+        </div>
+
       </v-card>
     </v-dialog>
 	</div>
@@ -68,19 +127,20 @@ export default {
       resetButton: false,
       gameStarted: false,
       selected: false,
+      bgsound: null,
       balanceGame: {
         type: 'Balance',
         isStart: false,
         isEnd:false,
-        totalTime: 3,
+        totalTime: 10,
         cardData: [[], []],
         curMember:0,
         members:[],
         randomNum : 0
       },
       gameData:[
-        ['평생 백수로 월 250','짬뽕','가','최준에게 아침마다 모닝키스 받기','치킨 퍽퍽살','하기싫은 일 10시출근 5시 퇴근','자','콜라','엄마','또'],
-        ['평생 직장인 월 1000(연차없음)','짜장','나','모닝에 치이기','치킨 날개 목','재미있는 일 8시 출근 9시 퇴근','차','사이다','아빠','뭐있지']
+        ['평생 백수로 월 250','짬뽕','토맛토마토','최준에게 아침마다 모닝키스 받기','치킨 퍽퍽살','하기싫은 일 10시출근 5시 퇴근','자','콜라','엄마','또'],
+        ['평생 직장인 월 1000(연차없음)','짜장','토마토맛토','모닝에 치이기','치킨 날개 목','재미있는 일 8시 출근 9시 퇴근','차','사이다','아빠','뭐있지']
       ],
       winCard : '선택해주세요',
     }
@@ -98,14 +158,15 @@ export default {
         console.log('클릭')
         this.balanceGame.curMember = 0
         this.balanceGame.cardData = [[], []],
-        this.balanceGame.totalTime = 3,
+        this.balanceGame.totalTime = 10,
         this.balanceGame.isStart = true
         const random = Math.floor(Math.random()*10)
         this.balanceGame.randomNum = random
         this.sendGameInfo()
       }
-      
+      this.bgsound.play()
       this.balanceGame.isEnd = false
+      console.log(this.balanceGame.cardData)
     },
     cardCount: function(n){
       if (!this.selected) {
@@ -125,6 +186,7 @@ export default {
         }
         this.selected = true
         this.sendGameInfo()
+        this.sound.play()
       }
     },
     countTime:function(){
@@ -142,6 +204,7 @@ export default {
 
         clearInterval(this.timer)
         this.balanceGame.isEnd = true
+        this.balanceGame.isStart = false
       }
     },
     showResult: function () {
@@ -168,6 +231,11 @@ export default {
 
       }
     }
+  },
+  mounted:function(){
+    this.bgsound = document.querySelector('.bgaudio')
+    this.sound = document.querySelector('.audio')
+    this.bgsound.volume = 0.3    
   }
 }
 </script>
@@ -185,5 +253,30 @@ export default {
    justify-content: center; 
    align-items: center;
    padding: 2rem;
+}
+.game{
+  text-align: center;
+}
+.question-box{
+  display: table;
+  width: 300px;
+  height: 300px;
+  text-align: center;
+}
+.question-text{
+  display: table-cell;
+  vertical-align: middle;
+  padding: 10%;
+}
+.progress-text{
+  text-align: justify
+}
+.name-highlignt{
+  text-decoration-color: darkcyan;
+  font-weight: bold;
+}
+.win-messege{
+  text-align: center;
+  padding: 20px;
 }
 </style>
