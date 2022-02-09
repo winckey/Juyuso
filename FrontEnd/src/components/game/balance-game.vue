@@ -11,6 +11,8 @@
         <v-container class="game">
           <p>🍺밸런스 게임🥃</p>
           <v-btn @click="gameStart()" :disabled="balanceGame.isStart">시작</v-btn>
+          <v-btn @click="[changeGameMode(undefined
+          ),balanceGame.isEnd = false]" v-if="balanceGame.isStart">다시시작</v-btn>
           <div style="color: rgb(0, 0, 0); font-size:1.2em"
             v-if="balanceGame.isStart">
             {{ balanceGame.totalTime }}
@@ -92,6 +94,9 @@
           </span>
           님이 승리하였습니다
         </div>
+        <div v-if="balanceGame.cardData[0].length == balanceGame.cardData[1].length">
+          무승부입니다
+        </div>
 
       </v-card>
     </v-dialog>
@@ -100,7 +105,7 @@
 
 <script>
 import UserVideo from '@/components/table/user-video.vue'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
 	name:'BalanceGame',
@@ -146,6 +151,9 @@ export default {
     }
   },
   methods:{
+    ...mapActions('openviduStore', [
+      'changeGameMode'
+    ]),
     gameStart: function() {
       // 누군가 게임을 시작한 경우
       if (this.balanceGame.isStart && !this.gameStarted) {
@@ -164,7 +172,6 @@ export default {
         this.balanceGame.randomNum = random
         this.sendGameInfo()
       }
-      this.bgsound.play()
       this.balanceGame.isEnd = false
       console.log(this.balanceGame.cardData)
     },
@@ -203,8 +210,8 @@ export default {
         }
 
         clearInterval(this.timer)
+        this.gameStarted = false
         this.balanceGame.isEnd = true
-        this.balanceGame.isStart = false
       }
     },
     showResult: function () {
@@ -235,7 +242,8 @@ export default {
   mounted:function(){
     this.bgsound = document.querySelector('.bgaudio')
     this.sound = document.querySelector('.audio')
-    this.bgsound.volume = 0.3    
+    this.bgsound.volume = 0.3
+    this.bgsound.play()
   }
 }
 </script>
