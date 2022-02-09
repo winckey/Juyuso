@@ -2,13 +2,14 @@
   <div oncontextmenu="return false">
     <v-app-bar
       absolute
-      color="#11111f"
+      color="#11111f00"
     >
     <button class="h-100 sub-logo" @click="goToTableList">
       <v-img 
         src="@/assets/sub_logo.png"
         contain
-        height="100%"
+        height="95%"
+        class="mb-1"
         alt=""/>
     </button>
       <v-spacer></v-spacer>

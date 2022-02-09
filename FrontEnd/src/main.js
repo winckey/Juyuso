@@ -19,7 +19,7 @@ Vue.use(VCalendar,{
 })
 
 const options = {
-  transition: "Vue-Toastification__bounce",
+  transition: "Vue-Toastification__fade",
   maxToasts: 20,
   newestOnTop: true
 };
