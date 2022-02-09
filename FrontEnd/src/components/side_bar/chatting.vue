@@ -107,20 +107,14 @@ export default {
       this.height = `${window.innerHeight - 500}px`
     },
     scrollEvent() {
-      console.log(this.chatDiv.scrollTop)
-      console.log(this.chatDiv.scrollHeight)
-      console.log(this.chatDiv.clientHeight)
       if (this.chatDiv.scrollTop == 0 && !this.isEndOfMessage && this.chatDiv.scrollHeight > this.chatDiv.clientHeight) {
         this.page++
-        console.log('새거')
         this.getChatHistory()
       }
       if(this.chatDiv.scrollHeight - (this.chatDiv.scrollTop + this.chatDiv.clientHeight) < 1){
-        console.log(true)
         this.bottom_flag = true;
       }
       else if(this.pre_diffHeight > this.chatDiv.scrollTop + this.chatDiv.clientHeight ){
-        console.log(false)
         this.bottom_flag = false;  
       }  
 
@@ -172,10 +166,8 @@ export default {
         $client.subscribe(`/subscribe/chat/room/${this.roomId}`, chat => {
           let content = JSON.parse(chat.body);
           this.messages.push(content)
-          console.log(this.chatDiv.scrollHeight)
           this.$nextTick (() => {
             if (this.bottom_flag) {
-              console.log(this.bottom_flag)
               this.chatDiv.scrollTop = this.chatDiv.scrollHeight
             }
           })
