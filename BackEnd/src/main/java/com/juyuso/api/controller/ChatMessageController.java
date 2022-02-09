@@ -4,9 +4,13 @@ package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.ChatMessageReqDto;
 import com.juyuso.api.dto.response.ChatMessageResDto;
+import com.juyuso.api.exception.CustomException;
+import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.api.service.ChatMessageService;
 
+import com.juyuso.db.entity.User;
 import com.juyuso.db.entity.chat.Message;
+import com.juyuso.db.repository.UserRepository;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +37,7 @@ public class ChatMessageController {
 
     private final SimpMessagingTemplate template;
     private final ChatMessageService chatMessageService;
-
+    private final UserRepository userRepository;
     @MessageMapping("/broadcast")
     @SendTo("/topic/messages")
     public String sendMsgBroadcast(String username) {
@@ -43,6 +47,8 @@ public class ChatMessageController {
     @MessageMapping("/chat/message")
     public void sendMsgRoom(ChatMessageReqDto message) {
 
+        Long receiverId = Long.parseLong(message.getReceiverId());///알람기능
+        User receiver = userRepository.findById(receiverId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         chatMessageService.saveMessage(message);
 
         template.convertAndSend("/subscribe/chat/room/" + message.getChatRoomId(), message);

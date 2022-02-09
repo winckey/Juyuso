@@ -13,5 +13,5 @@ public class ChatMessageReqDto {
     private String chatRoomId;
     private String writerId;
     private String message;
-
+    private String receiverId;
 }
