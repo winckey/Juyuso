@@ -1,29 +1,41 @@
 <template>
 	<div v-if="balanceGame">
-		<div>
-      <div>
-        <p>타이머 되나?</p>
-        <v-btn @click="gameStart()" :disabled="balanceGame.isStart">시작</v-btn>
-        <div style="color: white">
-          {{ balanceGame.totalTime }}
+    <div>
+      <user-video class="col-md-4" :stream-manager="publisher"/>
+      <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+    </div>
+		<div class="game-box">
+      <v-card class="balance-game">
+        <div>
+          <p>타이머</p>
+          <v-btn @click="gameStart()" :disabled="balanceGame.isStart">시작</v-btn>
+          <div style="color: rgb(5, 6, 114); font-size:1.2em">
+            {{ balanceGame.totalTime }}
+          </div>
         </div>
-      </div>
-      <v-container fluid class="flex">
-        <v-row>
-          <v-col>
-            <v-btn v-for="n in 2" :key="n" @click="cardCount(n - 1)"> 
+        <v-container fluid class="flex">
+          <v-row>
+            <v-col
+              v-for="n in 2"
+              :key="n"
+              cols="12"
+              sm="6">
               <v-hover>
-                <v-card>
-                  card {{ n }} {{balanceGame.cardData[n - 1]}}
+                <v-card @click="cardCount(n - 1)">
+                  {{gameData[n-1][balanceGame.randomNum]}}
                 </v-card>
               </v-hover>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
 		</div>
-    <user-video class="col-md-4" :stream-manager="publisher"/>
-    <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+    <v-dialog v-model="balanceGame.isEnd">
+      <v-card>얍</v-card>
+      <v-card v-if="balanceGame.cardData">
+        {{ winCard }} 를 선택하신 분이 승리하였습니다
+      </v-card>
+    </v-dialog>
 	</div>
 </template>
 
@@ -59,11 +71,18 @@ export default {
       balanceGame: {
         type: 'Balance',
         isStart: false,
-        totalTime: 60,
+        isEnd:false,
+        totalTime: 3,
         cardData: [[], []],
         curMember:0,
         members:[],
+        randomNum : 0
       },
+      gameData:[
+        ['평생 백수로 월 250','짬뽕','가','최준에게 아침마다 모닝키스 받기','치킨 퍽퍽살','하기싫은 일 10시출근 5시 퇴근','자','콜라','엄마','또'],
+        ['평생 직장인 월 1000(연차없음)','짜장','나','모닝에 치이기','치킨 날개 목','재미있는 일 8시 출근 9시 퇴근','차','사이다','아빠','뭐있지']
+      ],
+      winCard : '선택해주세요',
     }
   },
   methods:{
@@ -79,10 +98,14 @@ export default {
         console.log('클릭')
         this.balanceGame.curMember = 0
         this.balanceGame.cardData = [[], []],
-        this.balanceGame.totalTime = 60,
+        this.balanceGame.totalTime = 3,
         this.balanceGame.isStart = true
+        const random = Math.floor(Math.random()*10)
+        this.balanceGame.randomNum = random
         this.sendGameInfo()
       }
+      
+      this.balanceGame.isEnd = false
     },
     cardCount: function(n){
       if (!this.selected) {
@@ -107,7 +130,18 @@ export default {
     countTime:function(){
       this.balanceGame.totalTime = this.balanceGame.totalTime - 1
       if (this.balanceGame.totalTime <= 0) {
+        
+        console.log(this.balanceGame.cardData[0].length)
+        if(this.balanceGame.cardData[0].length > this.balanceGame.cardData[1].length){
+          this.winCard = 'A카드'
+        }else if(this.balanceGame.cardData[0].length == this.balanceGame.cardData[1].length){
+          this.winCard = '동점입니다 다시 시작을 눌러주세요'
+        }else{
+          this.winCard = 'B카드'
+        }
+
         clearInterval(this.timer)
+        this.balanceGame.isEnd = true
       }
     },
     showResult: function () {
@@ -138,6 +172,18 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.game-box {
+    position: fixed;
+    top: 10%;
+    right: 40%;
+}
+.balance-game {
+    max-width: 500px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center; 
+   align-items: center;
+   padding: 2rem;
+}
 </style>
