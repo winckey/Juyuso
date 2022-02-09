@@ -1,6 +1,6 @@
 <template>
   <div class="background-box"
-  :style="{'background-image':'url('+ require(`@/assets/beach.jpg`)+')', 'background-repeat': 'no-repeat', 'background-size':'cover'}">
+  :style="{'background-image':'url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
@@ -447,5 +447,8 @@ export default {
   .background-box{
     width: 100vw;
     height: 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover
   }
 </style>
