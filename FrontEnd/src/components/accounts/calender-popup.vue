@@ -1,38 +1,42 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="12">
-                <v-toolbar>
-                    <div>
-                        <v-toolbar-title
-                            v-if="$refs.calendar">
-                            {{ $refs.calendar.title }}
-                        </v-toolbar-title>
-                    </div>
-                    <v-btn
-                        fab
-                        text
-                        small
-                        color="grey darken-2"
-                        @click="$refs.calendar.prev()">
-                        <v-icon small>
-                            mdi-chevron-left
-                        </v-icon>
-                    </v-btn>
-                    <v-btn
-                        fab
-                        text
-                        small
-                        color="grey darken-2"
-                        @click="$refs.calendar.next()">
-                        <v-icon small>
-                            mdi-chevron-right
-                        </v-icon>
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn v-if="!todayChecked" @click="onBtnClick">출석체크</v-btn>
-                </v-toolbar>
-                <v-sheet height="500">
+            <v-col>
+                <v-sheet height="70">
+                    <v-toolbar>
+                        <div>
+                            <v-toolbar-title
+                                v-if="$refs.calendar">
+                                {{ $refs.calendar.title }}
+                            </v-toolbar-title>
+                        </div>
+                        <v-btn
+                            fab
+                            text
+                            small
+                            color="grey darken-2"
+                            @click="$refs.calendar.prev()">
+                            <v-icon small>
+                                mdi-chevron-left
+                            </v-icon>
+                        </v-btn>
+                        <v-btn
+                            fab
+                            text
+                            small
+                            color="grey darken-2"
+                            @click="$refs.calendar.next()">
+                            <v-icon small>
+                                mdi-chevron-right
+                            </v-icon>
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <div v-if="!isFriend">
+                            <v-btn v-if="!todayChecked" @click="onBtnClick">출석체크</v-btn>
+                        </div>
+                    </v-toolbar>
+                </v-sheet>
+                <v-sheet height="400" max-height="100%">
                     <v-calendar
                         ref="calendar"
                         v-model="value"
@@ -64,13 +68,22 @@ import axios from 'axios'
  *  --> 다음/이전 달 클릭 이벤트 처리를 막든가 or 다음/이전달 클릭시에도 출첵 불러올 수 있도록 추가 처리 하든가
  * 2. 
  */
+import {mapState} from 'vuex'
+
 export default {
     data:() => ({
         type: 'month',
         value: null,
         todayChecked: false,
         events: [],
+        isFriend: false
     }),
+    props: {
+        user: Object
+    },
+    computed: {
+        ...mapState('accounts', {stateUser:'user'})
+    },
     mounted() {
         this.value = this.getTodayDate()
 
@@ -79,15 +92,14 @@ export default {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
                 }
             }).then(({ data }) => {
-                console.log(this.value)
                 console.log(data)
                 const events = []
 
                 data.attendanceList.forEach( ({ date }) => {
                     events.push({
-                        name: '출석체크',
+                        name: '🍺출석완료🍺',
                         start: date,
-                        color: 'blue'
+                        color: '#4DB6AC'
                     })
 
                     if (date === this.getTodayDate()) this.todayChecked = true;
@@ -97,6 +109,10 @@ export default {
             }).catch(err => {
                 console.log(err)
             })
+
+        if (this.user.id != this.stateUser.id) {
+            this.isFriend = true 
+        } 
     },
     methods: {
         onChange(e) {
@@ -112,10 +128,11 @@ export default {
                 const events = []
 
                 data.attendanceList.forEach( ({ date }) => {
+                    
                     events.push({
-                        name: '출석체크',
+                        name: '🍺출석완료🍺',
                         start: date,
-                        color: 'blue'
+                        color: '#4DB6AC'
                     })
 
                     if (date === this.getTodayDate()) this.todayChecked = true;
@@ -135,7 +152,7 @@ export default {
                 this.events.push({
                     name: '출석체크',
                     start: this.getTodayDate(),
-                    color: 'blue'
+                    color: '#4DB6AC'
                 })
 
                 this.todayChecked = true;
