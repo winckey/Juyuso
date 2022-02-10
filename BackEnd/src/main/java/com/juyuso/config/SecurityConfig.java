@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/chatRoom/**").permitAll()
                 .antMatchers("/subscribe/chat/**", "/publish/chat/message/**").permitAll()
                 .antMatchers("/api/chat/message/**").permitAll()
+                .antMatchers("/topic/messages/**").permitAll()
                 .anyRequest().authenticated()
                 .and().cors();
     }
