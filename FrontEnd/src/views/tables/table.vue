@@ -19,6 +19,10 @@
       <TypingGame v-else-if="gameMode == '타자연습'"
         :subscribers="subscribers"
         :publisher="publisher"/>
+      <BalanceGame
+        v-else-if="gameMode == '밸런스'"
+        :subscribers="subscribers"
+        :publisher="publisher"/>
       <div v-else class="container">
         <div class="row">
           <div id="video-container">
@@ -197,6 +201,8 @@ import axios from 'axios'
 import UserVideo from '@/components/table/user-video.vue'
 import ChatPopup from '@/components/table/chat-popup.vue'
 import TitanicGame from '@/components/game/titanic-game.vue'
+import BalanceGame from '@/components/game/balance-game.vue'
+
 import DrawGame from '@/components/game/draw-game.vue'
 import TypingGame from '@/components/game/typing-game.vue'
 import { mapState, mapActions } from 'vuex'
@@ -212,6 +218,7 @@ export default {
     UserVideo,
     ChatPopup,
     TitanicGame,
+    BalanceGame,
     DrawGame,
     TypingGame
   },
@@ -378,6 +385,31 @@ export default {
           curAmount: 0,
           maxAmount: Math.random() * 50 + members.length * 30,
         }
+        this.session.signal({
+          data: JSON.stringify(gameInfo),
+          to: [],
+          type: 'game-info'
+        })
+      }
+      else if (gameMode.name === '밸런스') {
+        let members = []
+        this.session.streamManagers.forEach(stream => {
+          members.push({
+            connectionId: stream.stream.connection.connectionId,
+            username: JSON.parse(stream.stream.connection.data).clientData,
+            isSelected: false,
+          })
+        })
+        let gameInfo = {
+          type: 'Balance',
+          members: members.sort(() => Math.random() - 0.5),
+          isStart: false,
+          isEnd: false,
+          curMember:0,
+          totalTime: 60,
+          cardData:[[], []],
+        }
+        console.log(gameInfo)
         this.session.signal({
           data: JSON.stringify(gameInfo),
           to: [],
