@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.function.Supplier;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -22,10 +20,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     public Long getChatRoomId(User user, User friend) {
 
-        Long roomId=0l;
-        System.out.println("===========user " + user.getId());
-        System.out.println("===========friend " + friend.getId());
-        ChatRoom chatRoom =chatRoomRepository.findByUserIdAndFriendId(user.getId() , friend.getId() , 2).orElseGet(()->createNewRoom(user , friend));
+        ChatRoom chatRoom = chatRoomRepository.findByUserIdAndFriendId(user.getId(), friend.getId(), 2)
+                                        .orElseGet(() -> createNewRoom(user, friend));
 
         return chatRoom.getId();
     }
@@ -44,7 +40,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoomUser chatRoomUser2 = new ChatRoomUser();
         chatRoomUser2.setChatRoom(newChatRoom);
         chatRoomUser2.setUser(friend);
-
 
         chatRoomUserRepository.save(chatRoomUser);
         chatRoomUserRepository.save(chatRoomUser2);

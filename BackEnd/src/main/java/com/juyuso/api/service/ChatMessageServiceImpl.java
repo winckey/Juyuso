@@ -14,15 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ChatMessageServiceImpl implements ChatMessageService {
+
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
-
 
     @Override
     public void saveMessage(ChatMessageReqDto message) {
@@ -36,14 +35,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .build();
 
         chatMessageRepository.save(chatMessage);
-        
     }
 
     @Override
     public List<Message> getMessageList(Long roomId , Pageable  pageable) {
-
-
-
         return chatMessageRepository.findAllByChatRoomId(roomId , pageable).get();
     }
 }
