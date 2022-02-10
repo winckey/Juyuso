@@ -11,8 +11,7 @@
         <v-container class="game">
           <p>🍺밸런스 게임🥃</p>
           <v-btn @click="gameStart()" :disabled="balanceGame.isStart">시작</v-btn>
-          <v-btn @click="[changeGameMode(undefined
-          ),balanceGame.isEnd = false]" v-if="balanceGame.isStart">다시시작</v-btn>
+          <v-btn @click="reStart()" v-if="balanceGame.isStart || balanceGame.isEnd">다시시작</v-btn>
           <div style="color: rgb(0, 0, 0); font-size:1.2em"
             v-if="balanceGame.isStart">
             {{ balanceGame.totalTime }}
@@ -26,7 +25,7 @@
               cols="12"
               sm="6">
               <v-hover v-if="balanceGame.isStart">
-                <v-card @click="cardCount(n - 1)"
+                <v-card @click="[cardCount(n - 1),myPick(n-1)]"
                   class="question-box">
                   <p class="question-text">{{gameData[n-1][balanceGame.randomNum]}}</p>
                   
@@ -40,6 +39,16 @@
     <v-dialog v-model="balanceGame.isEnd"
       max-width="400">
       <v-card v-if="balanceGame.cardData">
+      <v-card
+        class="result win"
+        v-if="winCard == myPickedCard">
+        you win
+      </v-card>
+      <v-card
+        v-else
+        class="result lose">
+        you lose 
+      </v-card>
         <!-- A 승리 -->
         <v-progress-linear
           :value="((balanceGame.cardData[0].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
@@ -74,6 +83,13 @@
             </v-row>
           </v-container>
         </v-progress-linear>
+
+        <div v-for="player in balanceGame.cardData[0]" :key="player.username">
+          A카드를 {{ player.username }} 님이 선택하셨습니다
+        </div>
+        <div v-for="player in balanceGame.cardData[1]" :key="player.username">
+          B카드를 {{ player.username}} 님이 선택하셨습니다
+        </div>
         <div v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
           class="win-messege">
           {{ winCard }} 를 선택하신
@@ -97,8 +113,8 @@
         <div v-if="balanceGame.cardData[0].length == balanceGame.cardData[1].length">
           무승부입니다
         </div>
-
       </v-card>
+      
     </v-dialog>
 	</div>
 </template>
@@ -137,7 +153,7 @@ export default {
         type: 'Balance',
         isStart: false,
         isEnd:false,
-        totalTime: 10,
+        totalTime: 8,
         cardData: [[], []],
         curMember:0,
         members:[],
@@ -148,6 +164,7 @@ export default {
         ['평생 직장인 월 1000(연차없음)','짜장','토마토맛토','모닝에 치이기','치킨 날개 목','재미있는 일 8시 출근 9시 퇴근','차','사이다','아빠','뭐있지']
       ],
       winCard : '선택해주세요',
+      myPickedCard:''
     }
   },
   methods:{
@@ -166,7 +183,7 @@ export default {
         console.log('클릭')
         this.balanceGame.curMember = 0
         this.balanceGame.cardData = [[], []],
-        this.balanceGame.totalTime = 10,
+        this.balanceGame.totalTime = 8,
         this.balanceGame.isStart = true
         const random = Math.floor(Math.random()*10)
         this.balanceGame.randomNum = random
@@ -174,7 +191,30 @@ export default {
       }
       this.balanceGame.isEnd = false
       console.log(this.balanceGame.cardData)
+
     },
+    reStart:function(){
+
+
+      // 누군가 게임을 시작한 경우
+      if (this.balanceGame.isStart && !this.gameStarted) {
+        console.log(this.balanceGame.isStart, this.gameStarted)
+        this.gameStarted = true
+        this.timer = setInterval(this.countTime,1000)
+      }
+      // 내가 시작버튼을 누른 경우
+      else if (!this.balanceGame.isStart && !this.gameStarted) {
+        console.log('클릭')
+        this.balanceGame.curMember = 0
+        this.balanceGame.cardData = [[], []],
+        this.balanceGame.totalTime = 8,
+        this.balanceGame.isStart = true
+        const random = Math.floor(Math.random()*10)
+        this.balanceGame.randomNum = random
+        this.sendGameInfo()
+      }
+    },
+
     cardCount: function(n){
       if (!this.selected) {
         this.balanceGame.cardData[n].push({
@@ -196,21 +236,27 @@ export default {
         this.sound.play()
       }
     },
+    myPick:function(n){
+      this.myPickedCard = n
+      console.log('선택카드 인덱스', this.myPickedCard)
+    },
     countTime:function(){
       this.balanceGame.totalTime = this.balanceGame.totalTime - 1
       if (this.balanceGame.totalTime <= 0) {
         
         console.log(this.balanceGame.cardData[0].length)
         if(this.balanceGame.cardData[0].length > this.balanceGame.cardData[1].length){
-          this.winCard = 'A카드'
+          this.winCard = 0
         }else if(this.balanceGame.cardData[0].length == this.balanceGame.cardData[1].length){
           this.winCard = '동점입니다 다시 시작을 눌러주세요'
         }else{
-          this.winCard = 'B카드'
+          this.winCard = 1
         }
 
         clearInterval(this.timer)
-        this.gameStarted = false
+        console.log('타이머 종료')
+        // this.balanceGame.isStart = false
+        this.gameStart = false
         this.balanceGame.isEnd = true
       }
     },
@@ -228,10 +274,9 @@ export default {
   watch: {
     gameInfo: function () {
       this.balanceGame = {...JSON.parse(this.gameInfo)}
-      console.log(this.balanceGame)
       if (!this.gameStarted && this.balanceGame.isStart) {
         console.log(this.balanceGame)
-        this.gameStart()
+        // this.gameStart()
       }
       else if (!this.balanceGame.isStart && this.gameStarted) {
         alert('게임 끝')
@@ -242,7 +287,7 @@ export default {
   mounted:function(){
     this.bgsound = document.querySelector('.bgaudio')
     this.sound = document.querySelector('.audio')
-    this.bgsound.volume = 0.3
+    this.bgsound.volume = 0.05
     this.bgsound.play()
   }
 }
@@ -286,5 +331,16 @@ export default {
 .win-messege{
   text-align: center;
   padding: 20px;
+}
+.result{
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+.win{
+  color: rgb(219, 184, 27);
+}
+.lose{
+  color: rgb(20, 20, 129);
 }
 </style>
