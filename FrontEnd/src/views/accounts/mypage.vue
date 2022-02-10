@@ -49,18 +49,10 @@
           </div>
 
           <div class="profile-calendar">
-            <v-dialog max-width="650px" max-height="650px" >
-              <template v-slot:activator="{ on, attrs }">
-                <img src="@/assets/Group 57.png" alt="calendar"
-                v-bind="attrs"
-                v-on="on">
-              </template>
-              <v-card width="95%" height="95%">
-                <calender-popup :user="user" v-if="user"></calender-popup>
-              </v-card>
-            </v-dialog>
-            
+              <CalenderPopup :user="user" v-if="user"/>
           </div>
+
+            
           <div class="wallet-2">
             <img src="@/assets/wallet_card_2.png" alt="wallet-card">
           </div>
@@ -100,8 +92,6 @@ export default {
   },
   methods: {
     goMyData: function () {
-      console.log('goMydata')
-      // this.$router.push({name: 'MyData', params: {userId: this.user.id}, query: {user:this.user}})
       this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
     },
     changeProfileImage: function (image) {
@@ -119,9 +109,6 @@ export default {
         console.log(res.data.user)
         const userInfo = res.data.user
         this.user = userInfo
-      })
-      .catch(err => {
-        console.log(err)
       })
   },
   computed: {

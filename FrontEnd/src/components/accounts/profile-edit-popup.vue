@@ -280,9 +280,9 @@ export default {
               this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
               this.$emit('changeProfileImage', res.data.imgUrl)
             })
-            .catch(err => {
-              console.log(err)
-            })
+            // .catch(err => {
+            //   console.log(err)
+            // })
       } else {
         console.log(this.profileImg.size)
         this.alertMessage = "이미지 크기가 용량을 초과했습니다!"
@@ -298,7 +298,6 @@ export default {
       axios({
         method: 'GET',
         url: `${process.env.VUE_APP_API_URL}/users/nickname/${this.userInfo.nickname}`,
-        // data: {nickname: this.userInfo.nickname}
       })
       .then(res => {
         if (!res.data.duplicate) {
@@ -310,9 +309,9 @@ export default {
           setTimeout(() => this.isAlert=false, 3000)
         }
       })
-      .catch(err => {
-        console.log(err)
-      })
+      // .catch(err => {
+      //   console.log(err)
+      // })
     }
   }
 }

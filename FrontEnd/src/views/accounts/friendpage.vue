@@ -42,18 +42,9 @@
           </div>
 
           <div class="profile-calendar">
-            <v-dialog max-width="650px" max-height="650px">
-              <template v-slot:activator="{ on, attrs }">
-                <img src="@/assets/Group 57.png" alt="calendar"
-                v-bind="attrs"
-                v-on="on">
-              </template>
-              <v-card width="95%" height="95%">
-                <calender-popup :user="friend" v-if="friend"></calender-popup>
-              </v-card>
-            </v-dialog>
-            
+              <CalenderPopup :user="friend" v-if="friend"/>
           </div>
+
           <div class="wallet-2">
             <img src="@/assets/wallet_card_2.png" alt="wallet-card">
           </div>
