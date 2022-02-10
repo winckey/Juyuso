@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="background-box"
+  :style="{'background-image':'url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
@@ -304,7 +305,10 @@ export default {
       'subscribers',
       'messages',
       'gameMode',
-    ])
+    ]),
+    ...mapState('table',[
+      'themeNum',
+    ]) 
   },
   watch: {
     subscribers: function () {
@@ -418,8 +422,10 @@ export default {
       }
       this.switchGameMode(gameMode.name)
     },
-    
   },
+  created:{
+
+  }
 
 }
 
@@ -465,5 +471,12 @@ export default {
     100% {
       width: 167px;
     }
+  }
+  .background-box{
+    width: 100vw;
+    height: 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover
   }
 </style>

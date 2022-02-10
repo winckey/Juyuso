@@ -15,12 +15,18 @@
 <script>
 import TableOrderPopup from '@/components/table_list/table-order-popup.vue'
 import TableMatrix from '@/components/table_list/table-matrix.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'TableList',
   components: {
     TableOrderPopup,
     TableMatrix
+  },
+  computed:{
+    ...mapState('friends',[
+      'themeNum',
+    ])
   }
 }
 </script>

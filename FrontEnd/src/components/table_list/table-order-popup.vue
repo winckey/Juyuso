@@ -1,161 +1,179 @@
 <template>
-  <v-dialog
-    transition="dialog-bottom-transition"
-    v-model="dialog"
-    width="800"
-  >
-    <template v-slot:activator="{ on, attrs }">
-      <button
-        v-on="on"
-        v-bind="attrs">
-      <img 
-        src="@/assets/create_room.png" 
-        alt=""
-        >
-      </button>
-    </template>
+  <div>
+    <v-dialog
+      transition="dialog-bottom-transition"
+      v-model="dialog"
+      width="800"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <button
+          v-on="on"
+          v-bind="attrs">
+        <img 
+          src="@/assets/create_room.png" 
+          alt=""
+          >
+        </button>
+      </template>
 
-    <v-card>
-      <v-card-title class="grey lighten-2 d-flex justify-content-center">
-        <span>
-        테이블 추가
-        </span>
-      </v-card-title>
-      <v-form ref="tableOrderForm">
-        <v-container>
-          <v-row>
-            <v-col cols="2">
-              <v-subheader>방 이름</v-subheader>
-            </v-col>
-            <v-col cols="8">
-              <v-text-field
-                label="방 이름"
-                v-model="roomInfo.meetingName"
-                outlined
-                rounded
-                dense
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="2">
-              <v-subheader>비밀방</v-subheader>
-            </v-col>
-            <v-col cols="2">
-              <v-switch
-                v-model="isSecret"
-                inset
-                color="success"
-                :label="`${isSecret ? 'On' : 'Off'}`"
-              ></v-switch>
-            </v-col>
-          </v-row>
-          <v-row v-show="isSecret">
-            <v-col offset="2" cols="4">
-              <v-text-field
-                label="비밀번호"
-                v-model="roomInfo.meetingPassword"
-                outlined
-                rounded
-                dense
-              ></v-text-field>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                label="비밀번호 확인"
-                v-model="passwordConfirmation"
-                outlined
-                rounded
-                dense
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="2">
-              <v-subheader>해시태그</v-subheader>
-            </v-col>
-            <v-col cols="8">
-              <v-text-field
-                label="해시태그"
-                :rules="rules.hastagRule"
-                v-model="hashtagInput"
-                outlined
-                rounded
-                dense
-                @keyup.enter="addHastag"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col offset="2" cols="8">
-              <v-chip
-                v-for="hashtag in roomInfo.hashTag"
-                :key="hashtag"
-                class="ma-2"
-                close
-                color="#FAC372"
-                @click:close="deleteHashtag(hashtag)"
-              >
-                {{ hashtag }}
-              </v-chip>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="2">
-              <v-subheader>테마선택</v-subheader>
-            </v-col>
-          </v-row>
-          <v-item-group>
+      <v-card>
+        <v-card-title class="grey lighten-2 d-flex justify-content-center">
+          <span>
+          테이블 추가
+          </span>
+        </v-card-title>
+        <v-form ref="tableOrderForm">
+          <v-container>
             <v-row>
-              <v-col
-                v-for="n in 4"
-                :key="n"
-                md="3"
-              >
-                <v-item v-slot="{ active, toggle }">
-                  <v-card
-                    :color="active ? 'primary' : ''"
-                    class="d-flex align-center"
-                    dark
-                    height="100"
-                    width="200"
-                    @click="[toggle(), setTheme(n)]"
-                  >
-                    <v-scroll-y-transition>
-                      <div
-                        v-if="active"
-                        class="text-h2 flex-grow-1 text-center"
-                      >
-                        Active
-                      </div>
-                    </v-scroll-y-transition>
-                  </v-card>
-                </v-item>
+              <v-col cols="2">
+                <v-subheader>방 이름</v-subheader>
+              </v-col>
+              <v-col cols="8">
+                <v-text-field
+                  label="방 이름"
+                  :rules="rules.nameRule"
+                  v-model="roomInfo.meetingName"
+                  outlined
+                  rounded
+                  dense
+                ></v-text-field>
               </v-col>
             </v-row>
-          </v-item-group>
-        </v-container>
-      </v-form>
-      <v-divider></v-divider>
-      <v-card-actions class="d-flex justify-content-center">
-        <v-btn
-          color="#FFBC58"
-          rounded
-          @click="createRoom"
-        >
-          테이블 예약하기
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+            <v-row>
+              <v-col cols="2">
+                <v-subheader>비밀방</v-subheader>
+              </v-col>
+              <v-col cols="2">
+                <v-switch
+                  v-model="isSecret"
+                  inset
+                  color="success"
+                  :label="`${isSecret ? 'On' : 'Off'}`"
+                ></v-switch>
+              </v-col>
+            </v-row>
+            <v-row v-show="isSecret">
+              <v-col offset="2" cols="4">
+                <v-text-field
+                  label="비밀번호"
+                  :rules="rules.passwordRule"
+                  v-model="roomInfo.meetingPassword"
+                  outlined
+                  rounded
+                  dense
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  label="비밀번호 확인"
+                  :rules="rules.passwordConfirmationRule"
+                  v-model="passwordConfirmation"
+                  outlined
+                  rounded
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="2">
+                <v-subheader>해시태그</v-subheader>
+              </v-col>
+              <v-col cols="8">
+                <v-text-field
+                  label="해시태그"
+                  :rules="rules.hastagRule"
+                  v-model="hashtagInput"
+                  outlined
+                  rounded
+                  dense
+                  @keyup.enter="addHastag"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col offset="2" cols="8">
+                <v-chip
+                  v-for="hashtag in roomInfo.hashTag"
+                  :key="hashtag"
+                  class="ma-2"
+                  close
+                  color="#FAC372"
+                  @click:close="deleteHashtag(hashtag)"
+                >
+                  {{ hashtag }}
+                </v-chip>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="2">
+                <v-subheader>테마선택</v-subheader>
+              </v-col>
+            </v-row>
+            <v-item-group>
+              <v-row>
+                <v-col
+                  v-for="n in 4"
+                  :key="n.imgName"
+                  md="3"
+                >
+                  <v-item v-slot="{ active, toggle }">
+                    <v-card
+                      :color="active ? 'red' : ''"
+                      class="d-flex align-center"
+                      dark
+                      height="100"
+                      width="200"
+                      @click="[toggle(), selectTheme(n)]"
+                    >
+                    
+                      <img :src="require(`@/assets/theme/${n}.jpg`)" alt="theme"
+                      height="100"
+                      width="200"
+                      :color="active ? 'red' : ''">
+                      <v-scroll-y-transition>
+                        <div
+                          v-if="active"
+                          class="text-h2 flex-grow-1 text-center"
+                        >
+                        </div>
+                      </v-scroll-y-transition>
+                    </v-card>
+                  </v-item>
+                </v-col>
+              </v-row>
+            </v-item-group>
+          </v-container>
+        </v-form>
+        <v-divider></v-divider>
+        <v-card-actions class="d-flex justify-content-center">
+          <v-btn
+            color="#FFBC58"
+            rounded
+            @click="createRoom"
+          >
+            테이블 예약하기
+          </v-btn>
+        </v-card-actions>    
+      </v-card>
+      
+    </v-dialog>
+    <TablePreview
+    :roomInfo="roomInfo"
+    ref="tablepreview"/>
+  </div>
+  
 </template>
 
 <script>
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
+import TablePreview from '@/components/table_list/table-preview.vue'
 
 export default {
   name: 'TableOrderPopup',
+  components: {
+    TablePreview
+  },
   data: function () {
     return {
       dialog: false,
@@ -186,7 +204,25 @@ export default {
           () => !(this.roomInfo.hashTag.length > 10) || '해시태그는 10개이상 입력할 수 없습니다.',
           v => this.roomInfo.hashTag.indexOf(v) == -1 || '중복된 해시태그는 입력할 수 없습니다.'
         ]
-      }
+      },
+      themeItems:[
+        {
+          themeImg:'@/assets/beach.jpg',
+          imgName:'beach'
+        },
+        {
+          themeImg:'@/assets/camping.jpg',
+          imgName:'camping'
+        },
+        {
+          themeImg:'@/assets/bar.jpg',
+          imgName:'bar'
+        },
+        {
+          themeImg:'@/assets/boat.jpg',
+          imgName:'boat'
+        }
+      ],
     } 
   },
   computed: {
@@ -206,6 +242,9 @@ export default {
       'joinSession',
       'leaveSession',
     ]),
+    ...mapActions('table',[
+      'setTheme',
+    ]),
     addHastag: function () {
       console.log(this.$refs.tableOrderForm.validate())
       if (this.$refs.tableOrderForm.validate() && this.hashtagInput != '') {
@@ -216,35 +255,30 @@ export default {
     deleteHashtag: function (hashtag) {
       this.roomInfo.hashTag = this.roomInfo.hashTag.filter(v => v != hashtag)
     },
-    setTheme: function (num) {
+    selectTheme: function (num) {
       this.roomInfo.img = num
-      // console.log(num)
+      console.log(this.roomInfo.img)
     },
     createRoom: function () {
-      this.roomInfo.common = !this.isSecret
-      const token = localStorage.getItem('jwt')
-      axios({
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}`},
-        url: `${process.env.VUE_APP_API_URL}/meeting/create`,
-        data: this.roomInfo,
-      })
-      .then( res => {
-        console.log(res)
-        const roomInfo = {
-          userName: this.user.nickname,
-          sessionId: String(res.data.meetingId),
-          isCreate: true,
-        }
-        this.joinSession(roomInfo)
-        this.$router.push({ name: 'Table', params: { roomId: res.data.meetingId, roomInfo: this.roomInfo }})
-      })
-      .catch( err => {
-        console.log(err)
-      })
+      if (this.$refs.tableOrderForm.validate()) {
+        this.roomInfo.common = !this.isSecret
+        const token = localStorage.getItem('jwt')
+        axios({
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}`},
+          url: `${process.env.VUE_APP_API_URL}/meeting/create`,
+          data: this.roomInfo,
+        })
+        .then( res => {
+          console.log(res)
+          this.$refs.tablepreview.dialog = true
+        })
+        .catch( err => {
+          console.log(err)
+        })
+      }
     }
-  }
-
+  },
 }
 </script>
 

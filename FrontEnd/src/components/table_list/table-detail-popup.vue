@@ -32,35 +32,41 @@
         </button>
       </template>
 
-      <v-card height="500" class="p-4">
-        <v-card-title class="d-flex justify-content-center">
-          <span>
-          {{ roomInfo.meetingTitle }}
-          <v-icon>{{ roomInfo.common ? '' : 'mdi-lock-outline'}}</v-icon>
-          </span>
-        </v-card-title>
-        <v-card-text>
-          방장 : {{ roomInfo.nickName }}
-        </v-card-text>
-        <v-chip
-          v-for="hashtag in roomInfo.hashtag"
-          :key="hashtag"
-          class="ma-2"
-          color="#FAC372"
-        >
-          {{ hashtag }}
-        </v-chip>
-
-        <!-- <v-divider></v-divider> -->
-        <v-card-actions class="enter-btn">
-          <v-btn
-            color="#1CFD9F"
-            rounded
-            @click="enterRoom"
+      <v-card 
+        height="500" 
+        class="p-4 card-background"
+        :style="{backgroundImage: 'url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}"
+      >
+        <div class="inner-card-background">
+          <v-card-title class="d-flex justify-content-center">
+            <span>
+            {{ roomInfo.meetingTitle }}
+            <v-icon>{{ roomInfo.common ? '' : 'mdi-lock-outline'}}</v-icon>
+            </span>
+          </v-card-title>
+          <v-card-text>
+            방장 : {{ roomInfo.nickName }}
+          </v-card-text>
+          <v-chip
+            v-for="hashtag in roomInfo.hashtag"
+            :key="hashtag"
+            class="ma-2"
+            color="#FAC372"
           >
-            입장
-          </v-btn>
-        </v-card-actions>
+            {{ hashtag }}
+          </v-chip>
+
+          <!-- <v-divider></v-divider> -->
+          <v-card-actions class="enter-btn">
+            <v-btn
+              color="#1CFD9F"
+              rounded
+              @click="enterRoom"
+            >
+              입장
+            </v-btn>
+          </v-card-actions>
+        </div>
       </v-card>
     </v-dialog>
     <TablePreview
@@ -154,4 +160,12 @@ export default {
     transform: translate(-50%);
   }
 
+  .card-background {
+    background-size: cover
+  }
+  
+  .inner-card-background {
+    background: rgba(255, 255, 255, 0.93);
+    height: 100%
+  }
 </style>

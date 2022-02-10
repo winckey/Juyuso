@@ -5,6 +5,7 @@ Vue.use(Vuex)
 import accounts from '@/store/modules/accounts.js'
 import friends from '@/store/modules/friends.js'
 import drinking from './modules/drinking'
+import table from '@/store/modules/table.js'
 
 export default new Vuex.Store({
   state: {
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     accounts: accounts,
     openviduStore: openviduStore,
     friends: friends,
-    drinking: drinking
+    drinking: drinking,
+    table: table,
   }
 })
