@@ -23,12 +23,12 @@ public class Ban {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ban_user_id" , referencedColumnName = "id")
-    private User BanUser;
+    private User banUser;
 
     public void addBan(User from, User toBan) {
         this.user = from;
         user.getBans().add(this);
-        this.BanUser = toBan;
+        this.banUser = toBan;
 
     }
 }

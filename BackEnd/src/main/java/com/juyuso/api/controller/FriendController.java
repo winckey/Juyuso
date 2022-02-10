@@ -102,7 +102,7 @@ public class FriendController {
     })
     public ResponseEntity<BaseResponseBody> friendAgree(@ApiIgnore Authentication authentication, @Valid @RequestBody FriendReqDto friendReqDto) {
         User userDetails = (User) authentication.getDetails();
-        User fromUser = friendService.agreeRequest(friendReqDto, userDetails);
+        User fromUser = friendService.acceptRequest(friendReqDto, userDetails);
 
         if (!fromUser.getFcmToken().isEmpty()) {
             try {

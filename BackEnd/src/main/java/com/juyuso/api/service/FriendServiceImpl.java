@@ -36,18 +36,18 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public FriendRequest addRequest(User from, FriendReqDto friendReqDto) {
 
-        User to = userRepository.findById(Long.parseLong(friendReqDto.getId()))
+        User to = userRepository.findById(friendReqDto.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 친구 요청이 있는가??
-        Optional<FriendRequest> check1FR = friendRequestRepository.findRequestByfromId(from.getId(), to.getId());
-        Optional<FriendRequest> check2FR = friendRequestRepository.findRequestByfromId(to.getId(), from.getId());
+        Optional<FriendRequest> check1FR = friendRequestRepository.findById(from.getId(), to.getId());
+        Optional<FriendRequest> check2FR = friendRequestRepository.findById(to.getId(), from.getId());
         if (check1FR.isPresent() || check2FR.isPresent()) {
             throw new CustomException(ErrorCode.FRIEND_REQUEST_DUPLICATE);
         }
 
         // 이미 친구인가?
-        Optional<Friend> checkFriend = friendRepository.findFriendByFromToId(from.getId(), to.getId());
+        Optional<Friend> checkFriend = friendRepository.findFriendByFromAndTo(from, to);
         if (checkFriend.isPresent()) {
             throw new CustomException(ErrorCode.FRIEND_DUPLICATE);
         }
@@ -61,7 +61,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void banRequest(User from, FriendReqDto friendReqDto) {
-        User toBan = userRepository.findById(Long.parseLong(friendReqDto.getId()))
+        User toBan = userRepository.findById(friendReqDto.getId())
                                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Ban ban = new Ban();
@@ -70,9 +70,9 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public User agreeRequest(FriendReqDto friendReqDto, User to) {
+    public User acceptRequest(FriendReqDto friendReqDto, User to) {
         FriendRequest friendRequest = friendRequestRepository
-                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
+                .findById(friendReqDto.getId(), to.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));;
 
         User fromUser = friendRequest.getFromUser();
@@ -96,17 +96,17 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<User> friendList(User user) {
-        return userRepository.findListByUserId(user.getId());
+        return userRepository.findFriendListByUser(user);
     }
 
     @Override
     public List<User> banList(User user) {
-        return userRepository.findBanListByUserId(user.getId());
+        return userRepository.findFriendBanListByUser(user);
     }
 
     @Override
     public List<User> RequestList(User user) {
-        return userRepository.findRequestListByUserId(user.getId());
+        return userRepository.findFriendRequestListByUser(user);
     }
 
     @Override
@@ -117,18 +117,17 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public void deleteFriend(User userDetails, FriendReqDto friendReqDto) {
-
-        Long from = Long.parseLong(friendReqDto.getId());
-        Long to = (userDetails.getId());
-        friendRepository.deleteBothByUserId(from, to);
-        friendRepository.deleteBothByUserId(to, from);
+        Long from = friendReqDto.getId();
+        Long to = userDetails.getId();
+        friendRepository.deleteById(from, to);
+        friendRepository.deleteById(to, from);
     }
 
     @Override
     public User rejectRequest(FriendReqDto friendReqDto, User to) {
 
         FriendRequest friendRequest = friendRequestRepository
-                .findRequestByfromId(Long.parseLong(friendReqDto.getId()), to.getId())
+                .findById(friendReqDto.getId(), to.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
 
         friendRequestRepository.delete(friendRequest);
@@ -137,20 +136,20 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void banCancelRequest(User userDetails, FriendReqDto friendReqDto) {
-        Long from = Long.parseLong(friendReqDto.getId());
+        Long from = friendReqDto.getId();
         Long to = (userDetails.getId());
         banRepository.deleteByBothUserId(from, to);
     }
 
 
     @Override
-    public List<User> userSearchMy(String keyword, User userDetails) {
-        return userRepository.findFriendByNickname(keyword , userDetails.getId());
+    public List<User> userSearchMy(String keyword, User user) {
+        return userRepository.findFriendListByNicknameAndUser(keyword , user);
     }
 
     @Override
-    public List<User> userSearchNot(String keyword, User userDetails) {
-        return userRepository.findNotFriendByNickname(keyword , userDetails.getId());
+    public List<User> userSearchNot(String keyword, User user) {
+        return userRepository.findNotFriendListByNicknameAndUser(keyword , user);
     }
 
 }

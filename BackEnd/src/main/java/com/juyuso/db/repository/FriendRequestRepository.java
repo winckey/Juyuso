@@ -1,24 +1,17 @@
 package com.juyuso.db.repository;
 
-import com.juyuso.db.entity.Friend;
 import com.juyuso.db.entity.FriendRequest;
-import com.juyuso.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
-
+@Transactional(readOnly = true)
 public interface FriendRequestRepository extends JpaRepository<FriendRequest, Long> {
 
-
-
-    @Query(value = "(SELECT * " +
-            "FROM  friend_request f " +
-            " WHERE f.from_id = :from" +
-            " and f.to_id = :to)", nativeQuery = true)
-   Optional<FriendRequest> findRequestByfromId(@Param("from")long from  , @Param("to")long to);
+    @Query(value = "select f from FriendRequest f where f.fromUser.id = :from and f.toUser.id = :to")
+    Optional<FriendRequest> findById(@Param("from") long from, @Param("to") long to);
 
 }
