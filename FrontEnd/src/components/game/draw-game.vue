@@ -1,48 +1,55 @@
 <template>
   <div>
-    
     <div class="tool-box">
-      <v-menu
-        v-model="colorDialog"
-        :close-on-content-click="false"
-        :nudge-width="200"
-        offset-x
-      >
+      <v-tooltip right color="white">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="m-1"
-            fab
-            :color="color"
-            dark
-            v-bind="attrs"
+          <v-menu
             v-on="on"
-            inline
-          >
-          <v-icon :elevation="8" :color="iconColor">mdi-palette</v-icon>
-          </v-btn>
-        </template>
-
-        <v-card>
-          <v-card-title>
-            펜 색 정하기
-          </v-card-title>
-          <v-color-picker
-            v-model="color"
-            dot-size="25"
-            swatches-max-height="200"
-          ></v-color-picker>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="green darken-1"
-              text
-              @click="dialog = false"
+            v-bind="attrs"
+            v-model="colorDialog"
+            :close-on-content-click="false"
+            :nudge-width="200"
+            offset-x
             >
-              CLOSE
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-menu>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  fab
+                  :color="color"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  inline
+                >
+                <v-icon :elevation="8" :color="iconColor">mdi-palette</v-icon>
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title>
+                  펜 색 정하기
+                </v-card-title>
+                <v-color-picker
+                  v-model="color"
+                  dot-size="25"
+                  swatches-max-height="200"
+                ></v-color-picker>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialog = false"
+                  >
+                    CLOSE
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-menu>
+          </template>
+          <span>펜 색상</span>
+      </v-tooltip>
+      
       <v-menu 
         :close-on-content-click="false" 
         :nudge-width="200" 
@@ -59,15 +66,16 @@
         </template>
 
         <v-card>
-          <v-slider label="굵기" min="1" max="20" height="12" tick-size="6" class="pt-5 px-3"  v-model="penWidth"></v-slider>
+          <v-slider label="굵기" min="1" max="20" height="12" tick-size="6" class="pt-5 px-3" thumb-label v-model="penWidth"></v-slider>
         </v-card>
       </v-menu>
       <v-btn
+        @click="erase = !erase"
         class="m-1"
         fab 
         dark
         :color="color">
-        <v-icon :color="iconColor">mdi-delete</v-icon>
+        <v-icon :color="iconColor">{{ erase ? 'mdi-close' : 'mdi-delete' }}</v-icon>
       </v-btn>
     </div>
     <canvas
@@ -77,12 +85,14 @@
       @mouseup.left="finishDraw"
       @mousemove="draw"
       @mouseout="finishDraw"
+      width=1500;
+      height=680;
     ></canvas>
     <div class="container">
         <div class="row">
           <div id="video-container">
-            <user-video class="col-md-4" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-            <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+            <user-video class="col-md-3" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+            <user-video class="col-md-3" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
           </div>
         </div>
       </div>
@@ -110,6 +120,7 @@ export default {
       canvas: null,
       context: null,
       drawable: false,
+      erase: false,
       pos: {
         x1: -1,
         y1: -1,
@@ -144,21 +155,27 @@ export default {
     this.drawSession()
   },
   methods: {
-
     drawSession: function () {
       this.session.on('signal:draw', (event) => {
         let data = JSON.parse(event.data)
-        this.context.lineWidth = data.penWidth;
-        this.context.lineCap = "round";
-        this.context.strokeStyle = data.color;
-        this.context.beginPath();
-        this.context.moveTo(data.x1, data.y1);
-        this.context.lineTo(data.x2, data.y2);
-        this.context.stroke();
+        if (data.erase) {
+
+          this.context.clearRect(data.x1 < data.x2 ? data.x1 : data.x2, data.y1 < data.y2 ? data.y1 : data.y2, 20, 20);
+        }
+        else {
+          this.context.lineWidth = data.penWidth;
+          this.context.lineCap = "round";
+          this.context.strokeStyle = data.color;
+          this.context.beginPath();
+          this.context.moveTo(data.x1, data.y1);
+          this.context.lineTo(data.x2, data.y2);
+          this.context.stroke();
+        }
       })
     },
     initDraw: function (event) {
       this.drawable = true;
+      console.log(event)
       this.pos.x1 = event.offsetX;
       this.pos.y1 = event.offsetY;
       this.pos.x2 = this.pos.x1 + 1
@@ -166,6 +183,7 @@ export default {
       let data = {
         penWidth: this.penWidth,
         color: this.color,
+        erase: this.erase,
         ...this.pos
       }
       console.log(data)
@@ -183,7 +201,8 @@ export default {
 
         let data = {
           penWidth: this.penWidth,
-          color: this.color.hex,
+          color: this.color,
+          erase: this.erase,
           ...this.pos
         }
         this.session.signal({
@@ -208,8 +227,8 @@ export default {
     background: rgb(97, 97, 97, 0);
     z-index: 1;
     border: solid 2px rgb(255, 255, 255);
-    height: 685px;
-    width: 1530px;
+    left: 50%;
+    transform: translate(-50%)
   }
 
   .tool-box {
