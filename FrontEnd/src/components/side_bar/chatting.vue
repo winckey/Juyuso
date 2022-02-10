@@ -176,7 +176,7 @@ export default {
     },
     sendMessage() {
       if (this.chatInput.trim()) {
-        this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writerId': this.user.id}), {})
+        this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writerId': this.user.id, 'receiverId': this.chatFriend.id}), {})
       }
       this.chatInput = null
     }
