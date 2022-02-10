@@ -119,7 +119,6 @@ export default {
                 console.log(this.value)
                 console.log(data)
                 const events = []
-
                 data.attendanceList.forEach( ({ date }) => {
                     
                     events.push({
