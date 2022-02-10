@@ -47,7 +47,6 @@ public class FriendServiceImpl implements FriendService {
         }
 
         // 이미 친구인가?
-        //Optional<Friend> checkFriend = friendRepository.findFriendByFromAndTo(from, to);
         Optional<Friend> checkFriend = friendRepository.findByFromAndTo(from, to);
         if (checkFriend.isPresent()) {
             throw new CustomException(ErrorCode.FRIEND_DUPLICATE);
@@ -120,8 +119,7 @@ public class FriendServiceImpl implements FriendService {
     public void deleteFriend(User userDetails, FriendReqDto friendReqDto) {
         Long from = friendReqDto.getId();
         Long to = userDetails.getId();
-//        friendRepository.deleteById(from, to);
-//        friendRepository.deleteById(to, from);
+
         friendRepository.deleteByFromIdAndToId(from, to);
         friendRepository.deleteByFromIdAndToId(to, from);
     }

@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @ToString
 public class FriendReqDto {
 
-    //@NotBlank
+    @NotNull
     @ApiModelProperty(name = "유저/신청 ID", example = "id (pk 고유번호넘겨 주세요)")
     private Long id;
 
