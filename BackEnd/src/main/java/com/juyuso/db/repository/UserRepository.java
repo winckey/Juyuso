@@ -4,10 +4,12 @@ import com.juyuso.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(String userId);
 
@@ -17,43 +19,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByNicknameContaining(String nickname);
 
-    @Query(value = "SELECT * FROM (SELECT * from user" +
-            " where id in " +
-            "(SELECT f.user_id" +
-            " from friend f " +
-            "WHERE f.from_id = :id)) as u " +
-            "where u.nickname LIKE %:keyword%", nativeQuery = true)
-    List<User> findFriendByNickname(@Param("keyword")String keyword , @Param("id")Long id);
+    @Query(value = "select f.to from Friend f where f.from = :user and f.to.nickname like %:nickname%")
+    List<User> findFriendListByNicknameAndUser(@Param("nickname") String nickname, @Param("user") User user);
 
+    @Query(value = "select f.to from Friend f where f.from = :user and f.to.nickname not like %:nickname%")
+    List<User> findNotFriendListByNicknameAndUser(@Param("nickname") String nickname, @Param("user") User user);
 
-    @Query(value = "SELECT * FROM (SELECT * from user" +
-            " where id not in " +
-            "(SELECT f.user_id" +
-            " from friend f " +
-            "WHERE f.from_id = :id)) as u " +
-            "where u.nickname LIKE %:keyword%", nativeQuery = true)
-    List<User> findNotFriendByNickname(@Param("keyword")String keyword , @Param("id")Long id);
+    @Query(value = "select f.to from Friend f where f.from = :user")
+    List<User> findFriendListByUser(@Param("user") User user);
 
-    @Query(value = "select * from user " +
-            " u where id in " +
-            "(SELECT f.user_id " +
-            "FROM  friend f " +
-            " WHERE f.from_id = :id)", nativeQuery = true)
-    List<User> findListByUserId(@Param("id")Long id);
+    @Query(value = "select f.fromUser from FriendRequest f where f.toUser = :user")
+    List<User> findFriendRequestListByUser(@Param("user") User user);
 
-
-    @Query(value = "select * from user " +
-            " u where id in " +
-            "(SELECT f.from_id " +
-            "FROM  friend_request f " +
-            " WHERE f.to_id = :id)", nativeQuery = true)
-    List<User> findRequestListByUserId(@Param("id")Long id);
-
-
-    @Query(value = "select * from user " +
-            " u where id in " +
-            "(SELECT b.ban_user_id " +
-            "FROM  ban b " +
-            " WHERE b.user_id = :id)", nativeQuery = true)
-    List<User> findBanListByUserId(Long id);
+    @Query(value = "select b.banUser from Ban b where b.user = :user")
+    List<User> findFriendBanListByUser(@Param("user") User user);
 }

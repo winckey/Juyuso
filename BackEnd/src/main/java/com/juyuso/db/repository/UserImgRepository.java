@@ -16,9 +16,9 @@ public class UserImgRepository {
         em.persist(userImg);
     }
 
-    public int deleteByUserId(Long userId) {
-        return em.createQuery("delete from UserImg img where img.user.id = :id")
-                .setParameter("id", userId)
-                .executeUpdate();
+    public void deleteByUserId(Long userId) {
+        em.createQuery("delete from UserImg img where img.user.id = :id")
+            .setParameter("id", userId)
+            .executeUpdate();
     }
 }

@@ -4,6 +4,7 @@ import com.juyuso.common.validation.Date;
 import com.juyuso.db.entity.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
+@Setter
 @ToString
 public class UserRegisterReqDto {
 

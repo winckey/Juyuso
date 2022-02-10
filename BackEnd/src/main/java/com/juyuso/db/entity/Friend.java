@@ -16,20 +16,19 @@ public class Friend {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "from_id" , referencedColumnName = "id")
+    private User from;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "from_id" , referencedColumnName = "id")
-    private User friend;
-
+    @JoinColumn(name = "to_id", referencedColumnName = "id")
+    private User to;
 
     public void setFriend(User friend) {
-        user.getFriends().add(this);
-        this.friend = friend;
+        to.getFriends().add(this);
+        this.from = friend;
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.to = user;
     }
 }

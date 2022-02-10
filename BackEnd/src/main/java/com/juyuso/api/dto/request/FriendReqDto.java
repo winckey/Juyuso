@@ -12,6 +12,6 @@ public class FriendReqDto {
 
     @NotBlank
     @ApiModelProperty(name = "유저/신청 ID", example = "id (pk 고유번호넘겨 주세요)")
-    private String id;
+    private Long id;
 
 }

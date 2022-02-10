@@ -12,7 +12,7 @@ public interface FriendService {
     FriendRequest addRequest(User from , FriendReqDto friendReqDto);
     void banRequest(User from , FriendReqDto friendReqDto);
 
-    User agreeRequest(FriendReqDto friendReqDto , User userDetails);
+    User acceptRequest(FriendReqDto friendReqDto , User userDetails);
 
     List<User> friendList(User user);
     List<User> banList(User user);
