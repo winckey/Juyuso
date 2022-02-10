@@ -30,14 +30,14 @@
         </template>
       </v-toolbar>
         <v-tabs-items v-model="tab">
-          <v-tab-item v-for="filter in filterType" :key="filter.name">
+          <v-tab-item>
             <v-card flat height="300" class="d-flex flex-column align-center">
               <v-radio-group
               v-if="tab == 0"
                 v-model="audioFilter"
                 row>
                 <v-radio 
-                  v-for="(type, idx) in filter.types"
+                  v-for="(type, idx) in filterType[tab].types"
                   :key="type.name"
                   :label="type.name"
                   :value="idx">
@@ -45,7 +45,7 @@
               </v-radio-group>
               
               <div v-if="tab == 0 && audioFilter != -1">
-                {{ filter.types[audioFilter].description }}
+                {{ filterType[tab].types[audioFilter].description }}
                 <div v-if="audioFilter == 0">
                   <v-slider
                     v-model="pitch"
@@ -64,8 +64,40 @@
             </v-card>
           </v-tab-item>
           <!-- 비디오 필터 -->
-      </v-tabs-items>
+          <v-tab-item>
+            <v-card flat height="500" class="d-flex flex-column align-center">
+              <v-item-group>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-3" v-for="filter in filterType[tab].types" :key="filter.name">
+                      <v-item v-slot="{ active, toggle }">
+                        <v-card
+                          width="100"
+                          :style="[ backgroundToggle(filter)]"
+                          :color="active ? 'primary' : ''"
+                          @click="[toggle(), testFilter(filter)]"
+                          class="filter-card d-flex justify-content-center align-end"
+                          height="100">
+                          <div class="filter-name">
+                            <span v-if="videoFilter != filter">
+                              {{ filter.name }}
+                            </span>
+                            <v-icon size=100 color="#1CFD9F" v-else>
+                              mdi-check
+                            </v-icon>
+                          </div>
 
+                        </v-card>
+                      </v-item>
+                    </div>
+                  </div>
+                </div>
+              </v-item-group>
+              
+            </v-card>
+          </v-tab-item>
+      </v-tabs-items>
+      <v-card-subtitle>*필터는 최대 1개만 적용가능합니다</v-card-subtitle>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -105,7 +137,7 @@ export default {
       radios:0,
       dialog: false,
       audioFilter: -1,
-      videoFilter: -1,
+      videoFilter: null,
       filterType: [
         {
           name: '오디오 필터', 
@@ -117,8 +149,22 @@ export default {
         {
           name: '비디오 필터', 
           types: [
-            { name: 'pitch', description: '목소리의 높낮이를 조절할 수 있는 필터입니다.'},
-            { name: 'audioecho', description: '목소리의 울림을 조절할 수 있는 필터입니다.'}
+            { name: 'bulge', img: 'bulge'},
+            { name: 'dicetv', img: 'dicetv'},
+            { name: 'agingtv', img: 'agingtv'},
+            { name: 'optv', img: 'optv'},
+            { name: 'quarktv', img: 'quarktv'},
+            { name: 'radioactv', img: 'radioactv'},
+            { name: 'revtv', img: 'revtv'},
+            { name: 'rippletv', img: 'rippletv'},
+            { name: 'shagadelictv', img: 'shagadelictv'},
+            { name: 'streaktv', img: 'streaktv'},
+            { name: 'vertigotv', img: 'vertigotv'},
+            { name: 'warptv', img: 'warptv'},
+            { name: 'twirl', img: 'twirl'},
+            { name: 'square', img: 'square'},
+            { name: 'mirror', img: 'mirror'},
+            { name: 'pinch', img: 'pinch'},
           ]
         }
       ],
@@ -126,6 +172,14 @@ export default {
     }
   },
   methods: {
+    backgroundToggle(filter) {
+      if (this.videoFilter == filter) {
+        return { backgroundImage: 'linear-gradient( rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5) ), url(' + require(`@/assets/filter/${filter.img}.png`) + ')' }
+      }
+      else {
+        return { backgroundImage: 'linear-gradient( rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) ), url(' + require(`@/assets/filter/${filter.img}.png`) + ')' }
+      }
+    },
     isFiltered: function () {
       return Object.keys(this.publisher.stream).includes('filter')
     },
@@ -137,6 +191,14 @@ export default {
       this.publisher.stream.applyFilter('GStreamerFilter', {"command": `pitch pitch=${this.pitch}`})
       console.log(this.publisher)
     },
+    testFilter: function (filter) {
+      this.videoFilter = filter
+      if (this.isFiltered()) {
+        this.removeFilter()
+      }
+      this.publisher.stream.applyFilter('GStreamerFilter', {"command": `${filter.name}`})
+      console.log(this.publisher)
+    },
     removeFilter: function () {
       this.publisher.stream.removeFilter()
       console.log(this.publisher)
@@ -145,6 +207,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .filter-card {
+    background-size : cover;
+  }
+  .filter-name {
+    color: white;
+  }
 
 </style>

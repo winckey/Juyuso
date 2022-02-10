@@ -16,7 +16,7 @@
               show-arrow
             >
               <v-slide-item v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-                <user-video class="col-md-3"  :stream-manager="sub"/>
+                <user-video class="col-md-3" :stream-manager="sub"/>
               </v-slide-item>
             </v-slide-group>
           </div>

@@ -2,6 +2,7 @@
 import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+import Vue from 'vue';
 
 const openviduStore = {
   namespaced: true,
@@ -12,6 +13,7 @@ const openviduStore = {
     OV: undefined,
     session: undefined,
     mainStreamManager: undefined,
+    wholeSubscribers: [],
     publisher: undefined,
     subscribers: [],
     messages: [],
@@ -45,8 +47,10 @@ const openviduStore = {
 			state.mainStreamManager = undefined;
 			state.publisher = undefined;
 			state.subscribers = [];
+      state.wholeSubscribers = [];
       state.messages = [];
 			state.OV = undefined;
+    
       state.gameMode = undefined;
       state.gameInfo = undefined;
     },
@@ -109,6 +113,7 @@ const openviduStore = {
         publisher: undefined,
         subscribers: [],
         messages: [],
+        wholeSubscribers: [],
         gameMode: undefined,
         gameInfo: undefined,
       }
@@ -122,14 +127,28 @@ const openviduStore = {
 			// --- Specify the actions when events take place in the session ---
 			// On every new Stream received...
 			data.session.on('streamCreated', ({ stream }) => {
-        
-				const subscriber = data.session.subscribe(stream);
+        const subscriber = data.session.subscribe(stream);
+        console.log(subscriber)
 				data.subscribers.push(subscriber);
+        data.wholeSubscribers.push(subscriber);
+        Vue.$toast.open({
+          position: 'bottom',
+          message: `${JSON.parse(subscriber.stream.connection.data).clientData}님이 입장하셨습니다.`,
+          type: 'default',
+          duration: 2500,
+        })
 			});
 			
       // On every Stream destroyed...
 			data.session.on('streamDestroyed', ({ stream }) => {
         const index = data.subscribers.indexOf(stream.streamManager, 0);
+        console.log()
+        Vue.$toast.open({
+          position: 'bottom',
+          message: `${JSON.parse(data.subscribers[index].stream.connection.data).clientData}님이 나가셨습니다.`,
+          type: 'default',
+          duration: 2500,
+        })
 				if (index >= 0) {
           data.subscribers.splice(index, 1);
 				}
@@ -172,8 +191,10 @@ const openviduStore = {
               data.mainStreamManager = publisher;
               data.publisher = publisher;
               // --- Publish your stream ---
+              // publisher.subscribeToRemote()
               data.session.publish(publisher);
-              // dispatch('enterRoom', sessionId)
+              data.wholeSubscribers.push(publisher)
+              dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
             })
             .catch(error => {
@@ -191,7 +212,7 @@ const openviduStore = {
               data.publisher = publisher;
               // --- Publish your stream ---
               data.session.publish(publisher);
-              // dispatch('enterRoom', sessionId)
+              dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
             })
             .catch(error => {
@@ -247,7 +268,6 @@ const openviduStore = {
 				axios
 					.post(`${process.env.VUE_APP_OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/connection`, { 
             "type":"WEBRTC",
-            "role":"PUBLISHER",
             "kurentoOptions" : {
               "allowedFilters": ["GStreamerFilter", "FaceOverlayFilter"]
             }
@@ -273,21 +293,23 @@ const openviduStore = {
     changeGameMode ({ commit }, mode) {
       const data = { gameMode: mode }
       commit('SET_GAME_MODE', data)
+    },
+    enterRoom (context, sessionId) {
+      axios({
+        method: 'POST', 
+        url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`,
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+      })
+
+    },
+    leaveRoom (context, sessionId) {
+      axios({
+        method: 'POST', 
+        url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`,
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+      })
+
     }
-    // enterRoom (context, sessionId) {
-    //   // axios({
-    //   //   method: 'POST', 
-    //   //   url: `${process.env.VUE_APP_API_URL}/meeting/enter/${sessionId}`
-    //   // })
-
-    // },
-    // leaveRoom (context, sessionId) {
-    //   // axios({
-    //   //   method: 'POST', 
-    //   //   url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`
-    //   // })
-
-    // }
   },
   getters: {
 

@@ -146,13 +146,13 @@ export default {
     initChat() {
       axios({
         method: 'GET',
-        url: `${process.env.VUE_APP_API_URL}/chatRoom/${this.chatFriend.id}`,
+        url: `${process.env.VUE_APP_API_URL}/chat/room/${this.chatFriend.id}`,
         headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       }).then( res => {
         this.roomId = res.data.roomId
         this.getChatHistory()
       })
-
+      console.log(this.roomId)
       this.sock = new SockJS('https://i6e101.p.ssafy.io/ws')
       this.client = Stomp.over(this.sock, {
         protocols: Stomp.VERSIONS.supportedProtocols()
