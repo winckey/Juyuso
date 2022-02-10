@@ -261,6 +261,7 @@ export default {
     },
     goFriendProfile: function(){
       this.$router.push({name: 'FriendPage', params: {userId: this.userInfo.id}})
+      this.$router.go()
     },
     prevent: function (e) {
       e.preventDefault()

@@ -6,12 +6,12 @@
       <div
         :key="idx" 
         v-for="(message, idx) in messages">
-        <div :class="message.writer == user.id ? 'my-chat': 'other-chat'">
+        <div :class="message.writerId == user.id ? 'my-chat': 'other-chat'">
           <div>
-            <div v-if="message.writer != user.id" class="chat-name">
+            <div v-if="message.writerId != user.id" class="chat-name">
               {{ chatFriend.nickname }}
             </div>
-            <div :class="message.writer == user.id ? 'my-chat-bubble': 'other-chat-bubble'">
+            <div :class="message.writerId == user.id ? 'my-chat-bubble': 'other-chat-bubble'">
               {{ message.message }}
             </div>
           </div>
@@ -99,7 +99,7 @@ export default {
     },
     sendMessage() {
       if (this.chatInput.trim()) {
-        this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writer': this.user.id}), {})
+        this.client.send('/publish/chat/message', JSON.stringify({'chatRoomId': this.roomId, 'message': this.chatInput, 'writerId': this.user.id, 'receiverId': this.chatFriend.id}), {})
       }
       this.chatInput = null
     }

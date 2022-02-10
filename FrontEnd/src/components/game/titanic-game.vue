@@ -1,5 +1,5 @@
 <template>
-  <div v-if="titanicGame" style="margin-bottom: 200px" class="game-mode" @mouseover="bgsound.play()">
+  <div v-if="titanicGame" style="padding-bottom: 200px" class="game-mode" @mouseover="bgsound.play()">
     <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
     <audio class="audio" src="@/assets/sound/pour_sound.mp3"></audio>
     <div class="container-fluid">
@@ -52,7 +52,7 @@
       max-width="300">
       <v-card>
         <v-card-title>당첨자 확인</v-card-title>
-        <v-card-text>{{ titanicGame.members[titanicGame.curMember].username }}님 당첨</v-card-text>
+        <v-card-text>🎉{{ titanicGame.members[titanicGame.curMember].username }}님 당첨🎉</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
