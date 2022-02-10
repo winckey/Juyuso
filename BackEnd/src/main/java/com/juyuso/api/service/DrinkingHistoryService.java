@@ -12,55 +12,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Service
-public class DrinkingHistoryService {
+public interface DrinkingHistoryService {
 
-    private final String soju = "소주";
-    private final String beer = "맥주";
-
-    private final DrinkingHistoryRepository drinkingHistoryRepository;
-    private final DrinkingCategoryRepository drinkingCategoryRepository;
-
-    @Autowired
-    public DrinkingHistoryService(DrinkingHistoryRepository drinkingHistoryRepository,
-                                  DrinkingCategoryRepository drinkingCategoryRepository) {
-        this.drinkingHistoryRepository = drinkingHistoryRepository;
-        this.drinkingCategoryRepository = drinkingCategoryRepository;
-    }
-
-    public List<DrinkingHistory> findAll(User user) {
-        Long userId = user.getId();
-        return drinkingHistoryRepository.findByDateGroup(userId);
-    }
-    @Transactional
-    public void addDrinking (DrinkingHistoryAddReqDto reqDto, User user) {
-        DrinkingCategory drinkingCategory;
-        if(reqDto.getSoju() != 0) {
-            drinkingCategory = drinkingCategoryRepository.findByName(soju).get();
-            drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory));
-        }
-        if(reqDto.getBeer() != 0) {
-            drinkingCategory = drinkingCategoryRepository.findByName(beer).get();
-            drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory));
-        }
-    }
-
-    @Transactional
-    public void addLocalDrinkingHistory(DrinkingHistoryAddReqDto reqDto, User user) {
-        DrinkingCategory drinkingCategory;
-        if(reqDto.getSoju() != 0) {
-            drinkingCategory = drinkingCategoryRepository.findByName(soju).get();
-            drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory, reqDto.getDate()));
-        }
-        if(reqDto.getBeer() != 0) {
-            drinkingCategory = drinkingCategoryRepository.findByName(beer).get();
-            drinkingHistoryRepository.save(reqDto.toEntity(user, drinkingCategory, reqDto.getDate()));
-        }
-
-
-
-
-    }
-
+    List<DrinkingHistory> findAll(User user);
+    void addDrinking (DrinkingHistoryAddReqDto reqDto, User user);
+    void addLocalDrinkingHistory(DrinkingHistoryAddReqDto reqDto, User user);
 
 }
