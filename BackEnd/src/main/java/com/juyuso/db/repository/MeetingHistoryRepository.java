@@ -11,9 +11,5 @@ import java.util.List;
 @Repository
 public interface MeetingHistoryRepository extends JpaRepository<MeetingHistory, Long> {
 
-
     List<MeetingHistory> findByUser (User user);
-
-
-
 }
