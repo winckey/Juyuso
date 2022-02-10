@@ -42,7 +42,7 @@
         <v-btn
           color="green darken-1"
           text
-          @click="[dialog = false, switchGameMode(selectedGame.name)]"
+          @click="[sendGameInfo(), switchGameMode(selectedGame.name), dialog = false]"
         >
           선택
         </v-btn>
@@ -70,7 +70,8 @@ export default {
   },
   computed: {
     ...mapState('openviduStore', [
-      'gameMode'
+      'gameMode',
+      'session'
     ]),
     
   },
@@ -88,6 +89,54 @@ export default {
       }
       else {
         return { backgroundImage: 'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), ' + 'url(' + require(`@/assets/${game.img}.jpg`) + ')' }
+      }
+    },
+    sendGameInfo: function () {
+      if (this.selectedGame.name === '타이타닉') {
+        let members = this.session.streamManagers.map(stream => {
+          return {
+            connectionId: stream.stream.connection.connectionId,
+            username: JSON.parse(stream.stream.connection.data).clientData
+          }
+        })
+        let gameInfo = {
+          type: 'Titanic',
+          members: members.sort(() => Math.random() - 0.5),
+          isEnd: false,
+          curMember: 0,
+          curAmount: 0,
+          maxAmount: Math.random() * 50 + members.length * 30,
+        }
+        this.session.signal({
+          data: JSON.stringify(gameInfo),
+          to: [],
+          type: 'game-info'
+        })
+      }
+      else if (this.selectedGame.name === '밸런스') {
+        let members = []
+        this.session.streamManagers.forEach(stream => {
+          members.push({
+            connectionId: stream.stream.connection.connectionId,
+            username: JSON.parse(stream.stream.connection.data).clientData,
+            isSelected: false,
+          })
+        })
+        let gameInfo = {
+          type: 'Balance',
+          members: members.sort(() => Math.random() - 0.5),
+          isStart: false,
+          isEnd: false,
+          curMember:0,
+          totalTime: 60,
+          cardData:[[], []],
+        }
+        console.log(gameInfo)
+        this.session.signal({
+          data: JSON.stringify(gameInfo),
+          to: [],
+          type: 'game-info'
+        })
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="background-box"
-  :style="{'background-image':'url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
+  :style="{'background-image':'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
@@ -515,6 +515,6 @@ export default {
     height: 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    background-size: cover
+    background-size: cover;
   }
 </style>
