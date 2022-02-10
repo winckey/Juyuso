@@ -1,7 +1,13 @@
 <template>
     <div>
-        <v-row>
-            <v-col>
+        <v-dialog max-width="650px" max-height="650px" v-model="dialog">
+            <template v-slot:activator="{ on, attrs }">
+                <img src="@/assets/Group 57.png" alt="calendar"
+                    v-bind="attrs"
+                    v-on="on">
+            </template>
+
+            <v-card width="99%" height="100%">
                 <v-sheet height="70">
                     <v-toolbar>
                         <div>
@@ -44,12 +50,10 @@
                         :events="events"
                         @moved="onChange"
                     >
-                        
                     </v-calendar>
                 </v-sheet>
-
-            </v-col>
-        </v-row>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -66,27 +70,41 @@ import {mapState} from 'vuex'
 
 export default {
     data:() => ({
+        dialog: false,
         type: 'month',
         value: null,
         todayChecked: false,
         events: [],
-        isFriend: false
     }),
     props: {
         user: Object
     },
     computed: {
-        ...mapState('accounts', {stateUser:'user'})
+        ...mapState('accounts', {stateUser:'user'}),
+        isFriend: function () {
+            if (this.user.id != this.stateUser.id) {
+                return true
+            } else {
+                return false 
+            }
+        },
+        getUrl: function () {
+            if (this.isFriend) {
+                return `${process.env.VUE_APP_API_URL}/attendance?friendId=${this.user.id}`
+            } else {
+                return `${process.env.VUE_APP_API_URL}/attendance`
+            }
+        }
     },
     mounted() {
         this.value = this.getTodayDate()
 
-        axios.get(`${process.env.VUE_APP_API_URL}/attendance`, {
+
+        axios.get(this.getUrl, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
                 }
             }).then(({ data }) => {
-                console.log(data)
                 const events = []
 
                 data.attendanceList.forEach( ({ date }) => {
@@ -102,12 +120,11 @@ export default {
                 this.events = events
             }).catch(err => {
                 console.log(err)
-            })
-
-        if (this.user.id != this.stateUser.id) {
-            this.isFriend = true 
-        } 
+             })
+ 
     },
+
+
     methods: {
         onChange(e) {
             const { year, month } = e
@@ -116,8 +133,6 @@ export default {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
                 }
             }).then(({ data }) => {
-                console.log(this.value)
-                console.log(data)
                 const events = []
                 data.attendanceList.forEach( ({ date }) => {
                     

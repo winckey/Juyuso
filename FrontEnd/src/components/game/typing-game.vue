@@ -1,61 +1,67 @@
 <template>
   <div>
-    <div>
-        <user-video class="col-md-4" :stream-manager="publisher"/>
-        <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-    </div>
-    <div class="game-box">
-        <v-card class="typing-game">
-            <div class="header">
-                    <h2>🍺술향기 타자 연습dd🍺</h2>
-                </div>
-                <div class="word-display">
-                    <h2>{{ wordDisplay }}</h2>
-                </div>
-                <div class="word-input-box">
-                    <v-text-field
-                        label="단어를 입력하시오"
-                        solo
-                        dense
-                        class="word-input"
-                        v-model="wordInput"
-                        @keyup.enter="check"
-                        :disabled="!isPlaying"
-                    ></v-text-field>
-                </div>
-                <div class="my-info">
-                    <div>
-                        시간: <span class="time">{{ typingGame.time }}</span>초
-                    </div>
-                    <div>
-                        내 점수: <span class="score">{{ score }}</span>점
-                    </div>
-                </div>
-                <v-btn class="button" color="primary" @click="startGame" v-if="this.typingGame.allPlaying===false">게임 시작</v-btn>
-                <v-btn class="button loading" color="grey" v-else>게임 진행 중</v-btn>
-        </v-card>
-    </div>
-    <v-dialog v-model="typingGame.isEnd" width="400px">
+    <v-row>
+      <v-col cols="8">
         <div>
-            <v-card  class="p-3">
-                <div class="d-flex flex-column" style="text-align: center">
-                    <h3>축하합니다</h3>
-                    <hr>
-                    <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리란다 얘둘앙🧃</v-card-text>
-                </div>
-                <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="typingGame.isEnd = false"
-                >
-                    확인
-                </v-btn>
-                </v-card-actions>
-            </v-card>
+          <user-video class="col-md-4" :stream-manager="publisher"/>
         </div>
-    </v-dialog>
+        <div>
+          <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+      </v-col>
+      <v-col class="d-flex justify-content-center align-items-center" cols="4" >
+          <v-card class="typing-game">
+              <div class="header">
+                      <h2>🍺술향기 타자 연습🍺</h2>
+                  </div>
+                  <div class="word-display">
+                      <h2>{{ wordDisplay }}</h2>
+                  </div>
+                  <div class="word-input-box">
+                      <v-text-field
+                          label="단어를 입력하시오"
+                          solo
+                          dense
+                          class="word-input"
+                          v-model="wordInput"
+                          @keyup.enter="check"
+                          :disabled="!isPlaying"
+                      ></v-text-field>
+                  </div>
+                  <div class="my-info">
+                      <div class="time">
+                          시간: <span >{{ typingGame.time }}</span>초
+                      </div>
+                      <div class="score">
+                          내 점수: <span >{{ score }}</span>점
+                      </div>
+                  </div>
+                  <v-btn class="button" color="#4DB6AC" @click="startGame" v-if="this.typingGame.allPlaying===false">게임 시작</v-btn>
+                  <v-btn class="button loading" color="white" v-else>게임 진행 중</v-btn>
+          </v-card>
+      </v-col>
+    </v-row>
+      <v-dialog v-model="typingGame.isEnd" width="400px">
+          <div>
+              <v-card  class="p-3">
+                  <div class="d-flex flex-column" style="text-align: center">
+                      <h3>축하합니다</h3>
+                      <hr>
+                      <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리란다 얘둘앙🧃</v-card-text>
+                  </div>
+                  <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      color="green darken-1"
+                      text
+                      @click="typingGame.isEnd = false"
+                  >
+                      확인
+                  </v-btn>
+                  </v-card-actions>
+              </v-card>
+          </div>
+      </v-dialog>
   </div>
   
 </template>
@@ -167,7 +173,9 @@ export default {
           winner.push(name)
         }
       }
-      alert(winner)
+      this.typingGame.isEnd = true
+      this.typingGame.winner = winner[0]
+      this.sendInfo()
     },
     changeWord: function () {
       const index = Math.floor((Math.random() * this.words.length))
@@ -199,33 +207,47 @@ export default {
 </script>
 
 <style scoped>
-.game-box {
-  position: fixed;
-  top: 10%;
-  right: 40%;
-}
+
 .typing-game {
+  border: 2px solid #dadada;
+  border-radius: 7px;
   max-width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center; 
   align-items: center;
-  padding: 2rem;
-  border: solid aqua;
+  padding: 1rem;
+  /* background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200); */
+  background-image: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5) ), url(https://i.pinimg.com/originals/07/fd/31/07fd31cf7290acb47f6329bb0a95b726.gif);
+  /* background-image: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5) ), url(https://mblogthumb-phinf.pstatic.net/MjAxODAxMDNfNDcg/MDAxNTE0OTE4MzE0MTg0.6TzBSC5Kl0NVtJZu0jcv1zaLcXXtqKsR8E9HUaaBeykg.pbeoeWCkLYvUaAmr1cMoaVaVEyUuVBZIwpSBuiR-Sb8g.GIF.njhanjo/queens_171223_05-%EB%84%88%EC%9D%98%EC%9D%B4%EB%A6%84%EC%9D%80_01.gif?type=w800); */
+  background-size: cover;
+  background-position: center;
+
+}
+
+.typing-game:focus {
+    outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
 }
 
 .header {
-    background: skyblue;
     width: 100%;
     text-align: center;
     padding: 1rem;
+    color: #fff;
+    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+      0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
     color: white;
 }
 
 .word-display {
     margin-top: 3rem;
     font-size: 2rem;
-    color: skyblue;
+    color: #fff;
+    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+      0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
+    color: white;
     text-align: center;
 }
 
@@ -247,8 +269,14 @@ export default {
 }
 
 .time, .score {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    /* color: white; */
+    color: #fff;
+    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+      0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
 }
+
+
 
 .button {
     width: 250px;
