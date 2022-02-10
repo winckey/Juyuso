@@ -142,7 +142,7 @@ export default {
 .background {
   background-size : cover;
   height: 100vh;
-  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2020/05/06/06/18/blue-5136251_960_720.jpg);
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2019/05/19/23/47/clouds-4215608_960_720.jpg);
 }
 
 .wallet-container {
@@ -153,9 +153,9 @@ export default {
 
 }
 
-/* img {
+img {
  max-width: 100%;
-} */
+}
 
 .wallet {
   position: relative;
