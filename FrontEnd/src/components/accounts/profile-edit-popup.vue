@@ -3,7 +3,7 @@
     <v-dialog
       v-model="dialog"
       persistent
-      max-width="650px"
+      max-width="600px"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -22,18 +22,10 @@
         dense
         type="error"
       >
-        입력 형식을 다시 확인해주세요!
+        {{ alertMessage }}
       </v-alert>
 
-      <v-alert
-      :value="isImage"
-        dense
-        type="error"
-      >
-        이미지 크기가 용량을 초과했습니다!
-      </v-alert>
-
-
+  
       <v-alert
       :value="isSuccess"
         dense
@@ -58,27 +50,23 @@
                   <div class="d-flex justify-content-center">
                     <v-avatar>
                       <img
-                        :src="userInfo.imgUrl"
+                        :src="myImage"
                         :alt="profileImg"
                       >
                     </v-avatar>
                   </div>
-                  <v-file-input
+                  
+                   <v-file-input
                     v-model="profileImg"
-                    @click="isShowBtn=true"
                     accept="image/*"
                     label="프로필 이미지 업로드"
-                    @change="changeImage"
+                    @change="uploadImage()"
                     prepend-icon="mdi-camera"
                   ></v-file-input>
-
-                  <div v-if="isShowBtn" class="d-flex justify-content-center">
-                    <v-btn @click="uploadImage()" color="primary" class="mx-4">이미지 저장</v-btn>
-                    <!-- <v-btn @click="deleteImage()" color="green" >이미지 제거</v-btn> -->
-                  </div>
                 </v-col>
 
                 <v-col>
+                  <div class="d-flex flex-column justify-content-end">
                     <v-text-field
                       label="닉네임*"
                       v-model="userInfo.nickname"
@@ -86,16 +74,25 @@
                       :counter="10"
                       required
                     ></v-text-field>
-
-                    <v-text-field
-                      label="자기소개"
-                      v-model="userInfo.description"
-                      :counter="10"
-                    ></v-text-field>
+                    <v-btn 
+                    @click="duplicate" 
+                    rounded
+                    width="100">
+                    <span v-if="!nicknameCheck">중복확인</span>
+                    <v-icon v-else large color="#1CFD9F">mdi-check</v-icon>
+                    </v-btn>
+                  </div>
                 </v-col>
 
                   
-
+                <v-col cols="12">
+                  <v-text-field
+                      label="자기소개"
+                      v-model="userInfo.description"
+                      :counter="10"
+                      :rules="rules.descriptionRule"
+                    ></v-text-field>
+                </v-col>
                 <v-col cols="12">
                   <v-text-field
                     type="email"
@@ -117,7 +114,7 @@
 
                 <v-col cols="12">
                   <v-select
-                    v-model="userInfo.regionId"
+                    v-model="defaultSelected.region_id"
                     :rules="rules.regionRule"
                     :items="regions"
                     label="지역*"
@@ -129,7 +126,7 @@
                 
 
               </v-row>
-              <h5>*필수항목입니다</h5>
+              <p>*필수항목입니다</p>
             </v-form>
         
           </v-container>
@@ -171,13 +168,14 @@ export default {
   },
   data: function () {
     return {
-      isShowBtn: false,
+      alertMessage: null,
       isAlert: false,
       isSuccess: false,
-      isImage: false,
       userInfo: null,
       dialog: false,
+      myImage: null,
       profileImg: null,
+      nicknameCheck: false,
       regions: [
           {region_id: 1, name: '서울'},
           {region_id: 2, name: '부산'},
@@ -207,12 +205,21 @@ export default {
           v => !(v && v.length > 10) || "닉네임은 10자까지 입력 가능합니다.",
           v => !/[~!@#$%^&*()_+|<>?:{}]/.test(v) || "닉네임에는 특수문자를 사용할 수 없습니다.",
         ],
+        descriptionRule: [
+          v => !(v && v.length > 10) || "자기소개는 10자까지 입력 가능합니다."
+        ]
       }
     }
   },
   created: function () {
     this.userInfo = this.user
-    // this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
+    this.myImage = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
+  },
+  computed: {
+    defaultSelected: function () {
+      return {region_id: this.userInfo.region.id, name: this.userInfo.region.name }
+    },
+    
   },
   methods: {
     ...mapActions('accounts', ['userUpdate']),
@@ -222,7 +229,7 @@ export default {
           email: this.userInfo.email,
           nickname: this.userInfo.nickname,
           phone: this.userInfo.phone,
-          regionId: this.userInfo.regionId,
+          regionId: this.defaultSelected.region_id,
       }}
 
       const validation = this.$refs.update.validate()
@@ -244,52 +251,82 @@ export default {
             })
             .catch(err => {
               console.log('axios 틀렸잖앙')
+              console.log(item.credentials.regionId)
+              console.log(this.defaultSelected)
+              this.alertMessage = "입력 형식을 다시 확인해주세요!"
               this.isAlert = true
+              setTimeout(() => this.isAlert=false, 3000)
               this.isSuccess = false
               console.log(err)
             })
 
       } else {
+        this.alertMessage = "입력 형식을 다시 확인해주세요!"
         this.isAlert=true
         this.isSuccess=false
       }
     },
-    changeImage: function () {
-      console.log('changeImage')
-      console.log(this.profileImg.size)
-      if (this.profileImg.size > 300000) {
-        this.isImage = true
-        setTimeout(() => this.isImage=false, 4000)
-      }
-      this.userInfo.imgUrl = this.profileImg
-    },
+    // changeImage: function () {
+    //   console.log('changeImage')
+    //   console.log(this.profileImg.size)
+    //   if (this.profileImg.size > 300000) {
+    //     this.isImage = true
+    //     setTimeout(() => this.isImage=false, 4000)
+    //   }
+    //   this.myImage = this.profileImg
+    // },
   
     uploadImage: function () {
-      console.log('uploadㄱㄱ')
 
       const image = new FormData()
       image.append('img', this.profileImg)
+      if (this.profileImg.size < 600000) {
+          axios({
+            method: 'POST',
+            url: `${process.env.VUE_APP_API_URL}/users/img`,
+            data: image,
+            headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
+          })
+            .then(res => {
+              console.log(res)
+              this.myImage = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
+              this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
+              this.$emit('changeProfileImage', res.data.imgUrl)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+      } else {
+        console.log(this.profileImg.size)
+        this.alertMessage = "이미지 크기가 용량을 초과했습니다!"
+        this.isAlert = true
+        setTimeout(() => this.isAlert=false, 3000)
+      }
 
-      axios({
-        method: 'POST',
-        url: `${process.env.VUE_APP_API_URL}/users/img`,
-        data: image,
-        headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
-      })
-        .then(res => {
-          console.log(res)
-          this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
-          this.$emit('changeProfileImage', res.data.imgUrl)
-        })
-        .catch(err => {
-          console.log(err)
-        })
     },
-    // deleteImage: function () {
-    //   this.userInfo.imgUrl = require("@/assets/chat.png")
-    // },
     reloadMypage: function () {
       this.$router.go()
+    },
+    duplicate: function () {
+      axios({
+        method: 'GET',
+        url: `${process.env.VUE_APP_API_URL}/users/nickname/${this.userInfo.nickname}`,
+        // data: {nickname: this.userInfo.nickname}
+      })
+      .then(res => {
+        if (!res.data.duplicate) {
+          console.log(res.data.duplicate)
+          this.nicknameCheck = true
+
+        } else {
+          this.alertMessage = "이미 존재하는 닉네임입니다!"
+          this.isAlert = true
+          setTimeout(() => this.isAlert=false, 3000)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
     }
   }
 }

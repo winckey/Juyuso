@@ -2,8 +2,7 @@
   <v-row justify="center">
     <v-dialog
       v-model="dialog"
-      persistent
-      max-width="650px"
+      max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -27,7 +26,7 @@
       </v-alert>
 
 
-      <v-card class="p-2" >
+      <v-card class="p-1" >
         <v-card-title class="justify-content-center">
           <span class="h2">차단 친구 목록</span>
         </v-card-title>

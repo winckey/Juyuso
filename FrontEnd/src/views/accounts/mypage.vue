@@ -1,83 +1,80 @@
 <template>
-  <div class="wallet-container">
-    <div class="wallet">
-      <img src="@/assets/wallet_main.png" alt="wallet">
+  <div class="background">
+    <div class="wallet-container mx-auto">
+      <div class="wallet">
+        <img src="@/assets/wallet_main.png" alt="wallet">
 
-      <div class="profile-card">
-        <img src="@/assets/profile.png" alt="profile-card">
-        <div class="profile-card-info">
-          <v-container>
-            <v-row >
-              <v-col cols="6">
-                <div v-if="user">
-                  <h1>주민등록증</h1>
-                  <p>별명: {{ user.nickname }}</p>
-                  <p>소개: {{ user.description }}</p>
-                  <p>성별: {{ user.gender }}</p>
-                  <p>나이: {{ user.age }}</p>
-                </div>
-              </v-col>
-              <v-col v-if="user" cols="4">
-                <!-- <div class="d-flex justify-content-center">
-                    <v-avatar size="100">
-                      <img :src="imgUrl" alt="profile_img">
-                      
-                    </v-avatar>
-                  </div> -->
+        <div class="profile-card">
+          <img src="@/assets/profile.png" alt="profile-card">
+          <div class="profile-card-info">
+            <v-container>
+              <v-row >
+                <v-col cols="6">
+                  <div v-if="user">
+                    <!-- <p style="font-size: 2rem">주민등록증</p> -->
+                    <h1>주민등록증</h1>
+                    <p>별명: {{ user.nickname }}</p>
+                    <p>소개: {{ user.description }}</p>
+                    <p>성별: {{ user.gender }}</p>
+                    <p>나이: {{ user.age }}</p>
+                  </div>
+                </v-col>
+                <v-col v-if="user" cols="5">
+                  <div class="d-flex justify-content-center" >
+                    <!-- <v-img max-width="100%"  height="auto" :src="imgUrl" alt="profile_img"></v-img> -->
+                    <v-img max-width="300px" width="100%" height="auto" :src="imgUrl" alt="profile_img"></v-img>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-container>
+          
+          </div>
+          <div class="profile-edit-popup my-2">
+            <!-- <ProfileEditPopup :user ="user" v-if="user"/> -->
+            <ProfileEditPopup :user ="user" v-if="user" @changeProfileImage="changeProfileImage"/>
 
-                <div class="d-flex justify-content-center" >
-                  <v-img max-width="200" :src="imgUrl" alt="profile_img"></v-img>
-                </div>
-              </v-col>
-            </v-row>
-          </v-container>
-         
-        </div>
-        <div class="profile-edit-popup my-2">
-          <!-- <ProfileEditPopup :user ="user" v-if="user"/> -->
-          <ProfileEditPopup :user ="user" v-if="user" @changeProfileImage="changeProfileImage"/>
-
-        </div>
-        <div class="profile-edit-popup my-6">
-          <PasswordChange :user="user" v-if="user"/>
-        </div>
-      </div>
-
-      <div class="profile-mydata">
-        <div class="profile-mydata-card">
-          <img @click="goMyData" src="@/assets/Group 56.png" width="90%" alt="mydata">
+          </div>
+          <div class="profile-edit-popup my-6">
+            <PasswordChange :user="user" v-if="user"/>
+          </div>
         </div>
 
-        <div class="wallet-1">
-          <img src="@/assets/wallet_card_1.png" alt="wallet-card">
-        </div>
+        <div class="profile-mydata">
+          <div class="profile-mydata-card">
+            <img @click="goMyData" src="@/assets/Group 56.png" width="90%" alt="mydata">
+          </div>
 
-        <div class="profile-calendar">
-          <v-dialog>
-            <template v-slot:activator="{ on, attrs }">
-              <img src="@/assets/Group 57.png" alt="calendar"
-              v-bind="attrs"
-              v-on="on">
-            </template>
-            <v-card>
-              <calender-popup></calender-popup>
-            </v-card>
-          </v-dialog>
+          <div class="wallet-1">
+            <img src="@/assets/wallet_card_1.png" alt="wallet-card">
+          </div>
+
+          <div class="profile-calendar">
+            <v-dialog>
+              <template v-slot:activator="{ on, attrs }">
+                <img src="@/assets/Group 57.png" alt="calendar"
+                v-bind="attrs"
+                v-on="on">
+              </template>
+              <v-card>
+                <calender-popup></calender-popup>
+              </v-card>
+            </v-dialog>
+            
+          </div>
+          <div class="wallet-2">
+            <img src="@/assets/wallet_card_2.png" alt="wallet-card">
+          </div>
+
+
+          <div class="friend-block">
+            <BlockedFriend/>
+          </div>
           
         </div>
-        <div class="wallet-2">
-          <img src="@/assets/wallet_card_2.png" alt="wallet-card">
-        </div>
-
-
-        <div class="friend-block">
-          <BlockedFriend/>
-        </div>
         
-      </div>
       
-     
-    </div> 
+      </div> 
+    </div>
   </div>
 </template>
 
@@ -129,10 +126,10 @@ export default {
   },
   computed: {
     imgUrl: function () {
-      if (this.user.img) {
+      if (this.user.imgUrl) {
         return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
       } else {
-        return require('@/assets/chat.png')
+        return require('@/assets/basic_profile.png')
       }
 
     }
@@ -142,6 +139,12 @@ export default {
 
 <style scoped>
 
+.background {
+  background-size : cover;
+  height: 100vh;
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2020/05/06/06/18/blue-5136251_960_720.jpg);
+}
+
 .wallet-container {
   height: 90vh;
   display:flex;
@@ -150,9 +153,9 @@ export default {
 
 }
 
-img {
+/* img {
  max-width: 100%;
-}
+} */
 
 .wallet {
   position: relative;
@@ -182,7 +185,7 @@ img {
   width: 40%;
   position: absolute;
   top: 18%;
-  right: 3%;
+  right: 2.5%;
 }
 
 
@@ -209,7 +212,7 @@ img {
 .wallet-1 {
   position: absolute;
   top: 35%;
-  right: -2%;
+  right: 0.5%;
   width: 110%;
   
 }
@@ -224,7 +227,7 @@ img {
 .friend-block {
   position: absolute;
   top: 140%;
-  right: 10%;
+  right: 13%;
 }
 
 .profile-edit-popup {
