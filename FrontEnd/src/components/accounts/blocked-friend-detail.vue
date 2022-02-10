@@ -1,14 +1,14 @@
 <template>
   <div v-if="friend">
-      <v-list-item>
+      <v-list-item >
           <v-list-item-avatar>
               <v-img :src="imgUrl"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
               <v-list-item-title>{{ friend.nickname }}</v-list-item-title>
           </v-list-item-content>
-          <v-btn @click="blockCancel" v-if="isBlocked">차단해제</v-btn>
-          <v-btn @click="block" v-else color="red">차단하기</v-btn>
+          <v-btn @click="blockCancel" v-if="isBlocked" rounded>차단해제</v-btn>
+          <v-btn @click="block" v-else color="red" rounded>차단하기</v-btn>
       </v-list-item>
   </div>
 </template>
@@ -20,7 +20,7 @@ import {mapActions} from 'vuex'
 export default {
     name: 'BlockedFriendDetail',
     props: {
-        friend: Array
+        friend: Object
     },
     data: function () {
         return {

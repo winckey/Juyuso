@@ -49,14 +49,14 @@
           </div>
 
           <div class="profile-calendar">
-            <v-dialog>
+            <v-dialog max-width="650px" max-height="650px" >
               <template v-slot:activator="{ on, attrs }">
                 <img src="@/assets/Group 57.png" alt="calendar"
                 v-bind="attrs"
                 v-on="on">
               </template>
-              <v-card>
-                <calender-popup></calender-popup>
+              <v-card width="95%" height="95%">
+                <calender-popup :user="user" v-if="user"></calender-popup>
               </v-card>
             </v-dialog>
             
@@ -142,7 +142,8 @@ export default {
 .background {
   background-size : cover;
   height: 100vh;
-  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2020/05/06/06/18/blue-5136251_960_720.jpg);
+  /* background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2019/05/19/23/47/clouds-4215608_960_720.jpg); */
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200);
 }
 
 .wallet-container {
@@ -153,9 +154,9 @@ export default {
 
 }
 
-/* img {
+img {
  max-width: 100%;
-} */
+}
 
 .wallet {
   position: relative;
