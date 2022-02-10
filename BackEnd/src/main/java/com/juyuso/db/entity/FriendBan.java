@@ -10,7 +10,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Setter
-public class Ban {
+public class FriendBan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

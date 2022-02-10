@@ -31,6 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select f.fromUser from FriendRequest f where f.toUser = :user")
     List<User> findFriendRequestListByUser(@Param("user") User user);
 
-    @Query(value = "select b.banUser from Ban b where b.user = :user")
+    @Query(value = "select b.banUser from FriendBan b where b.user = :user")
     List<User> findFriendBanListByUser(@Param("user") User user);
 }

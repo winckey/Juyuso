@@ -22,6 +22,7 @@ public enum ErrorCode {
 
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USER_NOT_FOUND(NOT_FOUND, "해당 유저의 정보를 찾을 수 없습니다."),
+    FRIEND_NOT_FOUND(NOT_FOUND, "해당 유저와 친구가 아닙니다."),
     FRIEND_REQUEST_NOT_FOUND(NOT_FOUND, "친구 요청 정보를 찾을 수 없습니다."),
     MEETING_NOT_FOUND(NOT_FOUND, "해당 방을 찾을수 없습니다"),
 

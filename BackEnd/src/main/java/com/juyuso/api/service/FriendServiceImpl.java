@@ -3,7 +3,7 @@ package com.juyuso.api.service;
 import com.juyuso.api.dto.request.FriendReqDto;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
-import com.juyuso.db.entity.Ban;
+import com.juyuso.db.entity.FriendBan;
 import com.juyuso.db.entity.Friend;
 import com.juyuso.db.entity.FriendRequest;
 import com.juyuso.db.entity.User;
@@ -21,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FriendServiceImpl implements FriendService {
 
     private final UserRepository userRepository;
@@ -29,8 +30,15 @@ public class FriendServiceImpl implements FriendService {
     private final BanRepository banRepository;
 
     @Override
-    public User getFriendInfo(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    @Transactional(readOnly = true)
+    public User getFriendInfo(User user, Long friendId) {
+        Optional<Friend> findFriend = friendRepository.findByFromAndToId(user, friendId);
+
+        if (findFriend.isPresent()) {
+            return userRepository.findById(friendId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        } else {
+            throw new CustomException(ErrorCode.FRIEND_NOT_FOUND);
+        }
     }
 
     @Override
@@ -64,7 +72,7 @@ public class FriendServiceImpl implements FriendService {
         User toBan = userRepository.findById(friendReqDto.getId())
                                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Ban ban = new Ban();
+        FriendBan ban = new FriendBan();
         ban.addBan(from, toBan);
         banRepository.save(ban);
     }
@@ -95,27 +103,24 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> friendList(User user) {
         return userRepository.findFriendListByUser(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> banList(User user) {
         return userRepository.findFriendBanListByUser(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> RequestList(User user) {
         return userRepository.findFriendRequestListByUser(user);
     }
 
     @Override
-    public List<User> userSearch(String keyword) {
-        return userRepository.findByNicknameContaining(keyword);
-    }
-
-    @Override
-    @Transactional
     public void deleteFriend(User userDetails, FriendReqDto friendReqDto) {
         Long from = friendReqDto.getId();
         Long to = userDetails.getId();
@@ -138,19 +143,20 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void banCancelRequest(User userDetails, FriendReqDto friendReqDto) {
         Long from = friendReqDto.getId();
-        Long to = (userDetails.getId());
+        Long to = userDetails.getId();
         banRepository.deleteByBothUserId(from, to);
     }
 
-
     @Override
+    @Transactional(readOnly = true)
     public List<User> userSearchMy(String keyword, User user) {
-        return userRepository.findFriendListByNicknameAndUser(keyword , user);
+        return userRepository.findFriendListByNicknameAndUser(keyword, user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> userSearchNot(String keyword, User user) {
-        return userRepository.findNotFriendListByNicknameAndUser(keyword , user);
+        return userRepository.findNotFriendListByNicknameAndUser(keyword, user);
     }
 
 }

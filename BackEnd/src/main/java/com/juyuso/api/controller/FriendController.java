@@ -144,9 +144,10 @@ public class FriendController {
             @ApiResponse(code = 401, message = "권한 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<FriendResDto> getFriendInfo(@NotNull @PathVariable Long friendId) {
-        User user = friendService.getFriendInfo(friendId);
-        return ResponseEntity.ok(FriendResDto.of(200, "Success", user));
+    public ResponseEntity<FriendResDto> getFriendInfo(@ApiIgnore Authentication authentication, @NotNull @PathVariable Long friendId) {
+        User user = (User) authentication.getDetails();
+        User friend = friendService.getFriendInfo(user, friendId);
+        return ResponseEntity.ok(FriendResDto.of(200, "Success", friend));
     }
 
     @GetMapping("/{keyword}")

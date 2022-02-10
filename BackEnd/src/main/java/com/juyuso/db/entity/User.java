@@ -66,7 +66,7 @@ public class User implements UserDetails {
     private List<FriendRequest> friendRequests = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Ban> Bans = new ArrayList<>();
+    private List<FriendBan> Bans = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

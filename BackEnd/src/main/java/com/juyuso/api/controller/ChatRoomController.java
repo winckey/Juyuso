@@ -42,7 +42,7 @@ public class ChatRoomController {
     })
     public ResponseEntity<ChatRoomResDto> chatHome(@ApiIgnore Authentication authentication, @Positive @PathVariable("friendId") Long friendId){
         User user = (User) authentication.getDetails();
-        User friend = friendService.getFriendInfo(friendId);
+        User friend = friendService.getFriendInfo(user, friendId);
         Long roomId = chatRoomService.getChatRoomId(user, friend);
 
         return ResponseEntity.ok(ChatRoomResDto.of(200, "Success", roomId));
