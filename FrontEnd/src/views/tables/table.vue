@@ -52,7 +52,7 @@
       <div class="d-flex justify-content-between align-items-center" style="height: 100%">
         <div class="d-flex align-items-center" style="height: 100%">
           <!-- 사운드 관련 버튼 -->
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="m-1"
@@ -69,7 +69,7 @@
 
           
         <!-- 카메라 관련 버튼 -->
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="m-1"
@@ -83,7 +83,7 @@
             </template>
             <span>{{ publishVideo ? '비디오 중지' : '비디오 시작' }} </span>
           </v-tooltip>
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="m-1"
@@ -111,7 +111,7 @@
           </transition>
         </div>
         <div class="d-flex">
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="m-1"
@@ -126,7 +126,7 @@
             </template>
             <span>필터 기능</span>
           </v-tooltip>
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="chat-btn m-1"
@@ -141,7 +141,7 @@
             </template>
             <span>채팅창 열기</span>
           </v-tooltip>
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="m-1"
@@ -158,7 +158,7 @@
           
           
           <!-- 게임 관련 -->
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 v-model="game"
@@ -178,7 +178,7 @@
             </template>
             <span>게임 기능</span>
           </v-tooltip>
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 v-show="gameMode"
@@ -200,20 +200,21 @@
           </v-tooltip>
         </div>
         <div>
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="m-1"
                 fab
                 small
                 v-on="on"
-                v-bind="attrs">
+                v-bind="attrs"
+                @click="openThemePopup">
                 <v-icon dark dense>mdi-compare</v-icon>
               </v-btn>
             </template>
             <span>테마 변경</span>
           </v-tooltip>
-          <v-tooltip top>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="m-1"
@@ -235,6 +236,9 @@
     ref="gamePopup"/>
     <FilterPopup
     ref="filterPopup"/>
+    <ThemePopup
+    ref="themePopup"
+    :roomInfo="roomInfo"/>
   </div>
 </template>
 
@@ -249,6 +253,7 @@ import DrawGame from '@/components/game/draw-game.vue'
 import TypingGame from '@/components/game/typing-game.vue'
 import GamePopup from '@/components/game/game-popup.vue'
 import FilterPopup from '@/components/table/filter-popup.vue'
+import ThemePopup from '@/components/table/theme-popup.vue'
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -266,7 +271,8 @@ export default {
     DrawGame,
     TypingGame,
     GamePopup,
-    FilterPopup
+    FilterPopup,
+    ThemePopup
   },
   props: {
     roomInfo: Object,
@@ -313,6 +319,16 @@ export default {
     .then( res => {
       this.userInfo = res.data.user
     })
+    this.session.on('signal:theme', event => {
+      let data = JSON.parse(event.data)
+      this.roomInfo.theme = data.theme
+      this.$toast.open({
+        position: 'bottom',
+        message: `${data.username}님이 테마를 변경하셨습니다`,
+        type: 'info',
+        duration: 2500,
+      })
+    })
   },
 
 
@@ -321,8 +337,8 @@ export default {
     if (answer) {
         this.leaveSession(this.roomId)
         window.removeEventListener('beforeunload', function () {
-        this.leaveSession(this.roomId)
-      });
+          this.leaveSession(this.roomId)
+        });
       next()
     }
     else {
@@ -356,6 +372,9 @@ export default {
       'switchGameMode',
       'changeSound'
     ]),
+    openThemePopup () {
+      this.$refs.themePopup.dialog = true
+    },
     openFilterPopup () {
       this.$refs.filterPopup.dialog = true
     },
@@ -512,7 +531,7 @@ export default {
   }
   .background-box{
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
