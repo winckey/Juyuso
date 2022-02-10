@@ -106,7 +106,6 @@ export default {
       headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
-        console.log(res.data.user)
         const userInfo = res.data.user
         this.user = userInfo
       })

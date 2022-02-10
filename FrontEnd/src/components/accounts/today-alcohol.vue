@@ -158,9 +158,9 @@ export default {
                     }
                     this.$emit('updateDrinkingInfo', emitItem)
                 })
-                .catch(err => {
-                    console.log(err)
-                })
+                // .catch(err => {
+                //     console.log(err)
+                // })
       }
     },
     computed: {

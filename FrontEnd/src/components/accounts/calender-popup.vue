@@ -94,12 +94,7 @@ export default {
             } else {
                 return `${process.env.VUE_APP_API_URL}/attendance`
             }
-        },
-
-        // title: function () {
-        //     return this.$refs.calendar.title
-        // }
-
+        }
     },
     mounted() {
         this.value = this.getTodayDate()
@@ -110,7 +105,6 @@ export default {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
                 }
             }).then(({ data }) => {
-                console.log(data)
                 const events = []
 
                 data.attendanceList.forEach( ({ date }) => {
