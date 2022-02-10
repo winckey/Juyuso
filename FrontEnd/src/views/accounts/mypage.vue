@@ -49,13 +49,13 @@
           </div>
 
           <div class="profile-calendar">
-            <v-dialog max-width="630px">
+            <v-dialog max-width="650px" max-height="650px" >
               <template v-slot:activator="{ on, attrs }">
                 <img src="@/assets/Group 57.png" alt="calendar"
                 v-bind="attrs"
                 v-on="on">
               </template>
-              <v-card>
+              <v-card width="95%" height="95%">
                 <calender-popup :user="user" v-if="user"></calender-popup>
               </v-card>
             </v-dialog>

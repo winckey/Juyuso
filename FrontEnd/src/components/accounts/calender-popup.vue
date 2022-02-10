@@ -36,7 +36,7 @@
                         </div>
                     </v-toolbar>
                 </v-sheet>
-                <v-sheet height="400" max-height="100%">
+                <v-sheet height="450" max-height="100%">
                     <v-calendar
                         ref="calendar"
                         v-model="value"
@@ -44,13 +44,7 @@
                         :events="events"
                         @moved="onChange"
                     >
-                        <!-- <template
-                            :stamp="stamp">
-                            <div>
-                                <p>text</p>
-                                {{ stamp }}
-                            </div>
-                        </template> -->
+                        
                     </v-calendar>
                 </v-sheet>
 
@@ -117,7 +111,6 @@ export default {
     methods: {
         onChange(e) {
             const { year, month } = e
-
             axios.get(`${process.env.VUE_APP_API_URL}/attendance/${year}/${month}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
