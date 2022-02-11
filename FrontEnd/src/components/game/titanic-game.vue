@@ -23,12 +23,15 @@
         </div>
         <div class="col-md-3">
           <div style="height: 100%" class="d-flex flex-column justify-content-end">
-            <span class="m-2 d-flex flex-column justify-content-end" style="height: 230px; width: 100%">
+            <span class="m-2 d-flex flex-column justify-content-end box" style="height: 230px; width: 100%">
               <img
                 class="img-style mx-auto"
                 :style="imgStyle"
-                src="@/assets/add_beer.png" 
+                src="@/assets/game_beer.png" 
                 alt="">
+              <img 
+                src="@/assets/game_glass.png" alt=""
+                class="img-style">
             </span>
             <span class="mx-auto">
               <v-btn
@@ -194,12 +197,37 @@ export default {
     border-radius: 20px;
     background: #141425;
   }
+  .box{
+    position:relative;
+    /* display: inline-block; */
+    display:block;
+    margin:auto;
+  }
 
+  .box > img {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translateX(-50%);
+  }
+
+ 
   .img-style {
     display: block;
     object-fit: cover;
     object-position: center bottom;
     width: 130px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform:translate(-50%, 0%);
+    -ms-transform:translate(-50%, 0%);
+    transform:translate(-50%, 0%);
+  }
+
+ .box > img:nth-child(2){
+    top: initial;
+    bottom: 0;
+    transform: translate(-50%, 0);
   }
 
 </style>
