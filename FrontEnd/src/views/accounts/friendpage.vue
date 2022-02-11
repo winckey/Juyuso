@@ -110,7 +110,7 @@ export default {
 
 .background {
   height: 100vh;
-  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7) ), url(https://cdn.pixabay.com/photo/2016/09/18/20/51/cans-1679022_960_720.jpg);
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200);
   background-size : cover;
 }
 
@@ -120,6 +120,11 @@ export default {
   justify-content:center;
   align-items:center;
 }
+
+
+/* img {
+ max-width: 100%;
+} */
 
 .wallet {
   position: relative;
@@ -165,7 +170,7 @@ export default {
 .profile-calendar {
   position:absolute;
   top: 50%;
-  width: 95%;
+  width: 90%;
   cursor: pointer;
 }
 

@@ -7,6 +7,10 @@ import friends from '@/store/modules/friends.js'
 import drinking from './modules/drinking'
 import table from '@/store/modules/table.js'
 
+import createPersistedState from 'vuex-persistedstate'
+
+
+
 export default new Vuex.Store({
   state: {
   },
@@ -20,5 +24,10 @@ export default new Vuex.Store({
     friends: friends,
     drinking: drinking,
     table: table,
-  }
+  },
+  plugins: [
+    createPersistedState({
+      paths: ['accounts']
+    })
+  ]
 })
