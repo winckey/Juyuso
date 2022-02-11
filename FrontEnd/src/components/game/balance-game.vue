@@ -165,6 +165,7 @@ export default {
       bgsound: null,
       balanceGame: {
         type: 'Balance',
+        isWrite: false,
         isStart: false,
         isEnd:false,
         totalTime: 5,
@@ -213,7 +214,15 @@ export default {
 
     },
     writeText:function(){
-      this.dataInput = true
+      if(this.balanceGame.isWrite == false){
+        this.dataInput = true
+        this.balanceGame.isWrite = true
+        this.sendGameInfo()
+      }
+      else{
+        alert('다른 사용자가 문제를 작성중입니다')
+      }
+      
     },
     inputData:function(){
       this.balanceGame.gameData[0] = this.Acard
