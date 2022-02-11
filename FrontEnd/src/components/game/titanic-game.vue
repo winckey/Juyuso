@@ -102,10 +102,10 @@ export default {
   },
   mounted: function () {
     this.bgsound = document.querySelector('.bgaudio')
-    this.bgsound.volume = 0.3
+    this.bgsound.volume = 0.1
     console.log(this.bgsound)
     this.sound = document.querySelector('.audio')
-    this.sound.volume = 0.7
+    this.sound.volume = 0.5
     this.titanicGame = {...JSON.parse(this.gameInfo)}
     this.myConnectionId = this.publisher.stream.connection.connectionId
     this.mainPublisher()
