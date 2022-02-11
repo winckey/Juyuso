@@ -106,7 +106,8 @@
 </template>
 
 <script>
-// import {mapActions} from 'vuex'
+import {mapState} from 'vuex'
+
 import axios from 'axios'
 
 export default {
@@ -121,7 +122,7 @@ export default {
         }
     },
     methods: {
-      // ...mapActions('drinking', ['addDrinking']),
+     
       addSojuBottle: function (){
         this.sojuBottle += 1
       },
@@ -142,7 +143,6 @@ export default {
           date: this.endDate, 
           soju: (this.sojuBottle * 7) + this.sojuGlass
         }
-        console.log(item)
         
         axios({
                 method: 'POST',
@@ -152,14 +152,19 @@ export default {
             })
                 .then(res => {
                     console.log(res)
-                    // this.$router.go()
+                    const emitItem = {
+                      date: this.endDate,
+                      count: (this.sojuBottle * 7) + this.sojuGlass + this.beer * 3
+                    }
+                    this.$emit('updateDrinkingInfo', emitItem)
                 })
-                .catch(err => {
-                    console.log(err)
-                })
+                // .catch(err => {
+                //     console.log(err)
+                // })
       }
     },
     computed: {
+      ...mapState('accounts', ['user']),
       endDate: function () {
       var today = new Date();
       var year = today.getFullYear();

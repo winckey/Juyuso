@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-content-center my-auto">
+  <div class="d-flex justify-content-center my-auto background">
     <div class="commit-box">
       <div class="mx-auto p-3">
 
@@ -36,10 +36,10 @@
         </div>
         
         <div class="d-flex justify-content-center p-4" v-if="isUser">
-          <h1>너의 간은 녹는 중ㅋ</h1>   
+          <h1>{{ drinkingMessage }}</h1>   
         </div>
         <div class="d-flex justify-content-center p-3 mx-auto" style="width:100px;" v-if="isUser">
-          <TodayAlcohol/>
+          <TodayAlcohol @updateDrinkingInfo="updateDrinkingInfo"/>
         </div>
 
       </div>
@@ -70,6 +70,13 @@ export default {
   methods: {
     goMyPage: function () {
       this.$router.push({name: 'MyPage', params: {userId: this.userInfo.id}})
+    },
+    updateDrinkingInfo: function (item) {
+      if (this.date[this.date.length-1]['date'] === this.end_date) {
+        this.date[this.date.length-1]['count'] += item['count']
+      } else {
+        this.date.push(item)
+      }
     }
     
   },
@@ -89,32 +96,49 @@ export default {
       } else {
         return false
       }
+    },
+    drinkingMessage: function () {
+      const dateCount = this.date.length
+
+      if (dateCount >= 10) {
+        return '간 meling'
+      } else if (dateCount >= 5) {
+        return '분발하자'
+      } else {
+        return '몹시 건강하구나'
+      }
     }
   },
   created: function () {
-    console.log('created시작')
     if (this.$route.params.user) {
       this.userInfo = this.$route.params.user
-      console.log('유저 정보 담기 완료')
     }
+
     axios({
       method: 'GET',
       url: `${process.env.VUE_APP_API_URL}/drinking/history/${this.userInfo.userId}`,
       headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
-        console.log(res.data)
         this.date = res.data
-        // this.$router.go()
       })
       .catch(err => {
         console.log(err)
       })
+
   }
 }
 </script>
 
 <style scoped>
+
+.background {
+  background-size : cover;
+  height: 100vh;
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://cdn.pixabay.com/photo/2019/05/19/23/47/clouds-4215608_960_720.jpg);
+  
+}
+
 .commit-box {
   width: 80%;
   margin-top: 10vh;
@@ -124,7 +148,7 @@ export default {
 .outer-box{
   border: 1px solid white;
   border-radius: 10px;
-  color: purple;
+
 }
 
 #app {

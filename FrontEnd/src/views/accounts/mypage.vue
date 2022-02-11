@@ -49,18 +49,10 @@
           </div>
 
           <div class="profile-calendar">
-            <v-dialog>
-              <template v-slot:activator="{ on, attrs }">
-                <img src="@/assets/Group 57.png" alt="calendar"
-                v-bind="attrs"
-                v-on="on">
-              </template>
-              <v-card>
-                <calender-popup></calender-popup>
-              </v-card>
-            </v-dialog>
-            
+              <CalenderPopup :user="user" v-if="user"/>
           </div>
+
+            
           <div class="wallet-2">
             <img src="@/assets/wallet_card_2.png" alt="wallet-card">
           </div>
@@ -100,8 +92,6 @@ export default {
   },
   methods: {
     goMyData: function () {
-      console.log('goMydata')
-      // this.$router.push({name: 'MyData', params: {userId: this.user.id}, query: {user:this.user}})
       this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
     },
     changeProfileImage: function (image) {
@@ -116,12 +106,8 @@ export default {
       headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
-        console.log(res.data.user)
         const userInfo = res.data.user
         this.user = userInfo
-      })
-      .catch(err => {
-        console.log(err)
       })
   },
   computed: {
@@ -142,7 +128,8 @@ export default {
 .background {
   background-size : cover;
   height: 100vh;
-  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2020/05/06/06/18/blue-5136251_960_720.jpg);
+  /* background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2019/05/19/23/47/clouds-4215608_960_720.jpg); */
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200);
 }
 
 .wallet-container {
@@ -153,9 +140,9 @@ export default {
 
 }
 
-/* img {
+img {
  max-width: 100%;
-} */
+}
 
 .wallet {
   position: relative;

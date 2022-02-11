@@ -234,7 +234,6 @@ export default {
 
       const validation = this.$refs.update.validate()
       if (validation) {
-        console.log('업데이트 요청 직전')
         axios({
             method: 'PUT',
             url: `${process.env.VUE_APP_API_URL}/users/me`,
@@ -242,17 +241,15 @@ export default {
             headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
           })
             .then(res => {
-              console.log('axios들어옴 하하하')
               this.isSuccess=true
               this.isAlert=false
-              console.log(res.data.user)
               this.userUpdate(res.data.user)
   
             })
             .catch(err => {
-              console.log('axios 틀렸잖앙')
-              console.log(item.credentials.regionId)
-              console.log(this.defaultSelected)
+              // console.log('axios 틀렸잖앙')
+              // console.log(item.credentials.regionId)
+              // console.log(this.defaultSelected)
               this.alertMessage = "입력 형식을 다시 확인해주세요!"
               this.isAlert = true
               setTimeout(() => this.isAlert=false, 3000)
@@ -266,15 +263,6 @@ export default {
         this.isSuccess=false
       }
     },
-    // changeImage: function () {
-    //   console.log('changeImage')
-    //   console.log(this.profileImg.size)
-    //   if (this.profileImg.size > 300000) {
-    //     this.isImage = true
-    //     setTimeout(() => this.isImage=false, 4000)
-    //   }
-    //   this.myImage = this.profileImg
-    // },
   
     uploadImage: function () {
 
@@ -288,14 +276,13 @@ export default {
             headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
           })
             .then(res => {
-              console.log(res)
               this.myImage = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
               this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
               this.$emit('changeProfileImage', res.data.imgUrl)
             })
-            .catch(err => {
-              console.log(err)
-            })
+            // .catch(err => {
+            //   console.log(err)
+            // })
       } else {
         console.log(this.profileImg.size)
         this.alertMessage = "이미지 크기가 용량을 초과했습니다!"
@@ -311,11 +298,9 @@ export default {
       axios({
         method: 'GET',
         url: `${process.env.VUE_APP_API_URL}/users/nickname/${this.userInfo.nickname}`,
-        // data: {nickname: this.userInfo.nickname}
       })
       .then(res => {
         if (!res.data.duplicate) {
-          console.log(res.data.duplicate)
           this.nicknameCheck = true
 
         } else {
@@ -324,9 +309,9 @@ export default {
           setTimeout(() => this.isAlert=false, 3000)
         }
       })
-      .catch(err => {
-        console.log(err)
-      })
+      // .catch(err => {
+      //   console.log(err)
+      // })
     }
   }
 }

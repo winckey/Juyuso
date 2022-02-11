@@ -53,13 +53,6 @@
           >
             닫기
           </v-btn>
-          <!-- <v-btn
-            color="blue darken-1"
-            text
-            
-          >
-            저장
-          </v-btn> -->
         </v-card-actions>
 
 
@@ -94,8 +87,6 @@ export default {
       headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
-        console.log(res.data)
-        console.log(res.data.bans)
         this.blockedFriends = res.data.bans
       })
       .catch(err =>{

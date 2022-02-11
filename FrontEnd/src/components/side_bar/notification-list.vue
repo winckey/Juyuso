@@ -73,6 +73,7 @@ export default {
   mounted: function () {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
+      console.log(payload)
       this.makeToast(payload)
     })
   },

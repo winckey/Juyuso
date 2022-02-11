@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog
       v-model="dialog"
-      max-width="500px"
+      max-width="450px"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -43,7 +43,7 @@
           <v-container class="rounded-lg">
               <v-form>
                 
-                <v-row>
+                <v-row class="d-flex justify-content-center">
 
                   <v-row v-if="!isValid">
                       <v-col cols="8">
@@ -57,15 +57,15 @@
                             @click:append="passwordShow = !passwordShow"
                             >
                             </v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <div class="d-flex align-self-center">
-                                <v-btn @click="passwordValid" color="#4DB6AC" dark>확인하기</v-btn>
-                            </div>
-                        </v-col>
+                      </v-col>
+                      <v-col cols="4" class="d-flex align-items-center justify-content-center">
+                          <div>
+                              <v-btn @click="passwordValid" color="#4DB6AC" dark rounded>확인하기</v-btn>
+                          </div>
+                      </v-col>
                     </v-row>
 
-                  <div v-if="isValid" ref="password">
+                  <div v-if="isValid" ref="password" class="d-flex flex-column align-items-center">
                       <v-col cols="10">
                          <v-text-field
                             v-model="password"
@@ -100,7 +100,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="[dialog = false, isSuccess=false, isAlert=false]"
+            @click="[dialog = false, isSuccess=false, isAlert=false, isValid=false]"
           >
             닫기
           </v-btn>
@@ -156,7 +156,6 @@ export default {
     methods: {
         ...mapActions('accounts', ['userUpdate']),
         passwordValid: function () {
-            console.log(this.nowPassword)
             axios({
                 method: 'POST',
                 url: `${process.env.VUE_APP_API_URL}/users/validate`,
@@ -164,8 +163,7 @@ export default {
                 headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
             })
                 .then(res => {
-                    console.log(res)
-                    this.isValid = true
+                    this.isValid = res.data.valid
                     this.isAlert = false
                 })
                 .catch(err => {
@@ -174,23 +172,21 @@ export default {
                 })
         },
         updatePassword: function () {
-            console.log('업데이트 요청 직전')
             if (this.password === this.passwordConfirmation) {
                 axios({
-                        method: 'PUT',
+                        method: 'POST',
                         url: `${process.env.VUE_APP_API_URL}/users/auth`,
                         data: {password: this.password},
                         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
                     })
                         .then(res => {
-                        console.log('axios들어옴 하하하')
                         this.isSuccess=true
                         this.isAlert = false
+                        this.nowPassword = ''
                         console.log(res.data.user)
                         this.userUpdate(res.data.user)
                         })
                         .catch(err => {
-                        console.log('axios 틀렸잖앙')
                         this.isAlert = true
                         console.log(err)
                         })

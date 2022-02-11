@@ -1,6 +1,6 @@
 <template>
   <div class="background-box"
-  :style="{'background-image':'url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
+  :style="{'background-image':'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
     <div id="session" v-if="session">
       <div id="session-header">
         <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
@@ -52,56 +52,51 @@
       <div class="d-flex justify-content-between align-items-center" style="height: 100%">
         <div class="d-flex align-items-center" style="height: 100%">
           <!-- 사운드 관련 버튼 -->
-          <v-speed-dial
-            v-model="fab"
-            direction="top"
-            fab>
-            <template v-slot:activator>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
               <v-btn
-                v-model="fab"
                 class="m-1"
-                dark
                 small
-                fab>
-                <v-icon dense v-if="fab">
-                  mdi-close
-                </v-icon>
-                <v-icon dense v-else>
-                  mdi-microphone-variant
-                </v-icon>
+                v-bind="attrs"
+                v-on="on"
+                fab
+                @click="audioToggle">
+                <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
               </v-btn>
             </template>
-            <v-btn
-              class="m-1"
-              fab
-              small
-              @click="audioToggle">
-              <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
-            </v-btn>
-            <v-btn
-              class="m-1"
-              fab
-              small
-              @click="changeVoice">
-              <v-icon dense>{{ voiceChange ? 'mdi-music-note' : 'mdi-music-note-off' }}</v-icon>
-            </v-btn>
-          </v-speed-dial>
+            <span>{{ publishAudio ? '오디오 중지' : '오디오 시작' }}</span>
+          </v-tooltip>
 
-          <!-- 카메라 관련 버튼 -->
-          <v-btn
-            class="m-1"
-            fab
-            small
-            @click="videoToggle">
-            <v-icon dense>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
-          </v-btn>
-          <v-btn
-            class="m-1"
-            fab
-            small
-            @click="bullhorn = !bullhorn">
-            <v-icon dense>mdi-bullhorn-outline</v-icon>
-          </v-btn>
+          
+        <!-- 카메라 관련 버튼 -->
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="m-1"
+                fab
+                small
+                v-bind="attrs"
+                v-on="on"
+                @click="videoToggle">
+                <v-icon dense>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ publishVideo ? '비디오 중지' : '비디오 시작' }} </span>
+          </v-tooltip>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="m-1"
+                fab
+                small
+                v-bind="attrs"
+                v-on="on"
+                @click="bullhorn = !bullhorn">
+                <v-icon dense>mdi-bullhorn-outline</v-icon>
+              </v-btn>
+            </template>
+            <span>확성기 기능</span>
+          </v-tooltip>
           <transition name="stretch" mode="out-in">
             <v-text-field
               class="align-items-center"
@@ -116,84 +111,134 @@
           </transition>
         </div>
         <div class="d-flex">
-          <v-btn
-            class="chat-btn m-1"
-            fab
-            small
-            @click="toggleChatbox"
-          >
-            <v-icon>mdi-chat-processing</v-icon>
-          </v-btn>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="m-1"
+                fab
+                small
+                v-on="on"
+                v-bind="attrs"
+                @click="openFilterPopup"
+              >
+                <v-icon>mdi-movie-filter</v-icon>
+              </v-btn>
+            </template>
+            <span>필터 기능</span>
+          </v-tooltip>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="chat-btn m-1"
+                fab
+                small
+                v-on="on"
+                v-bind="attrs"
+                @click="toggleChatbox"
+              >
+                <v-icon>mdi-chat-processing</v-icon>
+              </v-btn>
+            </template>
+            <span>채팅창 열기</span>
+          </v-tooltip>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="m-1"
+                fab
+                small
+                v-on="on"
+                v-bind="attrs"
+                @click="peopleListShow = !peopleListShow">
+                <v-icon>mdi-account-group-outline</v-icon>
+              </v-btn>
+            </template>
+            <span>참가자 보기</span>
+          </v-tooltip>
           
-          <v-btn
-            class="m-1"
-            fab
-            small
-            @click="peopleListShow = !peopleListShow">
-            <v-icon>mdi-account-group-outline</v-icon>
-          </v-btn>
+          
           <!-- 게임 관련 -->
-          <v-speed-dial
-            v-model="game"
-            direction="top"
-            fab
-          >
-            <template v-slot:activator>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
               <v-btn
                 v-model="game"
                 class="m-1"
+                @click="openGamePopup"
                 color="blue darken-2"
                 dark
+                v-on="on"
+                v-bind="attrs"
                 small
                 fab
               >
-                <v-icon dense v-if="game">
-                  mdi-close
-                </v-icon>
-                <v-icon dense v-else>
+                <v-icon dense>
                   mdi-controller-classic-outline
                 </v-icon>
               </v-btn>
             </template>
-            <v-btn
-              v-for="(game, idx) in games"
-              :key="idx"
-              dark
-              small
-              color="green"
-              @click="sendGameMode(game)"
-            >
-              {{ game.name }}
-            </v-btn>
-          </v-speed-dial>
+            <span>게임 기능</span>
+          </v-tooltip>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-show="gameMode"
+                class="m-1"
+                color="red darken-2"
+                dark
+                v-on="on"
+                v-bind="attrs"
+                small
+                fab
+                @click="switchGameMode(undefined)"
+              >
+                <v-icon dense>
+                  mdi-close
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>게임 취소</span>
+          </v-tooltip>
         </div>
         <div>
-          <v-btn
-            color="error"
-            fab
-            small
-            @click="leaveTable">
-            <v-icon dark dense>mdi-application-export</v-icon>
-          </v-btn>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="m-1"
+                fab
+                small
+                v-on="on"
+                v-bind="attrs"
+                @click="openThemePopup">
+                <v-icon dark dense>mdi-compare</v-icon>
+              </v-btn>
+            </template>
+            <span>테마 변경</span>
+          </v-tooltip>
+          <v-tooltip top :open-on-click="false" :open-on-focus="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="m-1"
+                color="error"
+                fab
+                small
+                v-on="on"
+                v-bind="attrs"
+                @click="leaveTable">
+                <v-icon dark dense>mdi-application-export</v-icon>
+              </v-btn>
+            </template>
+            <span>나가기</span>
+          </v-tooltip>
         </div>
       </div>
     </v-sheet>
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="2500"
-    >
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="red"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-      {{ snackbarText }}
-    </v-snackbar>
+    <GamePopup
+    ref="gamePopup"/>
+    <FilterPopup
+    ref="filterPopup"/>
+    <ThemePopup
+    ref="themePopup"
+    :roomInfo="roomInfo"/>
   </div>
 </template>
 
@@ -206,6 +251,9 @@ import BalanceGame from '@/components/game/balance-game.vue'
 
 import DrawGame from '@/components/game/draw-game.vue'
 import TypingGame from '@/components/game/typing-game.vue'
+import GamePopup from '@/components/game/game-popup.vue'
+import FilterPopup from '@/components/table/filter-popup.vue'
+import ThemePopup from '@/components/table/theme-popup.vue'
 import { mapState, mapActions } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -221,18 +269,19 @@ export default {
     TitanicGame,
     BalanceGame,
     DrawGame,
-    TypingGame
+    TypingGame,
+    GamePopup,
+    FilterPopup,
+    ThemePopup
   },
   props: {
     roomInfo: Object,
   },
   data: function () {
     return {
-      fab: false,
+      audioFab: false,
       game: false,
-      snackbar: false,
       bullhorn: false,
-      snackbarText: '',
       messageInput: '',
       peopleListShow: false,
       menuBar: false,
@@ -248,11 +297,6 @@ export default {
         {name: '그림그리기'},
         {name: '밸런스'}
       ],
-      audios:[
-        {name: 'volume'},
-        {name: 'voice-change'}
-      ],
-      voiceChange:false,
     }
   },
 
@@ -275,6 +319,16 @@ export default {
     .then( res => {
       this.userInfo = res.data.user
     })
+    this.session.on('signal:theme', event => {
+      let data = JSON.parse(event.data)
+      this.roomInfo.theme = data.theme
+      this.$toast.open({
+        position: 'bottom',
+        message: `${data.username}님이 테마를 변경하셨습니다`,
+        type: 'info',
+        duration: 2500,
+      })
+    })
   },
 
 
@@ -283,8 +337,8 @@ export default {
     if (answer) {
         this.leaveSession(this.roomId)
         window.removeEventListener('beforeunload', function () {
-        this.leaveSession(this.roomId)
-      });
+          this.leaveSession(this.roomId)
+        });
       next()
     }
     else {
@@ -306,15 +360,9 @@ export default {
       'messages',
       'gameMode',
     ]),
-    ...mapState('table',[
-      'themeNum',
-    ]) 
-  },
-  watch: {
-    subscribers: function () {
-      const username = JSON.parse(this.subscribers[this.subscribers.length - 1].stream.connection.data).clientData
-      this.snackbarText = `${username}님이 입장하셨습니다.`
-      this.snackbar = true
+    isGameMode() {
+      console.log(this.gameMode)
+      return this.gameMode ? true : false
     }
   },
   methods: {
@@ -324,6 +372,15 @@ export default {
       'switchGameMode',
       'changeSound'
     ]),
+    openThemePopup () {
+      this.$refs.themePopup.dialog = true
+    },
+    openFilterPopup () {
+      this.$refs.filterPopup.dialog = true
+    },
+    openGamePopup () {
+      this.$refs.gamePopup.dialog = true
+    },
     toggleChatbox () {
       this.$refs.ChatPopup.chatBox = !this.$refs.ChatPopup.chatBox
     },
@@ -474,9 +531,9 @@ export default {
   }
   .background-box{
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    background-size: cover
+    background-size: cover;
   }
 </style>
