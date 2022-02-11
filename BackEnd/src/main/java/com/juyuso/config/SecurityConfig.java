@@ -39,16 +39,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService))
                 .authorizeRequests()
-//                .antMatchers("/api/users/login", "/api/users/id/**", "/api/users").permitAll()
-//                .antMatchers("/api/users/nickname/**").permitAll()
-//                .antMatchers("/static/res/**").permitAll()
+                .antMatchers("/api/users/login", "/api/users/id/**", "/api/users").permitAll()
+                .antMatchers("/api/users/nickname/**").permitAll()
+                .antMatchers("/static/res/**").permitAll()
+                .antMatchers("/ws/**").permitAll()
 //                .antMatchers("/ws/**").permitAll()
-//                .antMatchers("/broadcast/**").permitAll()
-//                .antMatchers("/api/chatRoom/**").permitAll()
-//                .antMatchers("/subscribe/chat/**", "/publish/chat/message/**").permitAll()
 //                .antMatchers("/api/chat/message/**").permitAll()
 //                .antMatchers("/topic/messages/**").permitAll()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 .and().cors();
     }
 
