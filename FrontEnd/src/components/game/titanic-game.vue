@@ -4,7 +4,7 @@
     <audio class="audio" src="@/assets/sound/pour_sound.mp3"></audio>
     <div class="container-fluid">
       <div class="row" style="height: 100%">
-        <div class="col-md-8 video-list-style">
+        <div class="col-md-8">
           <div class="d-flex justify-content-center">
             <user-video class="col-md-4" :stream-manager="turnPublisher"/>
           </div>
@@ -25,13 +25,14 @@
           <div style="height: 100%" class="d-flex flex-column justify-content-end">
             <span class="m-2 d-flex flex-column justify-content-end box" style="height: 230px; width: 100%">
               <img
-                class="img-style mx-auto"
+                class="img-style mx-auto img-style-drink"
                 :style="imgStyle"
+                style="img-style"
                 src="@/assets/game_beer.png" 
                 alt="">
               <img 
                 src="@/assets/game_glass.png" alt=""
-                class="img-style">
+                class="img-style img-style-galss">
             </span>
             <span class="mx-auto">
               <v-btn
@@ -192,11 +193,6 @@ export default {
     border-top: 8px solid #bbb;
     border-radius: 5px;
   }
-  .video-list-style {
-    margin-left: 10px;
-    border-radius: 20px;
-    background: #141425;
-  }
   .box{
     position:relative;
     /* display: inline-block; */
@@ -204,10 +200,10 @@ export default {
     margin:auto;
   }
 
-  .box > img {
+  .img-style-glass {
     position: absolute;
-    left: 50%; top: 50%;
-    transform: translateX(-50%);
+    left: 50%;;
+    transform: translateX(-50%, 0);
   }
 
  
@@ -219,15 +215,14 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    -webkit-transform:translate(-50%, 0%);
-    -ms-transform:translate(-50%, 0%);
-    transform:translate(-50%, 0%);
+    transform:translate(-50%,-50%);
   }
 
- .box > img:nth-child(2){
+ .img-style-drink{
+    position: absolute;
     top: initial;
     bottom: 0;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0%);
   }
 
 </style>
