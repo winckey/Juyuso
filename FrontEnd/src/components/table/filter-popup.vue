@@ -154,14 +154,14 @@ export default {
       videoFilter: null,
       filterType: [
         {
-          name: '오디오 필터', 
+          name: '음성변조', 
           types: [
-            { name: 'pitch', description: '목소리의 높낮이를 조절할 수 있는 필터입니다.'},
-            { name: 'audioecho', description: '목소리의 울림을 조절할 수 있는 필터입니다.'}
+            { name: '헬륨가스', description: '목소리의 높낮이를 조절할 수 있는 필터입니다.'},
+            { name: '에코', description: '목소리의 울림을 조절할 수 있는 필터입니다.'}
           ]
         },
         {
-          name: '비디오 필터', 
+          name: '비디오 이펙트', 
           types: [
             { name: 'bulge', img: 'bulge'},
             { name: 'dicetv', img: 'dicetv'},

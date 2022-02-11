@@ -87,6 +87,9 @@ export default {
     ...mapActions('openviduStore', [
       'joinSession'
     ]),
+    ...mapActions('table', [
+      'setTheme'
+    ]),
     getUserDevices: function() {
       this.Chat_OV.getDevices().then( devices => {
         devices.forEach( device => {
@@ -126,6 +129,7 @@ export default {
       catch {
         roomInfo
       }
+      this.setTheme(this.roomInfo.theme)
       this.$router.push({ name: 'Table', params: { roomId: this.roomInfo.meetingId, roomInfo: this.roomInfo }})
     }
   },
