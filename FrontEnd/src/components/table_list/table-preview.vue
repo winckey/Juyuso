@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import { OpenVidu } from 'openvidu-browser'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -83,9 +82,6 @@ export default {
       audioDevices: [],
       videoSrc: undefined,
     }
-  },
-  mounted: function () {
-    this.OV = new OpenVidu()
   },
   methods: {
     ...mapActions('openviduStore', [

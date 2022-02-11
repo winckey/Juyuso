@@ -15,7 +15,7 @@
         :subscribers="session.streamManagers"
         :publisher="publisher"/>
       <DrawGame v-else-if="gameMode == '그림그리기'"
-        :subscribers="subscribers"
+        :subscribers="wholeSubscribers"
         :publisher="publisher"/>
       <TypingGame v-else-if="gameMode == '타자연습'"
         :subscribers="subscribers"
