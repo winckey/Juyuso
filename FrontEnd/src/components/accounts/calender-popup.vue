@@ -2,9 +2,9 @@
     <div>
         <v-dialog max-width="650px" max-height="650px" v-model="dialog">
             <template v-slot:activator="{ on, attrs }">
-                <img src="@/assets/Group 57.png" alt="calendar"
+                <v-img src="@/assets/Group 57.png" alt="calendar"
                     v-bind="attrs"
-                    v-on="on">
+                    v-on="on"></v-img>
             </template>
 
             <v-card width="99%" height="100%">
@@ -96,10 +96,10 @@ export default {
             }
         }
     },
-    mounted() {
+    created() {
         this.value = this.getTodayDate()
 
-
+        console.log('달력 mounted')
         axios.get(this.getUrl, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
