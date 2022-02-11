@@ -1,136 +1,149 @@
 <template>
-	<div v-if="balanceGame">
-    <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
-    <audio class="audio" src="@/assets/sound/balance_click.wav"></audio>
-    <div>
-      <user-video class="col-md-4" :stream-manager="publisher"/>
-      <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-    </div>
-		<div class="game-box">
-      <v-card class="balance-game">
-        <v-container class="game">
-          <p>🍺밸런스 게임🥃</p>
-          <v-btn @click="writeText" :disabled="balanceGame.isStart">시작</v-btn>
-          <v-container fluid class="flex"
-            v-if="dataInput">
-            <v-col
-              cols="12"
-              sm="6">
+  <div v-if="balanceGame">
+    <v-row>
+      <v-col cols="8">
+        <div>
+          <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
+        </div>
+        <div>
+          <audio class="audio" src="@/assets/sound/balance_click.wav"></audio>
+        </div>
+      </v-col>
+      <div>
+        
+        <div>
+          <user-video class="col-md-4" :stream-manager="publisher"/>
+          <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+        <div class="game-box">
+          <v-card class="balance-game">
+            <v-container class="game">
+              <p>🍺밸런스 게임🥃</p>
+              <v-btn @click="writeText" :disabled="balanceGame.isStart">시작</v-btn>
+              <v-container fluid class="flex"
+                v-if="dataInput">
+                <v-col
+                  cols="12"
+                  sm="6">
+                  <v-row>
+                    <v-text-field
+                      v-model="Acard"></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field
+                      v-model="Bcard"></v-text-field>
+                  </v-row>
+                  <v-btn @click="inputData" :disabled="balanceGame.isStart">문제확정</v-btn>
+                  <v-btn @click="gameStart" :disabled="balanceGame.isStart">게임시작</v-btn>
+                </v-col>
+              </v-container>
+              <div style="color: rgb(0, 0, 0); font-size:1.2em"
+                v-if="balanceGame.isStart">
+                {{ balanceGame.totalTime }}
+              </div>
+            </v-container>
+            <v-container fluid class="flex">
               <v-row>
-                <v-text-field
-                  v-model="Acard"></v-text-field>
+                <v-col
+                  v-for="n in 2"
+                  :key="n"
+                  cols="12"
+                  sm="6">
+                  <v-hover v-if="balanceGame.isStart">
+                    <v-card @click="[cardCount(n - 1),myPick(n-1)]"
+                      class="question-box">
+                      <p class="question-text">{{balanceGame.gameData[n-1]}}</p>
+                    </v-card>
+                  </v-hover>
+                </v-col>
               </v-row>
-              <v-row>
-                <v-text-field
-                  v-model="Bcard"></v-text-field>
-              </v-row>
-              <v-btn @click="inputData" :disabled="balanceGame.isStart">문제확정</v-btn>
-              <v-btn @click="gameStart" :disabled="balanceGame.isStart">게임시작</v-btn>
-            </v-col>
-          </v-container>
-          <div style="color: rgb(0, 0, 0); font-size:1.2em"
-            v-if="balanceGame.isStart">
-            {{ balanceGame.totalTime }}
-          </div>
-        </v-container>
-        <v-container fluid class="flex">
-          <v-row>
-            <v-col
-              v-for="n in 2"
-              :key="n"
-              cols="12"
-              sm="6">
-              <v-hover v-if="balanceGame.isStart">
-                <v-card @click="[cardCount(n - 1),myPick(n-1)]"
-                  class="question-box">
-                  <p class="question-text">{{balanceGame.gameData[n-1]}}</p>
-                </v-card>
-              </v-hover>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-		</div>
-    <v-dialog v-model="balanceGame.isEnd"
-      max-width="400">
-      <v-card v-if="balanceGame.cardData">
-      <v-card
-        class="result win"
-        v-if="winCard == myPickedCard">
-        you win
-      </v-card>
-      <v-card
-        v-else
-        class="result lose">
-        you lose 
-      </v-card>
-        <!-- A 승리 -->
-        <v-progress-linear
-          :value="((balanceGame.cardData[0].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
-          height="50"
-          v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
-          color="amber">
-          <v-container>
-            <v-row justify="space-between">
-              <v-col cols="auto">
-                A : {{ balanceGame.cardData[0].length }}
-              </v-col>
-              <v-col cols="auto">
-                B : {{ balanceGame.cardData[1].length }}
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-progress-linear>
+            </v-container>
+          </v-card>
+        </div>
+        <v-dialog v-model="balanceGame.isEnd"
+          max-width="400">
+          <v-card v-if="balanceGame.cardData">
+          <v-card
+            class="result win"
+            v-if="winCard == myPickedCard">
+            you win
+          </v-card>
+          <v-card
+            v-else
+            class="result lose">
+            you lose 
+          </v-card>
+            <!-- A 승리 -->
+            <v-progress-linear
+              :value="((balanceGame.cardData[0].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
+              height="50"
+              v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
+              color="amber">
+              <v-container>
+                <v-row justify="space-between">
+                  <v-col cols="auto">
+                    A : {{ balanceGame.cardData[0].length }}
+                  </v-col>
+                  <v-col cols="auto">
+                    B : {{ balanceGame.cardData[1].length }}
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-progress-linear>
 
-        <!-- B 승리 -->
-        <v-progress-linear
-          :value="((balanceGame.cardData[1].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
-          height="50"
-          v-else-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length">
-          <v-container>
-            <v-row justify="space-between">
-              <v-col cols="auto">
-                B : {{ balanceGame.cardData[1].length }}
-              </v-col>
-              <v-col cols="auto">
-                A : {{ balanceGame.cardData[0].length }}
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-progress-linear>
+            <!-- B 승리 -->
+            <v-progress-linear
+              :value="((balanceGame.cardData[1].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
+              height="50"
+              v-else-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length">
+              <v-container>
+                <v-row justify="space-between">
+                  <v-col cols="auto">
+                    B : {{ balanceGame.cardData[1].length }}
+                  </v-col>
+                  <v-col cols="auto">
+                    A : {{ balanceGame.cardData[0].length }}
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-progress-linear>
 
-        <div v-for="player in balanceGame.cardData[0]" :key="player.username">
-          A카드를 {{ player.username }} 님이 선택하셨습니다
-        </div>
-        <div v-for="player in balanceGame.cardData[1]" :key="player.username">
-          B카드를 {{ player.username}} 님이 선택하셨습니다
-        </div>
-        <div v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
-          class="win-messege">
-          {{ winCard }} 를 선택하신
-          <span class="name-highlignt"
-            v-for="player in balanceGame.cardData[0]"
-            :key="player.username">
-            🎉{{ player.username }}
-          </span>
-          님이 승리하였습니다
-        </div>
-        <div v-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length"
-          class="win-messege">
-          {{ winCard }} 를 선택하신
-          <span class="name-highlignt"
-            v-for="player in balanceGame.cardData[1]"
-            :key="player.username">
-            🎉{{ player.username }}
-          </span>
-          님이 승리하였습니다
-        </div>
-        <div v-if="balanceGame.cardData[0].length == balanceGame.cardData[1].length">
-          무승부입니다
-        </div>
-      </v-card>
-    </v-dialog>
-	</div>
+            <div v-for="player in balanceGame.cardData[0]" :key="player.username">
+              A카드를 {{ player.username }} 님이 선택하셨습니다
+            </div>
+            <div v-for="player in balanceGame.cardData[1]" :key="player.username">
+              B카드를 {{ player.username}} 님이 선택하셨습니다
+            </div>
+            <div v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
+              class="win-messege">
+              {{ winCard }} 를 선택하신
+              <span class="name-highlignt"
+                v-for="player in balanceGame.cardData[0]"
+                :key="player.username">
+                🎉{{ player.username }}
+              </span>
+              님이 승리하였습니다
+            </div>
+            <div v-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length"
+              class="win-messege">
+              {{ winCard }} 를 선택하신
+              <span class="name-highlignt"
+                v-for="player in balanceGame.cardData[1]"
+                :key="player.username">
+                🎉{{ player.username }}
+              </span>
+              님이 승리하였습니다
+            </div>
+            <div v-if="balanceGame.cardData[0].length == balanceGame.cardData[1].length">
+              무승부입니다
+            </div>
+          </v-card>
+        </v-dialog>
+      </div>
+    </v-row>
+
+  </div>
+
 </template>
 
 <script>
@@ -270,6 +283,7 @@ export default {
         this.balanceGame.isStart = false
         this.gameStarted = false
         this.balanceGame.isEnd = true
+        this.balanceGame.isWrite = false
       }
     },
     showResult: function () {
@@ -299,7 +313,8 @@ export default {
   mounted:function(){
     this.bgsound = document.querySelector('.bgaudio')
     this.sound = document.querySelector('.audio')
-    this.bgsound.volume = 0.05
+    this.bgsound.volume = 0.1
+    this.sound.volume = 0.5
     this.bgsound.play()
   }
 }
