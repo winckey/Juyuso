@@ -117,7 +117,7 @@ export default {
   
   .main-enter {
     position: absolute;
-    top: 15%;
+    top: -15%;
     left: 50%;
     opacity: 0.7;
     transform: translate(-50%);
@@ -125,7 +125,7 @@ export default {
 
   .main-enter:hover {
     position: absolute;
-    top: 15%;
+    top: -15%;
     left: 50%;
     opacity: 1;
     transform: translate(-50%);
