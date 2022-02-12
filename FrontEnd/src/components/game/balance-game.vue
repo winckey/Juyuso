@@ -1,16 +1,19 @@
 <template>
-  <div v-if="balanceGame">
+  <v-container v-if="balanceGame"
+    fluid>
     <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
     <audio class="audio" src="@/assets/sound/balance_click.wav"></audio>
+    <audio class="win" src="@/assets/sound/win.mp3"></audio>
+    <audio class="lose" src="@/assets/sound/lose.mp3"></audio>
     <v-row>
-      <v-col cols="8">
-        <div>
-          <user-video class="col-md-4" :stream-manager="publisher"/>
-        </div>
-        <div>
+      <v-col cols="4">
+        <user-video :stream-manager="publisher"/>
+      </v-col>
+      <v-col cols="4">
+        <div class="balance-game">
           <div>
-            <div class="game-box">
-              <v-card class="balance-game">
+            <div>
+              <div>
                 <v-container class="game">
                   <p>🍺밸런스 게임🥃</p>
                   <v-btn @click="[gameStart(),makeRandomNum()]" :disabled="balanceGame.isStart">시작</v-btn>
@@ -36,23 +39,32 @@
                     {{ balanceGame.totalTime }}
                   </div>
                 </v-container>
-                <v-container fluid class="flex">
+                <v-container class="flex">
                   <v-row>
-                    <v-col
-                      v-for="n in 2"
-                      :key="n"
-                      cols="12"
-                      sm="6">
-                      <v-hover v-if="balanceGame.isStart">
-                        <v-card @click="[cardCount(n - 1),myPick(n-1)]"
+                    <v-col>
+                      <div class="card-box" v-if="balanceGame.isStart">
+                        <div
+                          @click="[cardCount(0),myPick(0)]"
+                          class="question-box a-card">
+                          <!-- <div class="question-text">A</div> -->
+                          <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
+                        </div>
+                        <div
+                          @click="[cardCount(1),myPick(1)]"
+                          class="question-box b-card">
+                          <!-- <div class="question-text">B</div> -->
+                          <p class="question-text">{{balanceGame.gameData[1][balanceGame.randomNum]}}</p>
+                        </div>
+                        <!-- <div @click="[cardCount(n - 1),myPick(n-1)]"
                           class="question-box">
                           <p class="question-text">{{balanceGame.gameData[n-1][balanceGame.randomNum]}}</p>
-                        </v-card>
-                      </v-hover>
+                        </div> -->
+                        <img src="@/assets/vs.png" alt="" class="vs">
+                      </div>
                     </v-col>
                   </v-row>
                 </v-container>
-              </v-card>
+              </div>
             </div>
             <v-dialog v-model="balanceGame.isEnd"
               max-width="400">
@@ -135,14 +147,14 @@
             </v-dialog>
           </div>
         </div>
-        <div>
-          <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-        </div>
+      </v-col>
+      <v-col cols="4">
+        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
       </v-col>
 
     </v-row>
 
-  </div>
+  </v-container>
 
 </template>
 
@@ -181,7 +193,7 @@ export default {
         isWrite: false,
         isStart: false,
         isEnd:false,
-        totalTime: 5,
+        totalTime: 10,
         cardData: [[], []],
         curMember:0,
         members:[],
@@ -224,9 +236,9 @@ export default {
         console.log('클릭')
         this.balanceGame.curMember = 0
         this.balanceGame.cardData = [[], []],
-        this.balanceGame.totalTime = 5,
+        this.balanceGame.totalTime = 10,
         this.balanceGame.isStart = true
-        const random = this.makeRandomNum(0, 50)
+        const random = this.makeRandomNum(0, 49)
         this.balanceGame.randomNum = random
         this.sendGameInfo()
         console.log('랜덤 번호(this.random)',this.random)
@@ -301,6 +313,13 @@ export default {
         this.gameStarted = false
         this.balanceGame.isEnd = true
         this.balanceGame.isWrite = false
+
+        if(this.winCard == this.myPickedCard){
+          this.win.play()
+        }
+        else{
+          this.lose.play()
+        }
       }
     },
     showResult: function () {
@@ -333,23 +352,27 @@ export default {
     this.bgsound.volume = 0.1
     this.sound.volume = 0.5
     this.bgsound.play()
+    this.win = document.querySelector('.win')
+    this.lose = document.querySelector('.lose')
+    this.win.volume = 0.5
+    this.lose.volume = 0.5
   }
 }
 </script>
 
 <style scoped>
-.game-box {
-    position: fixed;
+/* .game-box {
     top: 10%;
     right: 40%;
-}
+} */
 .balance-game {
-    max-width: 500px;
-   display: flex;
-   flex-direction: column;
-   justify-content: center; 
-   align-items: center;
-   padding: 2rem;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;
+  padding: 2rem;
+  background-color: aliceblue;
 }
 .game{
   text-align: center;
@@ -357,13 +380,34 @@ export default {
 .question-box{
   display: table;
   width: 300px;
-  height: 300px;
+  height: 150px;
   text-align: center;
+}
+.question-box:hover{
+  font-size: large;
+}
+.card-box{
+  position: relative;
+}
+.a-card{
+  background-color: rgb(219, 184, 27);
+}
+.b-card{
+  background-color: rgb(96, 96, 136);
+}
+.vs{
+  position:absolute;
+  vertical-align: middle;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  transform:translate(-50%,-50%);
 }
 .question-text{
   display: table-cell;
   vertical-align: middle;
   padding: 10%;
+  color: white;
 }
 .progress-text{
   text-align: justify
