@@ -1,5 +1,7 @@
 <template>
   <div>
+    <audio class="correctAudio" src="@/assets/sound/correct.mp3"></audio>
+    <audio class="nopeAudio" src="@/assets/sound/nope.mp3"></audio>
     <v-row>
       <v-col cols="8">
         <div>
@@ -81,6 +83,8 @@ export default {
   },
   data: function () {
     return {
+      correctAudio: null,
+      nopeAudio: null,
       wordDisplay: '시좍',
       wordInput: null,
       score: 0,
@@ -88,8 +92,10 @@ export default {
       timeInterval: null,
       members: [],
       scoreResultObject: {},
-      words: ['우리가좍','쏴주', '맥쥬', '와잉', '으악', '낄낄', '걀걀', '요수 밤봐돠',
-        '막궐리', '청춘은 바로 지금', '해웅데', '강알리', '웨불러', '드러눕자', '오마이갓김치'],
+      words: ['우리가좍', '요수 밤봐돠','샹숑가수', '최참판댁', '한양 양장점', '기린 그림', 
+      '내가 그린 기린 그림', '확률분포표', '홑겹창살', '참치꽁치찜', '김치참치꽁치치',
+       '청춘은 바로 지금', '오마이갓김치', '왕밤빰', '영동용봉탕', 
+       '반품상품', '강력접착제', '브레드킹 김핑퐁', '하울의 무빙이 오지는 성'],
       typingGame: {
         type: 'Typing',
         time: 6,
@@ -107,6 +113,10 @@ export default {
     ...mapState('accounts', ['user'])
   },
   mounted: function () {
+    this.correctAudio = document.querySelector('.correctAudio')
+    this.nopeAudio = document.querySelector('.nopeAudio')
+    this.correctAudio.volumne = 0.1
+    this.nopeAudio.volumne = 0.1
     this.members = this.session.streamManagers.map(stream => {
       return {
         connectionId: stream.stream.connection.connectionId,
@@ -120,6 +130,7 @@ export default {
   methods: {
     check: function () {
       if (this.wordInput === this.wordDisplay) {
+        this.correctAudio.play()
         this.score += 1
         console.log(JSON.parse(this.publisher.stream.connection.data).clientData)
         this.typingGame.scoreResultObject[JSON.parse(this.publisher.stream.connection.data).clientData] += 1
@@ -127,6 +138,7 @@ export default {
         this.changeWord()
         this.sendInfo()
       } else {
+        this.nopeAudio.play()
         this.wordInput = null
       }
     },
@@ -217,9 +229,7 @@ export default {
   justify-content: center; 
   align-items: center;
   padding: 1rem;
-  /* background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200); */
   background-image: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5) ), url(https://i.pinimg.com/originals/07/fd/31/07fd31cf7290acb47f6329bb0a95b726.gif);
-  /* background-image: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5) ), url(https://mblogthumb-phinf.pstatic.net/MjAxODAxMDNfNDcg/MDAxNTE0OTE4MzE0MTg0.6TzBSC5Kl0NVtJZu0jcv1zaLcXXtqKsR8E9HUaaBeykg.pbeoeWCkLYvUaAmr1cMoaVaVEyUuVBZIwpSBuiR-Sb8g.GIF.njhanjo/queens_171223_05-%EB%84%88%EC%9D%98%EC%9D%B4%EB%A6%84%EC%9D%80_01.gif?type=w800); */
   background-size: cover;
   background-position: center;
 
@@ -275,7 +285,6 @@ export default {
     text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
       0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
 }
-
 
 
 .button {
