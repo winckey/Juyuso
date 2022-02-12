@@ -95,6 +95,7 @@ export default {
       this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
     },
     changeProfileImage: function (image) {
+      console.log('mypage 이미지')
       this.imgUrl = `${process.env.VUE_APP_IMG_URL}/${image}`
     }
    
@@ -108,6 +109,9 @@ export default {
       .then(res => {
         const userInfo = res.data.user
         this.user = userInfo
+      })
+      .catch(err=> {
+        console.log(err)
       })
   },
   computed: {
@@ -128,7 +132,6 @@ export default {
 .background {
   background-size : cover;
   height: 100vh;
-  /* background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) ), url(https://cdn.pixabay.com/photo/2019/05/19/23/47/clouds-4215608_960_720.jpg); */
   background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200);
 }
 
@@ -140,9 +143,9 @@ export default {
 
 }
 
-img {
+/* img {
  max-width: 100%;
-}
+} */
 
 .wallet {
   position: relative;
@@ -188,7 +191,7 @@ img {
 .profile-calendar {
   position:absolute;
   top: 50%;
-  width: 95%;
+  width: 90%;
   cursor: pointer;
 }
 

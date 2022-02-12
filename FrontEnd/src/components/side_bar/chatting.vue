@@ -88,7 +88,7 @@ export default {
     ...mapState('friends', ['chatFriend'])
   },
   mounted: function () {
-    this.height = `${window.innerHeight - 500}px`
+    this.height = `${window.innerHeight - 520}px`
     window.addEventListener('resize', this.resizeHeight);
     if (this.chatFriend) {
       this.chatDiv = document.querySelector('.chat-list')
@@ -215,6 +215,7 @@ export default {
 
   .chat-list {
     height: 100%;
+    padding: 5px;
     max-height: 100%;
     overflow-y: scroll;
   }

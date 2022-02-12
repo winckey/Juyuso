@@ -49,15 +49,28 @@
                 <div v-if="audioFilter == 0">
                   <v-slider
                     v-model="pitch"
-                    step="0.2"
+                    step="0.1"
                     ticks
-                    min="0"
-                    max="2"
+                    min="0.6"
+                    max="1.6"
                     thumb-label
                   ></v-slider>
                   <div style="text-align: center">
 
-                  {{ pitch }}
+                  높낮이 : {{ pitch }}
+                  </div>
+                </div>
+                <div v-else-if="audioFilter == 1">
+                  <v-slider
+                    v-model="pitch"
+                    step="0.1"
+                    ticks
+                    min="0.2"
+                    max="0.9"
+                    thumb-label
+                  ></v-slider>
+                  <div style="text-align: center">
+                  강도 : {{ pitch }}
                   </div>
                 </div>
               </div>
@@ -75,7 +88,7 @@
                           width="100"
                           :style="[ backgroundToggle(filter)]"
                           :color="active ? 'primary' : ''"
-                          @click="[toggle(), testFilter(filter)]"
+                          @click="[toggle(), setVideoFilter(filter)]"
                           class="filter-card d-flex justify-content-center align-end"
                           height="100">
                           <div class="filter-name">
@@ -101,9 +114,10 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
+          v-show="tab == 0"
           color="green darken-1"
           text
-          @click="[dialog = false, setFilter()]"
+          @click="[dialog = false, setAudioFilter()]"
         >
           적용
         </v-btn>
@@ -183,15 +197,23 @@ export default {
     isFiltered: function () {
       return Object.keys(this.publisher.stream).includes('filter')
     },
-    setFilter: function () {
+    setAudioFilter: function () {
       console.log(this.publisher)
+      this.videoFilter = null
       if (this.isFiltered()) {
         this.removeFilter()
       }
-      this.publisher.stream.applyFilter('GStreamerFilter', {"command": `pitch pitch=${this.pitch}`})
+      if (this.audioFilter == 0) {
+        this.publisher.stream.applyFilter('GStreamerFilter', {"command": `pitch pitch=${this.pitch}`})
+      }
+      else {
+        this.publisher.stream.applyFilter('GStreamerFilter', {"command": `audioecho delay=40000000 intensity=${this.pitch} feedback=0.7`})
+
+      }
       console.log(this.publisher)
     },
-    testFilter: function (filter) {
+    setVideoFilter: function (filter) {
+      this.audioFilter = -1
       this.videoFilter = filter
       if (this.isFiltered()) {
         this.removeFilter()
