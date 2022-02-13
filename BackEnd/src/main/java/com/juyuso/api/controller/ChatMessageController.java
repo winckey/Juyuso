@@ -58,10 +58,10 @@ public class ChatMessageController {
 
         if (!receiver.getFcmToken().isEmpty()) {
             try {
-                firebaseCloudMessageService.sendMessageTo(receiver.getFcmToken(), "메시지 도착",
+                firebaseCloudMessageService.sendMessageTo(receiver.getFcmToken(), message.getWriterName(),
                         message.getMessage().length() > 10 ?
-                                String.format("[%s] : %10s...", receiver.getNickname(), message.getMessage())
-                                : String.format("[%s] : %s", receiver.getNickname(), message.getMessage()));
+                                String.format("[%s] : %10s...", message.getWriterName(), message.getMessage())
+                                : String.format("[%s] : %s", message.getWriterName(), message.getMessage()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

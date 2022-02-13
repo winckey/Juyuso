@@ -17,6 +17,8 @@ public class ChatMessageReqDto {
     @NotBlank
     private String writerId;
     @NotBlank
+    private String writerName;
+    @NotBlank
     private String message;
     @NotBlank
     private String receiverId;
