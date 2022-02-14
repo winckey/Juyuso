@@ -117,7 +117,7 @@ export default {
     axios({
       method: 'GET',
       url: `${process.env.VUE_APP_API_URL}/drinking/history/${this.userInfo.userId}`,
-      headrs: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+      headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
     })
       .then(res => {
         this.date = res.data

@@ -1,23 +1,33 @@
 <template>
   <div>
+    <audio class="correctAudio" src="@/assets/sound/correct.mp3"></audio>
+    <audio class="nopeAudio" src="@/assets/sound/nope.mp3"></audio>
     <v-row>
-      <v-col cols="8">
-        <div>
-          <user-video class="col-md-4" :stream-manager="publisher"/>
+      
+      <v-col cols="4">
+        <div class="video-grid" :style="videoGrid">
+          <user-video  :stream-manager="publisher"/>
+          <user-video  v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
-        <div>
-          <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+      </v-col>
+      <v-col cols="4">
+        <div class="video-grid" :style="videoGrid">
+          <typing-game-score :stream-manager="publisher" :score="typingGame.scoreResultObject[JSON.parse(publisher.stream.connection.data).clientData]"/>
+          <typing-game-score v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"  :score="typingGame.scoreResultObject[JSON.parse(sub.stream.connection.data).clientData]"/>
         </div>
       </v-col>
       <v-col class="d-flex justify-content-center align-items-center" cols="4" >
           <v-card class="typing-game">
-              <div class="header">
-                      <h2>🍺술향기 타자 연습🍺</h2>
+                  <div class="d-flex justify-content-center" v-if="typingGame.isBefore" style="color: white">
+                    <h1>{{ typingGame.countBeforeGame }}</h1>
+                  </div>
+                  <div class="header">
+                      <h2>🍺술향기 타자연습🍺</h2>
                   </div>
                   <div class="word-display">
                       <h2>{{ wordDisplay }}</h2>
                   </div>
-                  <div class="word-input-box">
+                  <div class="mt-2">
                       <v-text-field
                           label="단어를 입력하시오"
                           solo
@@ -36,18 +46,19 @@
                           내 점수: <span >{{ score }}</span>점
                       </div>
                   </div>
-                  <v-btn class="button" color="#4DB6AC" @click="startGame" v-if="this.typingGame.allPlaying===false">게임 시작</v-btn>
-                  <v-btn class="button loading" color="white" v-else>게임 진행 중</v-btn>
+                  <v-btn class="button" color="#4DB6AC" @click="beforeGame" v-if="this.typingGame.allPlaying===false">게임 시작</v-btn>
+                  <v-btn class="button" color="white" style="cursor:not-allowed" v-else>게임 진행 중</v-btn>
           </v-card>
       </v-col>
     </v-row>
-      <v-dialog v-model="typingGame.isEnd" width="400px">
+      <v-dialog v-model="typingGame.isEnd" width="400px"  >
           <div>
+              <!-- <v-img src="@/assets/typing-game/celebrate.png"></v-img> -->
               <v-card  class="p-3">
                   <div class="d-flex flex-column" style="text-align: center">
                       <h3>축하합니다</h3>
                       <hr>
-                      <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리란다 얘둘앙🧃</v-card-text>
+                      <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리입니다🧃</v-card-text>
                   </div>
                   <v-card-actions>
                   <v-spacer></v-spacer>
@@ -69,6 +80,7 @@
 <script>
 import { mapState } from 'vuex'
 import UserVideo from '@/components/table/user-video.vue'
+import TypingGameScore from '@/components/game/typing-game-score.vue'
 
 export default {
   name: 'TypingGame',
@@ -77,10 +89,13 @@ export default {
     publisher: Object,
   },
   components: {
-    UserVideo
+    UserVideo,
+    TypingGameScore
   },
   data: function () {
     return {
+      correctAudio: null,
+      nopeAudio: null,
       wordDisplay: '시좍',
       wordInput: null,
       score: 0,
@@ -88,25 +103,45 @@ export default {
       timeInterval: null,
       members: [],
       scoreResultObject: {},
-      words: ['우리가좍','쏴주', '맥쥬', '와잉', '으악', '낄낄', '걀걀', '요수 밤봐돠',
-        '막궐리', '청춘은 바로 지금', '해웅데', '강알리', '웨불러', '드러눕자', '오마이갓김치'],
+      words: ['우리가좍', '요수 밤봐돠','샹숑가수', '최참판댁', '한양 양장점', '기린 그림', '난방 방법 변경 방법',
+      '내가 그린 기린 그림', '확률분포표', '홑겹창살', '참치꽁치찜', '김치참치꽁치치', '역전 석점슛',
+       '붕당정책 탕평책', '오마이갓김치', '왕밤빰', '영동 용봉탕', '게솰샥수핀', '경찰청 창살', '단팥맛 통찐빵',
+       '반품상품', '강력접착제', '브레드킹 김핑퐁', '하울의 무빙이 오지는 성', '깐 콩깍지', '금강산 정상',
+       '영월 칡국수', '공간감각 무감각', '팥죽깨죽', '스위스에서 온 스미스씨', '닥터페퍼','어 느새 힙 합은 안 멋져'],
       typingGame: {
         type: 'Typing',
-        time: 6,
+        time: 20,
+        countBeforeGame: 3,
         allPlaying: false,
+        isBefore: false,
         isEnd: false,
         scoreResult: [],
         scoreResultObject: {},
         members: [],
         winner: null
-      }
+      },
     }
   },
   computed: {
     ...mapState('openviduStore', ['session', 'gameInfo']),
-    ...mapState('accounts', ['user'])
+    ...mapState('accounts', ['user']),
+    videoGrid: function () {
+      return {
+          display: 'grid',
+          gridTemplateColumns: 28+'vw',
+          gap: 1+'vh',
+          gridTemplateRows: this.typingGame.members.length === 1 ? 
+          'repeat('+`${this.typingGame.members.length}`+','+ (80/2)+'vh)' :
+          'repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)'
+
+      }
+    }
   },
   mounted: function () {
+    this.correctAudio = document.querySelector('.correctAudio')
+    this.nopeAudio = document.querySelector('.nopeAudio')
+    this.correctAudio.volumne = 0.01
+    this.nopeAudio.volumne = 0.1
     this.members = this.session.streamManagers.map(stream => {
       return {
         connectionId: stream.stream.connection.connectionId,
@@ -116,10 +151,12 @@ export default {
     for(let i=0; i<this.members.length; i++) {
       this.scoreResultObject[this.members[i].username] = 0
     } 
+    console.log('repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)')
   },
   methods: {
     check: function () {
       if (this.wordInput === this.wordDisplay) {
+        this.correctAudio.play()
         this.score += 1
         console.log(JSON.parse(this.publisher.stream.connection.data).clientData)
         this.typingGame.scoreResultObject[JSON.parse(this.publisher.stream.connection.data).clientData] += 1
@@ -127,6 +164,7 @@ export default {
         this.changeWord()
         this.sendInfo()
       } else {
+        this.nopeAudio.play()
         this.wordInput = null
       }
     },
@@ -137,13 +175,26 @@ export default {
       }
       this.sendInfo()
     },
+    beforeGame: function () {
+      this.typingGame.isBefore = true 
+      this.sendInfo()
+      let count = setInterval(() => {
+        this.typingGame.countBeforeGame -- 
+        this.sendInfo()
+        if (this.typingGame.countBeforeGame === 0) {
+          clearInterval(count)
+          this.startGame()
+        }
+      }, 1000)
+    },
     startGame: function () {
       this.isPlaying = true
       if (this.isPlaying) {
           this.typingGame = {
             type: 'Typing',
-            time: 6,
+            time: 20,
             allPlaying: true,
+            isBefore: false,
             isEnd: false,
             scoreResult: [],
             scoreResultObject: {...this.scoreResultObject},
@@ -176,11 +227,33 @@ export default {
       this.typingGame.isEnd = true
       this.typingGame.winner = winner[0]
       this.sendInfo()
+      console.log('repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)')
     },
     changeWord: function () {
       const index = Math.floor((Math.random() * this.words.length))
       this.wordDisplay = this.words[index]
     },
+    // reset: function () {
+       
+    //   console.log('reset')
+    //   console.log(this.scoreResultObject)
+    //   this.wordInput = null
+    //   this.score = 0
+    //   this.typingGame = {
+    //     type: 'Typing',
+    //     time: 20,
+    //     countBeforeGame: 3,
+    //     allPlaying: false,
+    //     isBefore: false,
+    //     isEnd: false,
+    //     scoreResult: [],
+    //     scoreResultObject: {},
+    //     members: [],
+    //     winner: null
+    //   }
+    //   this.sendInfo()
+
+    // },
     sendInfo: function () {
       this.session.signal({
         data: JSON.stringify(this.typingGame),
@@ -211,15 +284,14 @@ export default {
 .typing-game {
   border: 2px solid #dadada;
   border-radius: 7px;
-  max-width: 500px;
+  width: 25vw;
+  height: 65vh;
   display: flex;
   flex-direction: column;
   justify-content: center; 
   align-items: center;
   padding: 1rem;
-  /* background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200); */
   background-image: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5) ), url(https://i.pinimg.com/originals/07/fd/31/07fd31cf7290acb47f6329bb0a95b726.gif);
-  /* background-image: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5) ), url(https://mblogthumb-phinf.pstatic.net/MjAxODAxMDNfNDcg/MDAxNTE0OTE4MzE0MTg0.6TzBSC5Kl0NVtJZu0jcv1zaLcXXtqKsR8E9HUaaBeykg.pbeoeWCkLYvUaAmr1cMoaVaVEyUuVBZIwpSBuiR-Sb8g.GIF.njhanjo/queens_171223_05-%EB%84%88%EC%9D%98%EC%9D%B4%EB%A6%84%EC%9D%80_01.gif?type=w800); */
   background-size: cover;
   background-position: center;
 
@@ -236,7 +308,7 @@ export default {
     text-align: center;
     padding: 1rem;
     color: #fff;
-    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+    text-shadow: 0 0 21px #fff, 0 0 42px #0fa,
       0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
     color: white;
 }
@@ -245,15 +317,11 @@ export default {
     margin-top: 3rem;
     font-size: 2rem;
     color: #fff;
-    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
-      0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
+    text-shadow: 0 0 7px #fff, 0 0 42px #0fa;
     color: white;
     text-align: center;
 }
 
-.word-input-box {
-    margin-top: 2rem;
-}
 
 .word-input {
     padding: 0.5rem;
@@ -272,10 +340,9 @@ export default {
     font-size: 1.5rem;
     /* color: white; */
     color: #fff;
-    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+    text-shadow: 0 0 21px #fff, 0 0 42px #0fa,
       0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
 }
-
 
 
 .button {
@@ -285,8 +352,15 @@ export default {
     margin-bottom: 2rem;
 }
 
-.loading {
-    background: red;
-    cursor: not-allowed;
+
+.video-grid {
+  display: grid;
+  grid-template-columns: 28vw;
+  grid-template-rows: repeat(6, 12vh);
+  gap: 1vh;
+
+  
+  
+
 }
 </style>
