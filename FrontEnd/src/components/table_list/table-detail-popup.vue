@@ -144,6 +144,7 @@ export default {
     left: 50%;
     top: 35%;
     transform: translate(-50%);
+    font-size: 1.5em;
   }
   
   .table-hashtag {

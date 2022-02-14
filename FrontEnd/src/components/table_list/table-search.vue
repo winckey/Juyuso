@@ -5,14 +5,14 @@
     :close-on-content-click="false">
       <template v-slot:activator="{ on: menu, attrs }">
         <v-btn
-          class="search-btn"
+          class="search-btn d-flex justify-space-between"
           color="white"
           v-bind="attrs"
           v-on="{ ...menu }"
           rounded
         >
-          검색
-          <v-icon class="mx-2" color="grey">mdi-magnify</v-icon>
+          <span class="ml-1">검색</span>
+          <v-icon class="m-0" color="grey">mdi-magnify</v-icon>
         </v-btn>
       </template>
       <v-card width="300">
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import api from '@/common/api'
 import TableDetailPopup from '@/components/table_list/table-detail-popup.vue'
 
 export default {
@@ -107,19 +107,11 @@ export default {
   methods: {
     roomSearch: function (tab) {
       if (this.searchInput.trim()) {
-        const token = localStorage.getItem('jwt')
-        console.log(this.searchInput)
-        axios({
-          method: 'GET',
-          url: `${process.env.VUE_APP_API_URL}/meeting/search`,
-          headers: { Authorization: `Bearer ${token}`},
+        api.get('/meeting/search', {
           params :{
             [this.items[tab].value] : this.searchInput 
           }
-        }).then( res => {
-          console.log(res.data)
-          this.searchResult[this.items[tab].value] = res.data.content
-        })
+        }).then(res => this.searchResult[this.items[tab].value] = res.data.content)
       }
       else {
         this.searchResult['title'] = []
