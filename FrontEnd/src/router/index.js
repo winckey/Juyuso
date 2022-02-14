@@ -56,7 +56,14 @@ const routes = [
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
+    component: Signup,
+    props: true
+  },
+  {
+    path: '/signup/kakao',
+    name: 'SignupKakao',
+    component: () => import('@/views/accounts/signup-kakao'),
+    props: true
   },
   {
     path: '/tables',
