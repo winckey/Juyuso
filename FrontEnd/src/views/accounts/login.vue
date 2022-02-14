@@ -165,7 +165,7 @@ export default {
                   console.log('No registration token available. Request permission to generate one.');
                 }
               }).catch((err) => {
-                console.log('An error occurred while retrieving token. ', err);
+                console.log('An error occurred while retrieving token. ', err.response);
               }
             )
           : this.$router.push({
@@ -178,7 +178,7 @@ export default {
           }
         )
         .catch(error => {
-          console.log(error);
+          console.log(error.response);
         })
     }
   }
