@@ -1,7 +1,7 @@
 package com.juyuso.common.auth;
 
-import com.juyuso.db.entity.User;
-import com.juyuso.db.repository.UserRepository;
+import com.juyuso.db.entity.user.User;
+import com.juyuso.db.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

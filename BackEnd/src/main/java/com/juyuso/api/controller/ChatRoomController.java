@@ -1,10 +1,10 @@
 package com.juyuso.api.controller;
 
-import com.juyuso.api.dto.response.ChatRoomResDto;
-import com.juyuso.api.service.ChatRoomService;
-import com.juyuso.api.service.FriendService;
+import com.juyuso.api.dto.response.chat.ChatRoomResDto;
+import com.juyuso.api.service.chat.ChatRoomService;
+import com.juyuso.api.service.firebase.FriendService;
 import com.juyuso.common.model.response.BaseResponseBody;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

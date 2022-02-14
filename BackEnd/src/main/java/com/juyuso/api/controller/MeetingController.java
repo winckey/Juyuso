@@ -1,17 +1,17 @@
 package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.DrinkingHistoryAddReqDto;
-import com.juyuso.api.dto.request.MeetingCreateReqDto;
-import com.juyuso.api.dto.request.MeetingModifyReqDto;
-import com.juyuso.api.dto.response.*;
+import com.juyuso.api.dto.request.meeting.MeetingCreateReqDto;
+import com.juyuso.api.dto.request.meeting.MeetingModifyReqDto;
+import com.juyuso.api.dto.response.meeting.*;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
-import com.juyuso.api.service.DrinkingHistoryService;
-import com.juyuso.api.service.MeetingHistoryService;
-import com.juyuso.api.service.MeetingService;
-import com.juyuso.api.service.UserService;
-import com.juyuso.db.entity.MeetingHistory;
-import com.juyuso.db.entity.User;
+import com.juyuso.api.service.drinking.DrinkingHistoryService;
+import com.juyuso.api.service.meeting.MeetingHistoryService;
+import com.juyuso.api.service.meeting.MeetingService;
+import com.juyuso.api.service.user.UserService;
+import com.juyuso.db.entity.meeting.MeetingHistory;
+import com.juyuso.db.entity.user.User;
 import io.openvidu.java.client.OpenVidu;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;

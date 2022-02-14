@@ -1,8 +1,8 @@
 package com.juyuso.api.dto;
 
 import com.juyuso.db.entity.Region;
-import com.juyuso.db.entity.User;
-import com.juyuso.db.entity.UserImg;
+import com.juyuso.db.entity.user.User;
+import com.juyuso.db.entity.user.UserImg;
 import lombok.*;
 
 import java.time.LocalDate;

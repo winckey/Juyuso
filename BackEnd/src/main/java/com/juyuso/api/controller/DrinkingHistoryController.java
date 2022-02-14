@@ -1,11 +1,11 @@
 package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.DrinkingHistoryAddReqDto;
-import com.juyuso.api.dto.response.DrinkingHistoryAddResDto;
-import com.juyuso.api.dto.response.DrinkingHistoryListResDto;
-import com.juyuso.api.service.DrinkingHistoryService;
-import com.juyuso.api.service.UserService;
-import com.juyuso.db.entity.User;
+import com.juyuso.api.dto.response.drinking.DrinkingHistoryAddResDto;
+import com.juyuso.api.dto.response.drinking.DrinkingHistoryListResDto;
+import com.juyuso.api.service.drinking.DrinkingHistoryService;
+import com.juyuso.api.service.user.UserService;
+import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

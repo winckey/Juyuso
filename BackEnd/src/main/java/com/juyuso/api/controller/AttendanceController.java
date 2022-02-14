@@ -1,16 +1,15 @@
 package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.response.AttendanceResDto;
-import com.juyuso.api.service.AttendanceService;
-import com.juyuso.api.service.FriendService;
+import com.juyuso.api.service.attend.AttendanceService;
+import com.juyuso.api.service.firebase.FriendService;
 import com.juyuso.common.model.response.BaseResponseBody;
-import com.juyuso.db.entity.Attendance;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.attend.Attendance;
+import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 

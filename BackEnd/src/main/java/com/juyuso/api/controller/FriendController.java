@@ -1,12 +1,15 @@
 package com.juyuso.api.controller;
 
 import com.juyuso.api.dto.request.FriendReqDto;
-import com.juyuso.api.dto.response.*;
-import com.juyuso.api.service.FirebaseCloudMessageService;
-import com.juyuso.api.service.FriendService;
+import com.juyuso.api.dto.response.friend.FriendBanResDto;
+import com.juyuso.api.dto.response.friend.FriendListResDto;
+import com.juyuso.api.dto.response.friend.FriendResDto;
+import com.juyuso.api.dto.response.friend.FriendSearchListResDto;
+import com.juyuso.api.service.firebase.FirebaseCloudMessageService;
+import com.juyuso.api.service.firebase.FriendService;
 import com.juyuso.common.model.response.BaseResponseBody;
-import com.juyuso.db.entity.FriendRequest;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.friend.FriendRequest;
+import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

@@ -1,5 +1,6 @@
 package com.juyuso.db.entity;
 
+import com.juyuso.db.entity.meeting.Meeting;
 import lombok.Getter;
 
 import javax.persistence.*;

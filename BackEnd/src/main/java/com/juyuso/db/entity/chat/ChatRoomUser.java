@@ -2,7 +2,7 @@ package com.juyuso.db.entity.chat;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
