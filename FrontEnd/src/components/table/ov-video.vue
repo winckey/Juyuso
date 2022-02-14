@@ -35,6 +35,8 @@ export default {
     -moz-border-radius:20px;
     -webkit-border-radius:20px;
     border-radius:20px;
-    width: 100%
+    height: 90%;
   }
+
+
 </style>

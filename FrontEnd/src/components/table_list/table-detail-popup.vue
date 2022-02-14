@@ -23,7 +23,7 @@
             <div class="table-hashtag">
               <v-chip
                 class="ma-2"
-                color=""
+                color="#e6f6fa"
               >
                 {{ roomInfo.hashtag[0] }}
               </v-chip>
