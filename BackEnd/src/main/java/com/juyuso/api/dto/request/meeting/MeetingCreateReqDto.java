@@ -35,6 +35,10 @@ public class MeetingCreateReqDto {
     @ApiModelProperty(name = "방 배경화면", example = "포장마차1")
     private String img;
 
+    @NotBlank
+    @ApiModelProperty(name = "인원수", example = "2")
+    private int cnt;
+
     MeetingCreateReqDto() {
 
     }
@@ -52,7 +56,7 @@ public class MeetingCreateReqDto {
     public Meeting toEntity(User user) {
         return new Meeting(user, meetingName, meetingPassword,
                 LocalDateTime.now(), LocalDateTime.now(),
-                active, common, img);
+                active, common, img, 1);
     }
 
 
