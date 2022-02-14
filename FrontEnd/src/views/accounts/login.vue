@@ -140,7 +140,7 @@ export default {
       // axios.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
       axios.get(`${process.env.VUE_APP_API_URL}/oauth/kakao?code=${authCode}`)
         .then((response) => {
-          console.log(response)
+          console.log('oAuth response', response)
           const { join, info } = response.data;
 
           join ? 
@@ -178,7 +178,7 @@ export default {
           }
         )
         .catch(error => {
-          console.log(error.status);
+          console.log(error);
         })
     }
   }
