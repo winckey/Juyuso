@@ -13,7 +13,7 @@
           </div>
           <div>
             <v-list-item-content>
-              <v-list-item-title class="text-h5 mb-1">
+              <v-list-item-title class="mb-1 item-title">
                 <p>{{ user.nickname }}</p>
               </v-list-item-title>
               <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
@@ -130,4 +130,7 @@ export default {
     float: right;
     text-align: right;
 } */
+.item-title{
+  font-size: 20px;
+}
 </style>
