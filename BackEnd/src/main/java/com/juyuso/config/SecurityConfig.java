@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService))
                 .authorizeRequests()
                 .antMatchers("/api/users/login", "/api/users/social/**", "/api/users/id/**", "/api/users/nickname/**", "/api/users").permitAll()
-                .antMatchers("/oauth/**").permitAll()
+                .antMatchers("/api/oauth/**").permitAll()
                 .antMatchers("/static/res/**").permitAll()
                 .antMatchers("/ws/**").permitAll()
 //                .antMatchers("/ws/**").permitAll()
