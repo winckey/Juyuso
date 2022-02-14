@@ -2,7 +2,7 @@
   <div 
     v-if="streamManager"
     class="video-box">
-    <ov-video class="video-inner" :streamManager="streamManager"></ov-video>
+    <ov-video class="video-inner" :style="videoInner" :streamManager="streamManager"></ov-video>
     <div class="video-status d-flex">
       <v-icon dark class="mx-2">{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
       <v-icon dark class="mx-2">{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
@@ -15,18 +15,19 @@
 import OvVideo from './ov-video.vue'
 
 export default {
-  name: 'UserVideo',
+  name: 'TitanicVideo',
 
   components: {
     OvVideo,
   },
   data: function () {
     return {
-      videoManager: null
+      videoManager: null,
     }
   },
   props: {
     streamManager: Object,
+    background: String,
   },
   computed: {
     clientData () {
@@ -38,6 +39,20 @@ export default {
     },
     publishVideo () {
       return this.streamManager.stream.videoActive
+    },
+    videoInner () {
+      if (this.background) {
+        return {
+          boxShadow: `0 0 15px ${this.background}`,
+          borderColor: this.background
+        }
+      }
+      else {
+        return {
+          boxShadow: `0 0 12px #FFFFFF`,
+          borderColor: '#FFFFFFB0'
+        }
+      }
     }
   },
   methods: {
@@ -61,8 +76,6 @@ export default {
     top: 5%;
     transform: translate(-50%);
     outline: none;
-    border-color: #ffffff;
-    box-shadow: 0 0 12px #ffffffb0;
   }
 
   .user-name {
