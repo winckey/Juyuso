@@ -30,7 +30,7 @@
           <div class="logout">
             <v-btn
               plain
-              @click="logout">
+              @click="onLogout">
               로그아웃
             </v-btn>
           </div>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data() {
@@ -58,17 +58,17 @@ export default {
     }
   },
   methods:{
+    ...mapActions('accounts', ['logout']),
     goMyPage: function () {
         this.$router.push({name: 'MyPage', params: {userId: this.user.id}})
         },
     goToLogin: function () {
         this.$router.push({ name: 'Login' })
         },
-    logout: function(){
-        console.log('isLogin')
+    onLogout: function(){
         this.isLogin = false
-        localStorage.removeItem('jwt')
-        this.$router.push({ name: 'Main' })
+        this.logout()
+          .then(() => this.$router.push({ name: 'Login' }))
     },
     setToken : function(){
         const token = localStorage.getItem('jwt')

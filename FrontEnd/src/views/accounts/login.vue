@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {mapActions} from 'vuex'
+import api from '@/common/api'
+import { mapActions } from 'vuex'
 import { getMessaging, getToken } from 'firebase/messaging'
 
 const accounts = 'accounts' 
@@ -141,7 +141,7 @@ export default {
     // },
     oAuth() {
       let REST_API_KEY = '54ef6bedc90c5d1d07c7813bdd123278';
-            // let REDIRECT_URI = `http://localhost:3000/login`;
+      // let REDIRECT_URI = `http://localhost:3000/login`;
       let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
       window.location.replace(
         `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
@@ -152,7 +152,7 @@ export default {
       // TODO: 현재 경로 라우터 히스토리에서 제거
       
       // axios.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
-      axios.get(`${process.env.VUE_APP_API_URL}/oauth/kakao?code=${authCode}`)
+      api.get(`/oauth/kakao?code=${authCode}`)
         .then((response) => {
           console.log('oAuth response', response)
           const { join, info } = response.data;
@@ -187,9 +187,6 @@ export default {
                   //   this.credentials.id = null
                   //   this.credentials.password = null
                   // })
-                } else {
-                  // Show permission request UI
-                  console.log('No registration token available. Request permission to generate one.');
                 }
               }).catch((err) => {
                 console.log('An error occurred while retrieving token. ', err.response);
@@ -203,8 +200,7 @@ export default {
               }
             })
           }
-        )
-        .catch(({ response }) => {
+        ).catch(({ response }) => {
           const {
             data: {
               code

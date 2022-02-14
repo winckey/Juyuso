@@ -1,12 +1,12 @@
 import axios from "axios"
 import store from "../../store"
 
-const http = axios.create({
+const api = axios.create({
   baseURL: `${process.env.VUE_APP_API_URL}`,
   headers: { "content-type": "application/json" },
 })
 
-http.interceptors.request.use(
+api.interceptors.request.use(
   config => {
     const isLogin = store.getters['isLogin']
     if (isLogin) {
@@ -21,4 +21,4 @@ http.interceptors.request.use(
 )
 // http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded"
 
-export default http
+export default api

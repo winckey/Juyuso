@@ -1,6 +1,6 @@
 // import router from "@/router/index.js"
 import jwt from '@/common/jwt'
-import http from '@/common/http'
+import api from '@/common/api'
 
 const accounts = {
   namespaced: true,
@@ -24,22 +24,19 @@ const accounts = {
       jwt.saveToken(payload.accessToken)
     },
     USER_UPDATE: (state, userInfo) => {
-        state.isLogin = true
-        state.user = userInfo
+      state.isLogin = true
+      state.user = userInfo
     },
     LOGOUT: (state) => {
       state.token.accessToken = ''
-      state.isLogin = true
+      state.isLogin = false
+      state.user = null
       jwt.destroyToken()
-      // localStorage.removeItem('jwt')
-        // state.isLogin = false
-        // state.user = null
-        // router.push({name:'Login'})         
     }
   },
   actions: {
     login: (context, { id, password, fcmToken }) => new Promise((resolve, reject) => {
-      http
+      api
         .post('/users/login', {
           id, password, fcmToken
         })
@@ -56,7 +53,7 @@ const accounts = {
         .catch(error => reject(error))
     }),
     loginKakao: (context, { id, fcmToken }) => new Promise((resolve, reject) => {
-      http
+      api
         .post('/users/social/kakao/login', {
           id, fcmToken
         })
@@ -75,9 +72,12 @@ const accounts = {
     userUpdate: ({ commit }, userInfo) => {
         commit('USER_UPDATE', userInfo)
     },
-    logout: ({commit}) => {
+    logout: ({ commit }) => new Promise(resolve => {
+      setTimeout(function() {
         commit('LOGOUT')
-    }
+        resolve({})
+      }, 500)
+    })
   }
 }
 
