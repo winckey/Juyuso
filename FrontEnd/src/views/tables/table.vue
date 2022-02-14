@@ -1,245 +1,250 @@
 <template>
   <div class="background-box"
   :style="{'background-image':'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
-    <div id="session" v-if="session">
-      <div id="session-header">
-        <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
-        <h5 class="session-title">{{ gameMode }}</h5>
-      </div>
-      <!-- <div id="main-video" class="col-md-6">
-        <user-video :stream-manager="mainStreamManager"/>
-      </div> -->
-      
-      <TitanicGame
-        v-if="gameMode == '타이타닉'"
-        :subscribers="session.streamManagers"
-        :publisher="publisher"/>
-      <DrawGame v-else-if="gameMode == '그림그리기'"
-        :subscribers="wholeSubscribers"
-        :publisher="publisher"/>
-      <TypingGame v-else-if="gameMode == '타자연습'"
-        :subscribers="subscribers"
-        :publisher="publisher"/>
-      <BalanceGame
-        v-else-if="gameMode == '밸런스'"
-        :subscribers="subscribers"
-        :publisher="publisher"/>
-      <div v-else class="container">
-        <div class="row">
-          <div id="video-container">
-            <user-video class="col-md-4" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-            <user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+  <div class="m-3">
+    <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
+  </div>
+    <div class="video-container">
+      <!-- 메뉴바 -->
+      <div
+        class="menu-bar p-3">
+        <div class="d-flex flex-column justify-content-around align-center" style="height: 100%">
+          <div class="d-flex flex-column align-center">
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  small
+                  v-bind="attrs"
+                  v-on="on"
+                  fab
+                  @click="audioToggle">
+                  <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ publishAudio ? '오디오 중지' : '오디오 시작' }}</span>
+            </v-tooltip>
+
+            
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  fab
+                  small
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="videoToggle">
+                  <v-icon dense>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ publishVideo ? '비디오 중지' : '비디오 시작' }} </span>
+            </v-tooltip>
+            <v-menu
+              transition="stretch"
+              offset-x>
+              <template v-slot:activator="{ on: menu, attrs }">
+                <v-tooltip right :open-on-click="false" :open-on-focus="false">
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn
+                    class="m-1"
+                    fab
+                    small
+                    v-bind="attrs"
+                    v-on="{ ...tooltip, ...menu }">
+                    <v-icon dense>mdi-bullhorn-outline</v-icon>
+                  </v-btn>
+                  </template>
+                  <span>확성기 기능</span>
+                </v-tooltip>
+              </template>
+              <v-text-field
+                class="align-items-center"
+                type="text" 
+                dense 
+                hide-details
+                solo
+                rounded
+                @keyup.enter="sendWholeMessage" 
+                v-model="messageInput"/>
+            </v-menu>
+            <!-- <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  fab
+                  small
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="bullhorn = !bullhorn">
+                  <v-icon dense>mdi-bullhorn-outline</v-icon>
+                </v-btn>
+              </template>
+              <span>확성기 기능</span>
+            </v-tooltip> -->
+            
+          </div>
+          <div class="d-flex flex-column align-center">
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  fab
+                  small
+                  v-on="on"
+                  v-bind="attrs"
+                  @click="openFilterPopup"
+                >
+                  <v-icon>mdi-movie-filter</v-icon>
+                </v-btn>
+              </template>
+              <span>필터 기능</span>
+            </v-tooltip>
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="chat-btn m-1"
+                  fab
+                  small
+                  v-on="on"
+                  v-bind="attrs"
+                  @click="toggleChatbox"
+                >
+                  <v-icon>mdi-chat-processing</v-icon>
+                </v-btn>
+              </template>
+              <span>채팅창 열기</span>
+            </v-tooltip>
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  fab
+                  small
+                  v-on="on"
+                  v-bind="attrs"
+                  @click="peopleListShow = !peopleListShow">
+                  <v-icon>mdi-account-group-outline</v-icon>
+                </v-btn>
+              </template>
+              <span>참가자 보기</span>
+            </v-tooltip>
+            
+            
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-model="game"
+                  class="m-1"
+                  @click="openGamePopup"
+                  color="blue darken-2"
+                  dark
+                  v-on="on"
+                  v-bind="attrs"
+                  small
+                  fab
+                >
+                  <v-icon dense>
+                    mdi-controller-classic-outline
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>게임 기능</span>
+            </v-tooltip>
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-show="gameMode"
+                  class="m-1"
+                  color="red darken-2"
+                  dark
+                  v-on="on"
+                  v-bind="attrs"
+                  small
+                  fab
+                  @click="switchGameMode(undefined)"
+                >
+                  <v-icon dense>
+                    mdi-close
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>게임 취소</span>
+            </v-tooltip>
+          </div>
+          <div class="d-flex flex-column align-center">
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  fab
+                  small
+                  v-on="on"
+                  v-bind="attrs"
+                  @click="openThemePopup">
+                  <v-icon dark dense>mdi-compare</v-icon>
+                </v-btn>
+              </template>
+              <span>테마 변경</span>
+            </v-tooltip>
+            <v-tooltip right :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="m-1"
+                  color="error"
+                  fab
+                  small
+                  v-on="on"
+                  v-bind="attrs"
+                  @click="leaveTable">
+                  <v-icon dark dense>mdi-application-export</v-icon>
+                </v-btn>
+              </template>
+              <span>나가기</span>
+            </v-tooltip>
+          </div>
+        </div>
+        </div>
+        <div id="session" style="width: 100%; height=80vh" v-if="session">
+          <TitanicGame
+            v-if="gameMode == '타이타닉'"
+            :subscribers="session.streamManagers"
+            :publisher="publisher"/>
+          <DrawGame v-else-if="gameMode == '그림그리기'"
+            :subscribers="wholeSubscribers"
+            :publisher="publisher"/>
+          <TypingGame v-else-if="gameMode == '타자연습'"
+            :subscribers="subscribers"
+            :publisher="publisher"/>
+          <BalanceGame
+            v-else-if="gameMode == '밸런스'"
+            :subscribers="subscribers"
+            :publisher="publisher"/>
+          <div v-else class="video-grid">
+              <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+              <user-video  v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
           </div>
         </div>
       </div>
-    </div>
-    <div class="people-list" v-show="peopleListShow">
-      <p>{{ JSON.parse(publisher.stream.connection.data).clientData }}</p>
-      <p 
-        v-for="sub in subscribers" 
-        :key="sub.stream.connection.connectionId">
-        {{ JSON.parse(sub.stream.connection.data).clientData }}
-      </p>
-    </div>
-    <ChatPopup
-      ref="ChatPopup"
-      :userInfo="userInfo"/>
-    <!-- 메뉴바 -->
-    <v-sheet 
-      class="menu-bar p-3"
-      rounded="xl"
-      elevation="18">
-      <div class="d-flex justify-content-between align-items-center" style="height: 100%">
-        <div class="d-flex align-items-center" style="height: 100%">
-          <!-- 사운드 관련 버튼 -->
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="m-1"
-                small
-                v-bind="attrs"
-                v-on="on"
-                fab
-                @click="audioToggle">
-                <v-icon dense>{{ publishAudio ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
-              </v-btn>
-            </template>
-            <span>{{ publishAudio ? '오디오 중지' : '오디오 시작' }}</span>
-          </v-tooltip>
-
-          
-        <!-- 카메라 관련 버튼 -->
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="m-1"
-                fab
-                small
-                v-bind="attrs"
-                v-on="on"
-                @click="videoToggle">
-                <v-icon dense>{{ publishVideo ? 'mdi-camera-outline' : 'mdi-camera-off-outline' }}</v-icon>
-              </v-btn>
-            </template>
-            <span>{{ publishVideo ? '비디오 중지' : '비디오 시작' }} </span>
-          </v-tooltip>
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="m-1"
-                fab
-                small
-                v-bind="attrs"
-                v-on="on"
-                @click="bullhorn = !bullhorn">
-                <v-icon dense>mdi-bullhorn-outline</v-icon>
-              </v-btn>
-            </template>
-            <span>확성기 기능</span>
-          </v-tooltip>
-          <transition name="stretch" mode="out-in">
-            <v-text-field
-              class="align-items-center"
-              v-show="bullhorn" 
-              type="text" 
-              dense 
-              hide-details
-              solo
-              rounded
-              @keyup.enter="sendWholeMessage" 
-              v-model="messageInput"/>
-          </transition>
-        </div>
-        <div class="d-flex">
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="m-1"
-                fab
-                small
-                v-on="on"
-                v-bind="attrs"
-                @click="openFilterPopup"
-              >
-                <v-icon>mdi-movie-filter</v-icon>
-              </v-btn>
-            </template>
-            <span>필터 기능</span>
-          </v-tooltip>
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="chat-btn m-1"
-                fab
-                small
-                v-on="on"
-                v-bind="attrs"
-                @click="toggleChatbox"
-              >
-                <v-icon>mdi-chat-processing</v-icon>
-              </v-btn>
-            </template>
-            <span>채팅창 열기</span>
-          </v-tooltip>
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="m-1"
-                fab
-                small
-                v-on="on"
-                v-bind="attrs"
-                @click="peopleListShow = !peopleListShow">
-                <v-icon>mdi-account-group-outline</v-icon>
-              </v-btn>
-            </template>
-            <span>참가자 보기</span>
-          </v-tooltip>
-          
-          
-          <!-- 게임 관련 -->
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-model="game"
-                class="m-1"
-                @click="openGamePopup"
-                color="blue darken-2"
-                dark
-                v-on="on"
-                v-bind="attrs"
-                small
-                fab
-              >
-                <v-icon dense>
-                  mdi-controller-classic-outline
-                </v-icon>
-              </v-btn>
-            </template>
-            <span>게임 기능</span>
-          </v-tooltip>
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-show="gameMode"
-                class="m-1"
-                color="red darken-2"
-                dark
-                v-on="on"
-                v-bind="attrs"
-                small
-                fab
-                @click="switchGameMode(undefined)"
-              >
-                <v-icon dense>
-                  mdi-close
-                </v-icon>
-              </v-btn>
-            </template>
-            <span>게임 취소</span>
-          </v-tooltip>
-        </div>
-        <div>
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="m-1"
-                fab
-                small
-                v-on="on"
-                v-bind="attrs"
-                @click="openThemePopup">
-                <v-icon dark dense>mdi-compare</v-icon>
-              </v-btn>
-            </template>
-            <span>테마 변경</span>
-          </v-tooltip>
-          <v-tooltip top :open-on-click="false" :open-on-focus="false">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="m-1"
-                color="error"
-                fab
-                small
-                v-on="on"
-                v-bind="attrs"
-                @click="leaveTable">
-                <v-icon dark dense>mdi-application-export</v-icon>
-              </v-btn>
-            </template>
-            <span>나가기</span>
-          </v-tooltip>
-        </div>
+      <div class="people-list" v-show="peopleListShow">
+        <p>{{ JSON.parse(publisher.stream.connection.data).clientData }}</p>
+        <p 
+          v-for="sub in subscribers" 
+          :key="sub.stream.connection.connectionId">
+          {{ JSON.parse(sub.stream.connection.data).clientData }}
+        </p>
       </div>
-    </v-sheet>
-    <GamePopup
-    ref="gamePopup"/>
-    <FilterPopup
-    ref="filterPopup"/>
-    <ThemePopup
-    ref="themePopup"
-    :roomInfo="roomInfo"/>
-  </div>
+      <ChatPopup
+        ref="ChatPopup"
+        :userInfo="userInfo"/>
+      <GamePopup
+      ref="gamePopup"/>
+      <FilterPopup
+      ref="filterPopup"/>
+      <ThemePopup
+      ref="themePopup"
+      :roomInfo="roomInfo"/>
+    </div>
 </template>
 
 <script>
@@ -254,7 +259,7 @@ import TypingGame from '@/components/game/typing-game.vue'
 import GamePopup from '@/components/game/game-popup.vue'
 import FilterPopup from '@/components/table/filter-popup.vue'
 import ThemePopup from '@/components/table/theme-popup.vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 const openviduStore = 'openviduStore'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -322,6 +327,7 @@ export default {
     this.session.on('signal:theme', event => {
       let data = JSON.parse(event.data)
       this.roomInfo.theme = data.theme
+      this.setTheme(data.theme)
       this.$toast.open({
         position: 'bottom',
         message: `${data.username}님이 테마를 변경하셨습니다`,
@@ -359,6 +365,10 @@ export default {
       'subscribers',
       'messages',
       'gameMode',
+    ]),
+    ...mapGetters('table', [
+      'getBackgroudColor',
+      'getTextColor'
     ]),
     isGameMode() {
       console.log(this.gameMode)
@@ -495,14 +505,29 @@ export default {
   }
 
   .menu-bar {
-    position: fixed;
+    position: absolute;
     background: white;
-    height: 100px;
-    width: 100%;
-    bottom: 0;
-    z-index: 3;
+    height: 84vh;
+    width: 5vw;
+    left: 0;
+    z-index: 1;
+    border-radius: 25px 0 0 25px;
   }
-  
+
+  .video-container {
+    position: relative;
+    width: 90vw;
+    height: 84vh;
+    padding-left: 5vw;
+    background: rgba(255, 255, 255, 0.671);
+    border-radius: 25px;
+    display: flex;
+    margin: auto;
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 8px #ffffff;
+  }
+
   .people-list {
     position: fixed;
     background: white;
@@ -526,7 +551,7 @@ export default {
       width: 0px;
     }
     100% {
-      width: 167px;
+      width: 236px;
     }
   }
   .background-box{
@@ -535,5 +560,11 @@ export default {
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
+  } 
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: 28vw 28vw 28vw;
+    grid-template-rows: 42vh 42vh;
   }
 </style>

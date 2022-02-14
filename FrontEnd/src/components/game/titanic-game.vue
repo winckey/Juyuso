@@ -1,8 +1,34 @@
 <template>
-  <div v-if="titanicGame" style="padding-bottom: 200px" class="game-mode" @mouseover="bgsound.play()">
+  <div v-if="titanicGame" class="game-mode" @mouseover="bgsound.play()">
+    <div style="text-align: center; font-size: 1.4rem; height: 3vh">타이타닉 게임</div>
     <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
     <audio class="audio" src="@/assets/sound/pour_sound.mp3"></audio>
-    <div class="container-fluid">
+    <div class="game-box">
+      <div class="beer-box">
+        <div class="box">
+          <img
+            class="img-style mx-auto img-style-drink"
+            :style="imgStyle"
+            src="@/assets/game_beer.png" 
+            alt="">
+          <img 
+            src="@/assets/game_glass.png" alt=""
+            class="img-style img-style-galss">
+        </div>
+        <span class="mx-auto beer-btn">
+          <v-btn
+            class="m-2"
+            :disabled="!MyTurn"
+            color="white"
+            rounded
+            @mousedown="setStartTime"
+            @mouseup="setEndTime">
+            따르기
+          </v-btn>
+        </span>
+      </div>
+    </div>
+    <!-- <div class="container-fluid">
       <div class="row" style="height: 100%">
         <div class="col-md-8">
           <div class="d-flex justify-content-center">
@@ -21,34 +47,8 @@
             </v-slide-group>
           </div>
         </div>
-        <div class="col-md-3">
-          <div style="height: 100%" class="d-flex flex-column justify-content-end">
-            <span class="m-2 d-flex flex-column justify-content-end box" style="height: 230px; width: 100%">
-              <img
-                class="img-style mx-auto img-style-drink"
-                :style="imgStyle"
-                style="img-style"
-                src="@/assets/game_beer.png" 
-                alt="">
-              <img 
-                src="@/assets/game_glass.png" alt=""
-                class="img-style img-style-galss">
-            </span>
-            <span class="mx-auto">
-              <v-btn
-                class="m-2"
-                :disabled="!MyTurn"
-                color="white"
-                rounded
-                @mousedown="setStartTime"
-                @mouseup="setEndTime">
-                따르기
-              </v-btn>
-            </span>
-          </div>
-        </div>
-        </div>
-    </div>
+      </div>
+    </div> -->
     <v-dialog
       v-if="titanicGame.isEnd"
       v-model="titanicGame.isEnd"
@@ -74,12 +74,12 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import UserVideo from '@/components/table/user-video.vue'
+// import UserVideo from '@/components/table/user-video.vue'
 
 export default {
   name: 'TitanicGame',
   components: {
-    UserVideo
+    // UserVideo
   },
   props: {
     subscribers: Array,
@@ -102,6 +102,10 @@ export default {
         curMember: 0,
         members: [],
       },
+      memberPos: [
+        {top: '2vh', left: '20vw'}, 
+        {top: '31vh', left: '40vw'}
+      ]
     }
   },
   mounted: function () {
@@ -171,7 +175,7 @@ export default {
     ]),
     imgStyle: function () {
       return {
-        height: `${245 / this.titanicGame.maxAmount * this.titanicGame.curAmount}px`,
+        height: `${40 / this.titanicGame.maxAmount * this.titanicGame.curAmount}vh`,
       }
     }
   },
@@ -193,36 +197,59 @@ export default {
     border-top: 8px solid #bbb;
     border-radius: 5px;
   }
+
+  .game-box {
+    height: 81vh;
+    width: 85vw;
+    position: relative;
+  }
+
+  .beer-box {
+    position: absolute;
+    left: 50%;
+    height: 57vh;
+    width: 100%;
+    transform: translate(-50%);
+    bottom: 2vh;
+  }
+  .beer-btn {
+    position: absolute;
+    right: 50%;
+    transform: translate(50%);
+    bottom: 0;
+  }
   .box{
+    display: inline-block;
     position:relative;
-    /* display: inline-block; */
-    display:block;
+    bottom: 0;
+    left: 50%;
+    transform:translate(-50%);
+    display: inline-block;
+    width: 11vw;
+    height: 41vh;
     margin:auto;
   }
 
   .img-style-glass {
     position: absolute;
-    left: 50%;;
+    left: 50%;
+    height: 100%;
     transform: translateX(-50%, 0);
   }
 
- 
   .img-style {
     display: block;
     object-fit: cover;
-    object-position: center bottom;
-    width: 130px;
+    object-position: bottom;
+    height: 41vh;
     position: absolute;
-    top: 50%;
+    bottom: 0;
     left: 50%;
-    transform:translate(-50%,-50%);
+    transform:translate(-50%, 10vh);
   }
 
- .img-style-drink{
-    position: absolute;
-    top: initial;
-    bottom: 0;
-    transform: translate(-50%, 0%);
+  .img-style-drink{
+    width: 11vw
   }
 
 </style>
