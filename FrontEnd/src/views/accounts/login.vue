@@ -103,7 +103,7 @@ export default {
               localStorage.setItem('jwt', res.data.accessToken)
               this.userUpdate(res.data.user)
               this.initSession(res.data.user)
-              this.$router.push({name:'Main'})
+              this.$router.replace({name:'Main'})
             })
             .catch(err => {
               console.log(err)
@@ -154,7 +154,7 @@ export default {
                     localStorage.setItem('jwt', res.data.accessToken)
                     this.userUpdate(res.data.user)
                     this.initSession(res.data.user)
-                    this.$router.push({name:'Main'})
+                    this.$router.replace({ name: 'Main' })
                   }).catch(err => {
                     console.log(err)
                     this.credentials.id = null
@@ -177,8 +177,17 @@ export default {
             })
           }
         )
-        .catch(error => {
-          console.log(error.response);
+        .catch(({ response }) => {
+          const {
+            data: {
+              code
+            }
+          } = response;
+
+          code === 'OAUTH_EMAIL_DUPLICATE'
+            && confirm('이메일로 가입된 계정이 이미 존재합니다. 아이디로 로그인하세요!')
+              && this.$router.replace({ name: 'Login' });
+
         })
     }
   }

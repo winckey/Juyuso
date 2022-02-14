@@ -223,7 +223,7 @@ export default {
         })
         .then(() => {
           console.log(this.credentials)
-          this.$router.push({ name: 'Main' })
+          this.$router.replace({ name: 'Main' })
         })
         .catch( err => {
           console.log(err)
