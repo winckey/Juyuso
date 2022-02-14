@@ -49,9 +49,9 @@ public class UserServiceImpl implements UserService {
 
         final String provider = registerRequestDto.getProvider();
         User userEntity = registerRequestDto.toEntity();
-        if (provider.isEmpty()) userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
+        if (provider == null || provider.isEmpty()) userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         userEntity.setRegion(regionRepository.getById(registerRequestDto.getRegionId()));
-        if (!provider.isEmpty()) userEntity.setProvider(provider);
+        if (provider != null && !provider.isEmpty()) userEntity.setProvider(provider);
         return userRepository.save(userEntity);
     }
 
