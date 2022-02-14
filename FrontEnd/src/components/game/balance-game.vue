@@ -5,154 +5,176 @@
     <audio class="audio" src="@/assets/sound/balance_click.wav"></audio>
     <audio class="win" src="@/assets/sound/win.mp3"></audio>
     <audio class="lose" src="@/assets/sound/lose.mp3"></audio>
-    <v-row>
-      <v-col cols="4">
-        <user-video :stream-manager="publisher"/>
-      </v-col>
-      <v-col cols="4">
-        <div class="balance-game">
-          <div>
+    <div>
+      <v-row>
+        <v-col>
+          <user-video class="col-md-12" style="height: 28vh" :stream-manager="publisher"/>
+          <div v-for="sub in subscribers.length" :key="sub">
+            <user-video style="height:28vh" class="col-md-12" :stream-manager="subscribers[sub-1].stream.connection.connectionId"/>{{subscribers[sub-1].stream.connection.connectionId }}
+          </div>
+          <user-video style="height:28vh" class="col-md-12 camera" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </v-col>
+        <v-col cols="4">
+          <div class="balance-game">
             <div>
               <div>
-                <v-container class="game">
-                  <p>🍺밸런스 게임🥃</p>
-                  <v-btn @click="[gameStart(),makeRandomNum()]" :disabled="balanceGame.isStart">시작</v-btn>
-                  <v-container fluid class="flex"
-                    v-if="dataInput">
-                    <!-- <v-col
-                      cols="12"
-                      sm="6">
-                      <v-row>
-                        <v-text-field
-                          v-model="Acard"></v-text-field>
-                      </v-row>
-                      <v-row>
-                        <v-text-field
-                          v-model="Bcard"></v-text-field>
-                      </v-row>
-                      <v-btn @click="inputData" :disabled="balanceGame.isStart">문제확정</v-btn>
-                      <v-btn @click="gameStart" :disabled="balanceGame.isStart">게임시작</v-btn>
-                    </v-col> -->
+                <div>
+                  <v-container class="game">
+                    <p>🍺밸런스 게임🥃</p>
+                    <v-btn @click="[gameStart(),makeRandomNum()]" :disabled="balanceGame.isStart">시작</v-btn>
+                    <v-container fluid class="flex"
+                      v-if="dataInput">
+                      <!-- <v-col
+                        cols="12"
+                        sm="6">
+                        <v-row>
+                          <v-text-field
+                            v-model="Acard"></v-text-field>
+                        </v-row>
+                        <v-row>
+                          <v-text-field
+                            v-model="Bcard"></v-text-field>
+                        </v-row>
+                        <v-btn @click="inputData" :disabled="balanceGame.isStart">문제확정</v-btn>
+                        <v-btn @click="gameStart" :disabled="balanceGame.isStart">게임시작</v-btn>
+                      </v-col> -->
+                    </v-container>
+                    <div style="color: rgb(0, 0, 0); font-size:1.2em"
+                      v-if="balanceGame.isStart">
+                      {{ balanceGame.totalTime }}
+                    </div>
                   </v-container>
-                  <div style="color: rgb(0, 0, 0); font-size:1.2em"
-                    v-if="balanceGame.isStart">
-                    {{ balanceGame.totalTime }}
+                  <v-container class="flex">
+                    <v-row>
+                      <v-col>
+                        <div class="card-box" v-if="balanceGame.isStart">
+                          <div
+                            @click="[cardCount(0),myPick(0)]"
+                            class="question-box a-card">
+                            <img src="@/assets/Acard.png" alt="" class="card-img">
+                            <!-- <div class="question-text">A</div> -->
+                            <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
+                          </div>
+                          <div
+                            @click="[cardCount(1),myPick(1)]"
+                            class="question-box b-card">
+                            <img src="@/assets/Bcard.png" alt="" class="card-img">
+                            <!-- <div class="question-text">B</div> -->
+                            <p class="question-text">{{balanceGame.gameData[1][balanceGame.randomNum]}}</p>
+                          </div>
+                          <!-- <div @click="[cardCount(n - 1),myPick(n-1)]"
+                            class="question-box">
+                            <p class="question-text">{{balanceGame.gameData[n-1][balanceGame.randomNum]}}</p>
+                          </div> -->
+                          <img src="@/assets/vs.png" alt="" class="vs">
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </div>
+              </div>
+              <v-dialog v-model="balanceGame.isEnd"
+                max-width="400">
+                <v-card v-if="balanceGame.cardData">
+                  <div
+                    class="result win"
+                    v-if="winCard == myPickedCard">
+                    <img src="@/assets/you_win.png" alt="">
                   </div>
-                </v-container>
-                <v-container class="flex">
+                  <div
+                    v-else
+                    class="result lose">
+                    <img src="@/assets/you_lose.png" alt="">
+                  </div>
+                  <!-- A 승리 -->
+                  <v-progress-linear
+                    :value="((balanceGame.cardData[0].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
+                    height="50"
+                    v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
+                    color="amber">
+                    <v-container>
+                      <v-row justify="space-between">
+                        <v-col cols="auto">
+                          A : {{ balanceGame.cardData[0].length }}
+                        </v-col>
+                        <v-col cols="auto">
+                          B : {{ balanceGame.cardData[1].length }}
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-progress-linear>
+
+                  <!-- B 승리 -->
+                  <v-progress-linear
+                    :value="((balanceGame.cardData[1].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
+                    height="50"
+                    v-else-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length">
+                    <v-container>
+                      <v-row justify="space-between">
+                        <v-col cols="auto">
+                          A : {{ balanceGame.cardData[0].length }}
+                        </v-col>
+                        <v-col cols="auto">
+                          B : {{ balanceGame.cardData[1].length }}
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-progress-linear>
                   <v-row>
                     <v-col>
-                      <div class="card-box" v-if="balanceGame.isStart">
-                        <div
-                          @click="[cardCount(0),myPick(0)]"
-                          class="question-box a-card">
-                          <!-- <div class="question-text">A</div> -->
-                          <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
+                      <div class="win-message">
+                        {{balanceGame.gameData[0][balanceGame.randomNum]}} 을(를) 
+                        <div v-for="player in balanceGame.cardData[0]" :key="player.username">
+                          {{ player.username }} 님
                         </div>
-                        <div
-                          @click="[cardCount(1),myPick(1)]"
-                          class="question-box b-card">
-                          <!-- <div class="question-text">B</div> -->
-                          <p class="question-text">{{balanceGame.gameData[1][balanceGame.randomNum]}}</p>
+                        이 선택하셨습니다
+                      </div>
+                    </v-col>
+                    <v-col>
+                      <div class="win-message">
+                        {{balanceGame.gameData[1][balanceGame.randomNum]}} 을(를)
+                        <div v-for="player in balanceGame.cardData[1]" :key="player.username">
+                          {{ player.username}} 님
                         </div>
-                        <!-- <div @click="[cardCount(n - 1),myPick(n-1)]"
-                          class="question-box">
-                          <p class="question-text">{{balanceGame.gameData[n-1][balanceGame.randomNum]}}</p>
-                        </div> -->
-                        <img src="@/assets/vs.png" alt="" class="vs">
+                        이 선택하셨습니다
                       </div>
                     </v-col>
                   </v-row>
-                </v-container>
-              </div>
+                  <div v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
+                    class="win-messege">
+                    {{ balanceGame.gameData[0][balanceGame.randomNum] }} 를 선택하신
+                    <span class="name-highlignt"
+                      v-for="player in balanceGame.cardData[0]"
+                      :key="player.username">
+                      🎉{{ player.username }}
+                    </span>
+                    님이 승리하였습니다
+                  </div>
+                  <div v-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length"
+                    class="win-messege">
+                    {{ balanceGame.gameData[1][balanceGame.randomNum] }} 를 선택하신
+                    <span class="name-highlignt"
+                      v-for="player in balanceGame.cardData[1]"
+                      :key="player.username">
+                      🎉{{ player.username }}
+                    </span>
+                    님이 승리하였습니다
+                  </div>
+                  <div v-if="balanceGame.cardData[0].length == balanceGame.cardData[1].length">
+                    무승부입니다
+                  </div>
+                </v-card>
+              </v-dialog>
             </div>
-            <v-dialog v-model="balanceGame.isEnd"
-              max-width="400">
-              <v-card v-if="balanceGame.cardData">
-              <v-card
-                class="result win"
-                v-if="winCard == myPickedCard">
-                you win
-              </v-card>
-              <v-card
-                v-else
-                class="result lose">
-                you lose 
-              </v-card>
-                <!-- A 승리 -->
-                <v-progress-linear
-                  :value="((balanceGame.cardData[0].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
-                  height="50"
-                  v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
-                  color="amber">
-                  <v-container>
-                    <v-row justify="space-between">
-                      <v-col cols="auto">
-                        A : {{ balanceGame.cardData[0].length }}
-                      </v-col>
-                      <v-col cols="auto">
-                        B : {{ balanceGame.cardData[1].length }}
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-progress-linear>
-
-                <!-- B 승리 -->
-                <v-progress-linear
-                  :value="((balanceGame.cardData[1].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
-                  height="50"
-                  v-else-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length">
-                  <v-container>
-                    <v-row justify="space-between">
-                      <v-col cols="auto">
-                        B : {{ balanceGame.cardData[1].length }}
-                      </v-col>
-                      <v-col cols="auto">
-                        A : {{ balanceGame.cardData[0].length }}
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-progress-linear>
-
-                <div v-for="player in balanceGame.cardData[0]" :key="player.username">
-                  A카드를 {{ player.username }} 님이 선택하셨습니다
-                </div>
-                <div v-for="player in balanceGame.cardData[1]" :key="player.username">
-                  B카드를 {{ player.username}} 님이 선택하셨습니다
-                </div>
-                <div v-if="balanceGame.cardData[0].length > balanceGame.cardData[1].length"
-                  class="win-messege">
-                  {{ winCard }} 를 선택하신
-                  <span class="name-highlignt"
-                    v-for="player in balanceGame.cardData[0]"
-                    :key="player.username">
-                    🎉{{ player.username }}
-                  </span>
-                  님이 승리하였습니다
-                </div>
-                <div v-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length"
-                  class="win-messege">
-                  {{ winCard }} 를 선택하신
-                  <span class="name-highlignt"
-                    v-for="player in balanceGame.cardData[1]"
-                    :key="player.username">
-                    🎉{{ player.username }}
-                  </span>
-                  님이 승리하였습니다
-                </div>
-                <div v-if="balanceGame.cardData[0].length == balanceGame.cardData[1].length">
-                  무승부입니다
-                </div>
-              </v-card>
-            </v-dialog>
           </div>
-        </div>
-      </v-col>
-      <v-col cols="4">
-        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-      </v-col>
+        </v-col>
+        <v-col >
+          <user-video style="height:28vh" class="col-md-12 camera" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </v-col>
 
-    </v-row>
+      </v-row>
+    </div>
+
 
   </v-container>
 
@@ -193,7 +215,7 @@ export default {
         isWrite: false,
         isStart: false,
         isEnd:false,
-        totalTime: 10,
+        totalTime: 5,
         cardData: [[], []],
         curMember:0,
         members:[],
@@ -212,7 +234,7 @@ export default {
         randomNum : 0
       },
       winCard : '선택해주세요',
-      myPickedCard:'',
+      myPickedCard:null,
       Acard:'',
       Bcard:'',
       dataInput : false,
@@ -236,7 +258,7 @@ export default {
         console.log('클릭')
         this.balanceGame.curMember = 0
         this.balanceGame.cardData = [[], []],
-        this.balanceGame.totalTime = 10,
+        this.balanceGame.totalTime = 5,
         this.balanceGame.isStart = true
         const random = this.makeRandomNum(0, 49)
         this.balanceGame.randomNum = random
@@ -289,6 +311,7 @@ export default {
         this.selected = true
         this.sendGameInfo()
         this.sound.play()
+        console.log('카메라',this.subscribers)
       }
     },
     myPick:function(n){
@@ -354,8 +377,8 @@ export default {
     this.bgsound.play()
     this.win = document.querySelector('.win')
     this.lose = document.querySelector('.lose')
-    this.win.volume = 0.5
-    this.lose.volume = 0.5
+    this.win.volume = 0.3
+    this.lose.volume = 0.3
   }
 }
 </script>
@@ -365,6 +388,10 @@ export default {
     top: 10%;
     right: 40%;
 } */
+.camera{
+  margin: 0%;
+  padding: 0%;
+}
 .balance-game {
   max-width: 500px;
   display: flex;
@@ -372,29 +399,33 @@ export default {
   justify-content: center; 
   align-items: center;
   padding: 2rem;
-  background-color: aliceblue;
+  background-color: rgb(245, 241, 225);
+  border-radius: 20px;
 }
 .game{
   text-align: center;
 }
 .question-box{
+  /* position:absolute; */
   display: table;
   width: 300px;
   height: 150px;
   text-align: center;
+  position: relative;
 }
 .question-box:hover{
-  font-size: large;
+  transform: scale(1.2);
+  translate: .3s;
 }
 .card-box{
   position: relative;
 }
-.a-card{
+/* .a-card{
   background-color: rgb(219, 184, 27);
 }
 .b-card{
   background-color: rgb(96, 96, 136);
-}
+} */
 .vs{
   position:absolute;
   vertical-align: middle;
@@ -403,11 +434,17 @@ export default {
   width: 80px;
   transform:translate(-50%,-50%);
 }
+.card-img{
+  width:100%;
+}
 .question-text{
+  position:absolute;
   display: table-cell;
   vertical-align: middle;
-  padding: 10%;
   color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .progress-text{
   text-align: justify
@@ -431,4 +468,6 @@ export default {
 .lose{
   color: rgb(20, 20, 129);
 }
+
+
 </style>
