@@ -4,6 +4,7 @@ package com.juyuso.db.entity.meeting;
 import com.juyuso.db.entity.HashTag;
 import com.juyuso.db.entity.user.User;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -43,6 +44,9 @@ public class Meeting {
     @Column(nullable = false)
     private String url;
 
+    @ColumnDefault("0")
+    private int cnt;
+
     @OneToMany(mappedBy = "meeting")
     private List<HashTag> hashtags = new ArrayList<>();
 
@@ -62,7 +66,7 @@ public class Meeting {
     }
 
     public Meeting(User owner, String title, String password, LocalDateTime callStartTime,
-                   LocalDateTime callEndTime, boolean active, boolean common, String url) {
+                   LocalDateTime callEndTime, boolean active, boolean common, String url, int cnt) {
         this.owner = owner;
         this.title = title;
         this.password = password;
@@ -71,6 +75,7 @@ public class Meeting {
         this.active = active;
         this.common = common;
         this.url = url;
+        this.cnt = cnt;
     }
 
     public void changeActive() {

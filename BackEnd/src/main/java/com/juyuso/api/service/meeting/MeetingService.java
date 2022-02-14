@@ -19,6 +19,8 @@ public interface MeetingService {
    Meeting findByMeetingId(Long meetingId);
    Long changeActiveMeetingByMeetingId(Long meetingId);
    Meeting modifyMeeting(Long meetingId, MeetingModifyReqDto reqDto);
+   void plusCnt(Long meetingId);
+   void minusCnt(Long meetingId);
 
 
 }

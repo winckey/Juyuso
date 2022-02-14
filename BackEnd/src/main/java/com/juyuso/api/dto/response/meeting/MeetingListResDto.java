@@ -30,6 +30,8 @@ public class MeetingListResDto {
     private String userImg;
     @ApiModelProperty(name = "방 테마", example = "포창마차 테마")
     private String theme;
+    @ApiModelProperty(name = "방 인원수", example = "2")
+    private int cnt;
 
     public MeetingListResDto() {
 
@@ -70,6 +72,7 @@ public class MeetingListResDto {
                 if(entity.getOwner().getUserImg() != null) {
                     dto.setUserImg(entity.getOwner().getUserImg().getFileUrl());
                 }
+                dto.setCnt(entity.getCnt());
                 return dto;
             }
         });

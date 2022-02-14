@@ -38,9 +38,6 @@ public class MeetingController {
     private OpenVidu openVidu;
     private final DrinkingHistoryService drinkingHistoryService;
 
-    private Map<Long, Integer> mapSessions = new ConcurrentHashMap<>();
-
-
     private int LIMIT_MEETING = 10; // 인원 제한
 
     private String OPENVIDU_URL;
@@ -71,7 +68,6 @@ public class MeetingController {
     public ResponseEntity<MeetingCreateResDto> createMeeting(@RequestBody @ApiParam(value = "방만들기 정보") MeetingCreateReqDto reqDto, Principal principal) {
         String userId = principal.getName();
         Long meetingId = meetingService.createMeeting(reqDto, userId);
-        this.mapSessions.put(meetingId, 1);
         historyService.saveMeetingHistory(meetingId, userId, "생성");
         return ResponseEntity.ok(MeetingCreateResDto.of(meetingId, reqDto.getMeetingName(), reqDto.getMeetingPassword(), userId));
     }
@@ -127,13 +123,15 @@ public class MeetingController {
     })
     public ResponseEntity<MeetingEnterResDto> enterMeeting(@PathVariable Long meetingId, Principal principal) {
         String userId = principal.getName();
-         if(this.mapSessions.get(meetingId) == null || this.mapSessions.get(meetingId) >= LIMIT_MEETING) {
-             throw new CustomException(ErrorCode.CANNOT_ENTER_MEETING);
-         } else {
+        int cnt = meetingService.findByMeetingId(meetingId).getCnt();
+        if (cnt >= LIMIT_MEETING) {
+            throw new CustomException(ErrorCode.CANNOT_ENTER_MEETING);
+        }
+        else {
              historyService.saveMeetingHistory(meetingId, userId, "입장");
-             this.mapSessions.put(meetingId, this.mapSessions.get(meetingId) + 1);
+             meetingService.plusCnt(meetingId);
          }
-        int cnt = mapSessions.get(meetingId);
+
         return ResponseEntity.ok(MeetingEnterResDto.of(meetingId, cnt));
     }
 
@@ -148,7 +146,7 @@ public class MeetingController {
     public ResponseEntity<MeetingLeaveResDto> leaveMeeting (@PathVariable Long meetingId, Principal principal,
                                                             @RequestBody DrinkingHistoryAddReqDto reqDto) {
 
-        int cnt = this.mapSessions.get(meetingId);
+        int cnt = meetingService.findByMeetingId(meetingId).getCnt();
         String userId = principal.getName();
         User user = userService.getUserByUserId(userId);
         if(user == null) {
@@ -159,11 +157,9 @@ public class MeetingController {
 
         if(cnt == 1) {
             meetingService.changeActiveMeetingByMeetingId(meetingId);
-            this.mapSessions.remove(meetingId);
             //한명남았을때 active false 로 바꿈
-            //미팅방은 삭제안함
         } else {
-            this.mapSessions.put(meetingId, cnt -1);
+            meetingService.minusCnt(meetingId);
         }
         return ResponseEntity.ok(MeetingLeaveResDto.of(meetingId));
     }

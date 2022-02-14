@@ -88,9 +88,22 @@ public class MeetingServiceImpl implements MeetingService{
         return meeting;
 
     }
+    @Transactional
+    public void plusCnt(Long meetingId) {
+        meetingRepository.plusCnt(meetingId);
+    }
+
+    @Transactional
+    public void minusCnt(Long meetingId) {
+        meetingRepository.minusCnt(meetingId);
+    }
+
+
     @PreDestroy
     public void changeActiveMeeting() {
         System.out.println("종료직전 모든 방 active false 로 바꾸기 !! ");
 //        meetingRepository.changeActiveMeeting();
     }
+
+
 }
