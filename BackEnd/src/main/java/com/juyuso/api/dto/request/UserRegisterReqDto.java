@@ -21,7 +21,6 @@ public class UserRegisterReqDto {
     @ApiModelProperty(name="유저 ID", example="your_id")
     private String id;
 
-    @NotBlank
     @ApiModelProperty(name="유저 Password", example="your_password")
     private String password;
 
@@ -49,6 +48,8 @@ public class UserRegisterReqDto {
     @Min(1) @Max(8)
     @ApiModelProperty(name="지역 코드")
     private Long regionId;
+
+    private String provider;
 
     public User toEntity() {
         return User.builder()

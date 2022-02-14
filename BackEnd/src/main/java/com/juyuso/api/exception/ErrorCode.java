@@ -29,8 +29,13 @@ public enum ErrorCode {
     /* 409 CONFLICT : Resource의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     USER_ID_DUPLICATE(CONFLICT, "중복된 사용자 ID입니다."),
     USER_NICKNAME_DUPLICATE(CONFLICT, "중복된 사용자 닉네임입니다."),
+    USER_EMAIL_DUPLICATE(CONFLICT, "중복된 사용자 Email입니다."),
+    OAUTH_EMAIL_DUPLICATE(CONFLICT, "이미 아이디로 가입된 계정이 존재합니다."),
     FRIEND_REQUEST_DUPLICATE(CONFLICT, "이미 친구 요청하였습니다."),
-    FRIEND_DUPLICATE(CONFLICT, "이미 등록된 친구입니다.");
+    FRIEND_DUPLICATE(CONFLICT, "이미 등록된 친구입니다."),
+
+    /* 500 */
+    OAUTH_ERROR(INTERNAL_SERVER_ERROR, "카카오 로그인/회원가입 중 오류가 발생하였습니다.");
 
     private HttpStatus httpStatus;
     private String message;

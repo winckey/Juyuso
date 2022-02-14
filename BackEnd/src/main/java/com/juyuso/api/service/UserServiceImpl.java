@@ -45,10 +45,13 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserRegisterReqDto registerRequestDto) {
         if (checkDuplicateUserId(registerRequestDto.getId())) throw new CustomException(ErrorCode.USER_ID_DUPLICATE);
         if (checkDuplicateNickname(registerRequestDto.getNickname())) throw new CustomException(ErrorCode.USER_NICKNAME_DUPLICATE);
+        if (checkDuplicateEmail(registerRequestDto.getEmail())) throw new CustomException(ErrorCode.USER_EMAIL_DUPLICATE);
 
+        final String provider = registerRequestDto.getProvider();
         User userEntity = registerRequestDto.toEntity();
-        userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
+        if (provider.isEmpty()) userEntity.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         userEntity.setRegion(regionRepository.getById(registerRequestDto.getRegionId()));
+        if (!provider.isEmpty()) userEntity.setProvider(provider);
         return userRepository.save(userEntity);
     }
 
@@ -68,6 +71,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Boolean checkDuplicateNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean checkDuplicateEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override

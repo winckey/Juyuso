@@ -17,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByNickname(String nickname);
 
+    boolean existsByEmail(String email);
+
     List<User> findByNicknameContaining(String nickname);
 
     @Query(value = "select f.to from Friend f where f.from = :user and f.to.nickname like %:nickname%")
