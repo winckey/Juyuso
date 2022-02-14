@@ -125,6 +125,7 @@ export default {
       axios({
         method: 'GET',
         url: `${process.env.VUE_APP_API_URL}/chat/message/${this.roomId}`,
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`},
         params: {
           page: this.page,
           size: 10,

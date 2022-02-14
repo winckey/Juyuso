@@ -153,6 +153,5 @@ export default {
   .game-name {
     font-size: 1.3rem;
     color: white;
-    font-weight: 600;
   }
 </style>
