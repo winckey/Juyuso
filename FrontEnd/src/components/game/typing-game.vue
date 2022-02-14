@@ -12,11 +12,8 @@
       </v-col>
       <v-col cols="4">
         <div class="video-grid" :style="videoGrid">
-          <img src="@/assets/chat.png" alt="dd">
-          <img src="@/assets/chat.png" alt="dd">
-          <img src="@/assets/chat.png" alt="dd">
-          <img src="@/assets/chat.png" alt="dd">
-
+          <typing-game-score :stream-manager="publisher" :score="typingGame.scoreResultObject[JSON.parse(publisher.stream.connection.data).clientData]"/>
+          <typing-game-score v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"  :score="typingGame.scoreResultObject[JSON.parse(sub.stream.connection.data).clientData]"/>
         </div>
       </v-col>
       <v-col class="d-flex justify-content-center align-items-center" cols="4" >
@@ -61,7 +58,7 @@
                   <div class="d-flex flex-column" style="text-align: center">
                       <h3>축하합니다</h3>
                       <hr>
-                      <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리란다 얘둘앙🧃</v-card-text>
+                      <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리입니다🧃</v-card-text>
                   </div>
                   <v-card-actions>
                   <v-spacer></v-spacer>
@@ -83,6 +80,7 @@
 <script>
 import { mapState } from 'vuex'
 import UserVideo from '@/components/table/user-video.vue'
+import TypingGameScore from '@/components/game/typing-game-score.vue'
 
 export default {
   name: 'TypingGame',
@@ -91,11 +89,11 @@ export default {
     publisher: Object,
   },
   components: {
-    UserVideo
+    UserVideo,
+    TypingGameScore
   },
   data: function () {
     return {
-      
       correctAudio: null,
       nopeAudio: null,
       wordDisplay: '시좍',
@@ -105,13 +103,14 @@ export default {
       timeInterval: null,
       members: [],
       scoreResultObject: {},
-      words: ['우리가좍', '요수 밤봐돠','샹숑가수', '최참판댁', '한양 양장점', '기린 그림', 
-      '내가 그린 기린 그림', '확률분포표', '홑겹창살', '참치꽁치찜', '김치참치꽁치치',
-       '청춘은 바로 지금', '오마이갓김치', '왕밤빰', '영동용봉탕', 
-       '반품상품', '강력접착제', '브레드킹 김핑퐁', '하울의 무빙이 오지는 성'],
+      words: ['우리가좍', '요수 밤봐돠','샹숑가수', '최참판댁', '한양 양장점', '기린 그림', '난방 방법 변경 방법',
+      '내가 그린 기린 그림', '확률분포표', '홑겹창살', '참치꽁치찜', '김치참치꽁치치', '역전 석점슛',
+       '붕당정책 탕평책', '오마이갓김치', '왕밤빰', '영동 용봉탕', '게솰샥수핀', '경찰청 창살', '단팥맛 통찐빵',
+       '반품상품', '강력접착제', '브레드킹 김핑퐁', '하울의 무빙이 오지는 성', '깐 콩깍지', '금강산 정상',
+       '영월 칡국수', '공간감각 무감각', '팥죽깨죽', '스위스에서 온 스미스씨', '닥터페퍼','어 느새 힙 합은 안 멋져'],
       typingGame: {
         type: 'Typing',
-        time: 6,
+        time: 20,
         countBeforeGame: 3,
         allPlaying: false,
         isBefore: false,
@@ -131,7 +130,9 @@ export default {
           display: 'grid',
           gridTemplateColumns: 28+'vw',
           gap: 1+'vh',
-          gridTemplateRows: 'repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)'
+          gridTemplateRows: this.typingGame.members.length === 1 ? 
+          'repeat('+`${this.typingGame.members.length}`+','+ (80/2)+'vh)' :
+          'repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)'
 
       }
     }
@@ -191,7 +192,7 @@ export default {
       if (this.isPlaying) {
           this.typingGame = {
             type: 'Typing',
-            time: 6,
+            time: 20,
             allPlaying: true,
             isBefore: false,
             isEnd: false,
@@ -232,6 +233,27 @@ export default {
       const index = Math.floor((Math.random() * this.words.length))
       this.wordDisplay = this.words[index]
     },
+    // reset: function () {
+       
+    //   console.log('reset')
+    //   console.log(this.scoreResultObject)
+    //   this.wordInput = null
+    //   this.score = 0
+    //   this.typingGame = {
+    //     type: 'Typing',
+    //     time: 20,
+    //     countBeforeGame: 3,
+    //     allPlaying: false,
+    //     isBefore: false,
+    //     isEnd: false,
+    //     scoreResult: [],
+    //     scoreResultObject: {},
+    //     members: [],
+    //     winner: null
+    //   }
+    //   this.sendInfo()
+
+    // },
     sendInfo: function () {
       this.session.signal({
         data: JSON.stringify(this.typingGame),
@@ -262,8 +284,8 @@ export default {
 .typing-game {
   border: 2px solid #dadada;
   border-radius: 7px;
-  max-width: 75vw;
-  max-height: 100vh;
+  width: 25vw;
+  height: 65vh;
   display: flex;
   flex-direction: column;
   justify-content: center; 
