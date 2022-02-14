@@ -1,6 +1,6 @@
 package com.juyuso.config;
 
-import com.juyuso.api.service.UserService;
+import com.juyuso.api.service.user.UserService;
 import com.juyuso.common.auth.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

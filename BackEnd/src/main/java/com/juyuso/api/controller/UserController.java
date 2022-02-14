@@ -1,16 +1,17 @@
 package com.juyuso.api.controller;
 
-import com.juyuso.api.dto.request.UserLoginReqDto;
-import com.juyuso.api.dto.request.UserRegisterReqDto;
-import com.juyuso.api.dto.request.UserModifyReqDto;
-import com.juyuso.api.dto.request.UserPwReqDto;
+import com.juyuso.api.dto.request.user.UserLoginReqDto;
+import com.juyuso.api.dto.request.user.UserRegisterReqDto;
+import com.juyuso.api.dto.request.user.UserModifyReqDto;
+import com.juyuso.api.dto.request.user.UserPwReqDto;
 import com.juyuso.api.dto.response.*;
+import com.juyuso.api.dto.response.user.*;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
-import com.juyuso.api.service.UserService;
+import com.juyuso.api.service.user.UserService;
 import com.juyuso.common.model.response.BaseResponseBody;
 import com.juyuso.common.util.JwtTokenUtil;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

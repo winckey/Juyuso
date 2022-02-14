@@ -6,7 +6,7 @@ import com.juyuso.api.dto.OAuthKakaoToken;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
 import com.juyuso.api.service.KakaoService;
-import com.juyuso.api.service.UserService;
+import com.juyuso.api.service.user.UserService;
 import com.juyuso.common.model.response.BaseResponseBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;

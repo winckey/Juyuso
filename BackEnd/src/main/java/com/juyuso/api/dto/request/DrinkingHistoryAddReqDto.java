@@ -1,9 +1,8 @@
 package com.juyuso.api.dto.request;
 
-import com.juyuso.db.entity.DrinkingCategory;
-import com.juyuso.db.entity.DrinkingHistory;
-import com.juyuso.db.entity.User;
-import io.swagger.annotations.ApiModel;
+import com.juyuso.db.entity.drinking.DrinkingCategory;
+import com.juyuso.db.entity.drinking.DrinkingHistory;
+import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 

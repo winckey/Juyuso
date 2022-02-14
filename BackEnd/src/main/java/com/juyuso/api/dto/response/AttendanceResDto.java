@@ -22,7 +22,7 @@ public class AttendanceResDto extends BaseResponseBody {
         private String date;
     }
 
-    public static AttendanceResDto of(Integer statusCode, String message, LocalDate date, List<com.juyuso.db.entity.Attendance> list) {
+    public static AttendanceResDto of(Integer statusCode, String message, LocalDate date, List<com.juyuso.db.entity.attend.Attendance> list) {
         AttendanceResDto res = new AttendanceResDto();
         res.setStatusCode(statusCode);
         res.setMessage(message);

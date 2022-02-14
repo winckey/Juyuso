@@ -1,7 +1,7 @@
 package com.juyuso.db.repository;
 
-import com.juyuso.db.entity.Attendance;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.attend.Attendance;
+import com.juyuso.db.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

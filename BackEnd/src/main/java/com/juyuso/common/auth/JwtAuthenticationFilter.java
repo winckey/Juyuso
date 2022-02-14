@@ -2,10 +2,10 @@ package com.juyuso.common.auth;
 
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.juyuso.api.service.UserService;
+import com.juyuso.api.service.user.UserService;
 import com.juyuso.common.util.JwtTokenUtil;
 import com.juyuso.common.util.ResponseBodyWriteUtil;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.user.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

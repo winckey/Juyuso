@@ -1,16 +1,16 @@
 package com.juyuso.api.controller;
 
-import com.juyuso.api.dto.request.ChatMessageReqDto;
-import com.juyuso.api.dto.response.ChatMessageResDto;
+import com.juyuso.api.dto.request.chat.ChatMessageReqDto;
+import com.juyuso.api.dto.response.chat.ChatMessageResDto;
 import com.juyuso.api.exception.CustomException;
 import com.juyuso.api.exception.ErrorCode;
-import com.juyuso.api.service.ChatMessageService;
+import com.juyuso.api.service.chat.ChatMessageService;
 
-import com.juyuso.api.service.FirebaseCloudMessageService;
+import com.juyuso.api.service.firebase.FirebaseCloudMessageService;
 import com.juyuso.common.model.response.BaseResponseBody;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.user.User;
 import com.juyuso.db.entity.chat.Message;
-import com.juyuso.db.repository.UserRepository;
+import com.juyuso.db.repository.user.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

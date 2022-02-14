@@ -2,7 +2,7 @@ package com.juyuso.api.dto.response;
 
 import com.juyuso.api.dto.UserInfoDto;
 import com.juyuso.common.model.response.BaseResponseBody;
-import com.juyuso.db.entity.User;
+import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
