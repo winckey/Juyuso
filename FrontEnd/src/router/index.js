@@ -15,76 +15,69 @@ import Table from '@/views/tables/table.vue'
 //main
 import Main from '@/views/main.vue'
 
-//store
-// import openvidu from '@/store/modules/openviduStore'
+import store from '../store'
 
 Vue.use(VueRouter)
 
-
-const rejectAuthUser = (to, from, next) => {
-  if (localStorage.getItem('jwt')) {
-    console.log('로그인 접근을 reject함')
-    alert('이미 로그인을 하셨습니다')
-    next('/')
-  }else {
-    next()
-  }
+const beforeAuth = isAuth => (from, to, next) => {
+  const isLogin = store.getters['accounts/getIsLogin'];
+  ((isLogin && isAuth) || (!isLogin && !isAuth)) ? next() : next({ name : 'Login', replace: true });
 }
-
-// const rejectEnter = (to, from, next) => {
-//   if (openvidu.state.session.options.sessionId) {
-//     // next(`/table/${openvidu.state.session.options.sessionId}`)
-//     next('/tables')
-//     // next()
-//   } else {
-//     next()
-//   }
-// }
 
 const routes = [
   {
     path: '/',
     name: 'Main',
-    component: Main
+    component: Main,
+    beforeEnter: beforeAuth(true)
   },
   {
     path: '/login',
     name: 'Login',
-    beforeEnter: rejectAuthUser,
     component: Login
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
+    component: Signup,
+  },
+  {
+    path: '/signup/kakao',
+    name: 'SignupKakao',
+    component: () => import('@/views/accounts/signup-kakao'),
+    props: true
   },
   {
     path: '/tables',
     name: 'TableList',
-    component: TableList
+    component: TableList,
+    beforeEnter: beforeAuth(true)
   },
   {
     path: '/mypage/:userId',
     name: 'MyPage',
-    component: MyPage
+    component: MyPage,
+    beforeEnter: beforeAuth(true)
   },
   {
     path: '/friendpage/:userId',
     name: 'FriendPage',
-    component: FriendPage
+    component: FriendPage,
+    beforeEnter: beforeAuth(true)
   },
   {
     path: '/mydata/:userId',
     name: 'MyData',
     component: MyData,
-    props: true
+    props: true,
+    beforeEnter: beforeAuth(true)
   },
   {
     path: '/table/:roomId',
     name: 'Table',
     component: Table,
     props: true,
-    // beforeEnter: rejectEnter
+    beforeEnter: beforeAuth(true)
   }
 ]
 
@@ -93,7 +86,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
-
 
 export default router

@@ -30,7 +30,7 @@
           <div class="logout">
             <v-btn
               plain
-              @click="logout">
+              @click="onLogout">
               로그아웃
             </v-btn>
           </div>
@@ -48,57 +48,61 @@
 </template>
 
 <script>
-import axios from 'axios'
-// import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-    data(){
-        return{
-            isLogin: false,
-            user : ''
-        }
-    },
-    methods:{
-        goMyPage: function () {
-            this.$router.push({name: 'MyPage', params: {userId: this.user.id}})
-            },
-        goToLogin: function () {
-            this.$router.push({ name: 'Login' })
-            },
-        logout: function(){
-            console.log('isLogin')
-            this.isLogin = false
-            localStorage.removeItem('jwt')
-            this.$router.push({ name: 'Main' })    
+  data() {
+    return {
+        isLogin: false,
+        user : ''
+    }
+  },
+  methods:{
+    ...mapActions('accounts', ['logout']),
+    goMyPage: function () {
+        this.$router.push({name: 'MyPage', params: {userId: this.user.id}})
         },
-        setToken : function(){
-            const token = localStorage.getItem('jwt')
-            const config = {
-                Authorization: `Bearer ${token}`
-            }
-            return config
+    goToLogin: function () {
+        this.$router.push({ name: 'Login' })
         },
+    onLogout: function(){
+        this.isLogin = false
+        this.logout()
+          .then(() => this.$router.push({ name: 'Login' }))
     },
-    created: function(){
-        axios({
-            method: 'get',
-            url: `${process.env.VUE_APP_API_URL}/users/me`,
-            headers: this.setToken()
-        })
-            .then(res =>{
-                console.log(res.data.user)
-                const userInfo = res.data.user
-                this.user = userInfo
-            })
-            .catch(err => {
-                console.log(err)
-            })
+    setToken : function(){
         const token = localStorage.getItem('jwt')
-        if(token){
-            this.isLogin=true
+        const config = {
+            Authorization: `Bearer ${token}`
         }
+        return config
     },
+  },
+  mounted() {
+    // axios({
+    //   method: 'get',
+    //   url: `${process.env.VUE_APP_API_URL}/users/me`,
+    //   headers: this.setToken()
+    // })
+    //     .then(res =>{
+    //         console.log(res.data.user)
+    //         const userInfo = res.data.user
+    //         this.user = userInfo
+    //     })
+    //     .catch(err => {
+    //         console.log(err)
+    //     })
+    // const token = localStorage.getItem('jwt')
+    // if(token){
+    //     this.isLogin=true
+    // }
+    
+    this.user = this.getUser;
+    this.isLogin = this.getIsLogin;
+    console.log(this.user)
+  },
   computed: {
+    ...mapGetters('accounts', ['getUser', 'getIsLogin']),
     imgUrl: function () {
       if (this.user.img) {
         return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
@@ -107,7 +111,6 @@ export default {
       }
     }
   }
-
 }
 </script>
 
