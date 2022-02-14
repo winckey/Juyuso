@@ -15,34 +15,12 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import NavBar from '@/components/nav-bar.vue'
-// import axios from 'axios'
 const accounts = 'accounts'
 
 export default {
   name: 'App',
   components: {
     NavBar
-  },
-  mounted: function () {
-    console.log(this.$route.name)
-    // if (!localStorage.getItem('jwt')) {
-    //   this.$router.push({name: 'Login'})
-    // }
-    // else {
-    //   const token = localStorage.getItem('jwt')
-    //   axios({
-    //     method: 'get',
-    //     url: `${process.env.VUE_APP_API_URL}/users/me`,
-    //     headers: { Authorization: `Bearer ${token}`}
-    //   })
-    //   .then(res =>{
-    //     this.userUpdate(res.data.user)
-    //     this.initSession(res.data.user)
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //   })
-    // }
   },
   data: () => ({
     //

@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-center my-auto">
     <div class="login-box rounded-lg">
       <div  class="mx-auto p-4">
-          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="login">
+          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="onLogin">
             <span>
               <h2 class="my-3 text-center">🍻 적셔 🍻</h2>
             </span>
@@ -23,10 +23,10 @@
             :rules="passwordRules"
             label="비밀번호"
             required
-            @keyup.enter="login"></v-text-field>
+            @keyup.enter="onLogin"></v-text-field>
             
             <span class="d-flex justify-content-center my-3">
-              <v-btn @click="login" color="#1CFD9F" rounded>로그인</v-btn>
+              <v-btn @click="onLogin" color="#1CFD9F" rounded>로그인</v-btn>
             </span>
 
             <span class="d-flex justify-content-center my-3">
@@ -77,49 +77,63 @@ export default {
   },
   created() {
     // get kakao oauth authorization code
-    console.log('created() : get Auth Code!!')
+    // console.log('created() : get Auth Code!!')
     let authCode = this.$route.query.code;
     authCode && this.kakaoAuth(authCode);
   },
   methods: {
-    ...mapActions(accounts, ['userUpdate']),
+    ...mapActions(accounts, ['login', 'loginKakao', 'userUpdate']),
     ...mapActions('openviduStore', ['initSession']),
     getFcmToken() {
       const messaging = getMessaging();
       const PUBLIC_VAPID_KEY = 'BNEXCWddmnyA6pokCD8W5cGv9JBI6gA2IeDlf7RbP9VzVoXN23r8J-ULN-bdkAyS6gB0aVw7DUNokhdSUuNfdmU';
       return getToken(messaging, { vapidKey: PUBLIC_VAPID_KEY });
     },
-    login() {
-      this.getFcmToken()
-        .then(token => {
-          if (token) {
-            this.credentials.fcmToken = token
-            axios({
-              method: 'post',
-              url: `${process.env.VUE_APP_API_URL}/users/login`,
-              data: this.credentials
-            })
-            .then(res => {
-              localStorage.setItem('jwt', res.data.accessToken)
-              this.userUpdate(res.data.user)
-              this.initSession(res.data.user)
-              this.$router.replace({name:'Main'})
-            })
-            .catch(err => {
-              console.log(err)
-              this.credentials.id = null
-              this.credentials.password = null
-            })
-            console.log('fcm getToken ', token);
-          } else {
-            // Show permission request UI
-            console.log('No registration token available. Request permission to generate one.');
-          }
-        }
-      ).catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
-        // ...
-      });
+    onLogin() {
+      console.log('loginbtn')
+      // this.getFcmToken()
+      //   .then(token => {
+      //     if (token) {
+            // this.credentials.fcmToken = token
+            this.credentials.fcmToken = 'abcd'
+            // axios({
+            //   method: 'post',
+            //   url: `${process.env.VUE_APP_API_URL}/users/login`,
+            //   data: this.credentials
+            // })
+            // .then(res => {
+            //   localStorage.setItem('jwt', res.data.accessToken)
+            //   this.userUpdate(res.data.user)
+            //   this.initSession(res.data.user)
+            //   this.$router.replace({name:'Main'})
+            // })
+            // .catch(err => {
+            //   console.log(err)
+            //   this.credentials.id = null
+            //   this.credentials.password = null
+            // })
+
+            this.login(this.credentials)
+              .then(response => {
+                if (response.status == 200) {
+                  this.initSession(response.data.user);
+                  this.$router.replace({ name : 'Main' });
+                }
+              })
+              .catch(error => {
+                console.log(error.response);
+              })
+
+            // console.log('fcm getToken ', token);
+      //     } else {
+      //       // Show permission request UI
+      //       console.log('No registration token available. Request permission to generate one.');
+      //     }
+      //   }
+      // ).catch((err) => {
+      //   console.log('An error occurred while retrieving token. ', err);
+      //   // ...
+      // });
       
     },
     // goPasswordFind: function () {
@@ -147,19 +161,32 @@ export default {
             this.getFcmToken()
               .then(token => {
                 if (token) {
-                  axios.post(`${process.env.VUE_APP_API_URL}/users/social/kakao/login`, {
+                  this.loginKakao({
                     id: info.id,
                     fcmToken: token
-                  }).then(res => {
-                    localStorage.setItem('jwt', res.data.accessToken)
-                    this.userUpdate(res.data.user)
-                    this.initSession(res.data.user)
-                    this.$router.replace({ name: 'Main' })
-                  }).catch(err => {
-                    console.log(err)
-                    this.credentials.id = null
-                    this.credentials.password = null
-                  })
+                  }).then(response => {
+                      if (response.status == 200) {
+                        this.initSession(response.data.user);
+                        this.$router.replace({ name : 'Main' });
+                      }
+                    }
+                  ).catch(error => {
+                      console.log(error.response);
+                    }
+                  )
+                  // axios.post(`${process.env.VUE_APP_API_URL}/users/social/kakao/login`, {
+                  //   id: info.id,
+                  //   fcmToken: token
+                  // }).then(res => {
+                  //   localStorage.setItem('jwt', res.data.accessToken)
+                  //   this.userUpdate(res.data.user)
+                  //   this.initSession(res.data.user)
+                  //   this.$router.replace({ name: 'Main' })
+                  // }).catch(err => {
+                  //   console.log(err)
+                  //   this.credentials.id = null
+                  //   this.credentials.password = null
+                  // })
                 } else {
                   // Show permission request UI
                   console.log('No registration token available. Request permission to generate one.');

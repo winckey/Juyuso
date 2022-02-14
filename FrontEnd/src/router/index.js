@@ -15,31 +15,7 @@ import Table from '@/views/tables/table.vue'
 //main
 import Main from '@/views/main.vue'
 
-//store
-// import openvidu from '@/store/modules/openviduStore'
-
 Vue.use(VueRouter)
-
-
-const rejectAuthUser = (to, from, next) => {
-  if (localStorage.getItem('jwt')) {
-    console.log('로그인 접근을 reject함')
-    alert('이미 로그인을 하셨습니다')
-    next('/')
-  }else {
-    next()
-  }
-}
-
-// const rejectEnter = (to, from, next) => {
-//   if (openvidu.state.session.options.sessionId) {
-//     // next(`/table/${openvidu.state.session.options.sessionId}`)
-//     next('/tables')
-//     // next()
-//   } else {
-//     next()
-//   }
-// }
 
 const routes = [
   {
@@ -50,7 +26,6 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    beforeEnter: rejectAuthUser,
     component: Login
   },
   {
@@ -90,8 +65,7 @@ const routes = [
     path: '/table/:roomId',
     name: 'Table',
     component: Table,
-    props: true,
-    // beforeEnter: rejectEnter
+    props: true
   }
 ]
 
@@ -101,6 +75,33 @@ const router = new VueRouter({
   routes
 })
 
+// router.beforeEach((to, from, next) => {
+//   console.log(to)
+//   console.log(from)
+//   console.log(next)
 
+//   let { name } = to;
+
+//   if (name === 'Main' || name === 'Login' || name === 'Signup' || name === 'SignupKakao') {
+//     if (localStorage.getItem('jwt')) {
+//       alert('이미 로그인을 했으므로, 해당 페이지 이동이 제한됩니다.');
+//       next({
+//         name: 'TableList',
+//         replace: true,
+//       });
+//     } else {
+//       next();
+//     }
+//   } else {
+//     // 인증이 필요한 모든 라우터 path에 대해, 로그인 여부 체크
+//     // jwt 토큰이 없으면, 로그인 페이지로 이동한다.
+//     !localStorage.getItem('jwt') ?
+//       next({
+//         name: 'Login',
+//         replace: true,
+//       })
+//     : next();
+//   }
+// });
 
 export default router
