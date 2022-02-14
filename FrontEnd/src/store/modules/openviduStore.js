@@ -54,6 +54,9 @@ const openviduStore = {
       state.gameMode = undefined;
       state.gameInfo = undefined;
     },
+    SET_WHOLE_SUBSCRIBERS(state, data) {
+      state.wholeSubscribers = data.wholeSubscribers
+    },
     SET_MESSAGE(state, data) {
       state.messages = data.messages
     },
@@ -131,6 +134,7 @@ const openviduStore = {
         console.log(subscriber)
 				data.subscribers.push(subscriber);
         data.wholeSubscribers.push(subscriber);
+        commit('SET_WHOLE_SUBSCRIBERS', data)
         Vue.$toast.open({
           position: 'bottom',
           message: `${JSON.parse(subscriber.stream.connection.data).clientData}님이 입장하셨습니다.`,
@@ -196,6 +200,7 @@ const openviduStore = {
               data.wholeSubscribers.push(publisher)
               dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
+              commit('SET_WHOLE_SUBSCRIBERS', data)
             })
             .catch(error => {
               console.log('There was an error connecting to the session:', error.code, error.message);
