@@ -78,24 +78,21 @@
         <v-icon :color="iconColor">{{ erase ? 'mdi-close' : 'mdi-delete' }}</v-icon>
       </v-btn>
     </div>
-    <canvas
-      id="canvas"
-      ref="canvas"
-      @mousedown.left="initDraw"
-      @mouseup.left="finishDraw"
-      @mousemove="draw"
-      @mouseout="finishDraw"
-      width=1500;
-      height=680;
-    ></canvas>
-    <div class="container">
-        <div class="row">
-          <div id="video-container">
-            <user-video class="col-md-3" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-            <user-video class="col-md-3" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-          </div>
-        </div>
+    <div class="game-box">
+      <canvas
+        id="canvas"
+        ref="canvas"
+        @mousedown.left="initDraw"
+        @mouseup.left="finishDraw"
+        @mousemove="draw"
+        @mouseout="finishDraw"
+        width=1200;
+        height=550;
+      ></canvas>
+      <div class="video-grid">
+        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
       </div>
+    </div>
   </div>
 </template>
 
@@ -115,7 +112,7 @@ export default {
   data: function () {
     return {
       colorDialog: false,
-      color: '#FFFFFF',
+      color: '#000000',
       penWidth: '2',
       canvas: null,
       context: null,
@@ -150,6 +147,7 @@ export default {
     }
   },
   mounted: function () {
+    console.log(this.subscribers)
     this.canvas = document.getElementById('canvas')
     this.context = document.getElementById('canvas').getContext("2d")
     this.drawSession()
@@ -225,21 +223,38 @@ export default {
   #canvas {
     position: absolute;
     background: rgb(97, 97, 97, 0);
-    z-index: 1;
-    border: solid 2px rgb(255, 255, 255);
+    z-index: 2;
     left: 50%;
-    transform: translate(-50%)
+    top: 50%;
+    transform: translate(-50%, -50%)
   }
-
+  .game-box {
+    height: 81vh;
+    width: 85vw;
+    position: relative;
+  }
   .tool-box {
     position: fixed;
     width: 64px;
-    top: 170px;
+    top: 10vh;
     left: 20px;
     height: 200px;
     background: rgb(255, 255, 255);
     z-index: 2;
     border-radius: 10px;
     box-shadow: 0.5px 0.5px 4px 0px rgb(192, 192, 192);
+  }
+
+  .video-grid {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    width: 1200px;
+    height: 550px;
+    grid-template-columns: 400px 400px 400px;
+    grid-template-rows: 275px 275px;
+    background: white
   }
 </style>
