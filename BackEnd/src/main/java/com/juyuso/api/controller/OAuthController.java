@@ -19,23 +19,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Api(tags = "OAuth Kakao")
+@Api(tags = "OAuth")
 @RestController
-@RequestMapping("api/oauth/kakao")
+@RequestMapping("/api/oauth")
 @RequiredArgsConstructor
 public class OAuthController {
 
     private final KakaoService kakaoService;
     private final UserService userService;
 
-    @GetMapping()
-    public ResponseEntity<? extends BaseResponseBody> redirect(
+    @GetMapping("/kakao")
+    public ResponseEntity<? extends BaseResponseBody> kakaoAuth(
             @ApiParam(value = "인가 코드", required = true)
             @RequestParam String code
     ) {
         OAuthKakaoToken tokenResDto = kakaoService.getAccessToken(code);
         String accessToken = tokenResDto.getAccess_token();
-        log.info(accessToken);
 
         KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(accessToken);
         log.info(kakaoProfile.toString());

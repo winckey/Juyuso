@@ -28,7 +28,7 @@ import javax.validation.constraints.NotBlank;
 
 @Slf4j
 @Validated
-@Api(value = "유저 API", tags = {"회원 관리"})
+@Api(tags = "회원 관리")
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/social/kakao/login")
-    @ApiOperation(value = "카카오(소셜) 로그인", notes = "<strong>아이디와 패스워드</strong>를 통해 로그인 한다.")
+    @ApiOperation(value = "카카오(소셜) 로그인")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResDto.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
