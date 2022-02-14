@@ -8,9 +8,9 @@ const api = axios.create({
 
 api.interceptors.request.use(
   config => {
-    const isLogin = store.getters['isLogin']
+    const isLogin = store.getters['accounts/getIsLogin']
     if (isLogin) {
-      config.headers.common['Authorization'] = `Bearer ${store.getters['getAccessToken']}`
+      config.headers.common['Authorization'] = `Bearer ${store.getters['accounts/getAccessToken']}`
     }
     return config
   },

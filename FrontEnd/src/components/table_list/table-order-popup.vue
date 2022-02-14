@@ -6,14 +6,16 @@
       width="800"
     >
       <template v-slot:activator="{ on, attrs }">
-        <button
-          v-on="on"
-          v-bind="attrs">
-        <img 
-          src="@/assets/create_room.png" 
-          alt=""
-          >
-        </button>
+        <v-btn
+          fab
+          dark
+          color="blue darken-4"
+          class="float-right" style="margin-right: 3vw;" v-on="on" v-bind="attrs"
+        >
+          <v-icon dark>
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </template>
 
       <v-card>
@@ -174,6 +176,7 @@ export default {
   components: {
     TablePreview
   },
+  props: [],
   data: function () {
     return {
       dialog: false,
