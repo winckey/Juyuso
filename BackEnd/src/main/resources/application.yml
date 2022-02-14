@@ -33,6 +33,16 @@ jwt:
   secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
   expiration: 1296000000 # unit is ms. 15 * 24 * 60 * 60 * 1000 = 15days
 
+social:
+  kakao:
+    client-id: 54ef6bedc90c5d1d07c7813bdd123278
+    redirect: https://i6e101.p.ssafy.io/login
+    url:
+      login: https://kauth.kakao.com/oauth/authorize
+      token: https://kauth.kakao.com/oauth/token
+      profile: https://kapi.kakao.com/v2/user/me
+      unlink: https://kapi.kakao.com/v1/user/unlink
+
 logging:
   file:
     name: ./web.log

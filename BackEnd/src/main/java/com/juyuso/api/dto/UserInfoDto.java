@@ -26,6 +26,7 @@ public class UserInfoDto {
     private LocalDateTime regDate;
     private Character gender;
     private Region region;
+    private String provider;
 
     public static UserInfoDto of(User user) {
         UserInfoDto userInfoDto = new UserInfoDto();
@@ -48,6 +49,9 @@ public class UserInfoDto {
             userInfoDto.setImg(false);
             userInfoDto.setImgUrl("default_profile_img.png");
         }
+
+        String provider = user.getProvider();
+        if (provider != null && !provider.isEmpty()) userInfoDto.setProvider(provider);
 
         userInfoDto.setAge(user.getBirthDate().until(LocalDate.now(), ChronoUnit.YEARS));
 

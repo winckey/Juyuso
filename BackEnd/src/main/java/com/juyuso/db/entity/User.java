@@ -25,13 +25,12 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String userId;
 
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -55,6 +54,9 @@ public class User implements UserDetails {
     private String description;
 
     private String fcmToken;
+
+    @Column(length = 100)
+    private String provider;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserImg userImg;
