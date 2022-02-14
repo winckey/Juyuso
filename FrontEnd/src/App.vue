@@ -2,7 +2,7 @@
   <v-app style="background: #1B1B32" >
     <transition 
       name="fade">
-    <NavBar v-if="$route.name != 'Main' && $route.name != 'Table'"/>
+    <NavBar v-if="$route.name != 'Main'"/>
     </transition>
     <transition 
       name="fade"

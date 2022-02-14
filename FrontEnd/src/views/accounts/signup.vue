@@ -232,16 +232,12 @@ export default {
       })
       .then( res => {
         if (res.data.duplicate) {
-          this.$toast.error('이미 존재하는 아이디입니다', {
-            position: "top-center",
-            timeout: 2500,
-            closeOnClick: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            hideProgressBar: true,
-            icon: true,
-            rtl: false
-          });
+          this.$toast.open({
+            position: 'top',
+            message: '이미 존재하는 아이디입니다',
+            type: 'error',
+            duration: 2500,
+          })
         }
         this.isIdCheck = !res.data.duplicate
         this.idLoading = false
@@ -256,16 +252,12 @@ export default {
       })
       .then( res => {
         if (res.data.duplicate) {
-          this.$toast.error('이미 존재하는 닉네임입니다', {
-            position: "top-center",
-            timeout: 2500,
-            closeOnClick: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            hideProgressBar: true,
-            icon: true,
-            rtl: false
-          });
+          this.$toast.open({
+            position: 'top',
+            message: '이미 존재하는 닉네임입니다',
+            type: 'error',
+            duration: 2500,
+          })
         }
         this.isNameCheck = !res.data.duplicate
         this.nameLoading = false
@@ -274,29 +266,21 @@ export default {
     signup: function () {
       const validateCheck = this.$refs.signupForm.validate()
       if (validateCheck && !this.isNameCheck) {
-        this.$toast.error('아이디 중복체크를 확인해주세요', {
-          position: "top-center",
-          timeout: 2500,
-          closeOnClick: true,
-          draggable: true,
-          draggablePercent: 0.6,
-          hideProgressBar: true,
-          icon: true,
-          rtl: false
-        });
+        this.$toast.open({
+          position: 'top',
+          message: '닉네임 중복체크를 확인해주세요',
+          type: 'error',
+          duration: 2500,
+        })
         return
       }
       else if (validateCheck && !this.isIdCheck) {
-        this.$toast.error('닉네임 중복체크를 확인해주세요', {
-          position: "top-center",
-          timeout: 2500,
-          closeOnClick: true,
-          draggable: true,
-          draggablePercent: 0.6,
-          hideProgressBar: true,
-          icon: true,
-          rtl: false
-        });
+        this.$toast.open({
+          position: 'top',
+          message: '아이디 중복체크를 확인해주세요',
+          type: 'error',
+          duration: 2500,
+        })
         return
       }
       if (validateCheck) {

@@ -67,22 +67,7 @@
                 rounded
                 @keyup.enter="sendWholeMessage" 
                 v-model="messageInput"/>
-            </v-menu>
-            <!-- <v-tooltip right :open-on-click="false" :open-on-focus="false">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  class="m-1"
-                  fab
-                  small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="bullhorn = !bullhorn">
-                  <v-icon dense>mdi-bullhorn-outline</v-icon>
-                </v-btn>
-              </template>
-              <span>확성기 기능</span>
-            </v-tooltip> -->
-            
+            </v-menu>            
           </div>
           <div class="d-flex flex-column align-center">
             <v-tooltip right :open-on-click="false" :open-on-focus="false">
@@ -196,7 +181,7 @@
                   small
                   v-on="on"
                   v-bind="attrs"
-                  @click="leaveTable">
+                  @click="goToTable">
                   <v-icon dark dense>mdi-application-export</v-icon>
                 </v-btn>
               </template>
@@ -234,6 +219,70 @@
           {{ JSON.parse(sub.stream.connection.data).clientData }}
         </p>
       </div>
+      <div class="d-flex justify-content-center align-center">
+        <span style="color: white">{{ beer }}</span>
+        <v-menu
+        top
+        :close-on-content-click="false"
+        :nudge-width="55"
+        offset-y>
+          <template v-slot:activator="{ on: menu, attrs }">
+            <v-tooltip top :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on: tooltip }">
+                <v-btn
+                class="m-1"
+                fab
+                small
+                v-bind="attrs"
+                v-on="{ ...tooltip, ...menu }">
+                <img src="@/assets/beer_icon.png" style="width: 30px">
+              </v-btn>
+              </template>
+              <span>맥주 추가</span>
+            </v-tooltip>
+          </template>
+          <v-card>
+            <v-btn icon @click="beer > 0 ? beer -= 1: null">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+            {{ beer }}
+            <v-btn icon @click="beer += 1">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-card>
+        </v-menu>
+        <v-menu
+        top
+        :close-on-content-click="false"
+        :nudge-width="55"
+        offset-y>
+          <template v-slot:activator="{ on: menu, attrs }">
+            <v-tooltip top :open-on-click="false" :open-on-focus="false">
+              <template v-slot:activator="{ on: tooltip }">
+                <v-btn
+                class="m-1"
+                fab
+                small
+                v-bind="attrs"
+                v-on="{ ...tooltip, ...menu }">
+                <img src="@/assets/soju_icon.png" style="width: 30px">
+              </v-btn>
+              </template>
+              <span>소주 추가</span>
+            </v-tooltip>
+          </template>
+          <v-card>
+            <v-btn icon @click="soju > 0 ? soju -= 1: null">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+            {{ soju }}
+            <v-btn icon @click="soju += 1">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-card>
+        </v-menu>
+        <span style="color: white">{{ soju }}</span>
+      </div>
       <ChatPopup
         ref="ChatPopup"
         :userInfo="userInfo"/>
@@ -244,6 +293,8 @@
       <ThemePopup
       ref="themePopup"
       :roomInfo="roomInfo"/>
+      <LeaveRoomPopup
+      ref="leaveRoomPopup"/>
     </div>
 </template>
 
@@ -259,6 +310,7 @@ import TypingGame from '@/components/game/typing-game.vue'
 import GamePopup from '@/components/game/game-popup.vue'
 import FilterPopup from '@/components/table/filter-popup.vue'
 import ThemePopup from '@/components/table/theme-popup.vue'
+import LeaveRoomPopup from '@/components/table/leave-room-popup.vue'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -277,7 +329,8 @@ export default {
     TypingGame,
     GamePopup,
     FilterPopup,
-    ThemePopup
+    ThemePopup,
+    LeaveRoomPopup
   },
   props: {
     roomInfo: Object,
@@ -296,6 +349,8 @@ export default {
       publishVideo: true,
       userInfo: null,
       titanicMembers: null,
+      soju: 0,
+      beer: 0,
       games: [
         {name: '타자연습'},
         {name: '타이타닉'},
@@ -306,24 +361,14 @@ export default {
   },
 
   mounted: function () {
-    window.addEventListener('beforeunload', function (event) {
-      event.returnValue = "안녕"
-      this.leaveSession(this.roomId)
+    window.addEventListener('beforeunload', (event) => {
+      event.preventDefault()
+      event.returnValue = ''
+      this.leaveTable
+      this.setSojuBeer
     });
-    console.log(this.publisher)
-    // console.log(this.publisher)
-    console.log(this.subscribers)
     this.publishAudio = this.publisher.stream.audioActive
     this.publishVideo = this.publisher.stream.videoActive
-    const token = localStorage.getItem('jwt')
-    axios({
-      method: 'GET',
-      url: `${process.env.VUE_APP_API_URL}/users/me`,
-      headers: { Authorization: `Bearer ${token}`}
-    })
-    .then( res => {
-      this.userInfo = res.data.user
-    })
     this.session.on('signal:theme', event => {
       let data = JSON.parse(event.data)
       this.roomInfo.theme = data.theme
@@ -336,19 +381,28 @@ export default {
       })
     })
   },
+  beforeDestroy: function () {
+    window.removeEventListener('beforeunload', (event) => {
+      event.preventDefault()
+      this.leaveTable
+      this.setSojuBeer
+    })
+  },
 
-
-  beforeRouteLeave (to, from, next) {
-    const answer = window.confirm('정말로 방을 떠나시겠습니까?')
+  async beforeRouteLeave (to, from, next) {
+    const answer = await this.$refs.leaveRoomPopup.open()
     if (answer) {
         this.leaveSession(this.roomId)
-        window.removeEventListener('beforeunload', function () {
-          this.leaveSession(this.roomId)
-        });
+        this.setSojuBeer()
+        window.removeEventListener('beforeunload', (event) => {
+          event.preventDefault()
+          this.leaveTable
+          this.setSojuBeer
+        })
       next()
     }
     else {
-      next(false)
+      return false
     }
     // 경고창 띄우기
   },
@@ -365,10 +419,17 @@ export default {
       'subscribers',
       'messages',
       'gameMode',
+      'wholeSubscribers'
     ]),
     ...mapGetters('table', [
       'getBackgroudColor',
       'getTextColor'
+    ]),
+    ...mapState('accounts', [
+      'user'
+    ]),
+    ...mapState('friends', [
+      'vuexDialog'
     ]),
     isGameMode() {
       console.log(this.gameMode)
@@ -381,6 +442,9 @@ export default {
       'leaveSession',
       'switchGameMode',
       'changeSound'
+    ]),
+    ...mapActions('friends', [
+      'changeDialog'
     ]),
     openThemePopup () {
       this.$refs.themePopup.dialog = true
@@ -396,12 +460,11 @@ export default {
     },
     leaveTable () {
       this.leaveSession(this.roomId)
-			window.removeEventListener('beforeunload', function () {
-        this.leaveSession(this.roomId)
-      });
       this.$router.push({ name: 'TableList' })
 		},
-
+    goToTable() {
+      this.$router.push({ name: 'TableList'})
+    },
 		updateMainVideoStreamManager (stream) {
 			if (this.mainStreamManager === stream) return;
 			this.mainStreamManager = stream;
@@ -410,7 +473,6 @@ export default {
     audioToggle() {
       this.publisher.publishAudio(!this.publishAudio)
       this.publishAudio = !this.publishAudio        
-
     },
 
     videoToggle () {
@@ -489,10 +551,31 @@ export default {
       }
       this.switchGameMode(gameMode.name)
     },
+    setSojuBeer() {
+      let today = new Date()
+      let year = today.getFullYear();
+      let month = ('0' + (today.getMonth() + 1)).slice(-2);
+      let day = ('0' + today.getDate()).slice(-2);
+      const item = {
+        beer: this.beer,
+        date: `${year}-${month}-${day}`, 
+        soju: this.soju
+      }
+      
+      axios({
+        method: 'POST',
+        url: `${process.env.VUE_APP_API_URL}/drinking/history`,
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` },
+        data: item
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
   },
-  created:{
-
-  }
 
 }
 

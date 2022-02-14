@@ -5,6 +5,8 @@
     <audio class="audio" src="@/assets/sound/pour_sound.mp3"></audio>
     <div class="game-box">
       <div class="beer-box">
+        <div class="game-result" v-if="titanicGame.isEnd">술 넘치게 따른 💥{{ titanicGame.members[titanicGame.curMember].username }}💥 당첨</div>
+        <div class="game-info" v-else>{{ gameText }}</div>
         <div class="box">
           <img
             class="img-style mx-auto img-style-drink"
@@ -14,9 +16,14 @@
           <img 
             src="@/assets/game_glass.png" alt=""
             class="img-style img-style-galss">
+          <img 
+            v-if="titanicGame.isEnd"
+            src="@/assets/game_bubble.png" alt=""
+            class="img-style-bubble">
         </div>
-        <span class="mx-auto beer-btn">
+        <div class="mx-auto beer-btn">
           <v-btn
+            v-if="!titanicGame.isEnd"
             class="m-2"
             :disabled="!MyTurn"
             color="white"
@@ -25,31 +32,32 @@
             @mouseup="setEndTime">
             따르기
           </v-btn>
-        </span>
-      </div>
-    </div>
-    <!-- <div class="container-fluid">
-      <div class="row" style="height: 100%">
-        <div class="col-md-8">
-          <div class="d-flex justify-content-center">
-            <user-video class="col-md-4" :stream-manager="turnPublisher"/>
-          </div>
-          <hr class="rounded">
-          <div>
-            <div style="color:white; text-align: center">참가자</div>
-            <v-slide-group
-              dark
-              show-arrow
-            >
-              <v-slide-item v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-                <user-video class="col-md-3" :stream-manager="sub"/>
-              </v-slide-item>
-            </v-slide-group>
-          </div>
+          <span v-else class="end-btn">
+            <v-btn
+              class="m-2"
+              color="white"
+              rounded>
+              한판 더하기
+            </v-btn>
+            <v-btn
+              class="m-2"
+              color="white"
+              rounded
+              @click="switchGameMode(undefined)">
+              게임 끝내기
+            </v-btn>
+          </span>
+        
         </div>
       </div>
-    </div> -->
-    <v-dialog
+      <TitanicVideo 
+        v-for="(sub, idx) in turnSubscribers" 
+        :key="sub.stream.connection.connectionId" 
+        :stream-manager="sub" 
+        :style="memberPos[idx]" 
+        :background="setBackground(sub)"/>
+    </div>
+    <!-- <v-dialog
       v-if="titanicGame.isEnd"
       v-model="titanicGame.isEnd"
       persistent
@@ -68,18 +76,18 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-// import UserVideo from '@/components/table/user-video.vue'
+import TitanicVideo from '@/components/table/titanic-video.vue'
 
 export default {
   name: 'TitanicGame',
   components: {
-    // UserVideo
+    TitanicVideo
   },
   props: {
     subscribers: Array,
@@ -87,6 +95,7 @@ export default {
   },
   data: function () {
     return {
+      turnSubscribers: [],
       bgsound: null,
       sound: null,
       turnPublisher: null,
@@ -94,6 +103,8 @@ export default {
       MyTurn: false,
       myConnectionId: null,
       timerId: null,
+      gameText: null,
+      members: [],
       titanicGame: {
         type: 'Titanic',
         isEnd: false,
@@ -103,39 +114,65 @@ export default {
         members: [],
       },
       memberPos: [
-        {top: '2vh', left: '20vw'}, 
-        {top: '31vh', left: '40vw'}
-      ]
+        {top: '2vh', left: '26vw', position: 'absolute', height: '25vh', width: '12vw'}, 
+        {top: '2vh', left: '46vw', position: 'absolute', height: '25vh', width: '12vw'},
+        {top: '28vh', left: '16vw', position: 'absolute', height: '25vh', width: '12vw'},
+        {top: '28vh', left: '58vw', position: 'absolute', height: '25vh', width: '12vw'},
+        {top: '54vh', left: '20vw', position: 'absolute', height: '25vh', width: '12vw'},
+        {top: '54vh', left: '52vw', position: 'absolute', height: '25vh', width: '12vw'}
+      ],
     }
   },
   mounted: function () {
     this.bgsound = document.querySelector('.bgaudio')
-    this.bgsound.volume = 0.1
-    console.log(this.bgsound)
+    this.bgsound.volume = 0.0
     this.sound = document.querySelector('.audio')
     this.sound.volume = 0.5
     this.titanicGame = {...JSON.parse(this.gameInfo)}
     this.myConnectionId = this.publisher.stream.connection.connectionId
+    for (let i=0; i<this.titanicGame.members.length; i++) {
+      for (let j=0; j<this.titanicGame.members.length; j++) {
+        if (this.titanicGame.members[i].connectionId == this.subscribers[j].stream.connection.connectionId) {
+          this.turnSubscribers.push(this.subscribers[j])
+          break
+        }
+      }
+    }
     this.mainPublisher()
     this.isMyTurn()
   },
   methods: {
     ...mapActions('openviduStore', [
-      'changeGameMode'
+      'switchGameMode'
     ]),
     mainPublisher: function () {
       for(let i=0; i<this.subscribers.length; i++) {
         if(this.subscribers[i].stream.connection.connectionId == this.titanicGame.members[this.titanicGame.curMember].connectionId) {
           if (this.turnPublisher != this.subscribers[i]) {
             this.turnPublisher = this.subscribers[i]
-            console.log(this.turnPublisher)
+            break
           }
-          break
         }
+      }
+    },
+    gameStart: function() {
+
+    },
+    setBackground: function (sub) {
+      if (sub == this.turnPublisher) {
+        return '#ffd500'
+      } else {
+        return null
       }
     },
     isMyTurn: function () {
       this.MyTurn = this.myConnectionId == this.titanicGame.members[this.titanicGame.curMember].connectionId
+      if (this.MyTurn) {
+        this.gameText = "내차례🍻 마음껏 따라봐~"
+      }
+      else {
+        this.gameText = `${this.titanicGame.members[this.titanicGame.curMember].username} 님이 따르는중💨`
+      }
     },
     setStartTime: function () {
       this.bgsound.play()
@@ -177,7 +214,7 @@ export default {
       return {
         height: `${40 / this.titanicGame.maxAmount * this.titanicGame.curAmount}vh`,
       }
-    }
+    },
   },
   watch: {
     gameInfo: function () {
@@ -204,10 +241,26 @@ export default {
     position: relative;
   }
 
+  .game-info {
+    position: absolute;
+    left: 50%;
+    top: 5vh;
+    transform: translate(-50%)
+  }
+  .game-result {
+    position: absolute;
+    left: 50%;
+    top: 5vh;
+    transform: translate(-50%);
+    z-index: 1;
+    font-size: 2rem;
+    -webkit-animation: scale-in-center 0.5s 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    animation: scale-in-center 0.5s 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  }
   .beer-box {
     position: absolute;
     left: 50%;
-    height: 57vh;
+    height: 56vh;
     width: 100%;
     transform: translate(-50%);
     bottom: 2vh;
@@ -215,9 +268,19 @@ export default {
   .beer-btn {
     position: absolute;
     right: 50%;
-    transform: translate(50%);
     bottom: 0;
+    transform: translate(50%);
   }
+
+  .end-btn {
+    position: absolute;
+    left: 50%;
+    bottom: 20%;
+    transform: translate(-50%);
+    -webkit-animation: bounce-top 1s;
+    animation: bounce-top 1s;
+  }
+
   .box{
     display: inline-block;
     position:relative;
@@ -248,8 +311,162 @@ export default {
     transform:translate(-50%, 10vh);
   }
 
+  .img-style-bubble {
+    width: 12vw;
+    position: absolute;
+    top: 7vh;
+    left: 50%;
+    transform: translate(-50%);
+    object-fit: cover;
+    object-position: top;
+    height: 35vh;
+    animation: bubble 1.5s;
+  }
+
   .img-style-drink{
     width: 11vw
   }
+
+  @keyframes bubble {
+    0% {
+      height: 0;
+    }
+
+    100% {
+      height: 35vh;
+    }
+  }
+
+@-webkit-keyframes scale-in-center {
+  0% {
+    -webkit-transform: scale(0) translate(-50%);
+            transform: scale(0) translate(-50%);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1) translate(-50%);
+            transform: scale(1) translate(-50%);
+    opacity: 1;
+  }
+}
+@keyframes scale-in-center {
+  0% {
+    -webkit-transform: scale(0) translate(-50%);
+            transform: scale(0) translate(-50%);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1) translate(-50%);
+            transform: scale(1) translate(-50%);
+    opacity: 1;
+  }
+}
+
+
+
+@-webkit-keyframes bounce-top {
+  0% {
+    -webkit-transform: translateY(-45px) translateX(-50%);
+            transform: translateY(-45px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+    opacity: 1;
+  }
+  24% {
+    opacity: 1;
+  }
+  40% {
+    -webkit-transform: translateY(-24px) translateX(-50%);
+            transform: translateY(-24px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  65% {
+    -webkit-transform: translateY(-12px) translateX(-50%);
+            transform: translateY(-12px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  82% {
+    -webkit-transform: translateY(-6px) translateX(-50%);
+            transform: translateY(-6px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  93% {
+    -webkit-transform: translateY(-4px) translateX(-50%);
+            transform: translateY(-4px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  25%,
+  55%,
+  75%,
+  87% {
+    -webkit-transform: translateY(0px) translateX(-50%);
+            transform: translateY(0px) translateX(-50%);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+  100% {
+    -webkit-transform: translateY(0px) translateX(-50%);
+            transform: translateY(0px) translateX(-50%);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+    opacity: 1;
+  }
+}
+@keyframes bounce-top {
+  0% {
+    -webkit-transform: translateY(-45px) translateX(-50%);
+            transform: translateY(-45px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+    opacity: 1;
+  }
+  24% {
+    opacity: 1;
+  }
+  40% {
+    -webkit-transform: translateY(-24px) translateX(-50%);
+            transform: translateY(-24px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  65% {
+    -webkit-transform: translateY(-12px) translateX(-50%);
+            transform: translateY(-12px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  82% {
+    -webkit-transform: translateY(-6px) translateX(-50%);
+            transform: translateY(-6px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  93% {
+    -webkit-transform: translateY(-4px) translateX(-50%);
+            transform: translateY(-4px) translateX(-50%);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  25%,
+  55%,
+  75%,
+  87% {
+    -webkit-transform: translateY(0px) translateX(-50%);
+            transform: translateY(0px) translateX(-50%);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+  100% {
+    -webkit-transform: translateY(0px) translateX(-50%);
+            transform: translateY(0px) translateX(-50%);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+    opacity: 1;
+  }
+}
 
 </style>

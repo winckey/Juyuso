@@ -3,16 +3,16 @@
     <v-dialog
       transition="dialog-bottom-transition"
       v-model="dialog"
-      width="600"
+      width="550"
     >
       <template v-slot:activator="{ on, attrs }" v-if="!search">
         <button
-          style="display: block; width: 80%; margin: auto; vertical-align: middle"
+          style="display: block; width: 90%; margin: auto; vertical-align: middle"
           v-on="on"
           v-bind="attrs">
           <div class="table-container">
             <img
-              class="w-100"
+              class="table-image"
               :src="require(`@/assets/${imgUrl}.png`)" 
               alt=""
               >
@@ -37,7 +37,7 @@
         class="p-4 card-background"
         :style="{backgroundImage: 'url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}"
       >
-        <div class="inner-card-background">
+        <div class="inner-card-background p-3">
           <v-card-title class="d-flex justify-content-center">
             <span>
             {{ roomInfo.meetingTitle }}
@@ -167,5 +167,15 @@ export default {
   .inner-card-background {
     background: rgba(255, 255, 255, 0.93);
     height: 100%
+  }
+
+  .table-image {
+    width: 90%;
+    transition-property: all;
+    transition-duration: .2s;
+  }
+
+  .table-image:hover {
+    width: 100%
   }
 </style>
