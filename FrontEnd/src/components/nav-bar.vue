@@ -4,12 +4,12 @@
       absolute
       color="#11111f00"
     >
-    <button class="h-100 sub-logo" @click="goToTableList">
+    <button v-if="$route.name != 'Table'" class="h-100 sub-logo" @click="goToTableList">
       <v-img 
         src="@/assets/sub_logo.png"
         contain
         height="95%"
-        class="mb-1"
+        class="mb-1 text-flicker-in-glow"
         alt=""/>
     </button>
       <v-spacer></v-spacer>
