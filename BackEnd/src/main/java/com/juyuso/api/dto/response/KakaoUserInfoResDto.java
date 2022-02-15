@@ -26,8 +26,11 @@ public class KakaoUserInfoResDto extends BaseResponseBody {
         UserInfo userInfo = new UserInfo();
         userInfo.setId("kakao_" + String.valueOf(kakaoProfile.getId()));
         if (!join) {
-            String nickname = kakaoProfile.getProperties().getNickname();
-            if (nickname != null) userInfo.setNickname(nickname);
+            KakaoProfile.Properties kakaoProfileProperties = kakaoProfile.getProperties();
+            if (kakaoProfileProperties != null) {
+                String nickname = kakaoProfileProperties.getNickname();
+                if (nickname != null) userInfo.setNickname(nickname);
+            }
             String email = kakaoProfile.getKakao_account().getEmail();
             if (email != null) userInfo.setEmail(email);
             String gender = kakaoProfile.getKakao_account().getGender();
