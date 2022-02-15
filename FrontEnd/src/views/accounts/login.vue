@@ -1,56 +1,71 @@
 <template>
   <div class="d-flex justify-content-center my-auto">
     <div class="login-box rounded-lg">
-      <div  class="mx-auto p-4">
-          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="onLogin">
-            <span>
-              <h2 class="my-3 text-center">🍻 적셔 🍻</h2>
-            </span>
-            <v-text-field
-            v-model="credentials.id"
-            :counter="15"
-            :rules = "idRules"
-            label="아이디"
-            required>
-            </v-text-field>
+      <div class="mx-auto p-4">
+        <v-form ref="loginForm" v-model="valid" lazy-validation @submit.prevent="onLogin">
+          <span>
+            <h2 class="mt-8 mb-10 text-center">🍻 적셔 🍻</h2>
+          </span>
+          <v-text-field
+          class="mb-4"
+          v-model="credentials.id"
+          :counter="15"
+          :rules = "idRules"
+          label="아이디"
+          required>
+          </v-text-field>
 
-            <v-text-field
-            :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="passwordShow ? 'text' : 'password'"
-            @click:append="passwordShow = !passwordShow"
-            v-model="credentials.password"
-            hint="영어, 숫자, 특수문자를 모두 포함해야합니다 (9-16자)"
-            :rules="passwordRules"
-            label="비밀번호"
-            required
-            @keyup.enter="onLogin"></v-text-field>
-            
-            <span class="d-flex justify-content-center my-3">
-              <v-btn @click="onLogin" color="#1CFD9F" rounded>로그인</v-btn>
-            </span>
+          <v-text-field
+          :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="passwordShow ? 'text' : 'password'"
+          @click:append="passwordShow = !passwordShow"
+          v-model="credentials.password"
+          :rules="passwordRules"
+          label="비밀번호"
+          required
+          @keyup.enter="onLogin"></v-text-field>
+        </v-form>
+        <div class="d-flex justify-space-between my-4 mx-50">
+          <v-btn class="white--text" @click="onLogin" color="#4DB6AC" rounded>로그인</v-btn>
+          <v-btn class="white--text" @click="$router.push({ name: 'Signup' })" color="indigo lighten-2"  rounded>회원가입</v-btn>
+        </div>
 
-            <span class="d-flex justify-content-center my-3">
-              <v-btn @click="$router.push({ name: 'Signup' })" color="indigo lighten-2"  rounded>회원가입</v-btn>
-            </span>
-
-            <span class="d-flex justify-content-center my-3">
-              <v-btn @click="oAuth" color="indigo lighten-2"  rounded>카카오로 로그인</v-btn>
-            </span>
-            
-          </v-form>
-
-          <!-- <span class="d-flex justify-content-center">
-            <v-btn plain @click="goPasswordFind">비밀번호 찾기</v-btn>    
-          </span> -->
-
-
+        <div class="my-4 mx-50">
+          <v-btn width="100%" @click="oAuth" color="amber" rounded>
+            <img src="@/assets/kakao_symbol.png" width="5%">
+            &nbsp;카카오로 로그인
+          </v-btn>
+        </div>
+        <div class="text-center">
+          <router-link class="text-decoration-none font-sm" to="#">비밀번호를 잊으셨나요?</router-link>
+        </div>
       </div>
     </div>
+    <v-dialog
+      v-model="isLoading"
+      persistent
+      width="300"
+    >
+      <v-card
+        color="primary"
+        dark
+      >
+        <v-card-text>
+          잠시만 기다려 주십시오...
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import api from '@/common/api'
+import axios from 'axios'
+// import api from '@/common/api'
 import { mapActions } from 'vuex'
 import { getMessaging, getToken } from 'firebase/messaging'
 
@@ -60,6 +75,7 @@ export default {
   name: 'Login',
   data: function () {
     return {
+      isLoading: false,
       valid: true,
       passwordShow: false,
       credentials: {
@@ -80,6 +96,7 @@ export default {
     // console.log('created() : get Auth Code!!')
     let authCode = this.$route.query.code;
     authCode && this.kakaoAuth(authCode);
+    authCode && (this.isLoading = true);
   },
   methods: {
     ...mapActions(accounts, ['login', 'loginKakao', 'userUpdate']),
@@ -90,6 +107,16 @@ export default {
       return getToken(messaging, { vapidKey: PUBLIC_VAPID_KEY });
     },
     onLogin() {
+      if (!this.$refs.loginForm.validate()) {
+          this.$toast.open({
+          position: 'top',
+          message: '아이디, 비밀번호를 입력하세요.',
+          type: 'error',
+          duration: 2500,
+        });
+        return;
+      }
+
       console.log('loginbtn')
       // this.getFcmToken()
       //   .then(token => {
@@ -141,8 +168,8 @@ export default {
     // },
     oAuth() {
       let REST_API_KEY = '54ef6bedc90c5d1d07c7813bdd123278';
-      // let REDIRECT_URI = `http://localhost:3000/login`;
-      let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
+      let REDIRECT_URI = `http://localhost:3000/login`;
+      // let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
       window.location.replace(
         `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
       );
@@ -151,8 +178,8 @@ export default {
       console.log('Starting KAKAO Auth ', authCode)
       // TODO: 현재 경로 라우터 히스토리에서 제거
       
-      // axios.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
-      api.get(`/oauth/kakao?code=${authCode}`)
+      axios.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
+      // api.get(`/oauth/kakao?code=${authCode}`)
         .then((response) => {
           console.log('oAuth response', response)
           const { join, info } = response.data;
@@ -168,6 +195,7 @@ export default {
                       if (response.status == 200) {
                         this.initSession(response.data.user);
                         this.$router.replace({ name : 'Main' });
+                        this.isLoading = false;
                       }
                     }
                   ).catch(error => {
@@ -207,10 +235,16 @@ export default {
             }
           } = response;
 
+          this.isLoading = false;
           code === 'OAUTH_EMAIL_DUPLICATE'
             && confirm('이메일로 가입된 계정이 이미 존재합니다. 아이디로 로그인하세요!')
               && this.$router.replace({ name: 'Login' });
 
+          console.log(response)
+          // 나머지 에러 처리
+          // 오류 발생했다 메시지 띄우고
+          // 로그인 페이지로 리다이렉트
+          
         })
     }
   }
@@ -218,8 +252,15 @@ export default {
 </script>
 
 <style>
-.login-box {
-  width: 450px;
-  background: #FBF8F8
-}
+  .font-sm {
+    font-size: 0.8em;
+  }
+  .mx-50 {
+    margin-left: 7.2rem;
+    margin-right: 7.2rem;
+  }
+  .login-box {
+    width: 450px;
+    background: #FBF8F8
+  }
 </style>
