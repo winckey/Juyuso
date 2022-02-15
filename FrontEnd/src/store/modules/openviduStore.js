@@ -87,7 +87,7 @@ const openviduStore = {
       data.OV.enableProdMode()
 
       data.session = data.OV.initSession()
-
+      
       data.session.on('signal:whole-chat', (event) => {
         data.messages.push(event)
         commit('SET_WHOLE_MESSAGE', data)
@@ -97,7 +97,7 @@ const openviduStore = {
 				console.warn(exception);
 			});
 
-      dispatch('getToken', '0').then(token => {
+      dispatch('createToken', '0').then(token => {
         data.session.connect(token, { clientData: userInfo.nickname })
         commit('SET_WHOLE_SESSION_INFO', data)
       })

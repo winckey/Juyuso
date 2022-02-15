@@ -3,6 +3,7 @@
     <div style="text-align: center; font-size: 1.4rem; height: 3vh">타이타닉 게임</div>
     <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
     <audio class="audio" src="@/assets/sound/pour_sound.mp3"></audio>
+    <audio class="gameResult" src="@/assets/sound/game_result.mp3"></audio>
     <div class="game-box">
       <div class="beer-box">
         <div class="game-result" v-if="titanicGame.isEnd">술 넘치게 따른 💥{{ titanicGame.members[titanicGame.curMember].username }}💥 당첨</div>
@@ -20,6 +21,10 @@
             v-if="titanicGame.isEnd"
             src="@/assets/game_bubble.png" alt=""
             class="img-style-bubble">
+          <TitanicVideo
+            v-if="titanicGame.isEnd"
+            class="result-video"
+            :stream-manager="turnSubscribers[titanicGame.curMember]"/>
         </div>
         <div class="mx-auto beer-btn">
           <v-btn
@@ -36,7 +41,8 @@
             <v-btn
               class="m-2"
               color="white"
-              rounded>
+              rounded
+              @click="gameStart">
               한판 더하기
             </v-btn>
             <v-btn
@@ -57,26 +63,6 @@
         :style="memberPos[idx]" 
         :background="setBackground(sub)"/>
     </div>
-    <!-- <v-dialog
-      v-if="titanicGame.isEnd"
-      v-model="titanicGame.isEnd"
-      persistent
-      max-width="300">
-      <v-card>
-        <v-card-title>당첨자 확인</v-card-title>
-        <v-card-text>🎉{{ titanicGame.members[titanicGame.curMember].username }}님 당첨🎉</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="[titanicGame.isEnd = false, changeGameMode(undefined)]"
-          >
-            확인
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
   </div>
 </template>
 
@@ -98,6 +84,7 @@ export default {
       turnSubscribers: [],
       bgsound: null,
       sound: null,
+      gameResultSound: null, 
       turnPublisher: null,
       clickStart: 0,
       MyTurn: false,
@@ -128,6 +115,8 @@ export default {
     this.bgsound.volume = 0.0
     this.sound = document.querySelector('.audio')
     this.sound.volume = 0.5
+    this.gameResultSound = document.querySelector('.gameResult')
+    this.gameResultSound.volume = 0.2
     this.titanicGame = {...JSON.parse(this.gameInfo)}
     this.myConnectionId = this.publisher.stream.connection.connectionId
     for (let i=0; i<this.titanicGame.members.length; i++) {
@@ -156,7 +145,25 @@ export default {
       }
     },
     gameStart: function() {
-
+      let members = this.subscribers.map(stream => {
+        return {
+          connectionId: stream.stream.connection.connectionId,
+          username: JSON.parse(stream.stream.connection.data).clientData
+        }
+      })
+      let gameInfo = {
+        type: 'Titanic',
+        members: members.sort(() => Math.random() - 0.5),
+        isEnd: false,
+        curMember: 0,
+        curAmount: 0,
+        maxAmount: Math.random() * 50 + members.length * 30,
+      }
+      this.session.signal({
+        data: JSON.stringify(gameInfo),
+        to: [],
+        type: 'game-info'
+      })
     },
     setBackground: function (sub) {
       if (sub == this.turnPublisher) {
@@ -220,6 +227,7 @@ export default {
     gameInfo: function () {
       this.titanicGame = {...JSON.parse(this.gameInfo)}
       if(this.titanicGame.isEnd) {
+        this.gameResultSound.play()
         clearInterval(this.timerId)
       }
       this.mainPublisher()
@@ -230,10 +238,7 @@ export default {
 </script>
 
 <style scoped>
-  hr.rounded {
-    border-top: 8px solid #bbb;
-    border-radius: 5px;
-  }
+
 
   .game-box {
     height: 81vh;
@@ -323,6 +328,17 @@ export default {
     animation: bubble 1.5s;
   }
 
+  .result-video {
+    position: absolute;
+    height: 25vh; 
+    width: 12vw;
+    top: 16vh;
+    left: 50%;
+    transform: translate(-50%);
+    -webkit-animation: scale-in-center 0.5s 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    animation: scale-in-center 0.5s 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  }
+
   .img-style-drink{
     width: 11vw
   }
@@ -339,25 +355,25 @@ export default {
 
 @-webkit-keyframes scale-in-center {
   0% {
-    -webkit-transform: scale(0) translate(-50%);
-            transform: scale(0) translate(-50%);
+    -webkit-transform: translate(-50%) scale(0);
+            transform: translate(-50%) scale(0);
     opacity: 1;
   }
   100% {
-    -webkit-transform: scale(1) translate(-50%);
-            transform: scale(1) translate(-50%);
+    -webkit-transform: translate(-50%) scale(1);
+            transform: translate(-50%) scale(1);
     opacity: 1;
   }
 }
 @keyframes scale-in-center {
   0% {
-    -webkit-transform: scale(0) translate(-50%);
-            transform: scale(0) translate(-50%);
+    -webkit-transform: translate(-50%) scale(0);
+            transform: translate(-50%) scale(0);
     opacity: 1;
   }
   100% {
-    -webkit-transform: scale(1) translate(-50%);
-            transform: scale(1) translate(-50%);
+    -webkit-transform: translate(-50%) scale(1);
+            transform: translate(-50%) scale(1);
     opacity: 1;
   }
 }

@@ -4,10 +4,10 @@
   <div class="m-3">
     <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
   </div>
-    <div class="video-container">
+    <div class="video-container" :style="videoBackground">
       <!-- 메뉴바 -->
       <div
-        class="menu-bar p-3">
+        class="menu-bar p-3" :style="menuBarBackground">
         <div class="d-flex flex-column justify-content-around align-center" style="height: 100%">
           <div class="d-flex flex-column align-center">
             <v-tooltip right :open-on-click="false" :open-on-focus="false">
@@ -41,6 +41,7 @@
               <span>{{ publishVideo ? '비디오 중지' : '비디오 시작' }} </span>
             </v-tooltip>
             <v-menu
+              :close-on-content-click="false"
               transition="stretch"
               offset-x>
               <template v-slot:activator="{ on: menu, attrs }">
@@ -367,6 +368,7 @@ export default {
       this.leaveTable
       this.setSojuBeer
     });
+    this.setTheme(this.roomInfo.theme)
     this.publishAudio = this.publisher.stream.audioActive
     this.publishVideo = this.publisher.stream.videoActive
     this.session.on('signal:theme', event => {
@@ -390,21 +392,30 @@ export default {
   },
 
   async beforeRouteLeave (to, from, next) {
-    const answer = await this.$refs.leaveRoomPopup.open()
-    if (answer) {
-        this.leaveSession(this.roomId)
-        this.setSojuBeer()
-        window.removeEventListener('beforeunload', (event) => {
-          event.preventDefault()
-          this.leaveTable
-          this.setSojuBeer
-        })
+    try {
+      const answer = await this.$refs.leaveRoomPopup.open()
+      if (answer) {
+          this.leaveSession(this.roomId)
+          this.setSojuBeer()
+          window.removeEventListener('beforeunload', (event) => {
+            event.preventDefault()
+            this.leaveTable
+            this.setSojuBeer
+          })
+        next()
+      }
+      else {
+        return false
+      }
+    }
+    catch {
+      window.removeEventListener('beforeunload', (event) => {
+        event.preventDefault()
+        this.leaveTable
+        this.setSojuBeer
+      })
       next()
     }
-    else {
-      return false
-    }
-    // 경고창 띄우기
   },
 
   computed: {
@@ -432,8 +443,18 @@ export default {
       'vuexDialog'
     ]),
     isGameMode() {
-      console.log(this.gameMode)
       return this.gameMode ? true : false
+    },
+    menuBarBackground() {
+      return {
+        background: this.getBackgroudColor
+      }
+    },
+    videoBackground() {
+      return {
+        borderColor: this.getBackgroudColor,
+        boxShadow: `0 0 8px ${this.getBackgroudColor}`,
+      }
     }
   },
   methods: {
@@ -445,6 +466,9 @@ export default {
     ]),
     ...mapActions('friends', [
       'changeDialog'
+    ]),
+    ...mapActions('table', [
+      'setTheme'
     ]),
     openThemePopup () {
       this.$refs.themePopup.dialog = true
@@ -589,7 +613,7 @@ export default {
 
   .menu-bar {
     position: absolute;
-    background: white;
+    /* background: #1a84b2; */
     height: 84vh;
     width: 5vw;
     left: 0;
@@ -607,8 +631,8 @@ export default {
     display: flex;
     margin: auto;
     outline: none;
-    border-color: #ffffff;
-    box-shadow: 0 0 8px #ffffff;
+    /* border-color: #1a84b2;
+    box-shadow: 0 0 8px #1a84b2; */
   }
 
   .people-list {

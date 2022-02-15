@@ -179,6 +179,6 @@ export default {
   }
 
   .table-image:hover {
-    width: 100%
+    transform: scale(1.2);
   }
 </style>
