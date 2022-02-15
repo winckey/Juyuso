@@ -87,6 +87,7 @@
               :rules="rules.phoneRule"
               label="휴대전화"
               v-model="credentials.phone"
+              hint="숫자만 입력하세요 (13자리)"
               @input="onPhoneChange"
             ></v-text-field>
           </v-row>
@@ -144,7 +145,7 @@ export default {
       rules: {
         emailRule: [
           v => !!v || '이메일을 입력해주세요.',
-          v => /.+@.+/.test(v) || '이메일 형식에 맞지않습니다.',
+          v => /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(v) || '이메일 형식에 맞지않습니다.',
         ],
         birthRule: [
           v => !!v || "생년월일을 입력해주세요."
@@ -156,7 +157,8 @@ export default {
           v => !!v || "지역을 입력해주세요."
         ],
         phoneRule: [
-          v => !!v || "휴대전화 번호를 입력해주세요."
+          v => !!v || "휴대전화 번호를 입력해주세요.",
+          v => /^010-?([0-9]{4})-?([0-9]{4})$/.test(v) || "13자리의 휴대전화 번호를 (숫자만) 입력하세요."
         ],
       }
     }
@@ -195,10 +197,10 @@ export default {
     ...mapActions('openviduStore', ['initSession']),
     makeToast(message) {
       this.$toast.open({
-        position: 'top',
+        position: 'bottom',
         message,
         type: 'error',
-        duration: 2500,
+        duration: 2000,
       });
     },
     onPhoneChange() {
