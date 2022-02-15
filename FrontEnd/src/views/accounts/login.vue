@@ -64,10 +64,8 @@
 </template>
 
 <script>
-// import axios from 'axios'
 import api from '@/common/api'
 import { mapActions } from 'vuex'
-import { getMessaging, getToken } from 'firebase/messaging'
 
 const accounts = 'accounts' 
 
@@ -81,7 +79,6 @@ export default {
       credentials: {
         id: null,
         password: null,
-        fcmToken: null,
       },
       idRules: [
         v => !!v || "아이디를 입력해주세요.",
@@ -93,7 +90,6 @@ export default {
   },
   created() {
     // get kakao oauth authorization code
-    // console.log('created() : get Auth Code!!')
     let authCode = this.$route.query.code;
     authCode && this.kakaoAuth(authCode);
     authCode && (this.isLoading = true);
@@ -101,11 +97,6 @@ export default {
   methods: {
     ...mapActions(accounts, ['login', 'loginKakao', 'userUpdate']),
     ...mapActions('openviduStore', ['initSession']),
-    getFcmToken() {
-      const messaging = getMessaging();
-      const PUBLIC_VAPID_KEY = 'BNEXCWddmnyA6pokCD8W5cGv9JBI6gA2IeDlf7RbP9VzVoXN23r8J-ULN-bdkAyS6gB0aVw7DUNokhdSUuNfdmU';
-      return getToken(messaging, { vapidKey: PUBLIC_VAPID_KEY });
-    },
     onLogin() {
       if (!this.$refs.loginForm.validate()) {
           this.$toast.open({
@@ -117,109 +108,46 @@ export default {
         return;
       }
 
-      console.log('loginbtn')
-      // this.getFcmToken()
-      //   .then(token => {
-      //     if (token) {
-            // this.credentials.fcmToken = token
-            this.credentials.fcmToken = 'abcd'
-            // axios({
-            //   method: 'post',
-            //   url: `${process.env.VUE_APP_API_URL}/users/login`,
-            //   data: this.credentials
-            // })
-            // .then(res => {
-            //   localStorage.setItem('jwt', res.data.accessToken)
-            //   this.userUpdate(res.data.user)
-            //   this.initSession(res.data.user)
-            //   this.$router.replace({name:'Main'})
-            // })
-            // .catch(err => {
-            //   console.log(err)
-            //   this.credentials.id = null
-            //   this.credentials.password = null
-            // })
-
-            this.login(this.credentials)
-              .then(response => {
-                if (response.status == 200) {
-                  this.initSession(response.data.user);
-                  this.$router.replace({ name : 'Main' });
-                }
-              })
-              .catch(error => {
-                console.log(error.response);
-              })
-
-            // console.log('fcm getToken ', token);
-      //     } else {
-      //       // Show permission request UI
-      //       console.log('No registration token available. Request permission to generate one.');
-      //     }
-      //   }
-      // ).catch((err) => {
-      //   console.log('An error occurred while retrieving token. ', err);
-      //   // ...
-      // });
-      
+      this.login(this.credentials)
+        .then(response => {
+          if (response.status == 200) {
+            this.initSession(response.data.user);
+            this.$router.replace({ name : 'Main' });
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+        })
     },
     // goPasswordFind: function () {
     //   this.$router.push({name:'PasswordFind'})
     // },
     oAuth() {
       let REST_API_KEY = '54ef6bedc90c5d1d07c7813bdd123278';
-      // let REDIRECT_URI = `http://localhost:3000/login`;
-      let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
+      let REDIRECT_URI = `http://localhost:3000/login`;
+      // let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
       window.location.replace(
         `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
       );
     },
     kakaoAuth(authCode) {
-      console.log('Starting KAKAO Auth ', authCode)
-      // TODO: 현재 경로 라우터 히스토리에서 제거
-      
-      // axios.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
-      api.get(`/oauth/kakao?code=${authCode}`)
+      api.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
+      // api.get(`/oauth/kakao?code=${authCode}`)
         .then((response) => {
-          console.log('oAuth response', response)
           const { join, info } = response.data;
 
           join ? 
-            this.getFcmToken()
-              .then(token => {
-                if (token) {
-                  this.loginKakao({
-                    id: info.id,
-                    fcmToken: token
-                  }).then(response => {
-                      if (response.status == 200) {
-                        this.initSession(response.data.user);
-                        this.$router.replace({ name : 'Main' });
-                        this.isLoading = false;
-                      }
-                    }
-                  ).catch(error => {
-                      console.log(error.response);
-                    }
-                  )
-                  // axios.post(`${process.env.VUE_APP_API_URL}/users/social/kakao/login`, {
-                  //   id: info.id,
-                  //   fcmToken: token
-                  // }).then(res => {
-                  //   localStorage.setItem('jwt', res.data.accessToken)
-                  //   this.userUpdate(res.data.user)
-                  //   this.initSession(res.data.user)
-                  //   this.$router.replace({ name: 'Main' })
-                  // }).catch(err => {
-                  //   console.log(err)
-                  //   this.credentials.id = null
-                  //   this.credentials.password = null
-                  // })
-                }
-              }).catch((err) => {
-                console.log('An error occurred while retrieving token. ', err.response);
+            this.loginKakao({
+              id: info.id,
+            }).then(response => {
+              if (response.status == 200) {
+                this.initSession(response.data.user);
+                this.$router.replace({ name : 'Main' });
+                this.isLoading = false;
               }
-            )
+            }).catch(error => {
+                console.log(error.response);
+            })
           : this.$router.push({
               name: 'SignupKakao',
               params: {
@@ -240,6 +168,7 @@ export default {
             && confirm('이메일로 가입된 계정이 이미 존재합니다. 아이디로 로그인하세요!')
               && this.$router.replace({ name: 'Login' });
 
+          
           console.log(response)
           // 나머지 에러 처리
           // 오류 발생했다 메시지 띄우고

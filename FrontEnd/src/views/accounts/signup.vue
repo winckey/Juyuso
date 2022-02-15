@@ -119,7 +119,7 @@
           <v-btn to="/login" class="mr-3" color="grey" dark rounded>
             취소
           </v-btn>
-          <v-btn @click="signup" color="#4DB6AC" dark rounded>
+          <v-btn @click="onSignup" color="#4DB6AC" dark rounded>
             회원가입
           </v-btn>
         </span>
@@ -129,6 +129,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import api from '@/common/api'
 import { phoneFormatter } from '@/common/util'
 
@@ -240,6 +241,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('accounts', ['signup']),
     makeToast(message) {
       this.$toast.open({
         position: 'top',
@@ -251,7 +253,7 @@ export default {
     onPhoneChange() {
       this.credentials.phone = phoneFormatter(this.credentials.phone)
     },
-    signup() {
+    onSignup() {
       const validateCheck = this.$refs.signupForm.validate()
       if (!this.isValid.id) {
         this.makeToast('아이디를 다시 입력하세요.');
@@ -260,7 +262,7 @@ export default {
       } else if (!validateCheck) {
         this.makeToast('가입 양식을 다시 한 번 확인해주세요.');
       } else {
-        api.post('/users', this.credentials)
+        this.signup(this.credentials)
           .then(() => {
             // 완료 메시지 띄운 이후 로그인 창으로 이동하기
             this.$router.replace({ name: 'Login' })
