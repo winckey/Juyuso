@@ -24,6 +24,11 @@ const beforeAuth = isAuth => (from, to, next) => {
   ((isLogin && isAuth) || (!isLogin && !isAuth)) ? next() : next({ name : 'Login', replace: true });
 }
 
+const rejectAuthUser = (to, from, next) => {
+  const isLogin = store.getters['accounts/getIsLogin'];
+  isLogin ? next({ name : 'Main', replace : true }) : next();
+}
+
 const routes = [
   {
     path: '/',
@@ -34,17 +39,20 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: rejectAuthUser
   },
   {
     path: '/signup',
     name: 'Signup',
     component: Signup,
+    beforeEnter: rejectAuthUser
   },
   {
     path: '/signup/kakao',
     name: 'SignupKakao',
     component: () => import('@/views/accounts/signup-kakao'),
+    beforeEnter: rejectAuthUser,
     props: true
   },
   {
