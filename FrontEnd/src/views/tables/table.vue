@@ -518,15 +518,6 @@ export default {
       }
       this.messageInput=''
     },
-    copyJoinCode(joinCode) {
-      const joinCodeToCopy = document.createElement("textarea")
-      document.body.appendChild(joinCodeToCopy)
-      joinCodeToCopy.value = joinCode
-      joinCodeToCopy.select()
-      document.execCommand("copy")
-      alert('복사되었습니다')
-      joinCodeToCopy.style.display = 'none'
-    },
     changeVoice(){
       if(this.voiceChange == false){
         const pitchs = ['0.75', '0.77', '1.5', '1.6']
