@@ -348,7 +348,7 @@
 
 #### 3-1. 사이드 바
 
-<img src="https://user-images.githubusercontent.com/19357410/100543583-4e970200-3294-11eb-9b69-67f6f57f2af5.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543584-4f2f9880-3294-11eb-8812-6b609c48aa0e.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543586-4fc82f00-3294-11eb-8a76-a75ae0e5fba9.png" width="30%">
+
 
 * **[개인정보] :** 자신의 간단한 개인정보를 볼수 있다.
 * **[마이페이지 클릭시] :** 개인정보를 수정할수 있는 마이페이지로 이동한다.
