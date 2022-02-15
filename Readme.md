@@ -303,7 +303,7 @@
 
 ## :desktop_computer: 시스템 아키텍쳐
 
-![System_Architecture](https://user-images.githubusercontent.com/19357410/100544133-088f6d80-3297-11eb-8ba7-bad031aa6e46.png)
+![System_Architecture](/img/architecture.png)
 
 ## 🎞 서비스 소개
 
@@ -422,86 +422,7 @@
 
 ---
 
-### 6. 지역 채팅
 
-#### 6-1. 지역 채팅
-
-<img src="https://user-images.githubusercontent.com/19357410/100543934-11337400-3296-11eb-93df-4bb018129209.jpg" width="30%">
-
-* **[지역 채팅] :** 원하는 지역을 선택 시 해당 지역에서 여러 유저와 실시간으로 채팅한다.
-
----
-
-### 7. 챌린지 페이지
-
-#### 7-1. 챌린지 페이지
-
-<img src="https://user-images.githubusercontent.com/19357410/100543935-1264a100-3296-11eb-95db-bd848289a472.jpg" width="30%">
-
-* **[챌린지 페이지] :** 상단의 보유 마일리지가 표시되고, 현재 진행중, 진행 예정, 종료된 챌린지를 확인한다.
-
----
-
-#### 7-2. 챌린지 상세
-
-<img src="https://user-images.githubusercontent.com/19357410/100543936-12fd3780-3296-11eb-9392-7269ed244161.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543937-12fd3780-3296-11eb-8ea9-7c279b4bfeff.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/33771279/100744077-964a9480-3420-11eb-995d-97c2903c193d.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/19357410/100543938-1395ce00-3296-11eb-8479-a79389bf8ff3.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543939-142e6480-3296-11eb-9db2-4ed86ddb56f1.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543941-142e6480-3296-11eb-907b-b69543697523.jpg" width="30%">
-
-* **[챌린지 클릭 시] :** 챌린지 클릭 시 해당 챌린지의 상세 정보를 확인하고, 신청 버튼을 통해 챌린지에 참여한다.
-* **[챌린지 신청 버튼 클릭 시] :** 챌린지 신청 버튼 클릭 시 챌린지 참여 페이지로 넘어가며, 기부 금액을 설정해 참여한다. 이 때, 기부 금액은 0원을 설정해도 참여가 가능하며, 해당 금액은 미리 충전된 마일리지에서 차감된다.
-* **[충전하기 버튼 클릭 시] :** 충전하기 버튼을 클릭 시, [마이페이지]-[마일리지 충전] 탭으로 전환되며 카카오페이를 통해 충전이 가능하다.
-
----
-
-### 8. 챌린지 제안
-
-#### 8.1 챌린지 제안
-
-<img src="https://user-images.githubusercontent.com/33771279/100743407-98f8ba00-341f-11eb-9757-517c487ae721.PNG" width="30%">  <img src="https://user-images.githubusercontent.com/33771279/100743427-9e560480-341f-11eb-99bc-94b88b1b6654.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743445-a2822200-341f-11eb-8396-e8c922af8ecc.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743436-a0b85e80-341f-11eb-809b-63bbd62e7a9a.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743434-9f873180-341f-11eb-8684-ec48e036a39f.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743430-9e560480-341f-11eb-875b-d814ff91a8aa.PNG" width="30%">
-
-* **[챌린지 제안] :** 유저가 관리자에게 챌린지를 제안한다.
-
----
-
-#### 8.2 챌린지 관리 페이지
-
-<img src="https://user-images.githubusercontent.com/19357410/100543945-15f82800-3296-11eb-89fe-b7faf669e5e0.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543947-1690be80-3296-11eb-9e8a-89af452253e0.JPG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100744077-964a9480-3420-11eb-995d-97c2903c193d.PNG" width="30%">
-
-* **[챌린지 관리 페이지] :** 챌린지 관리 페이지는 관리자 등급만 확인 가능하며, 챌린지 생성, 삭제, 수정이 가능하다.
-
----
-
-### 9. 러닝 기록 조회
-
-#### 9-1. 러닝 기록 조회
-
-<img src="https://user-images.githubusercontent.com/19357410/100543948-17295500-3296-11eb-8d14-165996f4ae60.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543949-17295500-3296-11eb-8a84-4eb34aac749e.JPG" width="30%">
-
-* **[러닝 기록 조회] :** 본인의 모든 러닝 기록을 조회한다. 하단에서 러닝 기록을 클릭 시, 지도에 러닝 경로가 표시된다.
-* **[활동 지역 러닝 기록 조회] :** 본인이 설정한 활동 지역 러닝 기록을 조회한다. 하단에서 러닝 기록을 클릭 시, 지도에 러닝 경로가 표시된다.
-* **[러닝 기록 클릭 시] :** 러닝 상세 페이지로 이동한다.
-
----
-
-### 10. 팔로우 목록
-
-#### 10-1. 팔로우 목록 조회
-
-<img src="https://user-images.githubusercontent.com/19357410/100543950-17c1eb80-3296-11eb-99b0-9f415388e0dd.JPG" width="30%">
-
-* **[팔로우 목록 조회] :** 팔로워의 간단한 정보와, 말풍선 아이콘을 클릭 시 일대일 채팅으로 이동하며, 엑스 아이콘을 클릭 시 팔로우를 취소한다.
-
----
-
-### 11. 유저 정보 수정
-
-#### 11-1. 유저 정보 수정
-
-<img src="https://user-images.githubusercontent.com/19357410/100543951-185a8200-3296-11eb-9472-75905c604228.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543952-18f31880-3296-11eb-94de-1cb7ac9e91c6.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543954-198baf00-3296-11eb-8438-a602935e4f9e.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543957-1a244580-3296-11eb-9d21-354d7693f06c.JPG" width="30%">
-
-* **[유저 정보 수정] :** 유저 정보를 수정하거나 탈퇴한다.
-* **[유저 프로필 수정] :** 유저 프로필을 수정한다.
-
----
 
 ## :calendar: 일정
 
