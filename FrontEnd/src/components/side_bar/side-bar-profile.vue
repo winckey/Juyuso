@@ -107,7 +107,7 @@ export default {
       if (this.user.img) {
         return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
       } else {
-        return require('@/assets/chat.png')
+        return require('@/assets/basic_profile.png')
       }
     }
   }
