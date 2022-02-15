@@ -77,15 +77,9 @@ const accounts = {
         .catch(error => reject(error))
     }),
     signup: (context, payload) => new Promise((resolve, reject) => {
-      console.log(payload)
-      console.log(context)
       api
         .post('/users', payload)
         .then(response => {
-          // console.log(context, payload)
-          if (payload.provider === 'kakao') {
-            console.log('kakao')
-          }
           resolve(response)
         })
         .catch(error => reject(error))

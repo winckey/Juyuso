@@ -241,13 +241,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions('accounts', ['signup']),
+    ...mapActions('accounts', ['signup', 'login']),
+    ...mapActions('openviduStore', ['initSession']),
     makeToast(message) {
       this.$toast.open({
-        position: 'top',
+        position: 'bottom',
         message,
         type: 'error',
-        duration: 2500,
+        duration: 2000,
       });
     },
     onPhoneChange() {
@@ -264,10 +265,30 @@ export default {
       } else {
         this.signup(this.credentials)
           .then(() => {
-            // 완료 메시지 띄운 이후 로그인 창으로 이동하기
-            this.$router.replace({ name: 'Login' })
-          }
-        )
+            this.$toast.open({
+              position: 'bottom',
+              message: '가입이 완료되었습니다!',
+              type: 'success',
+              duration: 1500,
+            });
+            /* 가입 완료 후, 바로 로그인 */
+            this.login({
+              id: this.credentials.id,
+              password: this.credentials.password
+            }).then(response => {
+              const {
+                status,
+                data: {
+                  user
+                }
+              } = response;
+
+              if (status == 200) {
+                this.initSession(user);
+                this.$router.replace({ name : 'Main' });
+              }
+            })
+          }).catch(error => console.log(error.response))
       }
     },
   }

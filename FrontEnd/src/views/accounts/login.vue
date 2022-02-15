@@ -33,7 +33,7 @@
         <div class="my-4 mx-50">
           <v-btn width="100%" @click="oAuth" color="amber" rounded>
             <img src="@/assets/kakao_symbol.png" width="5%">
-            &nbsp;카카오로 로그인
+            &nbsp;카카오로 시작하기
           </v-btn>
         </div>
         <div class="text-center">
@@ -99,24 +99,51 @@ export default {
     ...mapActions('openviduStore', ['initSession']),
     onLogin() {
       if (!this.$refs.loginForm.validate()) {
-          this.$toast.open({
-          position: 'top',
+        this.$toast.open({
+          position: 'bottom',
           message: '아이디, 비밀번호를 입력하세요.',
           type: 'error',
-          duration: 2500,
+          duration: 2000,
         });
         return;
       }
 
       this.login(this.credentials)
         .then(response => {
-          if (response.status == 200) {
-            this.initSession(response.data.user);
+          const {
+            status,
+            data: {
+              user
+            }
+          } = response;
+
+          if (status == 200) {
+            this.initSession(user);
             this.$router.replace({ name : 'Main' });
           }
         })
-        .catch(error => {
-          console.log(error.response);
+        .catch(({ response })=> {
+          const {
+            data: {
+              code
+            }
+          } = response;
+
+          if (code === 'USER_NOT_FOUND') {
+            this.$toast.open({
+              position: 'bottom',
+              message: '아이디 또는 비밀번호를 다시 확인하세요.',
+              type: 'error',
+              duration: 2000,
+            });
+          } else {
+            this.$toast.open({
+              position: 'bottom',
+              message: '서버에 문제가 발생하였습니다. 다시 시도하세요.',
+              type: 'error',
+              duration: 2000,
+            });
+          }
         })
     },
     // goPasswordFind: function () {
@@ -140,8 +167,15 @@ export default {
             this.loginKakao({
               id: info.id,
             }).then(response => {
-              if (response.status == 200) {
-                this.initSession(response.data.user);
+              const {
+                status,
+                data: {
+                  user
+                }
+              } = response;
+
+              if (status == 200) {
+                this.initSession(user);
                 this.$router.replace({ name : 'Main' });
                 this.isLoading = false;
               }

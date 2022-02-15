@@ -10,6 +10,7 @@
                 label="성별"
                 :rules="rules.genderRule"
                 v-model="credentials.gender"
+                :disabled="info.gender!=null"
                 row
               >
                 <v-radio
@@ -29,6 +30,7 @@
                 label="닉네임"
                 v-model="credentials.nickname"
                 :error-messages="errors.nickname"
+                :disabled="info.nickname!=null"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -38,7 +40,7 @@
             label="이메일"
             v-model="credentials.email"
             :rules="rules.emailRule"
-            disabled
+            :disabled="info.email!=null"
           ></v-text-field>
           </v-row>
           <!-- DATE -->
@@ -166,11 +168,10 @@ export default {
     this.credentials.email = this.info.email;
     this.credentials.nickname = this.info.nickname;
     this.credentials.gender = this.info.gender;
-    console.log('info', this.info);
   },
   watch: {
     'credentials.nickname'(v) {
-      if (v == '' || !v.trim()) {
+      if (v == null || v == '' || !v.trim()) {
         this.errors.nickname = ["닉네임을 입력해주세요."];
         this.isValid.nickname = false;
       } else if (v && v.length > 10) {
@@ -191,6 +192,7 @@ export default {
   },
   methods: {
     ...mapActions('accounts', ['loginKakao', 'signup']),
+    ...mapActions('openviduStore', ['initSession']),
     makeToast(message) {
       this.$toast.open({
         position: 'top',
@@ -210,16 +212,30 @@ export default {
         this.makeToast('가입 양식을 다시 한 번 확인해주세요.');
       } else {
         this.signup(this.credentials)
-          .then(res => {
-            console.log('signup success', res)
-            this.$router.replace({ name: 'Login' })
+          .then(() => {
+            this.$toast.open({
+              position: 'bottom',
+              message: '가입이 완료되었습니다!',
+              type: 'success',
+              duration: 1500,
+            });
+            /* 가입 완료 후, 바로 로그인 */
+            this.loginKakao({
+              id: this.credentials.id,
+            }).then(response => {
+              const {
+                status,
+                data: {
+                  user
+                }
+              } = response;
+
+              if (status == 200) {
+                this.initSession(user);
+                this.$router.replace({ name : 'Main' });
+              }
+            })
           })
-        // api.post('/users', this.credentials)
-        //   .then(() => {
-        //     // 완료 메시지 띄운 이후 로그인 창으로 이동하기
-        //     this.$router.replace({ name: 'Login' })
-        //   }
-        // )
       }
     },
   }
