@@ -250,9 +250,6 @@
   - **Let’s Encrypt** 무료 인증서를 발급받아 웹서버에 SSL 인증서를 적용.
   - Google Map API 활용 시, SSL 적용 필수.
 - **MySql** : RDBMS로 Run With Me Project의 사용자, 러닝 기록, 챌린지, 게시판 등 필요한 데이터를 저장.
-- **Redis** : 비관계형 데이터베이스로 'Key-Value' 구조 데이터 관리 시스템이며, 데이터를 메모리에 저장하여 빠른 처리속도가 필요한 기능에 적용.
-  - 채팅 서버의 채팅방, 메세지 처리를 위해 사용. (Subscribe / Publish)
-  - 만료일을 저장하면 만료 시 자동으로 데이터가 사라지는 특성을 활용하여 로그아웃된 토큰을 저장하여 블랙리스트로 활용.
 - **AWS**
   - EC2 서비스를 이용하여 Ubuntu 서버를 구축 (호스팅).
   - S3 서비스를 이용하여 프로필 및 러닝 기록 (Polyline)을 저장하기 위해 사용.
@@ -266,28 +263,12 @@
 - **Vue**
   * **Swal (Sweet Alert)** -  다양한 기능과 디자인을 가진 Alert창을 구현.
   * **SplideSlide** - Page를 Swap할때마다 변경되는 페이지.
-  * **carousal** - Main Page에서 다양한 이벤트를 보기 편하게 하기 위해 3D Slide형식으로 넘어가는 컴포넌트 구현.
-  * **apexChart** - 런닝 데이터 분석을 위해 사용하는 분석차트.
-  * **decode-google-map-polyline** - String으로 인코딩했던 polyline을 맵에 다시 표시하기 위해 사용.
   * **vue-good-table** - 친구 목록이나 다양한 목록을 표현할때 사용되는 검색과 정렬기능, 페이지 기능을 사용.
   * **vue-moment** - 시간을 DB에 저장하기위해 포맷 형식을 변경 및 DB에서 가져올 때 출력 형식 변경.
   * **web-stomp** - 채팅기능을 위한 웹 소켓 프로그래밍, 실시간으로 채팅을 할때 사용.
-- **Google Static Map** : 실시간 위치정보를 맵에 Polyline화해서 지도이미지를 DB에 저장.
-- **Google Map** : 지도에 지속적으로 위치를 기록 및 추적하기 위해 사용.
-- **Kakao Pay** : Kakao에서 제공하는 KakaoPay기능을 이용해 모바일로 결제가 가능. 기부 챌린지 참가를 위해 원하는 금액만큼 미리 충전하여 사용.
-- **Vuex** : 여러 페이지에서 공용으로 사용하는 데이터와 함수들을 저장해서 한번에 관리, 추가적으로 JWT토큰을 스토어에 저장하여 Backend와 통신시마다 주고받으며, 2시간이 지나면 토큰이 만료되어 서비스 이용 불가. 
+- **Vuex** :
 - **vue apaxcharts** : 러닝 데이터를 효과적으로 시각화할 수 있도록 활용.
   - axios 통신.
-  - 시각화 자료 이미지 파일로 변환 및 저장.
-  - 활용 사례
-    - running plant
-      - 월별 사용자 러닝 거리 기록.
-      - 거리 기록에 따라 상대적인 색 표현.
-      - 업데이트를 통한 실시간 기록 분석 가능.
-     - running analysis
-       - 지난 측정 기록 vuex 저장 및 시각화.
-       - 업데이트 기록과 비교.
-       - 사용자와 같은 티어의 사용자와 비교 분석.
 
 **[ TEAM Cooperation ]**
 
@@ -413,20 +394,10 @@
 
 ---
 
-#### 5-2. 매칭
-
-<img src="https://user-images.githubusercontent.com/19357410/100543929-0d9fed00-3296-11eb-8ca0-1e0df7388ee6.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543930-0f69b080-3296-11eb-929b-1c1e3bc5fb1b.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543932-0f69b080-3296-11eb-83d0-83adcb3e1959.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543933-10024700-3296-11eb-934f-9b131c543022.jpg" width="30%">
-
-* **[일대일 채팅 밑 매칭 클릭 시] :** 일대일 채팅의 온라인 및 오프라인 유저의 목록 하단 매칭 버튼 클릭 시 경험치에 따른 유저를 매칭해준다.
-* **[매칭 시스템] :** 성별을 선택 후 원하는 러너를 선택해 팔로우한 다음 일대일 채팅을 시작한다.
-
----
 
 
 
 ## :calendar: 일정
-
-![일정](https://user-images.githubusercontent.com/19357410/100542772-7d5ea980-328f-11eb-806c-4bd76138aa1e.png)
 
 ## 🙏 저자
 
