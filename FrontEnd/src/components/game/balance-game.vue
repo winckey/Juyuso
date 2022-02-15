@@ -9,10 +9,7 @@
       <v-row>
         <v-col>
           <user-video class="col-md-12" style="height: 28vh" :stream-manager="publisher"/>
-          <!-- <div v-for="sub in subscribers.length" :key="sub">
-            <user-video style="height:28vh" class="col-md-12" :stream-manager="subscribers[sub-1].stream.connection.connectionId"/>{{subscribers[sub-1].stream.connection.connectionId }}
-          </div> -->
-          <user-video style="height:28vh" class="col-md-12 camera" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+          <user-video style="height:28vh" class="col-md-12" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </v-col>
         <v-col cols="4">
           <div class="balance-game">
