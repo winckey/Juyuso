@@ -1,60 +1,67 @@
-# Run With Me ? 🏃️
+# 주 유 소 ? 🍻
 
-![Github](https://img.shields.io/badge/vue-2.6.11-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/badge/spring_boot-2.3.1-%236DB33F?style=plastic&logo=Spring)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/Redis-3.0-%23DC382D?style=plastic&logo=Redis)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
+![Github](https://img.shields.io/badge/vue-2.6.14-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/badge/spring_boot-2.5.8-%236DB33F?style=plastic&logo=Spring)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
 
 
 
-## :triangular_flag_on_post: Run With Me ? 🏃️
+## :triangular_flag_on_post: 주 유 소 ? 🍻
 
 
 - ### 프로젝트 개요
 
-  - 🏠 [Run With Me Homepage](https://k3a303.p.ssafy.io/)
+  - 🏠 [주유소 (酒流所)](https://i6e106.p.ssafy.io/)
 
-  - `Run With Me`는 런닝 시 GPS 추적을 통해 사용자의 런닝 기록 저장 및 사용자의 지역, 성향에 맞춰 코스를 추천 런닝 메이트들과 함께 기부하는 시스템, 친목 도모를 위한 채팅 및 커뮤니티를 활성화하여 게임같이 런닝을 즐길 수 있는 웹 / 앱 서비스입니다.
+  - `주 유 소`는 친구들, 혹은 새로운 사람들과 비대면으로 장소와 거리에 제약없이 재밌게 소통하며 술마시고 싶을 때 사용할 수 있는 서비스입니다.
 
 - ### 주요 기능 
 
-  - **러닝 기록 및 / 분석**
+  - **화상기능 서비스**
 
-    > 1) 사용자의 **러닝을 실시간으로 추적**하고 속도, 거리와 같은 기록이 화면에 표시가 된다.
+    > 1) 자유롭게 방을 생성하고 친구 또는 새로운 사람들과 만남을 가질수 있다
     >
-    > 2)  러닝 종료 시 기록이 저장되고, **개인 러닝 기록을 실시간으로 분석**한다. 
-    >
-    > ​	- 이전 기록과 최근 기록,  평균 러너 기록을 분석하여 비교해 얼마나 성장했는지 알 수 있다. 
+    > 2) 다른사람들과 **화상기능**을 이용해 자유로운 만남을 가질수 있다. 
 
-  - **챌린지 서비스** 
+  - **게임 및 재미 서비스** 
 
-    > 1) 매일 똑같이 러닝만 하는 데 지루함을 느끼는 **사용자들에게 새로운 시도를 제공**한다. 
+    > 1) 단순한 화상회의 서비스가 아닌 **여러가지 게임**을 통해 술자리에 맞는 분위기를 유도할수 있다. 
     >
-    > 2) 사용자는 **카카오페이를 통해 마일리지를 충전**하고 기부할 금액을 정해 원하는 카테고리의 챌린지에 참여한다. 
+    > 2) 사용자는 **카메라 필터 음성변조기능**을 이용하여 자신의 모습 , 목소리를 바꿀수 있다.
     >
-    > 3) **챌린지 각각의 목표와 기부 금액을 달성하면 기부가 되는 형식**으로, 기부를 하지 않아도 참여가 가능하다.
+    > 3) 각 방은 여러 배경을 변경하여 다양한 분위기에서 모임을 가질 수 있다.
     >
-    > 4) **비대면 레이스**의 형태로 여러 사용자들과 함께 각자의 장소에서 목표를 이루는 것을 통해 색다른 이벤트를 제공한다.
+    > - 게임과 재미기능들을 이용해 즐거운 술자리를 유도한다.
 
   - **커뮤니티 서비스**
 
-    > 1) 혼자가 아닌 **러닝메이트**를 만들고 싶을 때, **사용자의 기록과 활동 지역 분석을 통해 다른 러너를 매칭**해준다.
+    > 1) 새로운 사람 혹은 친구와의 연락을 위해 친구 기능을 제공한다.
     >
-    > 2) **일대일 채팅**을 통해 팔로우한 친구와 대화를 하거나 다른 러너 매칭을 원활하게 돕기위해 활용한다.
+    > 2) **일대일 채팅**을 통해 다양한 사람과 대화하고 만남을 주도한다.
     >
-    > 3) **지역별 채팅**을 통해 사용자의 지역에 속한 지역의 그룹 채팅을 통해 다양한 러너들과 소통하는 서비스를 제공한다. 
+    > 3) **확성기 채팅**을 통해 여러 사람들에게 자신의 방을 홍보 하거나 만남을 주도 할 수 있다. 
     >
-    > 4) **랭킹 시스템을 도입**하여 러닝에 대한 성취감을 높이고, 유저들의 러닝 동기부여를 한다.
+    > 4) **알림 기능**으로 친구기능 채팅이 왔을때 실시간으로 확인할 수 있다.
+   - **마이데이터 서비스**
+
+    > 1) 자신의 프로필 사진과 별명등을 변경한다.
+    >
+    > 2) **마이데이터**를 통해 출석정보 , 음주기록을 확인하고 저장할 수 있다.
+    >
+    > - 서로간의 정보를 공유하고 비교하며 재미를 느낄 수 있다.
+    - **로그인 서비스**
+
+    > 1) 로그인 기능을 이용하여 친구기능 마이데이터 서비스를 이용한다.
+    >
+    > 2) 웹 로그인과 카카오톡 로그인을 지원한다.
 
 - ### 향후 계획
 
-  - **알림 기능** : 친구 추가 및 채팅 관련한 알림 기능을 통해 사용자들에게 편리성을 제공.
-  - **코칭 서비스** : 러너들에게 효과적인 러닝을 할 수 있도록 코칭할 수 있는 유저를 매칭하는 서비스를 제공.
-  - **다양한 챌린지 컨텐츠** : 기부 뿐만 아니라 다양한 카테고리의 챌린지를 만들어 다양하게 챌린지를 할 수 있도록 제공.
-  - **기부 단체 협약** : 기부 챌린지를 통해 얻은 기부금 전달을 위해 기부 단체를 찾아 협약을 맺을 계획.
+ 
 
 
 
 ## 📌 목차
 
-[Run With Me ? 🏃](#triangular_flag_on_post-run-with-me--%EF%B8%8F) 
+[주 유 소 ? 🍻](#triangular_flag_on_post-run-with-me--%EF%B8%8F) 
 
 * [시작하기](#triangular_flag_on_post-시작하기)
 
@@ -89,7 +96,6 @@
 
 * [Windows 10](https://www.microsoft.com/en-us/software-download/windows10)
 * [JDK 1.8](https://www.oracle.com/kr/java/technologies/javase/javase-jdk8-downloads.html)
-* [Node.js 12.8.1](https://nodejs.org/ko/download/)
 * [MySQL 8.0](https://www.mysql.com/downloads/)
 
 ### 설치하기
@@ -97,7 +103,7 @@
 1. 깃헙의 레포지토리를 클론합니다.
 
    ```
-   $ git clone https://github.com/soohyun0907/RunWithMe.git
+   $ git clone https://lab.ssafy.com/s06-webmobile1-sub2/S06P12E101.git
    ```
 
 2. npm을 설치합니다.
@@ -108,7 +114,7 @@
 
 ### 실행하기
 
-`Run With Me` 서비스를 사용하기 위해서는 다음과 같은 방법으로 실행합니다:
+`주 유 소` 서비스를 사용하기 위해서는 다음과 같은 방법으로 실행합니다:
 
 1. 데이터베이스를 설정합니다.
 
@@ -120,7 +126,7 @@
      spring:
        datasource:
          driver-class-name: com.mysql.cj.jdbc.Driver
-         url : jdbc:mysql://localhost:3306/rwm?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+         url : jdbc:mysql://localhost:3306/juyuso?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
          username : {데이터베이스 계정 아이디}
          password : {데이터베이스 계정 비밀번호}
      ```
@@ -129,16 +135,16 @@
 
    - IDE에 import 후 실행합니다.
 
-     : IntelliJ, STS와 같은 IDE를 사용하는 경우, `backend - RunWithMe`를 import하여 실행합니다.
+     : IntelliJ, STS와 같은 IDE를 사용하는 경우, `BackEnd`폴더를 import하여 실행합니다.
 
-   - war파일을 생성 후 실행합니다.
+   - jar파일을 생성 후 실행합니다.
 
      ```
      $ gradlew -DskipTests=true build
      ```
 
      ```
-     $ java -jar [filename].war
+     $ java -jar [filename].jar
      ```
 
    - 프론트엔드를 실행합니다.
@@ -149,7 +155,7 @@
 
 ### 배포하기
 
-해당 서비스는 `AWS EC2`를 이용하여 배포하였습니다. 사전에 [여기]()를 참고해서 `AWS EC2`계정을 생성하세요.
+해당 서비스는 `AWS EC2`와 `docker`를 이용하여 배포하였습니다. 사전에 [여기]()를 참고해서 `AWS EC2`계정을 생성하세요.
 
 배포를 하기위해서는 다음과 같은 방법으로 실행합니다:
 
@@ -222,9 +228,10 @@
 * yarn 1.22.4
 * Spring boot 2.3.1
 * Gradle 6.4.1
-* IDE: Visual Studio Code 1.48, Spring Tool Suite 3
+* IDE: Visual Studio Code 1.48, IntelliJ
 * GitLab
 * Jira
+* Jenkins
 * SonarQube
 
 
@@ -304,77 +311,110 @@
 
 #### 1-1. 로그인 화면
 
-<img src="https://user-images.githubusercontent.com/19357410/100543558-2dceac80-3294-11eb-9d4a-51a0c0e7757b.jpg" width="30%">
+
 
 ---
 
-### 2. 메인 화면
+### 2. 테이블 화면
 
-#### 2-1. 메인 화면
+#### 2-1. 테이블 화면
 
-<img src="https://user-images.githubusercontent.com/19357410/100543566-332bf700-3294-11eb-98ee-fb4c9274adf7.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543569-3cb55f00-3294-11eb-8038-701758f0d13d.jpg" width="30%">
 
-- **[메인 화면] :** 상단에는 현재 진행중인 챌린지, 중앙에는 랭킹, 하단에는 팔로우한 유저의 최신 러닝 기록을 보여준다.
+
+- **[테이블 화면] :** 현재 생성되어 있는 방리스트를 확인 할수 있다.
+- **[테이블 리스트 필터] :** 전체, 공개방, 비공개방을 설정에따라 원하는 것만 볼 수 있다.
+- **[테이블 검색 기능] :** 방리스트를 태그별 제목별로 검색하여 원하는 것만 볼 수 있다.
+---
+
+#### 2-2. 테이블 화면 방 추가
+
+
+
+- **[+버튼 클릭시] :** 새로운 방을 생성할 수 있도록 모달창을 띄운다.
+- **[테마 선택 및 방정보 설정] :** 생성할 방의 기본 정보들을 정의 한다.
 
 ---
 
-#### 2-2. 메인 화면에서 랭커 클릭
+#### 2-3. 알림 기능
 
-<img src="https://user-images.githubusercontent.com/19357410/100543571-3de68c00-3294-11eb-8dce-13ead347632a.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543578-46d75d80-3294-11eb-9855-00c81a701ecc.jpg" width="30%">
 
-- **[메인 화면에서 랭커 클릭 시] :** 선택한 유저의 간단한 프로필, 팔로우 여부, 러닝 기록을 보여준다.
-- **[랭커 프로필에서 러닝 피드 클릭 시] :** 유저의 해당 러닝 상세 기록을 보여준다.
+- **[알림 도착시] :** 알림을 통해 친구 신청 또는 메세지를 실시간으로 확인 할수 있다.
 
 ---
 
-#### 2-3. 메인 화면에서 친구 피드 클릭
+### 3. 사이드 바
 
-<img src="https://user-images.githubusercontent.com/19357410/100543582-4b037b00-3294-11eb-9ef7-f924754da14e.jpg" width="30%">
-
-* **[메인 화면에서 팔로워 피드 클릭 시] :** 팔로우한 유저의 러닝 상세 기록을 보여준다.
-
----
-
-### 3. 러닝 페이지
-
-#### 3-1. 러닝 페이지
+#### 3-1. 사이드 바
 
 <img src="https://user-images.githubusercontent.com/19357410/100543583-4e970200-3294-11eb-9b69-67f6f57f2af5.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543584-4f2f9880-3294-11eb-8812-6b609c48aa0e.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543586-4fc82f00-3294-11eb-8a76-a75ae0e5fba9.png" width="30%">
 
-* **[러닝 페이지에서 시작 버튼 클릭 시] :** 러닝 기록을 시작한다.
-* **[러닝 페이지에서 정지 버튼 클릭 시] :** 러닝을 끝내고 기록을 저장한다.
-* **[러닝 페이지에서 페이지 스왑 시] :** 현재 러닝의 중간 기록을 1km 단위로 확인한다.
+* **[개인정보] :** 자신의 간단한 개인정보를 볼수 있다.
+* **[마이페이지 클릭시] :** 개인정보를 수정할수 있는 마이페이지로 이동한다.
+* **[로그아웃 클릭시] :** 로그아웃 되며 로그인 페이지로 이동한다.
+* **[사람모양 클릭시] :** 친구리스트를 볼수 있다.
+* **[말풍선모양 클릭시] :** 현재 대화상대와의 대화창으로 이동.
+* **[돋보기 모양 클릭시] :** 친구검색창으로 이동.
 
 ---
 
-#### 3-2. 러닝 결과 페이지
+#### 3-2. 친구리스트
 
-<img src="https://user-images.githubusercontent.com/19357410/100543588-50f95c00-3294-11eb-93bb-d9bd055ad608.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543589-50f95c00-3294-11eb-904b-55cd97774134.jpg" width="30%">
 
-* **[러닝 결과] :** 현재 러닝의 부분 기록 및 전체 기록을 확인한다.
+
+* **[친구리스트] :** 현재 친구와 친구 신청 리스트를 보여준다.
+* **[친구를 클릭시] :** 친구의 프로필 정보 또는 대화신청등의 기능을 실행할 수 있다.
+---
+
+#### 3-3. 1대1 대화창
+
+
+* **[대화창] :** 대화창에서 지금까지 상대와 대화한 목록을 볼 수 있고 상대방과의 실시간 채팅을 할수 있다.
+---
+#### 3-4. 검색창
+
+* **[검색어 입력] :** 해당 닉네임을 가진 사용자들을 검색하며 친구가 아닐경우 친구 신청을 할 수 있다.
+---
+
+### 4. 마이페이지
+
+#### 4-1. 마이페이지
+
+
+
+* **[마이페이지] :** 자신의 프로필 정보를 확인 및 수정할 수 있다.
+* **[마이데이터 클릭시] :** 자신의 음주 기록페이지로 이동한다.
+* **[캘린더 클릭시] :** 자신의 출석정보페이지로 이동한다.
+* **[차단친구 관리] :** 자신이 차단한 친구를 확인 할 수 있다.
+---
+
+#### 4-1. 마이페이지
+
+
+
+* **[마이페이지] :** 자신의 프로필 정보를 확인할 수 있다.
+* **[마이데이터 클릭시] :** 자신의 음주 기록페이지로 이동한다.
+* **[캘린더 클릭시] :** 자신의 출석정보페이지로 이동한다.
+* **[차단친구 관리] :** 자신이 차단한 친구를 확인 할 수 있다.
+---
+
+#### 4-2. 마이데이터
+
+
+
+* **[마이데이터] :** 자신의 음주 기록과 간단한 코멘트를 확인할 수 있다.
+* **[오늘 주량 추가] :** 어플리케이션 외에서 마신 주량을 기록할 수 있다.
 
 ---
 
-#### 3-3. 러닝 분석 페이지
+#### 4-3. 캘린더
 
-<img src="https://user-images.githubusercontent.com/19357410/100543590-522a8900-3294-11eb-8f17-c664e27a60d0.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543592-535bb600-3294-11eb-9525-df0f8aafde69.jpg" width="30%">
 
-* **[러닝 기록] :** Github의 contributions을 표현하는 잔디 포멧을 가져와 개발자 감성을 살려 한달 단위로 하루에 뛴 거리를 보여주며, 이미지로 저장할 수 있다.
-* **[러닝 분석 그래프] :** 이전 기록, 최근 기록과 유저들의 평균 기록을 보여주며, 이미지로 저장할 수 있다.
 
----
-
-### 4. 주변 러너 추천
-
-#### 4-1. 주변 러너 추천
-
-<img src="https://user-images.githubusercontent.com/19357410/100543958-1a244580-3296-11eb-8501-d2a6ebc7ab19.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543960-1b557280-3296-11eb-97bb-f78a235a0e5d.jpg" width="30%">
-
-* **[주변 러너 추천] :** 같은 동네의 주변 러너들을 추천해주고, 클릭 시 유저의 프로필과 기록을 보여준다.
+* **[출석] :** 출석체크 및 자신의 출석 현황을 파악할 수 있다.
 
 ---
 
-### 5. 일대일 채팅 및 매칭
+### 5. 미팅 페이지
 
 #### 5-1. 일대일 채팅
 
@@ -486,20 +526,3 @@
 * 이선수 - Sunsoo Lee - tjstn921030@gmail.com - @[LEESUNSOO](https://github.com/LEESUNSOO) [Back]
 * 전수현 - Soohyun Jeon - soohyun0907@naver.com - @[soohyun0907](https://github.com/soohyun0907) [Front]
 
-## :page_with_curl: 라이센스
-
-```
-Copyright (c) 2015 Juns Alen
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
