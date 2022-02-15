@@ -61,7 +61,7 @@ public class ChatMessageController {
                 firebaseCloudMessageService.sendMessageTo(receiver.getFcmToken(), message.getWriterName(),
                         message.getMessage().length() > 10 ?
                                 String.format("[%s] : %10s...", message.getWriterName(), message.getMessage())
-                                : String.format("[%s] : %s", message.getWriterName(), message.getMessage()));
+                                : String.format("[%s] : %s", message.getWriterName(), message.getMessage()), message.getWriterId());
             } catch (IOException e) {
                 e.printStackTrace();
             }

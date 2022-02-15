@@ -41,6 +41,24 @@ public class FirebaseCloudMessageService {
         log.info(response.body().string());
     }
 
+    public void sendMessageTo(String targetToken, String title, String body, String writerId) throws IOException {
+        String message = makeMessage(targetToken, title, body, writerId);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = RequestBody.create(message,
+                MediaType.get("application/json; charset=utf-8"));
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .post(requestBody)
+                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        log.info(response.body().string());
+    }
+    
     private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
@@ -49,6 +67,28 @@ public class FirebaseCloudMessageService {
                                 .title(title)
                                 .body(body)
                                 .image(null)
+                                .build()
+                        )
+                        .build()
+                ).validateOnly(false)
+                .build();
+
+        return objectMapper.writeValueAsString(fcmMessage);
+    }
+
+    private String makeMessage(String targetToken, String title, String body, String writerId) throws JsonProcessingException {
+        FcmMessage fcmMessage = FcmMessage.builder()
+                .message(FcmMessage.Message.builder()
+                        .token(targetToken)
+                        .notification(FcmMessage.Notification.builder()
+                                .title(title)
+                                .body(body)
+                                .image(null)
+                                .build()
+                        )
+                        .data(FcmMessage.Data.builder()
+                                .writerId(writerId)
+                                .writerName(title)
                                 .build()
                         )
                         .build()
