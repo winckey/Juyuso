@@ -45,7 +45,6 @@ export default {
                 headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`},
                 data: {
                 id: this.friend.id,
-                nickName: this.friend.nickname,
                 }
             })
                 .then(res => {
@@ -64,7 +63,6 @@ export default {
                 headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`},
                 data: {
                 id: this.friend.id,
-                nickName: this.friend.nickname,
                 }
             })
                 .then(res => {

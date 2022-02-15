@@ -12,8 +12,10 @@
       </v-col>
       <v-col cols="4">
         <div class="video-grid" :style="videoGrid">
-          <typing-game-score :stream-manager="publisher" :score="typingGame.scoreResultObject[JSON.parse(publisher.stream.connection.data).clientData]"/>
-          <typing-game-score v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"  :score="typingGame.scoreResultObject[JSON.parse(sub.stream.connection.data).clientData]"/>
+          <typing-game-score :stream-manager="publisher" 
+          :score="typingGame.scoreResultObject[JSON.parse(publisher.stream.connection.data).clientData]"/>
+          <typing-game-score v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"  
+          :score="typingGame.scoreResultObject[JSON.parse(sub.stream.connection.data).clientData]"/>
         </div>
       </v-col>
       <v-col class="d-flex justify-content-center align-items-center" cols="4" >

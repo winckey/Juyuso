@@ -110,7 +110,7 @@ export default {
 
 .background {
   height: 100vh;
-  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://post-phinf.pstatic.net/MjAyMDA5MjBfMTY3/MDAxNjAwNTk5OTkwNzEw.kFCN5OgjtKSCYGZKAVm7lWg3DsvBmBU5LfODMZj1ARAg.KzPbberktPM-cOzWp-0fP43V-8wtfvBSCA1_PrwVjacg.JPEG/Studio-Ghibli-releases-400-images-03.jpg?type=w1200);
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(http://img1.daumcdn.net/kakaotv/KAKAOACCOUNT/1102861286/thumb/20200201114734);
   background-size : cover;
 }
 

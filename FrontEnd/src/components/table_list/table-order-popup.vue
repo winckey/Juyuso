@@ -3,13 +3,13 @@
     <v-dialog
       transition="dialog-bottom-transition"
       v-model="dialog"
-      width="800"
+      width="700"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           fab
           dark
-          color="blue darken-4"
+          color="#4DB6AC"
           class="float-right" style="margin-right: 3vw;" v-on="on" v-bind="attrs"
         >
           <v-icon dark>
@@ -18,14 +18,15 @@
         </v-btn>
       </template>
 
-      <v-card>
-        <v-card-title class="grey lighten-2 d-flex justify-content-center">
-          <span>
+      <v-card class="p-2">
+        <v-card-title class="d-flex justify-content-center">
+          <span style="font-size: 1.5rem">
           테이블 추가
           </span>
         </v-card-title>
+        <v-divider></v-divider>
         <v-form ref="tableOrderForm">
-          <v-container>
+          <v-container class="px-5">
             <v-row>
               <v-col cols="2">
                 <v-subheader>방 이름</v-subheader>
@@ -49,7 +50,7 @@
                 <v-switch
                   v-model="isSecret"
                   inset
-                  color="success"
+                  color= "#4DB6AC"
                   :label="`${isSecret ? 'On' : 'Off'}`"
                 ></v-switch>
               </v-col>
@@ -93,13 +94,14 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col offset="2" cols="8">
+              <v-col offset="2" cols="9">
                 <v-chip
                   v-for="hashtag in roomInfo.hashTag"
                   :key="hashtag"
                   class="ma-2"
                   close
-                  color="#FAC372"
+                  color="#4DB6AC"
+                  dark
                   @click:close="deleteHashtag(hashtag)"
                 >
                   {{ hashtag }}
@@ -146,12 +148,14 @@
             </v-item-group>
           </v-container>
         </v-form>
-        <v-divider></v-divider>
-        <v-card-actions class="d-flex justify-content-center">
+        <!-- <v-divider></v-divider> -->
+        <v-card-actions class="d-flex justify-content-center m-2">
           <v-btn
-            color="#FFBC58"
+            color="#4DB6AC"
+            dark
             rounded
             @click="createRoom"
+            style="font-size: 1.2rem"
           >
             테이블 예약하기
           </v-btn>

@@ -51,7 +51,8 @@
             v-for="hashtag in roomInfo.hashtag"
             :key="hashtag"
             class="ma-2"
-            color="#FAC372"
+            color="#4DB6AC"
+            dark
           >
             {{ hashtag }}
           </v-chip>
@@ -59,7 +60,8 @@
           <!-- <v-divider></v-divider> -->
           <v-card-actions class="enter-btn">
             <v-btn
-              color="#1CFD9F"
+              color="#4DB6AC"
+              dark
               rounded
               @click="enterRoom"
             >
