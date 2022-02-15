@@ -124,15 +124,15 @@ export default {
     // },
     oAuth() {
       let REST_API_KEY = '54ef6bedc90c5d1d07c7813bdd123278';
-      let REDIRECT_URI = `http://localhost:3000/login`;
-      // let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
+      // let REDIRECT_URI = `http://localhost:3000/login`;
+      let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
       window.location.replace(
         `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
       );
     },
     kakaoAuth(authCode) {
-      api.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
-      // api.get(`/oauth/kakao?code=${authCode}`)
+      // api.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
+      api.get(`/oauth/kakao?code=${authCode}`)
         .then((response) => {
           const { join, info } = response.data;
 
