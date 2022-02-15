@@ -2,6 +2,7 @@
 import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+import router from '../../router'
 import Vue from 'vue';
 
 const openviduStore = {
@@ -106,7 +107,7 @@ const openviduStore = {
     joinSession: function ({ dispatch, commit }, roomInfo) {
       let isLogin = localStorage.getItem('jwt') ? true : false
       if (!isLogin) {
-        $router.push({ name: 'Login' })
+        router.push({ name: 'Login' })
         return
       }
       let data = {

@@ -27,13 +27,11 @@ const table = {
   mutations: {
     SET_THEME : function(state, data){
         state.themeNum = data
-        console.log('state:',state)
     }
   },
   actions: {
     setTheme : function({ commit }, themeNum){
       commit('SET_THEME', themeNum)
-      console.log('commit :',themeNum)
     }
   },
   getters: {

@@ -82,10 +82,19 @@ export default {
       'friendList',
       'changeDialog',
       'changeTab',
+      'setChatFriend'
     ]),
     makeToast(payload) {
       if (payload.notification.title == '친구 추가 요청') {
         this.friendList()
+        this.type = 0
+      }
+      else {
+        let data = {
+          nickname: payload.data.writerName,
+          id: payload.data.writerId
+        }
+        this.setChatFriend(data)
         this.type = 1
       }
       this.$toast.open({
