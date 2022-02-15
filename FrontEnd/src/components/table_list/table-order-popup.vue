@@ -5,17 +5,24 @@
       v-model="dialog"
       width="700"
     >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          fab
-          dark
-          color="#4DB6AC"
-          class="float-right" style="margin-right: 3vw;" v-on="on" v-bind="attrs"
-        >
-          <v-icon dark>
-            mdi-plus
-          </v-icon>
-        </v-btn>
+      <template v-slot:activator="{ on: dialog, attrs }">
+        <v-tooltip top :open-on-click="false" :open-on-focus="false">
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn
+              fab
+              dark
+              color="#4DB6AC"
+              class="float-right" style="margin-right: 1vw" 
+              v-bind="attrs"
+              v-on="{ ...tooltip, ...dialog }"
+            >
+              <v-icon dark>
+                mdi-plus
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>방 개설하기</span>
+        </v-tooltip>
       </template>
 
       <v-card class="p-2">

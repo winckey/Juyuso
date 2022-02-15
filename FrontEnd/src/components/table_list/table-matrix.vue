@@ -29,6 +29,7 @@
         </v-radio-group>
       </v-col>
       <v-col>
+        <TableEnterPopup />
         <TableOrderPopup />
       </v-col>
     </v-row>
@@ -59,13 +60,15 @@
 <script>
 import TableDetailPopup from '@/components/table_list/table-detail-popup.vue'
 import TableOrderPopup from '@/components/table_list/table-order-popup.vue'
+import TableEnterPopup from '@/components/table_list/table-enter-popup.vue'
 import api from '@/common/api'
 
 export default {
   name: 'TableMatrix',
   components:{
     TableOrderPopup,
-    TableDetailPopup
+    TableDetailPopup,
+    TableEnterPopup
   },
   data: function () {
     return {

@@ -2,7 +2,10 @@
   <div class="background-box"
   :style="{'background-image':'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
   <div class="m-3">
-    <h2 class="session-title">{{ roomInfo.meetingTitle }}</h2>
+    <h2 class="session-title">{{ roomInfo.meetingTitle }}
+      <RoomInfoMenu
+        :roomInfo="roomInfo"/>
+    </h2>
   </div>
     <div class="video-container" :style="videoBackground">
       <!-- 메뉴바 -->
@@ -312,6 +315,7 @@ import GamePopup from '@/components/game/game-popup.vue'
 import FilterPopup from '@/components/table/filter-popup.vue'
 import ThemePopup from '@/components/table/theme-popup.vue'
 import LeaveRoomPopup from '@/components/table/leave-room-popup.vue'
+import RoomInfoMenu from '@/components/table/room-info-menu.vue'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -331,7 +335,8 @@ export default {
     GamePopup,
     FilterPopup,
     ThemePopup,
-    LeaveRoomPopup
+    LeaveRoomPopup,
+    RoomInfoMenu
   },
   props: {
     roomInfo: Object,
@@ -513,6 +518,15 @@ export default {
       }
       this.messageInput=''
     },
+    copyJoinCode(joinCode) {
+      const joinCodeToCopy = document.createElement("textarea")
+      document.body.appendChild(joinCodeToCopy)
+      joinCodeToCopy.value = joinCode
+      joinCodeToCopy.select()
+      document.execCommand("copy")
+      alert('복사되었습니다')
+      joinCodeToCopy.style.display = 'none'
+    },
     changeVoice(){
       if(this.voiceChange == false){
         const pitchs = ['0.75', '0.77', '1.5', '1.6']
@@ -609,6 +623,8 @@ export default {
   .session-title {
     color: white;
     text-align: center;
+    position: relative;
+    z-index: 1;
   }
 
   .menu-bar {
