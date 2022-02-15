@@ -45,6 +45,11 @@
             </span>
           </v-card-title>
           <v-card-text>
+            <v-avatar
+              class="image-border"
+              size="36">
+              <v-img :src="userProfileImg"></v-img>
+            </v-avatar>
             방장 : {{ roomInfo.nickName }}
           </v-card-text>
           <v-chip
@@ -115,6 +120,9 @@ export default {
       ]
       let idx = Math.floor(Math.random() * 5)
       return imgList[idx]
+    },
+    userProfileImg: function () {
+      return `${process.env.VUE_APP_IMG_URL}/${this.roomInfo.userImg}`
     }
   },
   methods: {
@@ -180,5 +188,10 @@ export default {
 
   .table-image:hover {
     transform: scale(1.2);
+  }
+
+  .image-border {
+    box-shadow: 0 0 8px grey;
+    margin-right: 5px
   }
 </style>
