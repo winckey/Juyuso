@@ -98,8 +98,6 @@ export default {
     },
     created() {
         this.value = this.getTodayDate()
-
-        console.log('달력 mounted')
         axios.get(this.getUrl, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
@@ -128,7 +126,13 @@ export default {
     methods: {
         onChange(e) {
             const { year, month } = e
-            axios.get(`${process.env.VUE_APP_API_URL}/attendance/${year}/${month}`, {
+            
+            let url = `${process.env.VUE_APP_API_URL}/attendance/${year}/${month}`
+            if (this.isFriend) {
+                url = `${process.env.VUE_APP_API_URL}/attendance/${year}/${month}?friendId=${this.user.id}`
+            } 
+
+            axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
                 }
@@ -146,9 +150,10 @@ export default {
                 })
 
                 this.events = events
-            }).catch(err => {
-                console.log(err)
             })
+            // .catch(err => {
+            //     console.log(err)
+            // })
         },
         onBtnClick() {
             axios.post(`${process.env.VUE_APP_API_URL}/attendance`, {}, {
@@ -157,15 +162,16 @@ export default {
                 }
             }).then(() => {
                 this.events.push({
-                    name: '출석체크',
+                    name: '🍺출석완료🍺',
                     start: this.getTodayDate(),
                     color: '#4DB6AC'
                 })
 
                 this.todayChecked = true;
-            }).catch(err => {
-                console.log(err)
             })
+            // .catch(err => {
+            //     console.log(err)
+            // })
         },
         getTodayDate() {
             const date = new Date();

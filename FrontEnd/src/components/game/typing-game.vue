@@ -2,8 +2,9 @@
   <div>
     <audio class="correctAudio" src="@/assets/sound/correct.mp3"></audio>
     <audio class="nopeAudio" src="@/assets/sound/nope.mp3"></audio>
-    <v-row>
-      
+    <audio class="gameResult" src="@/assets/sound/game_result.mp3"></audio>
+    <v-row class="entire-box">
+      <img src="" alt="">
       <v-col cols="4">
         <div class="video-grid" :style="videoGrid">
           <user-video  :stream-manager="publisher"/>
@@ -49,39 +50,34 @@
                           내 점수: <span >{{ score }}</span>점
                       </div>
                   </div>
-                  <v-btn class="button" color="#4DB6AC" @click="beforeGame" v-if="this.typingGame.allPlaying===false">게임 시작</v-btn>
-                  <v-btn class="button" color="white" style="cursor:not-allowed" v-else>게임 진행 중</v-btn>
+                  <v-btn class="button" color="#4DB6AC" @click="beforeGame" v-if="!typingGame.allPlaying&& !typingGame.isEnd && !typingGame.isBefore">게임 시작</v-btn>
+                  <v-btn class="button" color="white" style="cursor:not-allowed" v-if="typingGame.allPlaying">게임 진행 중</v-btn>
+                  <v-btn class="button" color="white" style="cursor:not-allowed" v-if="typingGame.isBefore">대기 중</v-btn>
+                  <div class="d-flex flex-column" v-if="typingGame.isEnd">
+                    <v-btn class="button" color="#4DB6AC" @click="reset()">한판 더</v-btn>
+                    <v-btn class="button" @click="switchGameMode(undefined)">게임 종료</v-btn>
+                  </div>
           </v-card>
+    <div v-if="typingGame.isEnd"  class="celebration-box">
+        <v-card  class="p-3" width="300px">
+            <div class="d-flex flex-column align-items-center" style="text-align: center">
+                <h3>축하합니다</h3>
+                <img src="@/assets/basic_profile.png" width="100px" alt="celebrate" class="celebrate-img">
+                <hr>
+                <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님 덜 취했군요🧃</v-card-text>
+            </div>
+            <v-spacer></v-spacer>
+        </v-card>
+    </div>
       </v-col>
     </v-row>
-      <v-dialog v-model="typingGame.isEnd" width="400px"  >
-          <div>
-              <!-- <v-img src="@/assets/typing-game/celebrate.png"></v-img> -->
-              <v-card  class="p-3">
-                  <div class="d-flex flex-column" style="text-align: center">
-                      <h3>축하합니다</h3>
-                      <hr>
-                      <v-card-text style="font-size: 1.2rem">🧃{{typingGame.winner}}님의 승리입니다🧃</v-card-text>
-                  </div>
-                  <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                      color="green darken-1"
-                      text
-                      @click="typingGame.isEnd = false"
-                  >
-                      확인
-                  </v-btn>
-                  </v-card-actions>
-              </v-card>
-          </div>
-      </v-dialog>
+      
   </div>
   
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import UserVideo from '@/components/table/user-video.vue'
 import TypingGameScore from '@/components/game/typing-game-score.vue'
 
@@ -99,6 +95,7 @@ export default {
     return {
       correctAudio: null,
       nopeAudio: null,
+      gameResultSound: null, 
       wordDisplay: '시좍',
       wordInput: null,
       score: 0,
@@ -106,14 +103,14 @@ export default {
       timeInterval: null,
       members: [],
       scoreResultObject: {},
-      words: ['우리가좍', '요수 밤봐돠','샹숑가수', '최참판댁', '한양 양장점', '기린 그림', '난방 방법 변경 방법',
-      '내가 그린 기린 그림', '확률분포표', '홑겹창살', '참치꽁치찜', '김치참치꽁치치', '역전 석점슛',
-       '붕당정책 탕평책', '오마이갓김치', '왕밤빰', '영동 용봉탕', '게솰샥수핀', '경찰청 창살', '단팥맛 통찐빵',
-       '반품상품', '강력접착제', '브레드킹 김핑퐁', '하울의 무빙이 오지는 성', '깐 콩깍지', '금강산 정상',
-       '영월 칡국수', '공간감각 무감각', '팥죽깨죽', '스위스에서 온 스미스씨', '닥터페퍼','어 느새 부터 힙 합은 안 멋져'],
+      words: ['우리가좍!!', '요수 밤봐돠 말고 해운대','내가 기린 그린 기린', '최참판댁 뒤 김판참', '한양 양장점 앞', '기린 그림', '난방 방법 변경 방법', '도시 찹쌀 촌찹쌀', '오늘이 금요일이라면,,',
+      '내가 그린 기린 그림', '확률분포표', '홑겹창살', '참치꽁치찜', '김치참치꽁치치치', '역전 석점슛', 'dijkstra', 'bellman-ford', '커커커커커피 한 잔 plz',
+       '붕당정책 탕평책', '오마이갓김치', '왕밤빰', '영동 용봉탕', '게솰샥수핀', '경찰청 창살', '단팥맛 통찐빵', '설사vs변비', '한녀허름 소나기', 
+       '반품하려다 하지 않았쥐', '강력접착제', '브레드킹 김핑퐁', '하울의 무빙이 오지는 성', '깐 콩깍지', '얼죽아?ㄴㄴ', '떫디 떫은 왕떫은 감', '내 양말이 어허디히있나~',
+       '영월 칡국수', '공간감각 무감각', '팥죽깨죽', '스위스에서 온 스미스씨', '닥터페퍼 닥터페퍼','어! 느새, 부터 힙! 합은 안 멋져', '쑤쑤쑥떡이 먹고파'],
       typingGame: {
         type: 'Typing',
-        time: 20,
+        time: 30,
         countBeforeGame: 3,
         allPlaying: false,
         isBefore: false,
@@ -145,6 +142,8 @@ export default {
     this.nopeAudio = document.querySelector('.nopeAudio')
     this.correctAudio.volumne = 0.01
     this.nopeAudio.volumne = 0.1
+    this.gameResultSound = document.querySelector('.gameResult')
+    this.gameResultSound.volume = 0.2
     this.members = this.session.streamManagers.map(stream => {
       return {
         connectionId: stream.stream.connection.connectionId,
@@ -154,14 +153,14 @@ export default {
     for(let i=0; i<this.members.length; i++) {
       this.scoreResultObject[this.members[i].username] = 0
     } 
-    console.log('repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)')
   },
   methods: {
+    ...mapActions('openviduStore', ['switchGameMode']),
     check: function () {
       if (this.wordInput === this.wordDisplay) {
         this.correctAudio.play()
         this.score += 1
-        console.log(JSON.parse(this.publisher.stream.connection.data).clientData)
+        // console.log(JSON.parse(this.publisher.stream.connection.data).clientData)
         this.typingGame.scoreResultObject[JSON.parse(this.publisher.stream.connection.data).clientData] += 1
         this.wordInput = null
         this.changeWord()
@@ -195,7 +194,7 @@ export default {
       if (this.isPlaying) {
           this.typingGame = {
             type: 'Typing',
-            time: 20,
+            time: 30,
             allPlaying: true,
             isBefore: false,
             isEnd: false,
@@ -206,16 +205,13 @@ export default {
           }
           this.sendInfo()
       }
+      this.changeWord()
       this.timeInterval=setInterval(this.countDown, 1000)
 
     },
-      // else if (!this.isPlaying && this.typingGame.allPlaying) {
-      //   this.timeInterval=setInterval(this.countDown, 1000)
-      // }
     endGame: function () {
       this.isPlaying = false
       clearInterval(this.timeInterval)
-      console.log(this.typingGame)
       let winner = []
       let maxValue = 0
       for (let name in this.typingGame.scoreResultObject) {
@@ -230,33 +226,37 @@ export default {
       this.typingGame.isEnd = true
       this.typingGame.winner = winner[0]
       this.sendInfo()
-      console.log('repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)')
+      this.gameResultSound.play()
     },
     changeWord: function () {
       const index = Math.floor((Math.random() * this.words.length))
       this.wordDisplay = this.words[index]
     },
-    // reset: function () {
-       
-    //   console.log('reset')
-    //   console.log(this.scoreResultObject)
-    //   this.wordInput = null
-    //   this.score = 0
-    //   this.typingGame = {
-    //     type: 'Typing',
-    //     time: 20,
-    //     countBeforeGame: 3,
-    //     allPlaying: false,
-    //     isBefore: false,
-    //     isEnd: false,
-    //     scoreResult: [],
-    //     scoreResultObject: {},
-    //     members: [],
-    //     winner: null
-    //   }
-    //   this.sendInfo()
+    reset: function () {
+      this.score = 0
+      this.wordInput = null
+      this.wordDisplay = '시좍'
 
-    // },
+      for(let i=0; i<this.members.length; i++) {
+        this.scoreResultObject[this.members[i].username] = 0
+      } 
+
+      this.typingGame = {
+        type: 'Typing',
+        time: 30,
+        countBeforeGame: 3,
+        allPlaying: false,
+        isBefore: false,
+        isEnd: false,
+        scoreResult: [],
+        scoreResultObject: {},
+        members: [],
+        winner: null
+      }
+      
+      this.beforeGame()
+
+    },
     sendInfo: function () {
       this.session.signal({
         data: JSON.stringify(this.typingGame),
@@ -269,7 +269,6 @@ export default {
   watch: {
     gameInfo: function () {
       this.typingGame = {...JSON.parse(this.gameInfo)}
-      console.log(this.typingGame)
       if (!this.isPlaying && this.typingGame.allPlaying) {
         this.timeInterval=setInterval(this.countDown, 1000)
       }
@@ -284,11 +283,17 @@ export default {
 
 <style scoped>
 
+.entire-box {
+    height: 84vh;
+    width: 85vw;
+    position: relative;
+  }
+
 .typing-game {
   border: 2px solid #dadada;
   border-radius: 7px;
   width: 25vw;
-  height: 65vh;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center; 
@@ -317,7 +322,7 @@ export default {
 }
 
 .word-display {
-    margin-top: 3rem;
+    margin-top: 2rem;
     font-size: 2rem;
     color: #fff;
     text-shadow: 0 0 7px #fff, 0 0 42px #0fa;
@@ -327,8 +332,9 @@ export default {
 
 
 .word-input {
+    border-radius: 10px;
     padding: 0.5rem;
-    width: 250px;
+    width: 18vw;
 }
 
 .my-info {
@@ -336,12 +342,11 @@ export default {
     font-size: 1rem;
     display: flex;
     justify-content: space-between;
-    width: 250px;
+    width: 18vw;
 }
 
 .time, .score {
     font-size: 1.5rem;
-    /* color: white; */
     color: #fff;
     text-shadow: 0 0 21px #fff, 0 0 42px #0fa,
       0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
@@ -349,10 +354,11 @@ export default {
 
 
 .button {
-    width: 250px;
-    color: white;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    border-radius: 10px;
+    width: 18vw;
+    margin-top: 1.5vh;
+    margin-bottom: 2vh;
+    font-size: 1.2rem;
 }
 
 
@@ -361,9 +367,22 @@ export default {
   grid-template-columns: 28vw;
   grid-template-rows: repeat(6, 12vh);
   gap: 1vh;
+}
 
-  
-  
+.celebration-box {
+  z-index:2;
+  position: absolute;
+  top: 25%;
+  left: 40%;
+}
 
+.celebrate-img{
+  animation:motion 0.5s linear 0s infinite alternate; 
+  margin-top: 0;
+}
+
+@keyframes motion {
+	0% {margin-top: 0px;}
+	100% {margin-top: 5px;}
 }
 </style>

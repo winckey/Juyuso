@@ -183,7 +183,7 @@ export default {
                         this.isSuccess=true
                         this.isAlert = false
                         this.nowPassword = ''
-                        console.log(res.data.user)
+                        // console.log(res.data.user)
                         this.userUpdate(res.data.user)
                         })
                         .catch(err => {

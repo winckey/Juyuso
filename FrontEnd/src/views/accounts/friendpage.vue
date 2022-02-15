@@ -84,13 +84,13 @@ export default {
         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
         .then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           this.friend = res.data.friend
           
         })
-        .catch(err => {
-          console.log(err)
-        })
+        // .catch(err => {
+        //   console.log(err)
+        // })
     },
     computed: {
       imgUrl: function (){

@@ -89,9 +89,9 @@ export default {
       .then(res => {
         this.blockedFriends = res.data.bans
       })
-      .catch(err =>{
-        console.log(err)
-      })
+      // .catch(err =>{
+      //   console.log(err)
+      // })
   }
 }
 </script>

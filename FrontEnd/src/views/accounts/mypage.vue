@@ -30,7 +30,6 @@
           
           </div>
           <div class="profile-edit-popup my-2">
-            <!-- <ProfileEditPopup :user ="user" v-if="user"/> -->
             <ProfileEditPopup :user ="user" v-if="user" @changeProfileImage="changeProfileImage"/>
 
           </div>
@@ -95,7 +94,7 @@ export default {
       this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
     },
     changeProfileImage: function (image) {
-      console.log('mypage 이미지')
+      // console.log('mypage 이미지')
       this.imgUrl = `${process.env.VUE_APP_IMG_URL}/${image}`
     }
    
@@ -110,9 +109,9 @@ export default {
         const userInfo = res.data.user
         this.user = userInfo
       })
-      .catch(err=> {
-        console.log(err)
-      })
+      // .catch(err=> {
+      //   console.log(err)
+      // })
   },
   computed: {
     imgUrl: function () {
