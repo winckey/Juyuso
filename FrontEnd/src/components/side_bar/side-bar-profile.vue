@@ -13,7 +13,7 @@
           </div>
           <div>
             <v-list-item-content>
-              <v-list-item-title class="fs-3 mb-1">
+              <v-list-item-title class="mb-1 item-title">
                 <p>{{ user.nickname }}</p>
               </v-list-item-title>
               <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
@@ -107,7 +107,7 @@ export default {
       if (this.user.img) {
         return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
       } else {
-        return require('@/assets/chat.png')
+        return require('@/assets/basic_profile.png')
       }
     }
   }
@@ -130,4 +130,7 @@ export default {
     float: right;
     text-align: right;
 } */
+.item-title{
+  font-size: 20px;
+}
 </style>
