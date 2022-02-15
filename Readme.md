@@ -237,7 +237,7 @@
 
 ## :desktop_computer: 사용된 기술
 
-![TechStack](https://user-images.githubusercontent.com/19357410/100544132-062d1380-3297-11eb-832e-9e1dd8f8da13.png)
+![TechStack](/img/stack.png)
 
 **[ BACK END ]**
 
