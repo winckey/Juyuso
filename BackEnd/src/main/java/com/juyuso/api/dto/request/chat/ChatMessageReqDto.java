@@ -6,20 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageReqDto {
-    @NotBlank
+    @NotNull
     private String chatRoomId;
-    @NotBlank
+    @NotNull
     private String writerId;
-    @NotBlank
+    @NotNull
     private String writerName;
-    @NotBlank
+    @NotNull
     private String message;
-    @NotBlank
+    @NotNull
     private String receiverId;
 }
