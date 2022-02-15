@@ -22,7 +22,7 @@ export default {
     },
     computed: {
         nowScore: function () {
-            return {'left':`${this.score/6*100}%`}
+            return {'left':`${this.score/7*100}%`}
         }
     }
 
