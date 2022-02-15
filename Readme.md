@@ -309,7 +309,7 @@
 
 ### 1. 로그인 화면
 
-![login](/img/login.png)
+![](https://images.velog.io/images/upgrademarine5/post/6d65788e-11e3-48f5-9466-783c75e140d9/image.png)
 
 #### 1-1. 로그인 화면
 
@@ -317,7 +317,8 @@
 
 ---
 
-### 2. 테이블 화면
+### 2. 테이블 목록화면
+![](https://images.velog.io/images/upgrademarine5/post/7ec86d50-b97d-4dcd-981b-cf0ceaa43ccc/image.png)
 
 #### 2-1. 테이블 화면
 
@@ -344,79 +345,161 @@
 
 ---
 
-### 3. 사이드 바
+### 3. 마이페이지
 
-#### 3-1. 사이드 바
+#### 3-1. 마이페이지 화면
+
+![](https://images.velog.io/images/upgrademarine5/post/078e48c6-5c2e-4d91-821f-05b1f9c2951a/image.png)
+
+* **[프로필수정] :** 자신의 프로필이미지 및 정보를 수정할 수 있다.
+* **[비밀번호 변경] :** 자신의 비밀번호를 수정할 수 있다.
+* **[차단친구 관리] :** 자신이 차단한 사용자 목록을 보여준다.
 
 
+#### 3-2. 마이데이터 화면
 
-* **[개인정보] :** 자신의 간단한 개인정보를 볼수 있다.
-* **[마이페이지 클릭시] :** 개인정보를 수정할수 있는 마이페이지로 이동한다.
-* **[로그아웃 클릭시] :** 로그아웃 되며 로그인 페이지로 이동한다.
-* **[사람모양 클릭시] :** 친구리스트를 볼수 있다.
-* **[말풍선모양 클릭시] :** 현재 대화상대와의 대화창으로 이동.
-* **[돋보기 모양 클릭시] :** 친구검색창으로 이동.
+![](https://images.velog.io/images/upgrademarine5/post/7d7ba9e2-55d4-45f4-b202-1994d5d96c1a/image.png)
 
+
+* **[주량기록보기] :** 자신이 방에 접속하여 마신 주량을 나타낼 수 있다.
+* **[오늘주량추가] :** 대면 술자리에서 마신 주량을 직접 기록할 수 있다.
 ---
 
-#### 3-2. 친구리스트
+#### 3-3. 캘린더 화면
+![](https://images.velog.io/images/upgrademarine5/post/4d655189-820c-4048-8478-03513dece834/image.png)
 
 
-
-* **[친구리스트] :** 현재 친구와 친구 신청 리스트를 보여준다.
-* **[친구를 클릭시] :** 친구의 프로필 정보 또는 대화신청등의 기능을 실행할 수 있다.
+* **[출석체크] :** 출석체크를 통해 자신이 접속한 날짜를 알수 있다.
 ---
 
-#### 3-3. 1대1 대화창
 
+### 4. 사이드바
 
-* **[대화창] :** 대화창에서 지금까지 상대와 대화한 목록을 볼 수 있고 상대방과의 실시간 채팅을 할수 있다.
----
-#### 3-4. 검색창
+#### 4-1. 1:1채팅
+![](https://images.velog.io/images/upgrademarine5/post/6980e669-7941-44b3-a1b0-103c004581bb/image.png)
 
-* **[검색어 입력] :** 해당 닉네임을 가진 사용자들을 검색하며 친구가 아닐경우 친구 신청을 할 수 있다.
----
-
-### 4. 마이페이지
-
-#### 4-1. 마이페이지
-
-
-
-* **[마이페이지] :** 자신의 프로필 정보를 확인 및 수정할 수 있다.
-* **[마이데이터 클릭시] :** 자신의 음주 기록페이지로 이동한다.
-* **[캘린더 클릭시] :** 자신의 출석정보페이지로 이동한다.
-* **[차단친구 관리] :** 자신이 차단한 친구를 확인 할 수 있다.
+* **[채팅] :** 친구와 1:1 채팅을 할수 있다.
 ---
 
-#### 4-1. 마이페이지
+#### 4-2. 친구목록
+![](https://images.velog.io/images/upgrademarine5/post/6e8f1bc9-6743-46d3-b59a-8e095bc79bcf/image.png)
 
 
 
-* **[마이페이지] :** 자신의 프로필 정보를 확인할 수 있다.
-* **[마이데이터 클릭시] :** 자신의 음주 기록페이지로 이동한다.
-* **[캘린더 클릭시] :** 자신의 출석정보페이지로 이동한다.
-* **[차단친구 관리] :** 자신이 차단한 친구를 확인 할 수 있다.
+* **[프로필 보기] :** 자신의 친구의 프로필 정보를 볼수있다.
+* **[채팅하기] :** 친구와 1:1 채팅을 할수있다.
+* **[친구삭제] :** 자신의 친구목록에서 삭제를 한다.
+* **[차단] :** 친구목록에서 제거한후 차단목록에 추가한다.
 ---
 
-#### 4-2. 마이데이터
+#### 4-3. 사용자찾기
+![](https://images.velog.io/images/upgrademarine5/post/5586cd7d-97bb-4ede-abd8-15647775d251/image.png)
 
 
 
-* **[마이데이터] :** 자신의 음주 기록과 간단한 코멘트를 확인할 수 있다.
-* **[오늘 주량 추가] :** 어플리케이션 외에서 마신 주량을 기록할 수 있다.
-
----
-
-#### 4-3. 캘린더
-
-
-
-* **[출석] :** 출석체크 및 자신의 출석 현황을 파악할 수 있다.
+* **[사용자 검색] :** 닉네임을 검색하여 사용자를 찾을수 있다.
 
 ---
 
 
+
+### 5. 술게임 시작.
+
+#### 5-1. 일대일 채팅
+
+<img src="https://user-images.githubusercontent.com/19357410/100543962-1c869f80-3296-11eb-8d9b-342b48349992.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543963-1d1f3600-3296-11eb-9a7c-782bb19479fd.jpg" width="30%">
+
+* **[일대일 채팅] :** 팔로우한 유저의 온라인 접속 상태가 보이며 온라인인 유저와 실시간으로 채팅한다.
+
+---
+
+#### 5-2. 매칭
+
+<img src="https://user-images.githubusercontent.com/19357410/100543929-0d9fed00-3296-11eb-8ca0-1e0df7388ee6.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543930-0f69b080-3296-11eb-929b-1c1e3bc5fb1b.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543932-0f69b080-3296-11eb-83d0-83adcb3e1959.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543933-10024700-3296-11eb-934f-9b131c543022.jpg" width="30%">
+
+* **[일대일 채팅 밑 매칭 클릭 시] :** 일대일 채팅의 온라인 및 오프라인 유저의 목록 하단 매칭 버튼 클릭 시 경험치에 따른 유저를 매칭해준다.
+* **[매칭 시스템] :** 성별을 선택 후 원하는 러너를 선택해 팔로우한 다음 일대일 채팅을 시작한다.
+
+---
+
+### 6. 지역 채팅
+
+#### 6-1. 지역 채팅
+
+<img src="https://user-images.githubusercontent.com/19357410/100543934-11337400-3296-11eb-93df-4bb018129209.jpg" width="30%">
+
+* **[지역 채팅] :** 원하는 지역을 선택 시 해당 지역에서 여러 유저와 실시간으로 채팅한다.
+
+---
+
+### 7. 챌린지 페이지
+
+#### 7-1. 챌린지 페이지
+
+<img src="https://user-images.githubusercontent.com/19357410/100543935-1264a100-3296-11eb-95db-bd848289a472.jpg" width="30%">
+
+* **[챌린지 페이지] :** 상단의 보유 마일리지가 표시되고, 현재 진행중, 진행 예정, 종료된 챌린지를 확인한다.
+
+---
+
+#### 7-2. 챌린지 상세
+
+<img src="https://user-images.githubusercontent.com/19357410/100543936-12fd3780-3296-11eb-9392-7269ed244161.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543937-12fd3780-3296-11eb-8ea9-7c279b4bfeff.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/33771279/100744077-964a9480-3420-11eb-995d-97c2903c193d.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/19357410/100543938-1395ce00-3296-11eb-8479-a79389bf8ff3.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543939-142e6480-3296-11eb-9db2-4ed86ddb56f1.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543941-142e6480-3296-11eb-907b-b69543697523.jpg" width="30%">
+
+* **[챌린지 클릭 시] :** 챌린지 클릭 시 해당 챌린지의 상세 정보를 확인하고, 신청 버튼을 통해 챌린지에 참여한다.
+* **[챌린지 신청 버튼 클릭 시] :** 챌린지 신청 버튼 클릭 시 챌린지 참여 페이지로 넘어가며, 기부 금액을 설정해 참여한다. 이 때, 기부 금액은 0원을 설정해도 참여가 가능하며, 해당 금액은 미리 충전된 마일리지에서 차감된다.
+* **[충전하기 버튼 클릭 시] :** 충전하기 버튼을 클릭 시, [마이페이지]-[마일리지 충전] 탭으로 전환되며 카카오페이를 통해 충전이 가능하다.
+
+---
+
+### 8. 챌린지 제안
+
+#### 8.1 챌린지 제안
+
+<img src="https://user-images.githubusercontent.com/33771279/100743407-98f8ba00-341f-11eb-9757-517c487ae721.PNG" width="30%">  <img src="https://user-images.githubusercontent.com/33771279/100743427-9e560480-341f-11eb-99bc-94b88b1b6654.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743445-a2822200-341f-11eb-8396-e8c922af8ecc.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743436-a0b85e80-341f-11eb-809b-63bbd62e7a9a.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743434-9f873180-341f-11eb-8684-ec48e036a39f.PNG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100743430-9e560480-341f-11eb-875b-d814ff91a8aa.PNG" width="30%">
+
+* **[챌린지 제안] :** 유저가 관리자에게 챌린지를 제안한다.
+
+---
+
+#### 8.2 챌린지 관리 페이지
+
+<img src="https://user-images.githubusercontent.com/19357410/100543945-15f82800-3296-11eb-89fe-b7faf669e5e0.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543947-1690be80-3296-11eb-9e8a-89af452253e0.JPG" width="30%"> <img src="https://user-images.githubusercontent.com/33771279/100744077-964a9480-3420-11eb-995d-97c2903c193d.PNG" width="30%">
+
+* **[챌린지 관리 페이지] :** 챌린지 관리 페이지는 관리자 등급만 확인 가능하며, 챌린지 생성, 삭제, 수정이 가능하다.
+
+---
+
+### 9. 러닝 기록 조회
+
+#### 9-1. 러닝 기록 조회
+
+<img src="https://user-images.githubusercontent.com/19357410/100543948-17295500-3296-11eb-8d14-165996f4ae60.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543949-17295500-3296-11eb-8a84-4eb34aac749e.JPG" width="30%">
+
+* **[러닝 기록 조회] :** 본인의 모든 러닝 기록을 조회한다. 하단에서 러닝 기록을 클릭 시, 지도에 러닝 경로가 표시된다.
+* **[활동 지역 러닝 기록 조회] :** 본인이 설정한 활동 지역 러닝 기록을 조회한다. 하단에서 러닝 기록을 클릭 시, 지도에 러닝 경로가 표시된다.
+* **[러닝 기록 클릭 시] :** 러닝 상세 페이지로 이동한다.
+
+---
+
+### 10. 팔로우 목록
+
+#### 10-1. 팔로우 목록 조회
+
+<img src="https://user-images.githubusercontent.com/19357410/100543950-17c1eb80-3296-11eb-99b0-9f415388e0dd.JPG" width="30%">
+
+* **[팔로우 목록 조회] :** 팔로워의 간단한 정보와, 말풍선 아이콘을 클릭 시 일대일 채팅으로 이동하며, 엑스 아이콘을 클릭 시 팔로우를 취소한다.
+
+---
+
+### 11. 유저 정보 수정
+
+#### 11-1. 유저 정보 수정
+
+<img src="https://user-images.githubusercontent.com/19357410/100543951-185a8200-3296-11eb-9472-75905c604228.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543952-18f31880-3296-11eb-94de-1cb7ac9e91c6.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543954-198baf00-3296-11eb-8438-a602935e4f9e.JPG" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543957-1a244580-3296-11eb-9d21-354d7693f06c.JPG" width="30%">
+
+* **[유저 정보 수정] :** 유저 정보를 수정하거나 탈퇴한다.
+* **[유저 프로필 수정] :** 유저 프로필을 수정한다.
 
 ---
 
@@ -424,6 +507,12 @@
 
 ![일정](https://user-images.githubusercontent.com/19357410/100542772-7d5ea980-328f-11eb-806c-4bd76138aa1e.png)
 
-## 👤 저자
+## 🙏 저자
 
+* 장현진 - Daeyong Kim @[imdaeyong](https://github.com/imdaeyong) [Back]
+* 박대언 - Soonbeen Kim @[soo-ni](https://github.com/soo-ni) [Back]
+* 양석조 - Hyungtaik Kim @[hyungtaik](https://github.com/hyungtaik) [Back]
+* 성아영 - Sunsoo Lee @[LEESUNSOO](https://github.com/LEESUNSOO) [Front]
+* 박수아 - Soohyun Jeon @[soohyun0907](https://github.com/soohyun0907) [Front]
+* 박신영 - Soohyun Jeon @[soohyun0907](https://github.com/soohyun0907) [Front]
 
