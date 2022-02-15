@@ -117,30 +117,23 @@
               <v-row>
                 <v-col
                   v-for="n in 4"
-                  :key="n.imgName"
+                  :key="n"
                   md="3"
                 >
-                  <v-item v-slot="{ active, toggle }">
+                  <v-item v-slot="{ toggle }">
                     <v-card
-                      :color="active ? 'red' : ''"
-                      class="d-flex align-center"
+                      class="d-flex justify-content-center align-center theme-card"
                       dark
                       height="100"
                       width="200"
                       @click="[toggle(), selectTheme(n)]"
+                      :style="[backgroundToggle(n)]"
                     >
-                    
-                      <img :src="require(`@/assets/theme/${n}.jpg`)" alt="theme"
-                      height="100"
-                      width="200"
-                      :color="active ? 'red' : ''">
-                      <v-scroll-y-transition>
-                        <div
-                          v-if="active"
-                          class="text-h2 flex-grow-1 text-center"
-                        >
-                        </div>
-                      </v-scroll-y-transition>
+                      <div>
+                        <v-icon size=100 color="#1CFD9F" v-if="n==roomInfo.img">
+                          mdi-check
+                        </v-icon>
+                      </div>
                     </v-card>
                   </v-item>
                 </v-col>
@@ -148,13 +141,12 @@
             </v-item-group>
           </v-container>
         </v-form>
-        <!-- <v-divider></v-divider> -->
         <v-card-actions class="d-flex justify-content-center m-2">
           <v-btn
             color="#4DB6AC"
             dark
             rounded
-            @click="createRoom"
+            @click="[dialog=false, createRoom()]"
             style="font-size: 1.2rem"
           >
             테이블 예약하기
@@ -200,10 +192,10 @@ export default {
           v => !!v || "방이름을 입력해주세요."
         ],
         passwordRule: [
-          v => !(this.isSecret && v) || "비밀방 비밀번호를 입력해주세요."
+          v => !!(this.isSecret && v) || "비밀방 비밀번호를 입력해주세요."
         ],
         passwordConfirmationRule: [
-          v => !(this.isSecret && v == this.roomInfo.meetingPassword) || "비밀번호가 일치하지 않습니다."
+          v => !!(this.isSecret && v == this.roomInfo.meetingPassword) || "비밀번호가 일치하지 않습니다."
         ],
         hastagRule: [
           v => !/.+\s.+/.test(v) || '해시태그는 공백을 포함할 수 없습니다.',
@@ -253,7 +245,8 @@ export default {
       'setTheme',
     ]),
     addHastag: function () {
-      console.log(this.$refs.tableOrderForm.validate())
+      console.log(this.$refs.tableOrderForm)
+
       if (this.$refs.tableOrderForm.validate() && this.hashtagInput != '') {
         this.roomInfo.hashTag.push(this.hashtagInput)
         this.hashtagInput = ''
@@ -265,6 +258,14 @@ export default {
     selectTheme: function (num) {
       this.roomInfo.img = num
       console.log(this.roomInfo.img)
+    },
+    backgroundToggle(theme) {
+      if (this.roomInfo.img == theme) {
+        return { backgroundImage: 'linear-gradient( rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5) ), '+ 'url(' + require(`@/assets/theme/${theme}.jpg`) + ')' }
+      }
+      else {
+        return { backgroundImage: 'url(' + require(`@/assets/theme/${theme}.jpg`) + ')' }
+      }
     },
     createRoom: function () {
       if (this.$refs.tableOrderForm.validate()) {
@@ -289,6 +290,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .theme-card {
+    background-size: cover;
+  }
 </style>
