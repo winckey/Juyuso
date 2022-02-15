@@ -15,6 +15,8 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import NavBar from '@/components/nav-bar.vue'
+import { getFcmToken } from '@/common/util'
+
 const accounts = 'accounts'
 
 export default {
@@ -22,22 +24,20 @@ export default {
   components: {
     NavBar
   },
-  data: () => ({
-    //
-  }),
   methods: {
-    ...mapActions('accounts', [
-      'userUpdate'
-    ]),
-    ...mapActions('openviduStore', [
-      'initSession'
-    ])
+    ...mapActions('openviduStore', ['initSession']),
+    ...mapActions('accounts', ['setFcmToken'])
   },
   computed: {
     ...mapState(accounts, ['isLogin', 'user'])
   },
-  mounted: function () {
+  mounted() {
     this.isLogin ? this.initSession(this.user) : null
+    /* firebase fcm token 스토어에 저장 */
+    getFcmToken().then(token => {
+      token && this.setFcmToken(token);
+      console.log('App.vue get fcm token!!', token);
+    })
   }
 };
 </script>

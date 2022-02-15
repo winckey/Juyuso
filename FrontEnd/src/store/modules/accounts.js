@@ -8,6 +8,7 @@ const accounts = {
     user: null,
     token: {
       accessToken: jwt.getToken(),
+      fcmToken: null,
     },
     isLogin: !!jwt.getToken(),
   },
@@ -15,6 +16,7 @@ const accounts = {
     getUser: (state) => state.user,
     getIsLogin: (state) => state.isLogin,
     getAccessToken: (state) => state.token.accessToken,
+    getFcmToken: (state) => state.token.fcmToken,
   },
   mutations: {
     LOGIN: (state, payload = {}) => {
@@ -32,13 +34,17 @@ const accounts = {
       state.isLogin = false
       state.user = null
       jwt.destroyToken()
+    },
+    SET_FCM_TOKEN: (state, payload) => {
+      state.token.fcmToken = payload
     }
   },
   actions: {
-    login: (context, { id, password, fcmToken }) => new Promise((resolve, reject) => {
+    login: (context, { id, password }) => new Promise((resolve, reject) => {
       api
         .post('/users/login', {
-          id, password, fcmToken
+          id, password,
+          fcmToken: context.getters['getFcmToken']
         })
         .then(response => {
           const { data } = response
@@ -52,10 +58,11 @@ const accounts = {
         })
         .catch(error => reject(error))
     }),
-    loginKakao: (context, { id, fcmToken }) => new Promise((resolve, reject) => {
+    loginKakao: (context, { id }) => new Promise((resolve, reject) => {
       api
         .post('/users/social/kakao/login', {
-          id, fcmToken
+          id,
+          fcmToken: context.getters['getFcmToken']
         })
         .then(response => {
           const { data } = response
@@ -65,6 +72,14 @@ const accounts = {
             user: data.user,
           })
 
+          resolve(response)
+        })
+        .catch(error => reject(error))
+    }),
+    signup: (context, payload) => new Promise((resolve, reject) => {
+      api
+        .post('/users', payload)
+        .then(response => {
           resolve(response)
         })
         .catch(error => reject(error))
@@ -77,7 +92,10 @@ const accounts = {
         commit('LOGOUT')
         resolve({})
       }, 500)
-    })
+    }),
+    setFcmToken: ({ commit }, payload) => {
+      commit('SET_FCM_TOKEN', payload)
+    }
   }
 }
 

@@ -53,15 +53,15 @@ const firebaseConfig = {
 }
 firebase.initializeApp(firebaseConfig)
 firebase.messaging()
-const messaging  = firebase.messaging()
-messaging.onBackgroundMessage((payload) => {
-    console.log("tesing sevice worker")
-    // Customize notification here
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-      body: payload.notification.body,
-    };
+// const messaging  = firebase.messaging()
+// messaging.onBackgroundMessage((payload) => {
+//     console.log("tesing sevice worker")
+//     // Customize notification here
+//     const notificationTitle = payload.notification.title;
+//     const notificationOptions = {
+//       body: payload.notification.body,
+//     };
   
-    self.registration.showNotification(notificationTitle,
-      notificationOptions);
-  });
+//     self.registration.showNotification(notificationTitle,
+//       notificationOptions);
+//   });

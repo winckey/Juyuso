@@ -111,6 +111,7 @@
               :rules="rules.phoneRule"
               label="휴대전화"
               v-model="credentials.phone"
+              hint="숫자만 입력하세요 (13자리)"
               @input="onPhoneChange"
             ></v-text-field>
           </v-row>
@@ -119,7 +120,7 @@
           <v-btn to="/login" class="mr-3" color="grey" dark rounded>
             취소
           </v-btn>
-          <v-btn @click="signup" color="#4DB6AC" dark rounded>
+          <v-btn @click="onSignup" color="#4DB6AC" dark rounded>
             회원가입
           </v-btn>
         </span>
@@ -129,6 +130,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import api from '@/common/api'
 import { phoneFormatter } from '@/common/util'
 
@@ -171,7 +173,7 @@ export default {
       rules: {
         emailRule: [
           v => !!v || '이메일을 입력해주세요.',
-          v => /.+@.+/.test(v) || '이메일 형식에 맞지않습니다.',
+          v => /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(v) || '이메일 형식에 맞지 않습니다.',
         ],
         passwordRule: [
           v => !!v || "비밀번호를 입력해주세요.",
@@ -192,14 +194,15 @@ export default {
           v => !!v || "지역을 입력해주세요."
         ],
         phoneRule: [
-          v => !!v || "휴대전화 번호를 입력해주세요."
+          v => !!v || "휴대전화 번호를 입력해주세요.",
+          v => /^010-?([0-9]{4})-?([0-9]{4})$/.test(v) || "13자리의 휴대전화 번호를 (숫자만) 입력하세요."
         ],
       }
     }
   },
   watch: {
     'credentials.nickname'(v) {
-      if (v == '' || !v.trim()) {
+      if (v == null || v == '' || !v.trim()) {
         this.errors.nickname = ["닉네임을 입력해주세요."];
         this.isValid.nickname = false;
       } else if (v && v.length > 10) {
@@ -218,7 +221,7 @@ export default {
       }
     },
     'credentials.id'(v) {
-      if (v == '' || !v.trim()) {
+      if (v == null || v == '' || !v.trim()) {
         this.errors.id = ["아이디를 입력해주세요."];
         this.isValid.id = false;
       }
@@ -240,18 +243,20 @@ export default {
     },
   },
   methods: {
+    ...mapActions('accounts', ['signup', 'login']),
+    ...mapActions('openviduStore', ['initSession']),
     makeToast(message) {
       this.$toast.open({
-        position: 'top',
+        position: 'bottom',
         message,
         type: 'error',
-        duration: 2500,
+        duration: 2000,
       });
     },
     onPhoneChange() {
       this.credentials.phone = phoneFormatter(this.credentials.phone)
     },
-    signup() {
+    onSignup() {
       const validateCheck = this.$refs.signupForm.validate()
       if (!this.isValid.id) {
         this.makeToast('아이디를 다시 입력하세요.');
@@ -260,12 +265,32 @@ export default {
       } else if (!validateCheck) {
         this.makeToast('가입 양식을 다시 한 번 확인해주세요.');
       } else {
-        api.post('/users', this.credentials)
+        this.signup(this.credentials)
           .then(() => {
-            // 완료 메시지 띄운 이후 로그인 창으로 이동하기
-            this.$router.replace({ name: 'Login' })
-          }
-        )
+            this.$toast.open({
+              position: 'bottom',
+              message: '가입이 완료되었습니다!',
+              type: 'success',
+              duration: 1500,
+            });
+            /* 가입 완료 후, 바로 로그인 */
+            this.login({
+              id: this.credentials.id,
+              password: this.credentials.password
+            }).then(response => {
+              const {
+                status,
+                data: {
+                  user
+                }
+              } = response;
+
+              if (status == 200) {
+                this.initSession(user);
+                this.$router.replace({ name : 'Main' });
+              }
+            })
+          }).catch(error => console.log(error.response))
       }
     },
   }
