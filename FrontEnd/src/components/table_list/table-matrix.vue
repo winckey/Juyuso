@@ -14,17 +14,17 @@
           <v-radio
             label="전체"
             value="0"
-            color="#00692a"
+            color="#4DB6AC"
           ></v-radio>
           <v-radio
             label="공개방"
             value="1"
-            color="#00692a"
+            color="#4DB6AC"
           ></v-radio>
           <v-radio
             label="비밀방"
             value="2"
-            color="#00692a"
+            color="#4DB6AC"
           ></v-radio>
         </v-radio-group>
       </v-col>
@@ -48,7 +48,7 @@
         :length="totalPage"
         :total-visible="7"
         class="my-2"
-        color="#00692a"
+        color="#4DB6AC"
         circle
         @input="getTableList"
       />
