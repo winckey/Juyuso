@@ -46,7 +46,8 @@
         <v-divider></v-divider>
         <v-card-actions class="mt-5 d-flex justify-content-center">
           <v-btn
-            color="#1CFD9F"
+            color="#4DB6AC"
+            dark
             rounded
             @click="enterRoom"
           >
