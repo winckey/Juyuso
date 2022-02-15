@@ -142,9 +142,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void banCancelRequest(User userDetails, FriendReqDto friendReqDto) {
-        Long from = friendReqDto.getId();
-        Long to = userDetails.getId();
-        banRepository.deleteByBothUserId(from, to);
+        Long banUserId = friendReqDto.getId();
+        Long UserId = userDetails.getId();
+        banRepository.deleteByUserIdAndBanUserId(UserId, banUserId);
     }
 
     @Override
