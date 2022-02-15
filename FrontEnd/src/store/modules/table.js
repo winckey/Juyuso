@@ -6,19 +6,19 @@ const table = {
     themeNum:'1',
     themeColor: {
       1: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#815927',
         textColor: '#000000'
       },
       2: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#fabcac',
         textColor: '#000000'
       },
       3: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#1a84b2',
         textColor: '#000000'
       },
       4: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#b9a5ca',
         textColor: '#000000'
       },
     }
@@ -27,17 +27,18 @@ const table = {
   mutations: {
     SET_THEME : function(state, data){
         state.themeNum = data
-        console.log('state:',data)
+        console.log('state:',state)
     }
   },
   actions: {
-    setTheme : function({state}, themeimgName){
-      console.log(state)
-      console.log('commit :',themeimgName)
+    setTheme : function({ commit }, themeNum){
+      commit('SET_THEME', themeNum)
+      console.log('commit :',themeNum)
     }
   },
   getters: {
     getBackgroudColor (state) {
+      console.log(state)
       return state.themeColor[state.themeNum].backgroundColor
     },
     getTextColor (state) {

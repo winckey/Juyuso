@@ -94,7 +94,7 @@ export default {
       'changeDialog'
     ]),
     goToTableList: function() {
-      this.$router.push({ name: 'TableList' })
+      this.$router.push({ name: 'TableList' }).catch(()=>{})
     },
     friendsSearch: function(){
       if (this.searchInput != null) {
