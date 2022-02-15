@@ -265,7 +265,7 @@ export default {
     },
   
     uploadImage: function () {
-      console.log(this.profileImg.size)
+      // console.log(this.profileImg.size)
       const image = new FormData()
       image.append('img', this.profileImg)
       if (this.profileImg.size < 630000) {
@@ -280,11 +280,11 @@ export default {
               this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
               this.$emit('changeProfileImage', res.data.imgUrl)
             })
-            .catch(err => {
-              console.log(err)
-            })
+            // .catch(err => {
+            //   console.log(err)
+            // })
       } else {
-        console.log(this.profileImg.size)
+        // console.log(this.profileImg.size)
         this.alertMessage = "이미지 크기가 용량을 초과했습니다!"
         this.isAlert = true
         setTimeout(() => this.isAlert=false, 3000)
@@ -309,9 +309,9 @@ export default {
           setTimeout(() => this.isAlert=false, 3000)
         }
       })
-      .catch(err => {
-        console.log(err)
-      })
+      // .catch(err => {
+      //   console.log(err)
+      // })
     }
   }
 }

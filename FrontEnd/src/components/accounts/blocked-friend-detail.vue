@@ -52,9 +52,9 @@ export default {
                     this.isBlocked = false
                     this.blockFriendList()
                 })
-                .catch(err => {
-                    console.log(err)
-                })
+                // .catch(err => {
+                //     console.log(err)
+                // })
         },
         block: function () {
             axios({
@@ -70,9 +70,9 @@ export default {
                     this.isBlocked = true
                     this.blockFriendList()
                 })
-                .catch(err => {
-                    console.log(err)
-                })
+                // .catch(err => {
+                //     console.log(err)
+                // })
         }
     }
 }

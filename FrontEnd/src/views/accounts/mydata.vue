@@ -122,9 +122,9 @@ export default {
       .then(res => {
         this.date = res.data
       })
-      .catch(err => {
-        console.log(err)
-      })
+      // .catch(err => {
+      //   console.log(err)
+      // })
 
   }
 }
