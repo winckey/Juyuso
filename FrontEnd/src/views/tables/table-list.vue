@@ -2,7 +2,7 @@
   <v-row class="table-list"
     :style="{ backgroundImage: 'url(' + require(`@/assets/main_theme.png`) + ')'}">
     <!-- 방 목록 -->
-    <table-matrix class="pa-16" />
+    <table-matrix class="px-16 py-8" />
   </v-row>
 </template>
 
@@ -19,7 +19,6 @@ export default {
 
 <style scoped>
   .table-list {
-    padding-top: 64px;
     background-attachment: fixed;
     background-size : cover;
   }

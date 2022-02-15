@@ -34,9 +34,11 @@ export default {
     ])
   },
   computed: {
-    ...mapState(accounts, ['isLogin'])
+    ...mapState(accounts, ['isLogin', 'user'])
   },
-
+  mounted: function () {
+    this.isLogin ? this.initSession(this.user) : null
+  }
 };
 </script>
 <style scoped>

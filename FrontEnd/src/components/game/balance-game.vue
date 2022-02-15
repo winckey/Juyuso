@@ -8,8 +8,11 @@
     <div>
       <v-row>
         <v-col>
-          <user-video class="col-md-12" style="height: 28vh" :stream-manager="publisher"/>
-          <user-video style="height:28vh" class="col-md-12" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+          <user-video class="col-md-12" style="height: 25vh" :stream-manager="publisher"/>
+          <div v-for="sub in subscribers.length" :key="sub"> 
+            <user-video v-if="(sub-1) % 2 != 0" style="height:25vh;" class="col-md-12" :stream-manager="subscribers[sub-1]"/>
+          </div>
+          <!-- <user-video style="height:28vh" class="col-md-12" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/> -->
         </v-col>
         <v-col cols="4">
           <div class="balance-game">
@@ -21,20 +24,6 @@
                     <v-btn @click="[gameStart(),makeRandomNum()]" :disabled="balanceGame.isStart">시작</v-btn>
                     <v-container fluid class="flex"
                       v-if="dataInput">
-                      <!-- <v-col
-                        cols="12"
-                        sm="6">
-                        <v-row>
-                          <v-text-field
-                            v-model="Acard"></v-text-field>
-                        </v-row>
-                        <v-row>
-                          <v-text-field
-                            v-model="Bcard"></v-text-field>
-                        </v-row>
-                        <v-btn @click="inputData" :disabled="balanceGame.isStart">문제확정</v-btn>
-                        <v-btn @click="gameStart" :disabled="balanceGame.isStart">게임시작</v-btn>
-                      </v-col> -->
                     </v-container>
                     <div style="color: rgb(0, 0, 0); font-size:1.2em"
                       v-if="balanceGame.isStart">
@@ -49,20 +38,14 @@
                             @click="[cardCount(0),myPick(0)]"
                             class="question-box a-card">
                             <img src="@/assets/Acard.png" alt="" class="card-img">
-                            <!-- <div class="question-text">A</div> -->
                             <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
                           </div>
                           <div
                             @click="[cardCount(1),myPick(1)]"
                             class="question-box b-card">
                             <img src="@/assets/Bcard.png" alt="" class="card-img">
-                            <!-- <div class="question-text">B</div> -->
                             <p class="question-text">{{balanceGame.gameData[1][balanceGame.randomNum]}}</p>
                           </div>
-                          <!-- <div @click="[cardCount(n - 1),myPick(n-1)]"
-                            class="question-box">
-                            <p class="question-text">{{balanceGame.gameData[n-1][balanceGame.randomNum]}}</p>
-                          </div> -->
                           <img src="@/assets/vs.png" alt="" class="vs">
                         </div>
                       </v-col>
@@ -167,7 +150,10 @@
           </div>
         </v-col>
         <v-col >
-          <user-video style="height:28vh" class="col-md-12 camera" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+          <!-- <user-video style="height:28vh" class="col-md-12 camera" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/> -->
+          <div v-for="sub in subscribers.length" :key="sub"> 
+            <user-video v-if="(sub-1)%2 == 0" style="height:25vh" class="col-md-12" :stream-manager="subscribers[sub-1]"/>
+          </div>
         </v-col>
 
       </v-row>
@@ -238,6 +224,7 @@ export default {
       Acard:'',
       Bcard:'',
       dataInput : false,
+      // videoSubscribers:[]
     }
   },
   methods:{
@@ -271,6 +258,7 @@ export default {
       this.balanceGame.isEnd = false
       console.log(this.balanceGame.cardData)
       this.dataInput = false
+      console.log('화면',this.subscribers)
 
     },
     makeRandomNum : function(min,max){
@@ -311,7 +299,6 @@ export default {
         this.selected = true
         this.sendGameInfo()
         this.sound.play()
-        console.log('카메라',this.subscribers)
       }
     },
     myPick:function(n){
@@ -324,8 +311,6 @@ export default {
 
         if(this.balanceGame.cardData[0].length > this.balanceGame.cardData[1].length){
           this.winCard = 0
-        }else if(this.balanceGame.cardData[0].length == this.balanceGame.cardData[1].length){
-          this.winCard = '동점입니다 다시 시작을 눌러주세요'
         }else{
           this.winCard = 1
         }
@@ -368,6 +353,9 @@ export default {
 
       }
     },
+    countSubscriber: function(){
+      
+    }
   },
   mounted:function(){
     this.bgsound = document.querySelector('.bgaudio')
@@ -465,7 +453,7 @@ export default {
   padding: 20px;
 }
 .result-box{
-  height: 100px;
+  min-height: 100px;
   text-align: center;
   /* border: 1px solid black; */
   border-radius: 10px;
