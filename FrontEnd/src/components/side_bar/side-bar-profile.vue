@@ -1,9 +1,10 @@
 <template>
     <div>
       <v-card
-        class="p-3"
-        v-if="isLogin">
-        <div class="card-style">
+        class="p-2"
+        v-if="isLogin"
+        style="background: #E0F2F1;">
+        <div class="card-style pt-7 p-3" style="background: rgba(255, 255, 255, 0.93);">
           <div>
             <v-avatar
               class="grey"
@@ -16,22 +17,21 @@
               <v-list-item-title class="mb-1 item-title">
                 <p>{{ user.nickname }}</p>
               </v-list-item-title>
-              <v-list-item-subtitle>자기소개: {{ user.description }}</v-list-item-subtitle>
             </v-list-item-content>  
           </div>
 
-        <v-card-actions class="d-flex justify-content-evenly">
+        <v-card-actions class="d-flex justify-content-evenly" >
           <div class="mypage">
             <v-btn @click="goMyPage"
-              plain>
-              마이페이지
+              plain style="font-size: 1.1rem;" >
+              🍀 마이페이지
             </v-btn>
           </div>
           <div class="logout">
             <v-btn
               plain
-              @click="onLogout">
-              로그아웃
+              @click="onLogout" style="font-size: 1.1rem;">
+              🌼 로그아웃
             </v-btn>
           </div>
         </v-card-actions>
@@ -122,14 +122,7 @@ export default {
     float: right;
     text-align: right;
 }
-/* .mypage{
-    position :relative;
-}
-.logout{
-    position : relative;top: -36px;
-    float: right;
-    text-align: right;
-} */
+
 .item-title{
   font-size: 20px;
 }
