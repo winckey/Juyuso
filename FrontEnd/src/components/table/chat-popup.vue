@@ -6,7 +6,6 @@
       app
       overflow
       right
-      height="85%"
       width="300px"
       class="p-3 chat-box"
     >
@@ -50,7 +49,7 @@
         ></textarea>
         <v-btn
           dark
-          color="blue-grey"
+          color="#4DB6AC"
           @click="sendMessage">
           전송
         </v-btn>
