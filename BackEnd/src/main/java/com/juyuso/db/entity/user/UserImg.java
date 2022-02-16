@@ -16,9 +16,11 @@ public class UserImg {
     @Column(name = "user_img_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_img_id")
     private User user;
+
 
     @Column
     private String fileName;

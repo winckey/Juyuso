@@ -10,6 +10,7 @@ import com.juyuso.db.entity.user.User;
 import com.juyuso.db.repository.BanRepository;
 import com.juyuso.db.repository.friend.FriendRepository;
 import com.juyuso.db.repository.friend.FriendRequestRepository;
+import com.juyuso.db.repository.user.UserQueryRepository;
 import com.juyuso.db.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class FriendServiceImpl implements FriendService {
 
     private final UserRepository userRepository;
+    private final UserQueryRepository userQueryRepository;
     private final FriendRequestRepository friendRequestRepository;
     private final FriendRepository friendRepository;
     private final BanRepository banRepository;
@@ -156,7 +158,8 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional(readOnly = true)
     public List<User> userSearchNot(String keyword, User user) {
-        return userRepository.findNotFriendListByNicknameAndUser(keyword, user);
+        return userQueryRepository.findNotFriendListByNicknameAndUser(keyword , user);
+//        return userRepository.findNotFriendListByNicknameAndUser(keyword, user);
     }
 
 }
