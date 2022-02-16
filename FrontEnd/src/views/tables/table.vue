@@ -288,8 +288,7 @@
         <span style="color: white">{{ soju }}</span>
       </div>
       <ChatPopup
-        ref="ChatPopup"
-        :userInfo="userInfo"/>
+        ref="ChatPopup"/>
       <GamePopup
       ref="gamePopup"/>
       <FilterPopup
@@ -353,7 +352,6 @@ export default {
       roomId: this.$route.params.roomId,
       publishAudio: true,
       publishVideo: true,
-      userInfo: null,
       titanicMembers: null,
       soju: 0,
       beer: 0,

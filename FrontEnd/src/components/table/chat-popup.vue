@@ -28,12 +28,12 @@
         <div
           :key="idx" 
           v-for="(message, idx) in messages">
-          <div :class="JSON.parse(message.from.data).clientData == userInfo.nickname ? 'my-chat': 'other-chat'">
+          <div :class="JSON.parse(message.from.data).clientData == user.nickname ? 'my-chat': 'other-chat'">
             <div>
-              <div v-if="JSON.parse(message.from.data).clientData != userInfo.nickname" class="chat-name">
+              <div v-if="JSON.parse(message.from.data).clientData != user.nickname" class="chat-name">
                 {{ JSON.parse(message.from.data).clientData }}
               </div>
-              <div :class="JSON.parse(message.from.data).clientData == userInfo.nickname ? 'my-chat-bubble': 'other-chat-bubble'">
+              <div :class="JSON.parse(message.from.data).clientData == user.nickname ? 'my-chat-bubble': 'other-chat-bubble'">
                 {{ message.data }}
               </div>
             </div>
@@ -64,9 +64,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'ChatPopup',
-  props: {
-    userInfo: Object
-  },
   data: function () {
     return {
       chatBox: false,
@@ -100,6 +97,9 @@ export default {
       'messages',
       'Chat_messages'
     ]),
+    ...mapState('accounts', [
+      'user'
+    ])
   },
 }
 </script>

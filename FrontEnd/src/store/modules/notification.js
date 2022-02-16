@@ -7,10 +7,10 @@ const notification = {
   },
 
   mutations: {
-    ADD_NOTIFICATION: function ({ state }, noti) {
+    ADD_NOTIFICATION: function (state, noti) {
       state.notificationList.push(noti)
     },
-    DELETE_NOTIFICATION: function ({state}, noti) {
+    DELETE_NOTIFICATION: function (state, noti) {
       const index = state.notificationList.indexOf(noti, 0);
       if (index >= 0) {
         state.notificationList.splice(index, 1)
