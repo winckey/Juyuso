@@ -267,7 +267,6 @@ export default {
     gameStart: function() {
       // 누군가 게임을 시작한 경우
       if (this.balanceGame.isStart && !this.gameStarted) {
-        console.log(this.balanceGame.isStart, this.gameStarted)
         this.gameStarted = true
         this.balanceGame.isEnd = false
         this.selected = false
@@ -275,7 +274,6 @@ export default {
       }
       // 내가 시작버튼을 누른 경우
       else if (!this.balanceGame.isStart && !this.gameStarted) {
-        console.log('클릭')
         this.balanceGame.curMember = 0
         this.balanceGame.cardData = [[], []],
         this.balanceGame.totalTime = 5,
@@ -284,13 +282,10 @@ export default {
         this.balanceGame.randomNum = random
         this.myPickedCard = null
         this.sendGameInfo()
-        console.log('랜덤 번호(this.random)',this.random)
-        console.log('램덤 번호(balance.randomNum)',this.balanceGame.randomNum)
       }
 
 
       this.balanceGame.isEnd = false
-      console.log(this.balanceGame.cardData)
       this.dataInput = false
 
     },
@@ -336,7 +331,6 @@ export default {
     },
     myPick:function(n){
       this.myPickedCard = n
-      console.log('선택카드 인덱스', this.myPickedCard)
     },
     countTime:function(){
       this.balanceGame.totalTime = this.balanceGame.totalTime - 1
@@ -349,7 +343,6 @@ export default {
         }
 
         clearInterval(this.timer)
-        console.log('타이머 종료')
         this.balanceGame.isStart = false
         this.gameStarted = false
         this.balanceGame.isEnd = true
@@ -378,7 +371,6 @@ export default {
     gameInfo: function () {
       this.balanceGame = {...JSON.parse(this.gameInfo)}
       if (!this.gameStarted && this.balanceGame.isStart) {
-        console.log(this.balanceGame)
         this.gameStart()
       }
       else if (!this.balanceGame.isStart && this.gameStarted) {
