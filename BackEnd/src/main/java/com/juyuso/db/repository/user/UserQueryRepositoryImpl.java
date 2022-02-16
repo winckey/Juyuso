@@ -9,6 +9,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +30,6 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 //    @Query(value = "select u from User u where u.nickname like %:nickname% and u.id not in (select f.to.id from Friend f where f.from = :user)")
     public List<User> findNotFriendListByNicknameAndUser(String  nickname,  User user) {
 
-
-
         return (List<User>) query
                 .select(qUser)
                 .from(qUser)
@@ -43,7 +42,14 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
                 .fetch();
     }
 
-    private BooleanExpression userEmailEq(String userEmail) {
-        return userEmail != null ? qUser.email.eq(userEmail) : null;
+//    @Query(value = "select f.to from Friend f where f.from = :user and f.to.nickname like %:nickname%")
+    @Override
+    public List<User> findFriendListByNicknameAndUser(String nickname,User user) {
+        return (List<User>) query
+                .select(qFriend.to)
+                .from(qFriend)
+                .where(qFriend.from.eq(user)
+                        .and(qFriend.to.nickname.contains(nickname)))
+                .fetch();
     }
 }

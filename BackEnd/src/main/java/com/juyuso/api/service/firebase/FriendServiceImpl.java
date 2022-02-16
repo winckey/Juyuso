@@ -152,7 +152,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional(readOnly = true)
     public List<User> userSearchMy(String keyword, User user) {
-        return userRepository.findFriendListByNicknameAndUser(keyword, user);
+        return userQueryRepository.findFriendListByNicknameAndUser(keyword, user);
     }
 
     @Override
