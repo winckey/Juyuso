@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
             String fileUrl = img.getFileUrl();
             File file = new File(uploadPath + File.separator, fileUrl);
             if (file.exists()) file.delete();
-            userImgRepository.deleteByUserId(user.getId());
+            userImgRepository.deleteById(user.getUserImg().getId());
         }
 
         String fileName = multipartFile.getOriginalFilename();
@@ -127,7 +127,10 @@ public class UserServiceImpl implements UserService {
                 .fileUrl(savingFileName)
                 .build();
 
-        userImgRepository.save(userImg);
+
+        user.chageUserImg(userImg);
+        userRepository.save(user);
+//        userImgRepository.save(userImg);
 
         return savingFileName;
     }

@@ -31,7 +31,7 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 
 
 
-        return query
+        return (List<User>) query
                 .select(qUser)
                 .from(qUser)
                 .where(qUser.nickname.contains(nickname)

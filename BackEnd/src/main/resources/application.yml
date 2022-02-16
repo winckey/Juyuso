@@ -1,6 +1,6 @@
 server:
   port: 8080
-#  address: 172.26.11.126
+  #  address: 172.26.11.126
   servlet:
     context-path: /
     encoding:
@@ -53,7 +53,7 @@ logging:
         type:
           descriptor:
             sql: trace
-#        SQL: DEBUG
+      #        SQL: DEBUG
       springframework:
         web: DEBUG
         boot: DEBUG

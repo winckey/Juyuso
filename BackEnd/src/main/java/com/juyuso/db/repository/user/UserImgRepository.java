@@ -1,24 +1,15 @@
 package com.juyuso.db.repository.user;
 
+
 import com.juyuso.db.entity.user.UserImg;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-@RequiredArgsConstructor
-public class UserImgRepository {
 
-    private final EntityManager em;
+@Transactional(readOnly = true)
+public interface UserImgRepository extends JpaRepository<UserImg, Long> {
 
-    public void save(UserImg userImg) {
-        em.persist(userImg);
-    }
 
-    public void deleteByUserId(Long userId) {
-        em.createQuery("delete from UserImg img where img.user.id = :id")
-            .setParameter("id", userId)
-            .executeUpdate();
-    }
+
 }
