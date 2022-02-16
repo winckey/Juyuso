@@ -10,6 +10,7 @@ import com.juyuso.api.service.drinking.DrinkingHistoryService;
 import com.juyuso.api.service.meeting.MeetingHistoryService;
 import com.juyuso.api.service.meeting.MeetingService;
 import com.juyuso.api.service.user.UserService;
+import com.juyuso.db.entity.meeting.Meeting;
 import com.juyuso.db.entity.meeting.MeetingHistory;
 import com.juyuso.db.entity.user.User;
 import io.openvidu.java.client.OpenVidu;
@@ -119,7 +120,14 @@ public class MeetingController {
             @ApiResponse(code = 500, message = " 서버에러")
     })
     public ResponseEntity<MeetingResDto> getMeeting(@PathVariable Long meetingId) {
-        return ResponseEntity.ok(MeetingResDto.of(meetingService.findByMeetingId(meetingId)));
+        Meeting meeting = meetingService.findByMeetingId(meetingId);
+        if(meeting == null) {
+            throw new CustomException(ErrorCode.MEETING_NOT_FOUND);
+        }
+        else {
+            return ResponseEntity.ok(MeetingResDto.of(meeting));
+        }
+
     }
 
     @PostMapping("/enter/{meetingId}")
