@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="roomInfo">
     <v-dialog
       transition="dialog-bottom-transition"
       v-model="dialog"
@@ -44,13 +44,21 @@
             <v-icon>{{ roomInfo.common ? '' : 'mdi-lock-outline'}}</v-icon>
             </span>
           </v-card-title>
-          <v-card-text>
-            <v-avatar
-              class="image-border"
-              size="36">
-              <v-img :src="userProfileImg"></v-img>
-            </v-avatar>
-            방장 : {{ roomInfo.nickName }}
+          <v-card-text class="d-flex justify-content-between">
+            <span>
+              <v-avatar
+                class="image-border"
+                size="36">
+                <v-img :src="userProfileImg"></v-img>
+              </v-avatar>
+              방장 : {{ roomInfo.nickName }}
+            </span>
+            <span>
+              <v-icon>
+                mdi-account
+              </v-icon>
+              {{ roomInfo.cnt }} / 6
+            </span>
           </v-card-text>
           <v-chip
             v-for="hashtag in roomInfo.hashtag"
@@ -130,6 +138,15 @@ export default {
       'joinSession'
     ]),
     enterRoom: function () {
+      if (this.roomInfo.cnt >= 6) {
+        this.$toast.open({
+          position: 'top',
+          message: '인원이 초과되었습니다.',
+          type: 'error',
+          duration: 2500,
+        });
+        return
+      }
       if (!this.roomInfo.common) {
         this.$refs.tablepassword.dialog = true
       }

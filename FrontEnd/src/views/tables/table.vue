@@ -1,11 +1,11 @@
 <template>
   <div class="background-box"
   :style="{'background-image':'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}">
-  <div class="m-3">
-    <h2 class="session-title">{{ roomInfo.meetingTitle }}
+  <div class="m-3 d-flex justify-content-center">
+    <span class="session-title">{{ roomInfo.meetingTitle }}
       <RoomInfoMenu
         :roomInfo="roomInfo"/>
-    </h2>
+    </span>
   </div>
     <div class="video-container" :style="videoBackground">
       <!-- 메뉴바 -->
@@ -371,7 +371,6 @@ export default {
       event.preventDefault()
       event.returnValue = ''
       this.leaveTable
-      this.setSojuBeer
     });
     this.setTheme(this.roomInfo.theme)
     this.publishAudio = this.publisher.stream.audioActive
@@ -392,7 +391,6 @@ export default {
     window.removeEventListener('beforeunload', (event) => {
       event.preventDefault()
       this.leaveTable
-      this.setSojuBeer
     })
   },
 
@@ -400,13 +398,16 @@ export default {
     try {
       const answer = await this.$refs.leaveRoomPopup.open()
       if (answer) {
-          this.leaveSession(this.roomId)
-          this.setSojuBeer()
-          window.removeEventListener('beforeunload', (event) => {
-            event.preventDefault()
-            this.leaveTable
-            this.setSojuBeer
-          })
+        let data = {
+          sessionId: this.roomId,
+          data: this.setSojuBeer()
+        }
+        console.log(data)
+        this.leaveSession(data)
+        window.removeEventListener('beforeunload', (event) => {
+          event.preventDefault()
+          this.leaveTable
+        })
         next()
       }
       else {
@@ -417,7 +418,6 @@ export default {
       window.removeEventListener('beforeunload', (event) => {
         event.preventDefault()
         this.leaveTable
-        this.setSojuBeer
       })
       next()
     }
@@ -488,7 +488,12 @@ export default {
       this.$refs.ChatPopup.chatBox = !this.$refs.ChatPopup.chatBox
     },
     leaveTable () {
-      this.leaveSession(this.roomId)
+      let data = {
+        sessionId: this.roomId,
+        data: this.setSojuBeer()
+      }
+      console.log(data)
+      this.leaveSession(data)
       this.$router.push({ name: 'TableList' })
 		},
     goToTable() {
@@ -590,19 +595,7 @@ export default {
         date: `${year}-${month}-${day}`, 
         soju: this.soju
       }
-      
-      axios({
-        method: 'POST',
-        url: `${process.env.VUE_APP_API_URL}/drinking/history`,
-        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` },
-        data: item
-      })
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      return item
     }
   },
 
@@ -616,6 +609,7 @@ export default {
     text-align: center;
     position: relative;
     z-index: 1;
+    font-size: 1.8rem;
   }
 
   .menu-bar {

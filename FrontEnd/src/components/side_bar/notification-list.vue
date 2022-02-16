@@ -17,32 +17,19 @@
         </v-btn>
       </template>
 
-      <v-card>
+      <v-card height="500" style="overflow-y: scroll">
         <v-list>
-          <v-list-item>
+          <v-list-item class="d-flex justify-content-center">
             알람 리스트
           </v-list-item>
         </v-list>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            text
-            @click="menu = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            color="primary"
-            text
-            @click="makeToast(test)"
-          >
-            Save
-          </v-btn>
-        </v-card-actions>
+        <v-list>
+          <v-list-item v-for="(noti, idx) in notificationList" :key="idx">
+            <Notification
+            @closeMenu="menu=false"
+            :noti="noti"/>
+          </v-list-item>
+        </v-list>
       </v-card>
     </v-menu>
 </template>
@@ -50,12 +37,15 @@
 <script>
 import { getMessaging, onMessage } from 'firebase/messaging'
 import { mapState, mapActions } from 'vuex'
+import Notification from './notification.vue'
 
 export default {
   name: 'NotificationList',
+  components: {
+    Notification
+  },
   data: function () {
     return {
-      notificationList: [],
       menu: false,
       type: 0,
       test: {
@@ -68,7 +58,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('accounts', ['isLogin'])
+    ...mapState('accounts', ['isLogin']),
+    ...mapState('notification', ['notificationList'])
   },
   mounted: function () {
     const messaging = getMessaging();
@@ -84,10 +75,16 @@ export default {
       'changeTab',
       'setChatFriend'
     ]),
+    ...mapActions('notification', [
+      'addNotification'
+    ]),
     makeToast(payload) {
+      let noti = {}
+      noti.message = payload.notification.body
       if (payload.notification.title == '친구 추가 요청') {
         this.friendList()
         this.type = 0
+        noti.type = 'friend'
       }
       else {
         let data = {
@@ -96,7 +93,10 @@ export default {
         }
         this.setChatFriend(data)
         this.type = 1
+        noti.type = 'chat'
+        noti.data = data
       }
+      this.addNotification(noti)
       this.$toast.open({
         position: 'top-right',
         message: payload.notification.body,

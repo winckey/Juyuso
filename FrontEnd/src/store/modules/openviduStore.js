@@ -228,9 +228,9 @@ const openviduStore = {
       }
     },
 
-    leaveSession ({ dispatch, commit }, sessionId) {
+    leaveSession ({ dispatch, commit }, data) {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
-      dispatch('leaveRoom', sessionId)
+      dispatch('leaveRoom', data)
       commit('LEAVE_SESSION')
 		},
 
@@ -308,10 +308,11 @@ const openviduStore = {
       })
 
     },
-    leaveRoom (context, sessionId) {
+    leaveRoom (context, data) {
       axios({
         method: 'POST', 
-        url: `${process.env.VUE_APP_API_URL}/meeting/leave/${sessionId}`,
+        url: `${process.env.VUE_APP_API_URL}/meeting/leave/${data.sessionId}`,
+        data: data.data,
         headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
 
