@@ -1,6 +1,6 @@
 server:
   port: 8080
-#  address: 172.26.11.126
+  #  address: 172.26.11.126
   servlet:
     context-path: /
     encoding:
@@ -13,17 +13,19 @@ spring:
     url: jdbc:mysql://i6e101.p.ssafy.io:8802/juyuso?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-        username: ssafy
-        password: ssafy_juyuso!@
+      username: ssafy
+      password: ssafy_juyuso!@
   jpa:
     hibernate:
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
       ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
-        # show_sql: true
-        use_sql_comments: true
-        format_sql: true
-        default_batch_fetch_size: 100
+        format-sql: true
+        show-sql: true
   devtools:
     livereload:
       enabled: true
@@ -40,9 +42,24 @@ social:
       token: https://kauth.kakao.com/oauth/token
       profile: https://kapi.kakao.com/v2/user/me
       unlink: https://kapi.kakao.com/v1/user/unlink
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
+
+logging:
+  file:
+    name: ./web.log
+  level:
+    root: INFO
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+      #        SQL: DEBUG
+      springframework:
+        web: DEBUG
+        boot: DEBUG
+        security: DEBUG
+      apache:
+        tiles: INFO
 
 app:
   fileUpload:
