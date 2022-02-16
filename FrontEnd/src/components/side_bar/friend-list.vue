@@ -1,6 +1,6 @@
 <template>
   <div class="white" v-if="friends">
-    <v-list>
+    <v-list class="p-0">
       <friend-list-detail
         :key="friend.id"
         v-for="friend in friends"
