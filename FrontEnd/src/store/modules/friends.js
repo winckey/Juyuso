@@ -36,7 +36,6 @@ const friends = {
       state.friendsList = userId
     },
     CHANGE_TAB: function (state, tab) {
-      console.log(tab)
       state.tab = tab
     },
     SET_CHAT_FRIEND: function (state, friend) {

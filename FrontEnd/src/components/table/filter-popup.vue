@@ -198,7 +198,6 @@ export default {
       return Object.keys(this.publisher.stream).includes('filter')
     },
     setAudioFilter: function () {
-      console.log(this.publisher)
       this.videoFilter = null
       if (this.isFiltered()) {
         this.removeFilter()
@@ -210,7 +209,6 @@ export default {
         this.publisher.stream.applyFilter('GStreamerFilter', {"command": `audioecho delay=40000000 intensity=${this.pitch} feedback=0.7`})
 
       }
-      console.log(this.publisher)
     },
     setVideoFilter: function (filter) {
       this.audioFilter = -1
@@ -219,11 +217,9 @@ export default {
         this.removeFilter()
       }
       this.publisher.stream.applyFilter('GStreamerFilter', {"command": `${filter.name}`})
-      console.log(this.publisher)
     },
     removeFilter: function () {
       this.publisher.stream.removeFilter()
-      console.log(this.publisher)
     }
   }
 }

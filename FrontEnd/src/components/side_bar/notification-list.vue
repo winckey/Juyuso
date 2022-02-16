@@ -64,7 +64,6 @@ export default {
   mounted: function () {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
-      console.log(payload)
       this.makeToast(payload)
     })
   },
@@ -81,7 +80,7 @@ export default {
     makeToast(payload) {
       let noti = {}
       noti.message = payload.notification.body
-      if (payload.notification.title == '친구 추가 요청') {
+      if (payload.notification.title.includes('친구')) {
         this.friendList()
         this.type = 0
         noti.type = 'friend'
@@ -104,9 +103,6 @@ export default {
         duration: 2500,
         onClick: this.openDraw
       })
-    },
-    hello() {
-      console.log('hello')
     },
     openDraw() {
       this.changeDialog(true)

@@ -81,12 +81,6 @@ export default {
           to: [],
           type: 'my-chat'
         })
-        .then( () => {
-          console.log('success')
-        })
-        .catch( () => {
-          console.log('fail')
-        })
       }
       this.chatInput=''
     },

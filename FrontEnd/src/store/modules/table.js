@@ -36,7 +36,6 @@ const table = {
   },
   getters: {
     getBackgroudColor (state) {
-      console.log(state)
       return state.themeColor[state.themeNum].backgroundColor
     },
     getTextColor (state) {

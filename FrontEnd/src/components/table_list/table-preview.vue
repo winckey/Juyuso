@@ -138,7 +138,6 @@ export default {
         userName: this.user.nickname,
         publishInfo: this.publishInfo
       }
-      console.log(roomInfo)
       this.joinSession(roomInfo)
       try {
         this.videoSrc.getTracks()[0].stop()

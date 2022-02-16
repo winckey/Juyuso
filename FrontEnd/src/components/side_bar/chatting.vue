@@ -153,7 +153,6 @@ export default {
         this.roomId = res.data.roomId
         this.getChatHistory()
       })
-      console.log(this.roomId)
       this.sock = new SockJS('https://i6e101.p.ssafy.io/ws')
       this.client = Stomp.over(this.sock, {
         protocols: Stomp.VERSIONS.supportedProtocols()
@@ -162,8 +161,6 @@ export default {
       let $client = this.client
 
       this.client.connect({}, () => {
-        console.log('socket connection successful')
-
         $client.subscribe(`/subscribe/chat/room/${this.roomId}`, chat => {
           let content = JSON.parse(chat.body);
           this.messages.push(content)
