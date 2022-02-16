@@ -24,7 +24,8 @@ export default {
     },
     data: function () {
         return {
-            isBlocked: true
+            isBlocked: true,
+            axiosSuccess: []
         }
     },
     computed: {
@@ -48,13 +49,11 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res)
+                    this.axiosSuccess.push(res)
                     this.isBlocked = false
                     this.blockFriendList()
                 })
-                // .catch(err => {
-                //     console.log(err)
-                // })
+               
         },
         block: function () {
             axios({
@@ -66,13 +65,10 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res)
+                    this.axiosSuccess.push(res)
                     this.isBlocked = true
                     this.blockFriendList()
-                })
-                // .catch(err => {
-                //     console.log(err)
-                // })
+                })  
         }
     }
 }

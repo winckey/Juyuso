@@ -118,7 +118,8 @@ export default {
             isSuccess: false,
             sojuBottle: 0,
             sojuGlass: 0,
-            beer: 0
+            beer: 0,
+            axiosSuccess: []
         }
     },
     methods: {
@@ -151,16 +152,13 @@ export default {
                 data: item
             })
                 .then(res => {
-                    console.log(res)
+                    this.axiosSuccess.push(res)
                     const emitItem = {
                       date: this.endDate,
                       count: (this.sojuBottle * 7) + this.sojuGlass + this.beer * 3
                     }
                     this.$emit('updateDrinkingInfo', emitItem)
                 })
-                // .catch(err => {
-                //     console.log(err)
-                // })
       }
     },
     computed: {

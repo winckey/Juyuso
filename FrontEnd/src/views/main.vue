@@ -9,47 +9,43 @@
     <div class="main-bottom">
       <div style="position: relative" class="align-center">
         <div class="align-center" style="position: relative">
-          <img src="@/assets/main_start.png" alt="">
+          <img src="@/assets/main_start.png" alt="" height="240vh">
           <div class="main-enter">
             <button>
-
-            <img src="@/assets/room_point.png" alt="" @click="goToTableList">
+              <img src="@/assets/room_point.png" alt="" @click="goToTableList">
             </button>
           </div>
           <div class="main-text">불빛을 클릭해주세요</div>
         </div>
         <div class="main-board">
-          <img src="@/assets/account_board.png">
+          <img src="@/assets/account_board.png" height="130vh">
         </div>
           <div class="main-button">
-            <div class="d-flex flex-column">
-            
-              <!-- <div class="d-flex flex-column" v-if="isJwt">
-                <v-btn
-                  class="mx-auto my-1"
-                  color="#E6D8B2"
-                  @click="goToLogin"
-                >로그인</v-btn>
-                <v-btn 
-                  class="mx-auto my-1"
-                  color="#E6D8B2"
-                  @click="goToSignup"
-                >회원가입</v-btn>
-              </div> -->
-
-              <div>
-                <v-btn
-                  class="mx-auto my-1"
-                  color="#E6D8B2"
-                  @click="onLogout"
-                >로그아웃</v-btn>
-              </div>
-
+                    <!-- <div class="d-flex flex-column"> -->
+                    
+                      <!-- <div class="d-flex flex-column" v-if="isJwt">
+                        <v-btn
+                          class="mx-auto my-1"
+                          color="#E6D8B2"
+                          @click="goToLogin"
+                        >로그인</v-btn>
+                        <v-btn 
+                          class="mx-auto my-1"
+                          color="#E6D8B2"
+                          @click="goToSignup"
+                        >회원가입</v-btn>
+                      </div> -->
+                    <!-- </div> -->
+            <div>
+              <v-btn
+                color="#E6D8B2"
+                @click="onLogout"
+              >로그아웃</v-btn>
             </div>
           </div>
       </div>
-      <div class="align-center">
-        <img src="@/assets/main_ground.png" alt="">
+      <div class="align-center" >
+        <img src="@/assets/main_ground.png" alt="" height="150vh">
       </div>
     </div>
   </div>
@@ -104,6 +100,7 @@ export default {
 
   .main-logo {
     position: absolute;
+    height: 24vh;
     top: 20%;
     left: 50%;
     z-index: 1;
@@ -147,13 +144,13 @@ export default {
   .main-bottom {
     position: absolute;
     left: 50%;
-    bottom: 7%;
+    bottom: 5vh;
     transform: translate(-50%);
   }
   
   .main-button {
     position: absolute;
-    left: 63%;
+    left: 62.5%;
     bottom: 20%;
   }
 

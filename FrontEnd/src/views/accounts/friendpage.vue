@@ -11,7 +11,7 @@
               <v-row >
                 <v-col cols="6">
                   <div v-if="friend">
-                    <h1>주민등록증</h1>
+                    <h1 style="font-size: 2rem">주민등록증</h1>
                     <div class="d-flex flex-column mt-5">
                       <p>별명: {{ friend.nickname }}</p>
                       <p>소개: {{ friend.description }}</p>
@@ -84,13 +84,9 @@ export default {
         headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
         .then(res => {
-          // console.log(res.data)
           this.friend = res.data.friend
           
         })
-        // .catch(err => {
-        //   console.log(err)
-        // })
     },
     computed: {
       imgUrl: function (){
@@ -122,9 +118,9 @@ export default {
 }
 
 
-/* img {
+img {
  max-width: 100%;
-} */
+}
 
 .wallet {
   position: relative;

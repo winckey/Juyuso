@@ -208,7 +208,8 @@ export default {
         descriptionRule: [
           v => !(v && v.length > 10) || "자기소개는 10자까지 입력 가능합니다."
         ]
-      }
+      },
+      axiosErr: []
     }
   },
   created: function () {
@@ -247,14 +248,12 @@ export default {
   
             })
             .catch(err => {
-              // console.log('axios 틀렸잖앙')
-              // console.log(item.credentials.regionId)
-              // console.log(this.defaultSelected)
+            
               this.alertMessage = "입력 형식을 다시 확인해주세요!"
               this.isAlert = true
               setTimeout(() => this.isAlert=false, 3000)
               this.isSuccess = false
-              console.log(err)
+              this.axiosErr.push(err)
             })
 
       } else {
@@ -265,7 +264,6 @@ export default {
     },
   
     uploadImage: function () {
-      // console.log(this.profileImg.size)
       const image = new FormData()
       image.append('img', this.profileImg)
       if (this.profileImg.size < 630000) {
@@ -280,11 +278,7 @@ export default {
               this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
               this.$emit('changeProfileImage', res.data.imgUrl)
             })
-            // .catch(err => {
-            //   console.log(err)
-            // })
       } else {
-        // console.log(this.profileImg.size)
         this.alertMessage = "이미지 크기가 용량을 초과했습니다!"
         this.isAlert = true
         setTimeout(() => this.isAlert=false, 3000)
@@ -306,12 +300,9 @@ export default {
         } else {
           this.alertMessage = "이미 존재하는 닉네임입니다!"
           this.isAlert = true
-          setTimeout(() => this.isAlert=false, 3000)
+          setTimeout(() => this.isAlert=false, 2000)
         }
       })
-      // .catch(err => {
-      //   console.log(err)
-      // })
     }
   }
 }

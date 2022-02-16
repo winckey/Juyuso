@@ -11,8 +11,7 @@
               <v-row >
                 <v-col cols="6">
                   <div v-if="user">
-                    <!-- <p style="font-size: 2rem">주민등록증</p> -->
-                    <h1>주민등록증</h1>
+                    <h1 style="font-size: 2rem">주민등록증</h1>
                     <p>별명: {{ user.nickname }}</p>
                     <p>소개: {{ user.description }}</p>
                     <p>성별: {{ user.gender }}</p>
@@ -21,7 +20,6 @@
                 </v-col>
                 <v-col v-if="user" cols="5">
                   <div class="d-flex justify-content-center" >
-                    <!-- <v-img max-width="100%"  height="auto" :src="imgUrl" alt="profile_img"></v-img> -->
                     <v-img max-width="300px" width="100%" height="auto" :src="imgUrl" alt="profile_img"></v-img>
                   </div>
                 </v-col>
@@ -94,7 +92,6 @@ export default {
       this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
     },
     changeProfileImage: function (image) {
-      // console.log('mypage 이미지')
       this.imgUrl = `${process.env.VUE_APP_IMG_URL}/${image}`
     }
    
@@ -109,9 +106,6 @@ export default {
         const userInfo = res.data.user
         this.user = userInfo
       })
-      // .catch(err=> {
-      //   console.log(err)
-      // })
   },
   computed: {
     imgUrl: function () {
@@ -142,9 +136,9 @@ export default {
 
 }
 
-/* img {
+img {
  max-width: 100%;
-} */
+}
 
 .wallet {
   position: relative;
