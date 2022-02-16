@@ -19,7 +19,9 @@
       v-model="tab"
       class="h-100">
       <v-divider class="my-0"></v-divider>
-      <v-tab-item class="m-1">
+      <v-tab-item
+        class="friend-list"
+        :style="{height: height}">
         
         <span v-if="friendsList.length!=0 && friendsList.friendRequestList.length!=0" class="px-3">친구 요청</span>
         <FriendList
@@ -39,7 +41,9 @@
           v-if="tab == 1"
           :tab="tab"/>
       </v-tab-item>
-      <v-tab-item>
+      <v-tab-item
+        class="friend-list"
+        :style="{height: height}">
         <!-- <FriendList
           v-if="searchList"
           :friends="searchList.friendRequestList"
@@ -64,6 +68,13 @@ export default {
     FriendList,
     Chatting
   },
+  mounted: function () {
+    this.height = `${window.innerHeight - 380}px`
+    window.addEventListener('resize', this.resizeHeight);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeHeight);
+  },
   data: function () {
     return {
       items: [
@@ -71,13 +82,17 @@ export default {
         {src: 'mdi-chat-processing-outline', name: 'chat'},
         {src: 'mdi-magnify', name: 'search'},
       ],
-      result: []
+      result: [],
+      height: 0
     }
   },
   methods: {
     ...mapActions('friends', [
       'changeTab'
-    ])
+    ]),
+    resizeHeight () {
+      this.height = `${window.innerHeight - 380}px`
+    },
   },
   computed: {
     ...mapState('friends', [
@@ -89,6 +104,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .friend-list {
+    overflow-y: scroll;
+  }
 </style>

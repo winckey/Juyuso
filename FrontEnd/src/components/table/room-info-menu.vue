@@ -5,15 +5,19 @@
     :close-on-content-click="false"
     offset-y
   >
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn 
-        @click="null" 
-        icon 
-        dark
-        v-bind="attrs"
-        v-on="on">
-        <v-icon>mdi-information-outline</v-icon>
-      </v-btn>
+  <template v-slot:activator="{ on: menu, attrs }">
+      <v-tooltip bottom :open-on-click="false" :open-on-focus="false">
+        <template v-slot:activator="{ on: tooltip }">
+          <v-btn 
+            icon 
+            dark
+            v-bind="attrs"
+            v-on="{ ...tooltip, ...menu }">
+            <v-icon>mdi-information-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>방 정보 확인</span>
+      </v-tooltip>
     </template>
 
     <v-card

@@ -5,6 +5,7 @@
     <span class="session-title">{{ roomInfo.meetingTitle }}
       <RoomInfoMenu
         :roomInfo="roomInfo"/>
+      <ButtomInfoMenu/>
     </span>
   </div>
     <div class="video-container" :style="videoBackground">
@@ -103,22 +104,7 @@
                 </v-btn>
               </template>
               <span>채팅창 열기</span>
-            </v-tooltip>
-            <v-tooltip right :open-on-click="false" :open-on-focus="false">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  class="m-1"
-                  fab
-                  small
-                  v-on="on"
-                  v-bind="attrs"
-                  @click="peopleListShow = !peopleListShow">
-                  <v-icon>mdi-account-group-outline</v-icon>
-                </v-btn>
-              </template>
-              <span>참가자 보기</span>
-            </v-tooltip>
-            
+            </v-tooltip>            
             
             <v-tooltip right :open-on-click="false" :open-on-focus="false">
               <template v-slot:activator="{ on, attrs }">
@@ -215,14 +201,6 @@
           </div>
         </div>
       </div>
-      <div class="people-list" v-show="peopleListShow">
-        <p>{{ JSON.parse(publisher.stream.connection.data).clientData }}</p>
-        <p 
-          v-for="sub in subscribers" 
-          :key="sub.stream.connection.connectionId">
-          {{ JSON.parse(sub.stream.connection.data).clientData }}
-        </p>
-      </div>
       <div class="d-flex justify-content-center align-center">
         <span style="color: white">{{ beer }}</span>
         <v-menu
@@ -315,6 +293,7 @@ import FilterPopup from '@/components/table/filter-popup.vue'
 import ThemePopup from '@/components/table/theme-popup.vue'
 import LeaveRoomPopup from '@/components/table/leave-room-popup.vue'
 import RoomInfoMenu from '@/components/table/room-info-menu.vue'
+import ButtomInfoMenu from '@/components/table/button-info-menu.vue'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 const openviduStore = 'openviduStore'
@@ -335,7 +314,8 @@ export default {
     FilterPopup,
     ThemePopup,
     LeaveRoomPopup,
-    RoomInfoMenu
+    RoomInfoMenu,
+    ButtomInfoMenu
   },
   props: {
     roomInfo: Object,
@@ -346,7 +326,6 @@ export default {
       game: false,
       bullhorn: false,
       messageInput: '',
-      peopleListShow: false,
       menuBar: false,
       myUserName: '성아영',
       roomId: this.$route.params.roomId,
@@ -630,18 +609,6 @@ export default {
     /* border-color: #1a84b2;
     box-shadow: 0 0 8px #1a84b2; */
   }
-
-  .people-list {
-    position: fixed;
-    background: white;
-    height: 300px;
-    width: 200px;
-    border-radius: 2em;
-    padding: 1em;
-    right: 2em;
-    top: 6em
-  }
-
 
   .stretch-enter-active {
     animation: stretch-in .3s;

@@ -44,7 +44,7 @@
       ></textarea>
       <v-btn
         dark
-        color="blue-grey"
+        color="#4DB6AC"
         @click="sendMessage">
         전송
       </v-btn>
@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     resizeHeight () {
-      this.height = `${window.innerHeight - 500}px`
+      this.height = `${window.innerHeight - 520}px`
     },
     scrollEvent() {
       if (this.chatDiv.scrollTop == 0 && !this.isEndOfMessage && this.chatDiv.scrollHeight > this.chatDiv.clientHeight) {
@@ -157,7 +157,7 @@ export default {
       this.client = Stomp.over(this.sock, {
         protocols: Stomp.VERSIONS.supportedProtocols()
       });
-
+      this.client.debug = function() {};
       let $client = this.client
 
       this.client.connect({}, () => {

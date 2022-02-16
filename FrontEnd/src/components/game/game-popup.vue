@@ -62,7 +62,7 @@ export default {
       selectedGame: this.gameMode,
       games: [
         {name: '타자연습', img: 'typing'},
-        {name: '타이타닉', img: 'typing'},
+        {name: '타이타닉', img: 'titanic'},
         {name: '그림그리기', img: 'painting'},
         {name: '밸런스', img: 'balance'}
       ],
