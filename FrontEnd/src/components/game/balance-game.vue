@@ -1,7 +1,6 @@
 <template>
   <v-container v-if="balanceGame"
     fluid>
-    <audio class="bgaudio" src="@/assets/sound/game_background.mp3"></audio>
     <audio class="audio" src="@/assets/sound/balance_click.wav"></audio>
     <audio class="win" src="@/assets/sound/win.mp3"></audio>
     <audio class="lose" src="@/assets/sound/lose.mp3"></audio>
@@ -35,16 +34,32 @@
                       <v-col>
                         <div class="card-box" v-if="balanceGame.isStart">
                           <div
-                            @click="[cardCount(0),myPick(0)]"
                             class="question-box a-card">
-                            <img src="@/assets/Acard.png" alt="" class="card-img">
-                            <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
+                            <div
+                              @click="[cardCount(0),myPick(0)]"
+                              v-if="myPickedCard == null || myPickedCard == 0">
+                              <img src="@/assets/Acard.png" alt="" class="card-img">
+                              <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
+                            </div>
+                            <div
+                              v-else>
+                                <img src="@/assets/nonSelectedA.png" alt="" class="card-img">
+                                <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
+                            </div>
                           </div>
-                          <div
-                            @click="[cardCount(1),myPick(1)]"
+                          <div 
                             class="question-box b-card">
-                            <img src="@/assets/Bcard.png" alt="" class="card-img">
-                            <p class="question-text">{{balanceGame.gameData[1][balanceGame.randomNum]}}</p>
+                            <div
+                              @click="[cardCount(1),myPick(1)]"
+                              v-if="myPickedCard == null || myPickedCard == 1">
+                              <img src="@/assets/Bcard.png" alt="" class="card-img">
+                              <p class="question-text">{{balanceGame.gameData[1][balanceGame.randomNum]}}</p>                             
+                            </div>
+                            <div
+                              v-else>
+                              <img src="@/assets/nonSelectedB.png" alt="" class="card-img">
+                              <p class="question-text">{{balanceGame.gameData[1][balanceGame.randomNum]}}</p>                             
+                            </div>
                           </div>
                           <img src="@/assets/vs.png" alt="" class="vs">
                         </div>
@@ -86,9 +101,28 @@
 
                   <!-- B 승리 -->
                   <v-progress-linear
+                    :value="(100-(balanceGame.cardData[1].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
+                    height="50"
+                    v-else-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length"
+                    background-color="blue lighten-1"
+                    color="blue lighten-5">
+                    <v-container>
+                      <v-row justify="space-between">
+                        <v-col cols="auto">
+                          A : {{ balanceGame.cardData[0].length }}
+                        </v-col>
+                        <v-col cols="auto">
+                          B : {{ balanceGame.cardData[1].length }}
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-progress-linear>
+                  <!-- 무승부 -->
+                  <v-progress-linear
                     :value="((balanceGame.cardData[1].length) / (balanceGame.cardData[0].length + balanceGame.cardData[1].length)*100)"
                     height="50"
-                    v-else-if="balanceGame.cardData[0].length < balanceGame.cardData[1].length">
+                    v-else-if="balanceGame.cardData[0].length == balanceGame.cardData[1].length"
+                    color="deep-purple darken-2">
                     <v-container>
                       <v-row justify="space-between">
                         <v-col cols="auto">
@@ -224,7 +258,6 @@ export default {
       Acard:'',
       Bcard:'',
       dataInput : false,
-      // videoSubscribers:[]
     }
   },
   methods:{
@@ -249,6 +282,7 @@ export default {
         this.balanceGame.isStart = true
         const random = this.makeRandomNum(0, 52)
         this.balanceGame.randomNum = random
+        this.myPickedCard = null
         this.sendGameInfo()
         console.log('랜덤 번호(this.random)',this.random)
         console.log('램덤 번호(balance.randomNum)',this.balanceGame.randomNum)
@@ -258,7 +292,6 @@ export default {
       this.balanceGame.isEnd = false
       console.log(this.balanceGame.cardData)
       this.dataInput = false
-      console.log('화면',this.subscribers)
 
     },
     makeRandomNum : function(min,max){
@@ -353,16 +386,10 @@ export default {
 
       }
     },
-    countSubscriber: function(){
-      
-    }
   },
   mounted:function(){
-    this.bgsound = document.querySelector('.bgaudio')
     this.sound = document.querySelector('.audio')
-    this.bgsound.volume = 0.1
     this.sound.volume = 0.5
-    this.bgsound.play()
     this.win = document.querySelector('.win')
     this.lose = document.querySelector('.lose')
     this.win.volume = 0.3
@@ -432,6 +459,20 @@ export default {
 .card-img{
   width:100%;
 }
+.question-box:hover{
+  font-size: large;
+}
+.card-box{
+  position: relative;
+}
+.vs{
+  position:absolute;
+  vertical-align: middle;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  transform:translate(-50%,-50%);
+}
 .question-text{
   position:absolute;
   display: table-cell;
@@ -472,6 +513,4 @@ export default {
 .lose{
   color: rgb(20, 20, 129);
 }
-
-
 </style>
