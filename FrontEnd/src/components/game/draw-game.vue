@@ -147,7 +147,6 @@ export default {
     }
   },
   mounted: function () {
-    console.log(this.subscribers)
     this.canvas = document.getElementById('canvas')
     this.context = document.getElementById('canvas').getContext("2d")
     this.drawSession()
@@ -173,7 +172,6 @@ export default {
     },
     initDraw: function (event) {
       this.drawable = true;
-      console.log(event)
       this.pos.x1 = event.offsetX;
       this.pos.y1 = event.offsetY;
       this.pos.x2 = this.pos.x1 + 1
@@ -184,7 +182,6 @@ export default {
         erase: this.erase,
         ...this.pos
       }
-      console.log(data)
       this.session.signal({
         data: JSON.stringify(data),
         to: [],

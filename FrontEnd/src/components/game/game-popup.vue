@@ -81,7 +81,6 @@ export default {
     ]),
     selectGame: function (game) {
       this.selectedGame = game
-      console.log(this.selectedGame)
     },
     backgroundToggle(game) {
       if (this.selectedGame == game) {
@@ -131,7 +130,6 @@ export default {
           totalTime: 60,
           cardData:[[], []],
         }
-        console.log(gameInfo)
         this.session.signal({
           data: JSON.stringify(gameInfo),
           to: [],

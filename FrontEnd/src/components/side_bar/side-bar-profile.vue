@@ -78,28 +78,9 @@ export default {
         return config
     },
   },
-  mounted() {
-    // axios({
-    //   method: 'get',
-    //   url: `${process.env.VUE_APP_API_URL}/users/me`,
-    //   headers: this.setToken()
-    // })
-    //     .then(res =>{
-    //         console.log(res.data.user)
-    //         const userInfo = res.data.user
-    //         this.user = userInfo
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // const token = localStorage.getItem('jwt')
-    // if(token){
-    //     this.isLogin=true
-    // }
-    
+  mounted() {    
     this.user = this.getUser;
     this.isLogin = this.getIsLogin;
-    console.log(this.user)
   },
   computed: {
     ...mapGetters('accounts', ['getUser', 'getIsLogin']),

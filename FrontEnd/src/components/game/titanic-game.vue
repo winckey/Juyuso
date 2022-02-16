@@ -112,7 +112,7 @@ export default {
   },
   mounted: function () {
     this.bgsound = document.querySelector('.bgaudio')
-    this.bgsound.volume = 0.0
+    this.bgsound.volume = 0.05
     this.sound = document.querySelector('.audio')
     this.sound.volume = 0.5
     this.gameResultSound = document.querySelector('.gameResult')
