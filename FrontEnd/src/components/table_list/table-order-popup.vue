@@ -153,7 +153,7 @@
             color="#4DB6AC"
             dark
             rounded
-            @click="[dialog=false, createRoom()]"
+            @click="[createRoom()]"
             style="font-size: 1.2rem"
           >
             테이블 예약하기
@@ -162,9 +162,10 @@
       </v-card>
       
     </v-dialog>
-    <TablePreview
-    :roomInfo="roomInfo"
-    ref="tablepreview"/>
+    <TableDetailPopup
+      ref="detailpopup"
+      :search="true" 
+      :roomInfo="propsRoomInfo"/>
   </div>
   
 </template>
@@ -172,12 +173,12 @@
 <script>
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
-import TablePreview from '@/components/table_list/table-preview.vue'
+import TableDetailPopup from '@/components/table_list/table-detail-popup.vue'
 
 export default {
   name: 'TableOrderPopup',
   components: {
-    TablePreview
+    TableDetailPopup
   },
   props: [],
   data: function () {
@@ -185,12 +186,14 @@ export default {
       dialog: false,
       roomInfo: {
         active: true,
+        cnt: 0,
         common: true,
         meetingName: '',
         meetingPassword: '',
         hashTag: [],
         img: 1,
       },
+      propsRoomInfo: null,
       isSecret: false,
       passwordConfirmation: '',
       hashtagInput: '',
@@ -199,10 +202,10 @@ export default {
           v => !!v || "방이름을 입력해주세요."
         ],
         passwordRule: [
-          v => !!(this.isSecret && v) || "비밀방 비밀번호를 입력해주세요."
+          v => !(this.isSecret && !v) || "비밀방 비밀번호를 입력해주세요."
         ],
         passwordConfirmationRule: [
-          v => !!(this.isSecret && v == this.roomInfo.meetingPassword) || "비밀번호가 일치하지 않습니다."
+          v => !(this.isSecret && v != this.roomInfo.meetingPassword) || "비밀번호가 일치하지 않습니다."
         ],
         hastagRule: [
           v => !/.+\s.+/.test(v) || '해시태그는 공백을 포함할 수 없습니다.',
@@ -252,8 +255,6 @@ export default {
       'setTheme',
     ]),
     addHastag: function () {
-      console.log(this.$refs.tableOrderForm)
-
       if (this.$refs.tableOrderForm.validate() && this.hashtagInput != '') {
         this.roomInfo.hashTag.push(this.hashtagInput)
         this.hashtagInput = ''
@@ -264,7 +265,6 @@ export default {
     },
     selectTheme: function (num) {
       this.roomInfo.img = num
-      console.log(this.roomInfo.img)
     },
     backgroundToggle(theme) {
       if (this.roomInfo.img == theme) {
@@ -284,12 +284,16 @@ export default {
           url: `${process.env.VUE_APP_API_URL}/meeting/create`,
           data: this.roomInfo,
         })
-        .then( res => {
-          console.log(res)
-          this.$refs.tablepreview.dialog = true
-        })
-        .catch( err => {
-          console.log(err)
+        .then( () => {
+          this.dialog = false
+          this.propsRoomInfo = {...this.roomInfo}
+          this.propsRoomInfo.theme = this.roomInfo.img
+          this.propsRoomInfo.meetingTitle = this.roomInfo.meetingName
+          this.propsRoomInfo.hastag = this.roomInfo.hashTag
+          this.propsRoomInfo.nickName = this.user.nickname
+          this.propsRoomInfo.cnt = 0
+          this.propsRoomInfo.userImg = this.user.imgUrl
+          this.$refs.detailpopup.dialog = true
         })
       }
     }

@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import TableDetailPopup from '@/components/table_list/table-detail-popup.vue'
+
 export default {
   name: 'TableEnterPopup',
   data: function () {
@@ -68,6 +70,9 @@ export default {
       roomInfo: null,
       dialog: false,
     }
+  },
+  components: {
+    TableDetailPopup
   },
   methods: {
     searchRoom() {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="roomInfo">
     <v-dialog
       transition="dialog-bottom-transition"
       v-model="dialog"
