@@ -20,14 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    List<User> findByNicknameContaining(String nickname);
-
-    @Query(value = "select f.to from Friend f where f.from = :user and f.to.nickname like %:nickname%")
-    List<User> findFriendListByNicknameAndUser(@Param("nickname") String nickname, @Param("user") User user);
-
-    @Query(value = "select u from User u where u.nickname like %:nickname% and u.id not in (select f.to.id from Friend f where f.from = :user)")
-    List<User> findNotFriendListByNicknameAndUser(@Param("nickname") String nickname, @Param("user") User user);
-
     @Query(value = "select f.to from Friend f where f.from = :user")
     List<User> findFriendListByUser(@Param("user") User user);
 

@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface UserQueryRepository {
     public List<User> findNotFriendListByNicknameAndUser(String nickname,  User user);
 
+    List<User> findFriendListByNicknameAndUser(String nickname, User user);
+
 }
