@@ -118,7 +118,7 @@
 
 1. 데이터베이스를 설정합니다.
 
-   - ()을 참고해서 데이터베이스를 생성합니다. ([여기](/docs/ERD.png)를 눌러 erd를 확인하세요.)
+   - [RunWithMe_SQL.sql](https://github.com/soohyun0907/RunWithMe/tree/master/doc/ERD/RunWithMe_SQL.sql)을 참고해서 데이터베이스를 생성합니다. ([여기](https://github.com/soohyun0907/RunWithMe/tree/master/doc/ERD/RunWithMe_ERD.png)를 눌러 erd를 확인하세요.)
 
    - `application.yml`에 데이터베이스 설정을 추가합니다.
 
@@ -237,25 +237,27 @@
 
 ## :desktop_computer: 사용된 기술
 
-![TechStack](/img/stack.png)
+![TechStack](https://user-images.githubusercontent.com/19357410/100544132-062d1380-3297-11eb-832e-9e1dd8f8da13.png)
 
 **[ BACK END ]**
 
-- **Spring Boot** : 주유소의 전반적인 Rest Controller 구현.
+- **Spring Boot** : Run WIth Me Project의 전반적인 Rest Controller 구현.
 - **Spring Security** : WebSecurityConfigurerAdapter를 상속받아 Filter를 적용, 사용자 권한에 맞는 기능을 수행하도록 구현. 
 - **JWT** : JSON Web Token을 활용하여 회원 인증 및 안정성있는 정보 교환을 할 수 있도록 활용.
-- **JPA (Hibernate)** : ORM인 Hibernate를 활용하여 객체 중심의 개발을 할 수 있도록 하였고, JPQL, QueryDSL을 활용하여  Entity 필드가 되는 객체를 통해 DB를 동작시켜 유지보수에 용이하게 활용. 
+- **JPA (Hibernate)** : ORM인 Hibernate를 활용하여 객체 중심의 개발을 할 수 있도록 하였고, SQL을 직접 작성하지 않고 Entity 필드가 되는 객체를 통해 DB를 동작시켜 유지보수에 용이하게 활용. 
   - 동일한 쿼리에 대한 캐시 기능을 사용하기 때문에 높은 효율성 기대
 - **SSL 프로토콜** : SSL을 적용하여 전송되는 패킷값을 암호화하여 외부의 공격자로부터 데이터를 보안하기 위해 사용.
-  -  인증서를 발급받아 웹서버에 SSL 인증서를 적용.
-  - OPENVIDU 보안 문제를 해결하기 위해 사용 , SSL 적용 필수.
-- **MySql** : RDBMS로 주유소의 사용자, 음주 기록, 방 정보, 친구관리, 차단관리, 1:1 채팅 등 다양한 데이터를 저장.
+  - **Let’s Encrypt** 무료 인증서를 발급받아 웹서버에 SSL 인증서를 적용.
+  - Google Map API 활용 시, SSL 적용 필수.
+- **MySql** : RDBMS로 Run With Me Project의 사용자, 러닝 기록, 챌린지, 게시판 등 필요한 데이터를 저장.
+- **Redis** : 비관계형 데이터베이스로 'Key-Value' 구조 데이터 관리 시스템이며, 데이터를 메모리에 저장하여 빠른 처리속도가 필요한 기능에 적용.
+  - 채팅 서버의 채팅방, 메세지 처리를 위해 사용. (Subscribe / Publish)
+  - 만료일을 저장하면 만료 시 자동으로 데이터가 사라지는 특성을 활용하여 로그아웃된 토큰을 저장하여 블랙리스트로 활용.
 - **AWS**
   - EC2 서비스를 이용하여 Ubuntu 서버를 구축 (호스팅).
-- **Jenkins**
-  - CI/CD 파이프라인 구축을 통해 빌드 배포 자동화. 
+  - S3 서비스를 이용하여 프로필 및 러닝 기록 (Polyline)을 저장하기 위해 사용.
 - **Nginx** : 웹 서버를 구축
-- **WebSocket** : 웹 상에서 쉽게 소켓 통신을 하게 해주는 라이브러리를 친구와 1:1 채팅을 하기위해 사용
+- **WebSocket** : 웹 상에서 쉽게 소켓 통신을 하게 해주는 라이브러리를 활용하여 러닝 메이트 매칭, 지역별 그룹 채팅 기능을 구현.
 - **STOMP** : Http에 모델링된 frame 기반의 메세징 프로토콜을 통해 메세지 전송을 좀 더 효율적으로 하기 위해 활용.
   - `STOMP Handler`를 구현하여 Subscribe를 통해 통신하고자 하는 주체(Topic)를 판단하여 실시간, 지속적으로 감시하고 해당 요청이 들어오면 처리하도록 구현. **(Broker 역할 수행)**
 
@@ -266,15 +268,26 @@
   * **SplideSlide** - Page를 Swap할때마다 변경되는 페이지.
   * **carousal** - Main Page에서 다양한 이벤트를 보기 편하게 하기 위해 3D Slide형식으로 넘어가는 컴포넌트 구현.
   * **apexChart** - 런닝 데이터 분석을 위해 사용하는 분석차트.
+  * **decode-google-map-polyline** - String으로 인코딩했던 polyline을 맵에 다시 표시하기 위해 사용.
   * **vue-good-table** - 친구 목록이나 다양한 목록을 표현할때 사용되는 검색과 정렬기능, 페이지 기능을 사용.
   * **vue-moment** - 시간을 DB에 저장하기위해 포맷 형식을 변경 및 DB에서 가져올 때 출력 형식 변경.
   * **web-stomp** - 채팅기능을 위한 웹 소켓 프로그래밍, 실시간으로 채팅을 할때 사용.
+- **Google Static Map** : 실시간 위치정보를 맵에 Polyline화해서 지도이미지를 DB에 저장.
+- **Google Map** : 지도에 지속적으로 위치를 기록 및 추적하기 위해 사용.
+- **Kakao Pay** : Kakao에서 제공하는 KakaoPay기능을 이용해 모바일로 결제가 가능. 기부 챌린지 참가를 위해 원하는 금액만큼 미리 충전하여 사용.
 - **Vuex** : 여러 페이지에서 공용으로 사용하는 데이터와 함수들을 저장해서 한번에 관리, 추가적으로 JWT토큰을 스토어에 저장하여 Backend와 통신시마다 주고받으며, 2시간이 지나면 토큰이 만료되어 서비스 이용 불가. 
 - **vue apaxcharts** : 러닝 데이터를 효과적으로 시각화할 수 있도록 활용.
   - axios 통신.
   - 시각화 자료 이미지 파일로 변환 및 저장.
   - 활용 사례
-    
+    - running plant
+      - 월별 사용자 러닝 거리 기록.
+      - 거리 기록에 따라 상대적인 색 표현.
+      - 업데이트를 통한 실시간 기록 분석 가능.
+     - running analysis
+       - 지난 측정 기록 vuex 저장 및 시각화.
+       - 업데이트 기록과 비교.
+       - 사용자와 같은 티어의 사용자와 비교 분석.
 
 **[ TEAM Cooperation ]**
 
@@ -284,29 +297,32 @@
 - **Jira** : 이슈 관리 도구로 활용. 
   - 주요 기능들을 이슈로 등록하고 Story Point를 산정한 후, 담당자를 지정하여 프로젝트를 진행.
   - 1~2 주 정도 상황에 맞게 스프린트를 설정.
-- **Notion** : 협업을 위한 공용 문서 및 산출물들을 공유할 수 있도록 활용.
-  - 동시 문서 작성.
-- **Figma** : 웹 페이지 디자인 협업을 위해 활용.
-  - 동시 디자인 설계을 통해 스토리보드 작성.
+- **Google Drive** : 협업을 위한 공용 문서 및 산출물들을 공유할 수 있도록 활용.
+  - 동시 문서 작성 (Google Docs).
+  - 대용량 파일 첨부
 
 ## :desktop_computer: 시스템 아키텍쳐
 
-![System_Architecture](/img/architecture.png)
+![System_Architecture](https://user-images.githubusercontent.com/19357410/100544133-088f6d80-3297-11eb-8ba7-bad031aa6e46.png)
 
 ## 🎞 서비스 소개
 
 ### 1. 로그인 화면
 
-![](https://images.velog.io/images/upgrademarine5/post/6d65788e-11e3-48f5-9466-783c75e140d9/image.png)
+![](https://images.velog.io/images/upgrademarine5/post/19e17c9f-03b8-4a26-9b35-f9dd9f1826c3/image.png)
 
 #### 1-1. 로그인 화면
+
+- **[로그인] :** 로그인을 할수 있다.
+- **[회원가입] :** 회원가입을 통해 로그인을 할수있다.
+- **[카카오로 시작하기] :** 카카오API를 사용하여 카카오계정으로도 로그인을 할수있다.
 
 
 
 ---
 
 ### 2. 테이블 목록화면
-![](https://images.velog.io/images/upgrademarine5/post/7ec86d50-b97d-4dcd-981b-cf0ceaa43ccc/image.png)
+![](https://images.velog.io/images/upgrademarine5/post/573f5ce4-1a59-4d1e-8edc-97db001fbdee/image.png)
 
 #### 2-1. 테이블 화면
 
@@ -319,6 +335,7 @@
 
 #### 2-2. 테이블 화면 방 추가
 
+![](https://images.velog.io/images/upgrademarine5/post/db745c43-7e76-43d7-872d-114ec77fe6f0/image.png)
 
 
 - **[+버튼 클릭시] :** 새로운 방을 생성할 수 있도록 모달창을 띄운다.
@@ -332,10 +349,14 @@
 - **[알림 도착시] :** 알림을 통해 친구 신청 또는 메세지를 실시간으로 확인 할수 있다.
 
 ---
+### 3. 방 입장
 
-### 3. 마이페이지
 
-#### 3-1. 마이페이지 화면
+---
+
+### 4. 마이페이지
+
+#### 4-1. 마이페이지 화면
 
 ![](https://images.velog.io/images/upgrademarine5/post/078e48c6-5c2e-4d91-821f-05b1f9c2951a/image.png)
 
@@ -344,7 +365,7 @@
 * **[차단친구 관리] :** 자신이 차단한 사용자 목록을 보여준다.
 
 
-#### 3-2. 마이데이터 화면
+#### 4-2. 마이데이터 화면
 
 ![](https://images.velog.io/images/upgrademarine5/post/7d7ba9e2-55d4-45f4-b202-1994d5d96c1a/image.png)
 
@@ -353,7 +374,7 @@
 * **[오늘주량추가] :** 대면 술자리에서 마신 주량을 직접 기록할 수 있다.
 ---
 
-#### 3-3. 캘린더 화면
+#### 4-3. 캘린더 화면
 ![](https://images.velog.io/images/upgrademarine5/post/4d655189-820c-4048-8478-03513dece834/image.png)
 
 
@@ -361,15 +382,15 @@
 ---
 
 
-### 4. 사이드바
+### 5. 사이드바
 
-#### 4-1. 1:1채팅
+#### 5-1. 1:1채팅
 ![](https://images.velog.io/images/upgrademarine5/post/6980e669-7941-44b3-a1b0-103c004581bb/image.png)
 
 * **[채팅] :** 친구와 1:1 채팅을 할수 있다.
 ---
 
-#### 4-2. 친구목록
+#### 5-2. 친구목록
 ![](https://images.velog.io/images/upgrademarine5/post/6e8f1bc9-6743-46d3-b59a-8e095bc79bcf/image.png)
 
 
@@ -380,7 +401,7 @@
 * **[차단] :** 친구목록에서 제거한후 차단목록에 추가한다.
 ---
 
-#### 4-3. 사용자찾기
+#### 5-3. 사용자찾기
 ![](https://images.velog.io/images/upgrademarine5/post/5586cd7d-97bb-4ede-abd8-15647775d251/image.png)
 
 
@@ -395,23 +416,36 @@
 
 #### 5-1. 일대일 채팅
 
-<img src="https://user-images.githubusercontent.com/19357410/100543962-1c869f80-3296-11eb-8d9b-342b48349992.jpg" width="30%">  <img src="https://user-images.githubusercontent.com/19357410/100543963-1d1f3600-3296-11eb-9a7c-782bb19479fd.jpg" width="30%">
 
-* **[일대일 채팅] :** 팔로우한 유저의 온라인 접속 상태가 보이며 온라인인 유저와 실시간으로 채팅한다.
+---
+
+#### 5-2. 매칭
+
+
+---
+
+
 
 ---
 
 
 
 
+---
+
+
+---
+
 ## :calendar: 일정
 
-## 🙏 저자
+![일정](https://user-images.githubusercontent.com/19357410/100542772-7d5ea980-328f-11eb-806c-4bd76138aa1e.png)
 
-* 장현진 - Daeyong Kim @[imdaeyong](https://github.com/imdaeyong) [Back]
-* 박대언 - Soonbeen Kim @[soo-ni](https://github.com/soo-ni) [Back]
-* 양석조 - Hyungtaik Kim @[hyungtaik](https://github.com/hyungtaik) [Back]
-* 성아영 - Sunsoo Lee @[LEESUNSOO](https://github.com/LEESUNSOO) [Front]
-* 박수아 - Soohyun Jeon @[soohyun0907](https://github.com/soohyun0907) [Front]
-* 박신영 - Soohyun Jeon @[soohyun0907](https://github.com/soohyun0907) [Front]
+## 🙏 개발자
+
+* 장현진 - HyunJin Jang  @[winckey](https://github.com/winckey)  [Back]
+* 박대언 - DaeEon Park  @[park0691](https://github.com/park0691) [Back]
+* 양석조 - SeokJo Yang  @[protossking](https://github.com/protossking) [Back]
+* 성아영 - AYoung Sung  @[Sungayoung](https://github.com/Sungayoung) [Front]
+* 박수아 - SuAh Park  @[pakrsua](https://github.com/pakrsua) [Front]
+* 박신영 - ShinYoung Park  @[shinyoung-angel](https://github.com/shinyoung-angel) [Front]
 
