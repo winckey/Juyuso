@@ -34,7 +34,6 @@ export default {
     ]),
     onClickSheet() {
       if (this.noti.type == 'chat') {
-        console.log(this.noti)
         this.setChatFriend(this.noti.data)
         this.openDraw(1)
       }

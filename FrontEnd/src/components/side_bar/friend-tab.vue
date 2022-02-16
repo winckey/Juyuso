@@ -15,13 +15,16 @@
     <v-tabs-items
       v-model="tab"
       class="h-100">
+      <v-divider class="my-0"></v-divider>
       <v-tab-item>
+        
+        <span v-if="friendsList.length!=0 && friendsList.friendRequestList.length!=0" class="px-3">친구 요청</span>
         <FriendList
-          v-if="friendsList"
+          v-if="friendsList.length!=0 && friendsList.friendRequestList.length!=0"
           :friends="friendsList.friendRequestList"
           :tab="-1"
           />
-        <v-divider></v-divider>
+        <v-divider v-if="friendsList.length!=0 && friendsList.friendRequestList.length!=0" class="my-0"></v-divider>
         <FriendList
           v-if="friendsList"
           :friends="friendsList.friendList"
@@ -38,7 +41,6 @@
           v-if="searchList"
           :friends="searchList.friendRequestList"
           :tab="tab"/> -->
-        <v-divider></v-divider>
         <FriendList
           v-if="searchList"
           :friends="searchList.friendList"

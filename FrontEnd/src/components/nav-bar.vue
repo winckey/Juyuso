@@ -98,7 +98,6 @@ export default {
     },
     friendsSearch: function(){
       if (this.searchInput != null) {
-        console.log(this.searchInput)
         this.searchUserData(this.searchInput)
         this.changeTab(2)
       }

@@ -119,12 +119,10 @@ export default {
       }
     },
     openDetailPopup: function (roomInfo) {
-      console.log(this.$refs.detailpopup)
       this.propsRoomInfo = roomInfo
       this.$refs.detailpopup.dialog = true
     },
     filterHastag: function (hashtags) {
-      console.log(hashtags)
       let results = hashtags.filter( hashtag => hashtag.indexOf(this.searchInput) != -1)
       return results
     }
