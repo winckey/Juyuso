@@ -62,7 +62,8 @@ public class User implements UserDetails {
     @Column(length = 100)
     private String provider;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_img_id")
     private UserImg userImg;
 
     @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
