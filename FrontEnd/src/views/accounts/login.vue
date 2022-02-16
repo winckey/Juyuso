@@ -1,10 +1,10 @@
 <template>
   <div class="d-flex justify-content-center my-auto">
     <div class="login-box rounded-lg">
-      <div class="mx-auto p-4">
+      <div class="mx-auto p-5">
         <v-form ref="loginForm" v-model="valid" lazy-validation @submit.prevent="onLogin">
           <span>
-            <h2 class="mt-8 mb-10 text-center">🍻 적셔 🍻</h2>
+            <h2 class="mt-8 mb-8 text-center">🍻 적셔 🍻</h2>
           </span>
           <v-text-field
           class="mb-4"
@@ -25,19 +25,26 @@
           required
           @keyup.enter="onLogin"></v-text-field>
         </v-form>
-        <div class="d-flex justify-space-between my-4 mx-50">
-          <v-btn class="white--text" @click="onLogin" color="#4DB6AC" rounded>로그인</v-btn>
-          <v-btn class="white--text" @click="$router.push({ name: 'Signup' })" color="indigo lighten-2"  rounded>회원가입</v-btn>
-        </div>
 
-        <div class="my-4 mx-50">
-          <v-btn width="100%" @click="oAuth" color="amber" rounded>
-            <img src="@/assets/kakao_symbol.png" width="5%">
-            &nbsp;카카오로 시작하기
-          </v-btn>
-        </div>
-        <div class="text-center">
-          <router-link class="text-decoration-none font-sm" to="#">비밀번호를 잊으셨나요?</router-link>
+        <div>
+          <div class="d-flex flex-column my-3">
+            <v-btn class="white--text my-2" @click="onLogin" color="#4DB6AC" rounded>로그인</v-btn> 
+            <v-btn class="white--text" @click="$router.push({ name: 'Signup' })" color="indigo lighten-2" rounded>회원가입</v-btn>
+          </div>
+
+          <div style="text-align:center">
+            <span>or</span>
+          </div>
+          
+          <div class="my-3">
+            <v-btn width="100%" @click="oAuth" color="#f9e000" rounded>
+              <img src="@/assets/kakao_symbol.png" width="5%">
+              &nbsp;카카오로 시작하기
+            </v-btn>
+          </div>
+          <div class="text-center">
+            <router-link class="text-decoration-none font-sm" to="#">비밀번호를 잊으셨나요?</router-link>
+          </div>
         </div>
       </div>
     </div>

@@ -32,27 +32,27 @@
       temporary
     >
       
-    <div class="grey lighten-4" @contextmenu.prevent> 
-      <div>
-        <side-bar-profile></side-bar-profile>
+      <div class="grey"  @contextmenu.prevent> 
+          <side-bar-profile></side-bar-profile>
       </div>
-      <div>
-        <!-- 검색창 -->
-        <div>
-          <v-text-field
-            class="shrink my-2"
-            solo
-            rounded
-            dense
-            v-model="searchInput"
-            @keyup.enter="friendsSearch">   
-            </v-text-field>           
-        </div>
+
+      <!-- 검색창 -->
+      <div class="m-1 my-2">
+        <v-text-field
+        hide-details="true"
+        solo
+        filled
+        label="친구 닉네임 검색"
+        v-model="searchInput"
+        @input="friendsSearch"
+        autofocus>   
+        </v-text-field>           
       </div>
-      <!-- <friend-tab
-        ref="FriendTab"></friend-tab> -->
-      <FriendTab/>
-    </div>
+
+      <div>
+        <FriendTab/>
+      </div>
+    
     </v-navigation-drawer>
     
   </div>
