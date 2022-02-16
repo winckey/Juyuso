@@ -105,10 +105,11 @@
 
                 <v-col cols="12">
                   <v-text-field
-                    label="휴대전화* ex) 010-1234-1234"
+                    label="휴대전화*"
                     v-model="userInfo.phone"
                     :rules="rules.phoneRule"
                     required
+                    @input="phoneChange"
                   ></v-text-field>
                 </v-col>
 
@@ -159,7 +160,7 @@
 <script>
 import axios from 'axios'
 import {mapActions} from 'vuex'
-
+import { phoneFormatter } from '@/common/util'
 
 export default {
   name: 'ProfileEditPopup',
@@ -198,7 +199,8 @@ export default {
           v => !!v || "지역을 입력해주세요."
         ],
         phoneRule: [
-          v => !!v || "휴대전화 번호를 입력해주세요."
+          v => !!v || "휴대전화 번호를 입력해주세요.",
+          v => /^010-?([0-9]{4})-?([0-9]{4})$/.test(v) || "13자리의 휴대전화 번호를 (숫자만) 입력해주세요."
         ],
         nicknameRule: [
           v => !!v || "닉네임을 입력해주세요.",
@@ -209,7 +211,7 @@ export default {
           v => !(v && v.length > 10) || "자기소개는 10자까지 입력 가능합니다."
         ]
       },
-      axiosErr: []
+      
     }
   },
   created: function () {
@@ -224,6 +226,10 @@ export default {
   },
   methods: {
     ...mapActions('accounts', ['userUpdate']),
+    phoneChange: function () {
+      this.userInfo.phone = phoneFormatter(this.userInfo.phone)
+    },
+
     updateUser: function () {
       const item = {credentials: {
           description: this.userInfo.description,
@@ -247,13 +253,11 @@ export default {
               this.userUpdate(res.data.user)
   
             })
-            .catch(err => {
-            
+            .catch(() => {            
               this.alertMessage = "입력 형식을 다시 확인해주세요!"
               this.isAlert = true
               setTimeout(() => this.isAlert=false, 3000)
               this.isSuccess = false
-              this.axiosErr.push(err)
             })
 
       } else {

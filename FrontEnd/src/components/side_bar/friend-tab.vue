@@ -44,10 +44,6 @@
       <v-tab-item
         class="friend-list"
         :style="{height: height}">
-        <!-- <FriendList
-          v-if="searchList"
-          :friends="searchList.friendRequestList"
-          :tab="tab"/> -->
         <FriendList
           v-if="searchList"
           :friends="searchList.friendList"

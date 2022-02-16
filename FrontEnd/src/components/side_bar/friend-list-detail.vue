@@ -43,7 +43,6 @@
               </v-list-item>
             </template>
             <v-list @contextmenu.prevent>
-              <v-list-item><button>방에 초대</button></v-list-item>
               <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
               <v-list-item @click="chatFriend"><button>채팅하기</button></v-list-item>
               <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
@@ -82,8 +81,7 @@
           </v-list-item>
         </template>
         <v-list @contextmenu.prevent>
-          <v-list-item><button>방에 초대</button></v-list-item>
-          <v-list-item @click="goFriendProfile"><button>프로필 보기</button></v-list-item>
+          <!-- <v-list-item @click="goNotFriendProfile"><button>프로필 보기</button></v-list-item> -->
           <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item>
           <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
           <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
@@ -265,6 +263,10 @@ export default {
       this.$router.push({name: 'FriendPage', params: {userId: this.userInfo.id}})
       this.$router.go()
     },
+    // goNotFriendProfile: function(){
+    //   this.$router.push({name: 'FriendPage', params: {userId: this.notFriendUserInfo.id}})
+    //   this.$router.go()
+    // },
     prevent: function (e) {
       e.preventDefault()
     }
