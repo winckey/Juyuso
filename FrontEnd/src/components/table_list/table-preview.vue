@@ -8,7 +8,10 @@
           테이블 입장전
         </v-card-title>
         <div class="d-flex">
-          <video :srcObject.prop="videoSrc" autoplay></video>
+          <video v-if="videoSrc" :srcObject.prop="videoSrc" autoplay></video>
+          <div class="empty-div d-flex justify-content-center align-center" v-else>
+            비디오 소스가 없습니다.
+          </div>
           <div class="d-flex flex-column justify-content-end p-3">
             <div>
               <v-select
@@ -113,9 +116,22 @@ export default {
       .then(mediaStream => {
         let videoTrack = mediaStream.getVideoTracks()[0];
         this.videoSrc = new MediaStream([videoTrack])
-      });
+      })
+      .catch(() => {
+
+      })
+      
     },
     enterRoom: function () {
+      if (!this.videoSrc) {
+        this.$toast.open({
+          position: 'top',
+          message: '비디오 소스가 없으면 입장이 불가능합니다.',
+          type: 'error',
+          duration: 2500,
+        });
+        return
+      }
       let roomInfo = {
         sessionId: String(this.roomInfo.meetingId),
         isCreate: true,
@@ -150,7 +166,9 @@ export default {
         this.changeDevice()
       }
       else {
-        this.videoSrc.getTracks()[0].stop()
+        if(this.videoSrc) {
+          this.videoSrc.getTracks()[0].stop()
+        }
       }
     }
   }
@@ -161,6 +179,14 @@ export default {
 <style scoped>
   video {
     width: 500px;
+  }
+
+  .empty-div {
+    width: 500px;
+    height: 375px;
+    background: rgb(143, 143, 143);
+    color: white;
+    font-size: 1.5rem;
   }
 
 </style>

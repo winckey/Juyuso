@@ -43,7 +43,7 @@
             dark
             rounded
             small
-            @click="[dialog=false, enterRoom()]"
+            @click="[searchRoom()]"
             style="font-size: 1.2rem"
           >
             입장
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import TableDetailPopup from '@/components/table_list/table-detail-popup.vue'
 
 export default {
@@ -76,6 +77,18 @@ export default {
   },
   methods: {
     searchRoom() {
+      axios({
+        method: 'GET',
+        url: `${process.env.VUE_APP_API_URL}/meeting/${this.meetingId}`,
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+      })
+      .then( res => {
+        console.log(res)
+        this.roomInfo = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
       // axios 연결
     },
     enterRoom() {
