@@ -391,10 +391,6 @@ export default {
 </script>
 
 <style scoped>
-/* .game-box {
-    top: 10%;
-    right: 40%;
-} */
 .dialog{
   overflow:scroll;
   -ms-overflow-style: none;
@@ -434,12 +430,6 @@ export default {
 .card-box{
   position: relative;
 }
-/* .a-card{
-  background-color: rgb(219, 184, 27);
-}
-.b-card{
-  background-color: rgb(96, 96, 136);
-} */
 .vs{
   position:absolute;
   vertical-align: middle;
