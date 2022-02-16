@@ -31,7 +31,7 @@
             <ProfileEditPopup :user ="user" v-if="user" @changeProfileImage="changeProfileImage"/>
 
           </div>
-          <div class="profile-edit-popup my-6">
+          <div class="profile-edit-popup my-6" v-if="!isKakao">
             <PasswordChange :user="user" v-if="user"/>
           </div>
         </div>
@@ -84,7 +84,8 @@ export default {
   },
   data(){
     return{
-      user: null      
+      user: null,
+      isKakao: false      
     }
   },
   methods: {
@@ -105,6 +106,9 @@ export default {
       .then(res => {
         const userInfo = res.data.user
         this.user = userInfo
+        if (this.user.provider === 'kakao') {
+          this.isKakao = true
+        }
       })
   },
   computed: {

@@ -195,7 +195,7 @@ export default {
         ],
         phoneRule: [
           v => !!v || "휴대전화 번호를 입력해주세요.",
-          v => /^010-?([0-9]{4})-?([0-9]{4})$/.test(v) || "13자리의 휴대전화 번호를 (숫자만) 입력하세요."
+          v => /^010-?([0-9]{4})-?([0-9]{4})$/.test(v) || "13자리의 휴대전화 번호를 (숫자만) 입력해주세요."
         ],
       }
     }
@@ -299,7 +299,7 @@ export default {
 
 <style scoped>
   .signup-box {
-    width: 400px;
+    width: 500px;
     background: #FBF8F8
   }
 </style>
