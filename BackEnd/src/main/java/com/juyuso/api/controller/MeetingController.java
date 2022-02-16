@@ -21,11 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Api(value = "미팅방 관리 api", tags = {"미팅방 관리"})
 @RestController
@@ -113,12 +110,24 @@ public class MeetingController {
 
     }
 
+    @GetMapping("/{meetingId}")
+    @ApiOperation(value = "방 정보 불러오기", notes = "<strong>방 정보 불러오기</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "방 들어가기"),
+            @ApiResponse(code = 400, message = "오류"),
+            @ApiResponse(code = 403, message = "권한없음"),
+            @ApiResponse(code = 500, message = " 서버에러")
+    })
+    public ResponseEntity<MeetingResDto> getMeeting(@PathVariable Long meetingId) {
+        return ResponseEntity.ok(MeetingResDto.of(meetingService.findByMeetingId(meetingId)));
+    }
+
     @PostMapping("/enter/{meetingId}")
     @ApiOperation(value = "미팅방 들어가기" , notes = "<strong>방 들어가기 </strong>")
     @ApiResponses({
             @ApiResponse(code = 200, message = "방 들어가기"),
             @ApiResponse(code = 400, message = "오류"),
-            @ApiResponse(code = 401, message = "권한없음"),
+            @ApiResponse(code = 403, message = "권한없음"),
             @ApiResponse(code = 500, message = " 서버에러")
     })
     public ResponseEntity<MeetingEnterResDto> enterMeeting(@PathVariable Long meetingId, Principal principal) {
