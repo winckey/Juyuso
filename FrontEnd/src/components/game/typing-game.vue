@@ -160,7 +160,6 @@ export default {
       if (this.wordInput === this.wordDisplay) {
         this.correctAudio.play()
         this.score += 1
-        // console.log(JSON.parse(this.publisher.stream.connection.data).clientData)
         this.typingGame.scoreResultObject[JSON.parse(this.publisher.stream.connection.data).clientData] += 1
         this.wordInput = null
         this.changeWord()

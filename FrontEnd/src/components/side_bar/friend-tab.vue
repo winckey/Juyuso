@@ -1,7 +1,10 @@
 <template>
   <div style="height: 100%">
     <v-tabs
+      background-color="#E0F2F1"
       fixed-tab
+      color="#4DB6AC"
+      grow
       centered
       :value="tab">
     <v-tab
@@ -16,7 +19,7 @@
       v-model="tab"
       class="h-100">
       <v-divider class="my-0"></v-divider>
-      <v-tab-item>
+      <v-tab-item class="m-1">
         
         <span v-if="friendsList.length!=0 && friendsList.friendRequestList.length!=0" class="px-3">친구 요청</span>
         <FriendList

@@ -19,8 +19,8 @@
               <div>
                 <div>
                   <v-container class="game">
-                    <p>🍺밸런스 게임🥃</p>
-                    <v-btn @click="[gameStart(),makeRandomNum()]" :disabled="balanceGame.isStart">시작</v-btn>
+                    <p style="font-size: 1.5rem">🍺 밸런스 게임 🍺</p>
+                    <v-btn @click="[gameStart(),makeRandomNum()]" :disabled="balanceGame.isStart" color="#FFEA00" >시작</v-btn>
                     <v-container fluid class="flex"
                       v-if="dataInput">
                     </v-container>
@@ -72,13 +72,13 @@
                 max-width="400">
                 <v-card v-if="balanceGame.cardData" class="dialog">
                   <div
-                    class="result win"
+                    class="result win p-3"
                     v-if="winCard == myPickedCard">
                     <img src="@/assets/you_win.png" alt="">
                   </div>
                   <div
                     v-else
-                    class="result lose">
+                    class="result lose p-3">
                     <img src="@/assets/you_lose.png" alt="">
                   </div>
                   <!-- A 승리 -->
@@ -136,7 +136,7 @@
                   </v-progress-linear>
                   <v-row>
                     <v-col>
-                      <div class="result-box">
+                      <div class="result-box m-1">
                         {{balanceGame.gameData[0][balanceGame.randomNum]}} 을(를) 
                         <div v-for="player in balanceGame.cardData[0]" :key="player.username">
                           {{ player.username }} 님
@@ -145,7 +145,7 @@
                       </div>
                     </v-col>
                     <v-col>
-                      <div class="result-box">
+                      <div class="result-box m-1">
                         {{balanceGame.gameData[1][balanceGame.randomNum]}} 을(를)
                         <div v-for="player in balanceGame.cardData[1]" :key="player.username">
                           {{ player.username}} 님

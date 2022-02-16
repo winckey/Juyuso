@@ -42,7 +42,7 @@
         hide-details="true"
         solo
         filled
-        label="친구 닉네임 검색"
+        label="닉네임 검색"
         v-model="searchInput"
         @input="friendsSearch"
         autofocus>   
