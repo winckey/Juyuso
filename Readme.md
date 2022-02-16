@@ -291,8 +291,7 @@
 
 ## :desktop_computer: 시스템 아키텍쳐
 
-![System_Architecture](https://user-images.githubusercontent.com/19357410/100544133-088f6d80-3297-11eb-8ba7-bad031aa6e46.png)
-
+![](https://images.velog.io/images/upgrademarine5/post/a73584c2-db19-4d7b-bc07-655830e2dbde/image.png)
 ## 🎞 서비스 소개
 
 ### 1. 로그인 화면
@@ -376,6 +375,10 @@
 ![](https://images.velog.io/images/upgrademarine5/post/674e013e-3ba9-4dd5-9600-2ce15cf234ac/Inked%EB%B0%A955_LI.jpg)
 - **[밸런스게임] :** 두개의 질문중 하나를 시간내에 선택하는 게임.
 
+#### 3-7 방 채팅 및 확성기
+![](https://images.velog.io/images/upgrademarine5/post/ef0b24ad-bf8f-4718-bc13-d0e92a9c32d1/%EB%B0%A9%EC%B1%84%ED%8C%85.jpg)
+- **[채팅및확성기] :** 방에있는 사용자들과 채팅 및 확성기를 통해 소통을 할수있다.
+
 
 ---
 
@@ -435,37 +438,7 @@
 
 ---
 
-
-
-### 5. 술게임 시작.
-
-#### 5-1. 일대일 채팅
-
-
----
-
-#### 5-2. 매칭
-
-
----
-
-
-
----
-
-
-
-
----
-
-
----
-
-## :calendar: 일정
-
-![일정](https://user-images.githubusercontent.com/19357410/100542772-7d5ea980-328f-11eb-806c-4bd76138aa1e.png)
-
-## 🙏 개발자
+## 🙏 개발하신분들
 
 * 장현진 - HyunJin Jang  @[winckey](https://github.com/winckey)  [Back]
 * 박대언 - DaeEon Park  @[park0691](https://github.com/park0691) [Back]
