@@ -59,13 +59,6 @@
 
 <script>
 import axios from 'axios'
-/**
- * ## 추가 구현 사항
- * 1. 현재 월달력에서 이전, 다음달 날짜 클릭 막기 or 이벤트 막기 (타이틀 옆 화살표 버튼으로만 이동)
- *  --> 현재 moved 이벤트 (화살표 버튼 클릭 이벤트) 처리만 되어 있으므로 달력 내에서 이전/다음달 날짜 클릭시 이벤트 처리가 안되어 있음
- *  --> 다음/이전 달 클릭 이벤트 처리를 막든가 or 다음/이전달 클릭시에도 출첵 불러올 수 있도록 추가 처리 하든가
- * 2. 
- */
 import {mapState} from 'vuex'
 
 export default {
@@ -116,9 +109,7 @@ export default {
                 })
 
                 this.events = events
-            }).catch(err => {
-                console.log(err)
-             })
+            })
  
     },
 
@@ -151,9 +142,6 @@ export default {
 
                 this.events = events
             })
-            // .catch(err => {
-            //     console.log(err)
-            // })
         },
         onBtnClick() {
             axios.post(`${process.env.VUE_APP_API_URL}/attendance`, {}, {
@@ -169,9 +157,6 @@ export default {
 
                 this.todayChecked = true;
             })
-            // .catch(err => {
-            //     console.log(err)
-            // })
         },
         getTodayDate() {
             const date = new Date();

@@ -62,7 +62,6 @@
 </template>
 
 <script>
-// import {mapState} from 'vuex'
 import axios from 'axios'
 import BlockedFriendDetail from '@/components/accounts/blocked-friend-detail.vue'
 export default {
@@ -77,9 +76,7 @@ export default {
   components: {
     BlockedFriendDetail
   },
-  computed: {
-    // ...mapState('friends', ['banList'])
-  },
+ 
   created: function (){
     axios({
       method: 'GET',
@@ -89,9 +86,7 @@ export default {
       .then(res => {
         this.blockedFriends = res.data.bans
       })
-      // .catch(err =>{
-      //   console.log(err)
-      // })
+     
   }
 }
 </script>

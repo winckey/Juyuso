@@ -42,7 +42,7 @@
                           :autofocus="this.typingGame.allPlaying"
                       ></v-text-field>
                   </div>
-                  <div class="my-info">
+                  <div class="my-info"> 
                       <div class="time">
                           시간: <span >{{ typingGame.time }}</span>초
                       </div>
@@ -50,12 +50,12 @@
                           내 점수: <span >{{ score }}</span>점
                       </div>
                   </div>
-                  <v-btn class="button" color="#4DB6AC" @click="beforeGame" v-if="!typingGame.allPlaying&& !typingGame.isEnd && !typingGame.isBefore">게임 시작</v-btn>
-                  <v-btn class="button" color="white" style="cursor:not-allowed" v-if="typingGame.allPlaying">게임 진행 중</v-btn>
-                  <v-btn class="button" color="white" style="cursor:not-allowed" v-if="typingGame.isBefore">대기 중</v-btn>
+                  <v-btn class="button" color="#4DB6AC" dark @click="beforeGame" v-if="!typingGame.allPlaying&& !typingGame.isEnd && !typingGame.isBefore">게임 시작</v-btn>
+                  <v-btn class="button prep-button" color="white"  v-if="typingGame.allPlaying">게임 진행 중</v-btn>
+                  <v-btn class="button prep-button" color="white"  v-if="typingGame.isBefore">대기 중</v-btn>
                   <div class="d-flex flex-column" v-if="typingGame.isEnd">
-                    <v-btn class="button" color="#4DB6AC" @click="reset()">한판 더</v-btn>
-                    <v-btn class="button" @click="switchGameMode(undefined)">게임 종료</v-btn>
+                    <v-btn class="button" color="#4DB6AC" dark @click="reset()">한판 더</v-btn>
+                    <v-btn class="button" style="color: #4DB6AC" @click="switchGameMode(undefined)">게임 종료</v-btn>
                   </div>
           </v-card>
     <div v-if="typingGame.isEnd"  class="celebration-box">
@@ -361,6 +361,10 @@ export default {
     font-size: 1.2rem;
 }
 
+.prep-button {
+  cursor:not-allowed; 
+  color: #4DB6AC;
+}
 
 .video-grid {
   display: grid;

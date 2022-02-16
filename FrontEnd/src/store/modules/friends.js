@@ -32,10 +32,6 @@ const friends = {
     BAN_FRIEND_LIST: function (state, banInfo) {
       state.banList = banInfo
     },
-    // BAN_FIREND: function(state, data){
-    //   let index = state.friendList.indexOf(data)
-    //   state.friendList.splice(index, 1)
-    // },
     AGREE_FRIEND: function(state, userId){
       state.friendsList = userId
     },

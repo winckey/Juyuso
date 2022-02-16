@@ -167,8 +167,10 @@ export default {
                     this.isAlert = false
                 })
                 .catch(err => {
-                    console.log(err)
-                    this.isAlert = true
+                    if (err) {
+                      this.isAlert = true
+                      setTimeout(()=> {this.isAlert = false}, 3000)
+                    }
                 })
         },
         updatePassword: function () {
@@ -183,15 +185,17 @@ export default {
                         this.isSuccess=true
                         this.isAlert = false
                         this.nowPassword = ''
-                        // console.log(res.data.user)
                         this.userUpdate(res.data.user)
                         })
                         .catch(err => {
-                        this.isAlert = true
-                        console.log(err)
+                          if (err) {
+                            this.isAlert = true
+                            setTimeout(()=> {this.isAlert = false}, 3000)
+                          }
                         })
             } else {
-                this.isSuccess = false
+                this.isAlert = true
+                setTimeout(()=> {this.isAlert = false}, 3000)
             }
 
         },
