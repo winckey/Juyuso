@@ -400,7 +400,6 @@ export default {
           sessionId: this.roomId,
           data: this.setSojuBeer()
         }
-        console.log(data)
         this.leaveSession(data)
         window.removeEventListener('beforeunload', (event) => {
           event.preventDefault()
@@ -490,7 +489,6 @@ export default {
         sessionId: this.roomId,
         data: this.setSojuBeer()
       }
-      console.log(data)
       this.leaveSession(data)
       this.$router.push({ name: 'TableList' })
 		},
@@ -583,7 +581,6 @@ export default {
           totalTime: 60,
           cardData:[[], []],
         }
-        console.log(gameInfo)
         this.session.signal({
           data: JSON.stringify(gameInfo),
           to: [],

@@ -83,17 +83,18 @@ export default {
         headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
       })
       .then( res => {
-        console.log(res)
         this.roomInfo = res.data
+        this.$refs.detailpopup.dialog = true
       })
-      .catch(err => {
-        console.log(err)
+      .catch(() => {
+        this.$toast.open({
+          position: 'top',
+          message: '해당 방번호로 입장할 수 없습니다.',
+          type: 'error',
+          duration: 2500,
+        })
       })
-      // axios 연결
     },
-    enterRoom() {
-      this.$refs.detailpopup.dialog=true
-    }
   },
   watch: {
     dialog() {

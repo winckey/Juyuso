@@ -123,22 +123,21 @@ export default {
       
     },
     enterRoom: function () {
-      // if (!this.videoSrc) {
-      //   this.$toast.open({
-      //     position: 'top',
-      //     message: '비디오 소스가 없으면 입장이 불가능합니다.',
-      //     type: 'error',
-      //     duration: 2500,
-      //   });
-      //   return
-      // }
+      if (!this.videoSrc) {
+        this.$toast.open({
+          position: 'top',
+          message: '비디오 소스가 없으면 입장이 불가능합니다.',
+          type: 'error',
+          duration: 2500,
+        });
+        return
+      }
       let roomInfo = {
         sessionId: String(this.roomInfo.meetingId),
         isCreate: true,
         userName: this.user.nickname,
         publishInfo: this.publishInfo
       }
-      console.log(roomInfo)
       this.joinSession(roomInfo)
       try {
         this.videoSrc.getTracks()[0].stop()

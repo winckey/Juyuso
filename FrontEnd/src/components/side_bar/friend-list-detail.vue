@@ -193,9 +193,6 @@ export default {
           nickName: this.notFriendUserInfo.nickname,
         }
       })
-      .then( res => {
-        console.log(res)
-      })
     },
     chatFriend: function () {
       this.setChatFriend(this.userInfo || this.notFriendUserInfo)
@@ -231,12 +228,11 @@ export default {
           nickName: this.userInfo.nickname,
         }
       })
-      .then( res => {
+      .then( () => {
         const userId = {
           id : this.userInfo.id,
           nickName: this.userInfo.nickname
         }
-        console.log(res)
         this.friendList(userId)
       })
     },
