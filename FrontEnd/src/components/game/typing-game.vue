@@ -5,13 +5,13 @@
     <audio class="gameResult" src="@/assets/sound/game_result.mp3"></audio>
     <v-row class="entire-box">
       <img src="" alt="">
-      <v-col cols="4">
+      <v-col cols="4" class="d-flex justify-content-center align-items-center">
         <div class="video-grid" :style="videoGrid">
           <user-video  :stream-manager="publisher"/>
           <user-video  v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="4" class="d-flex justify-content-center align-items-center">
         <div class="video-grid" :style="videoGrid">
           <typing-game-score :stream-manager="publisher" 
           :score="typingGame.scoreResultObject[JSON.parse(publisher.stream.connection.data).clientData]"/>
@@ -129,7 +129,7 @@ export default {
       return {
           display: 'grid',
           gridTemplateColumns: 28+'vw',
-          gap: 1+'vh',
+          gap: 0.5+'vh',
           gridTemplateRows: this.typingGame.members.length === 1 ? 
           'repeat('+`${this.typingGame.members.length}`+','+ (80/2)+'vh)' :
           'repeat('+`${this.typingGame.members.length}`+','+ (80/`${this.typingGame.members.length}`)+'vh)'
@@ -283,7 +283,7 @@ export default {
 <style scoped>
 
 .entire-box {
-    height: 84vh;
+    height: 83vh;
     width: 85vw;
     position: relative;
   }
@@ -368,7 +368,7 @@ export default {
 .video-grid {
   display: grid;
   grid-template-columns: 28vw;
-  grid-template-rows: repeat(6, 12vh);
+  grid-template-rows: repeat(6, 12.5vh);
   gap: 1vh;
 }
 
