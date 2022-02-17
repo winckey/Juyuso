@@ -177,6 +177,7 @@ export default {
       this.sendInfo()
     },
     beforeGame: function () {
+      this.wordInput = null
       this.typingGame.isBefore = true 
       this.sendInfo()
       let count = setInterval(() => {
