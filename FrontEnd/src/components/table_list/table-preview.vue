@@ -13,7 +13,7 @@
             비디오 소스가 없습니다.
           </div>
           <div class="d-flex flex-column justify-content-end p-3">
-            <div>
+            <div style="width: 260px">
               <v-select
                 @change="changeDevice"
                 append-icon="mdi-camera-outline"
@@ -25,7 +25,7 @@
                 rounded
                 placehoder="video"></v-select>
             </div>
-            <div>
+            <div style="width: 260px">
               <v-select
                 @click="changeDevice"
                 append-icon="mdi-volume-high"

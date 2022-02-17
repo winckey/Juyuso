@@ -82,7 +82,7 @@
               <v-item-group>
                 <div class="container-fluid">
                   <div class="row">
-                    <div class="col-3" v-for="filter in filterType[tab].types" :key="filter.name">
+                    <div class="col-3" v-for="filter in filterType[1].types" :key="filter.name">
                       <v-item v-slot="{ active, toggle }">
                         <v-card
                           width="100"
