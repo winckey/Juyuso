@@ -72,7 +72,7 @@ export default {
     }
   },
   mounted: function () {
-    this.height = `${window.innerHeight - 80}px`
+    this.resizeHeight()
     window.addEventListener('resize', this.resizeHeight);
     this.chatDiv = document.querySelector('.chat-list')
     this.chatDiv.scrollTop = this.chatDiv.scrollHeight
@@ -88,7 +88,16 @@ export default {
       this.chatBox = !this.chatBox
     },
     resizeHeight () {
-      this.height = `${window.innerHeight - 80}px`
+      if(this.Chat_messages.length > 0) {
+        this.$nextTick (() => {
+          let whole_chat_list = document.querySelector('.whole-chat-list')
+          console.log(whole_chat_list.clientHeight)
+          this.height = `${window.innerHeight - 80 - whole_chat_list.clientHeight}px`
+        })
+      }
+      else {
+        this.height = `${window.innerHeight - 80}px`
+      }
     },
     sendMessage() {
       if (this.chatInput.trim() != '') {
@@ -128,6 +137,15 @@ export default {
           this.chatDiv.scrollTop = this.chatDiv.scrollHeight
         }
       })
+    },
+    Chat_messages() {
+      if(this.Chat_messages.length > 0) {
+        this.$nextTick (() => {
+          let whole_chat_list = document.querySelector('.whole-chat-list')
+          console.log(whole_chat_list.clientHeight)
+          this.height = `${window.innerHeight - 80 - whole_chat_list.clientHeight}px`
+        })
+      }
     }
   }
 }
@@ -156,7 +174,6 @@ export default {
     background: rgb(243, 162, 108);
     border-radius: 10px;
     text-align: center;
-
   }
 
   .chat-box {
