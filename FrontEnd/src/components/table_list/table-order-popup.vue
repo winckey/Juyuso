@@ -154,7 +154,6 @@
             dark
             rounded
             @click="[createRoom()]"
-            style="font-size: 1.2rem"
           >
             테이블 예약하기
           </v-btn>

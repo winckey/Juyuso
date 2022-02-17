@@ -97,7 +97,6 @@ const openviduStore = {
       data.session.on('exception', ({ exception }) => {
 				console.warn(exception);
 			});
-
       dispatch('createToken', '0').then(token => {
         data.session.connect(token, { clientData: userInfo.nickname })
         commit('SET_WHOLE_SESSION_INFO', data)
@@ -132,7 +131,6 @@ const openviduStore = {
 			// On every new Stream received...
 			data.session.on('streamCreated', ({ stream }) => {
         const subscriber = data.session.subscribe(stream);
-        console.log(subscriber)
 				data.subscribers.push(subscriber);
         data.wholeSubscribers.push(subscriber);
         commit('SET_WHOLE_SUBSCRIBERS', data)
@@ -147,7 +145,6 @@ const openviduStore = {
       // On every Stream destroyed...
 			data.session.on('streamDestroyed', ({ stream }) => {
         const index = data.subscribers.indexOf(stream.streamManager, 0);
-        console.log()
         Vue.$toast.open({
           position: 'bottom',
           message: `${JSON.parse(data.subscribers[index].stream.connection.data).clientData}님이 나가셨습니다.`,

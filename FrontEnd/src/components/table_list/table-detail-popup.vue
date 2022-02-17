@@ -3,7 +3,7 @@
     <v-dialog
       transition="dialog-bottom-transition"
       v-model="dialog"
-      width="550"
+      width="500"
     >
       <template v-slot:activator="{ on, attrs }" v-if="!search">
         <button
@@ -16,12 +16,13 @@
               :src="require(`@/assets/${imgUrl}.png`)" 
               alt=""
               >
-            <div class="table-info">
+            <div :class="roomInfo.hashtag.length > 0 ? 'table-info' : 'table-info-center'" >
               {{ roomInfo.meetingTitle }}
               <v-icon>{{ roomInfo.common ? '' : 'mdi-lock-outline'}}</v-icon>
             </div>
             <div class="table-hashtag">
               <v-chip
+                v-if="roomInfo.hashtag.length > 0"
                 class="ma-2"
                 color="#e6f6fa"
               >
@@ -33,13 +34,13 @@
       </template>
 
       <v-card 
-        height="500" 
+        height="450" 
         class="p-4 card-background"
         :style="{backgroundImage: 'url('+ require(`@/assets/theme/${roomInfo.theme}.jpg`)+')'}"
       >
         <div class="inner-card-background p-3">
           <v-card-title class="d-flex justify-content-center">
-            <span>
+            <span style="font-size: 1.2em">
             {{ roomInfo.meetingTitle }}
             <v-icon>{{ roomInfo.common ? '' : 'mdi-lock-outline'}}</v-icon>
             </span>
@@ -171,7 +172,17 @@ export default {
     left: 50%;
     top: 35%;
     transform: translate(-50%);
-    font-size: 1.5em;
+    font-size: 1.3em;
+    text-shadow: 2px 2px 2px rgb(187, 187, 187);
+  }
+
+  .table-info-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -40%);
+    font-size: 1.3em;
+    text-shadow: 2px 2px 2px rgb(187, 187, 187);
   }
   
   .table-hashtag {
