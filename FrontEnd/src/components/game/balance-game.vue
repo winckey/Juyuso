@@ -269,13 +269,14 @@ export default {
       if (this.balanceGame.isStart && !this.gameStarted) {
         this.gameStarted = true
         this.balanceGame.isEnd = false
+        this.balanceGame.cardData = [[], []],
         this.selected = false
+        this.myPickedCard = null
         this.timer = setInterval(this.countTime,1000)
       }
       // 내가 시작버튼을 누른 경우
       else if (!this.balanceGame.isStart && !this.gameStarted) {
         this.balanceGame.curMember = 0
-        this.balanceGame.cardData = [[], []],
         this.balanceGame.totalTime = 5,
         this.balanceGame.isStart = true
         const random = this.makeRandomNum(0, 52)
