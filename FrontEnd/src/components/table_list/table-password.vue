@@ -1,5 +1,4 @@
 <template>
-  <div>
     <v-dialog
         v-model="dialog"
         max-width="290"
@@ -14,11 +13,11 @@
         </v-alert>
       </div>
         <v-card>
-          <v-card-title>
-            비밀번호
+          <v-card-title class="d-flex justify-content-center">
+            비밀번호 입력
           </v-card-title>
 
-          <v-card-text>
+          <v-card-text class="pb-0">
             <v-text-field
               :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
               :type="passwordShow ? 'text' : 'password'"
@@ -29,12 +28,20 @@
             </v-text-field>
           </v-card-text>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
+          <v-card-actions class="d-flex justify-content-center pb-4">
+            <v-btn
+              color="#4DB6AC"
+              dark
+              rounded
+              small
+              @click="confirmPassword"
+              style="font-size: 1rem"
+            >
+              확인
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </div>
 </template>
 
 <script>

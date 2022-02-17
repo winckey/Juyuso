@@ -44,7 +44,7 @@
             rounded
             small
             @click="[searchRoom()]"
-            style="font-size: 1.2rem"
+            style="font-size: 1rem"
           >
             입장
           </v-btn>
