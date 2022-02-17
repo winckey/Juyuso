@@ -71,6 +71,8 @@ public class MeetingListResDto {
                 dto.setTheme(entity.getUrl());
                 if(entity.getOwner().getUserImg() != null) {
                     dto.setUserImg(entity.getOwner().getUserImg().getFileUrl());
+                } else {
+                    dto.setUserImg("default_profile_img.png");
                 }
                 dto.setCnt(entity.getCnt());
                 return dto;

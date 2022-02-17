@@ -78,7 +78,7 @@ public class UserController {
     @PostMapping("/logout")
     @ApiOperation(value = "로그아웃")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = LoginResDto.class),
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
