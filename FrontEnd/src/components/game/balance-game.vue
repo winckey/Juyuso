@@ -233,7 +233,7 @@ export default {
         isWrite: false,
         isStart: false,
         isEnd:false,
-        totalTime: 5,
+        totalTime: 10,
         cardData: [[], []],
         curMember:0,
         members:[],
@@ -277,7 +277,7 @@ export default {
       // 내가 시작버튼을 누른 경우
       else if (!this.balanceGame.isStart && !this.gameStarted) {
         this.balanceGame.curMember = 0
-        this.balanceGame.totalTime = 5,
+        this.balanceGame.totalTime = 10,
         this.balanceGame.isStart = true
         const random = this.makeRandomNum(0, 52)
         this.balanceGame.randomNum = random
