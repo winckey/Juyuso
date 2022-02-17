@@ -9,8 +9,10 @@
       </v-card-title>
       <v-divider></v-divider>
       <div class="d-flex justify-content-between">
-        <video v-if="videoSrc" :srcObject.prop="videoSrc" autoplay></video>
-        <div class="empty-div d-flex justify-content-center align-center" v-else>
+        <div v-if="videoSrc && !publishInfo.publishVideo" class="black empty-div d-flex justify-content-center align-center">
+        </div>
+        <video v-else-if="videoSrc" :srcObject.prop="videoSrc" autoplay></video>
+        <div v-else class="empty-div d-flex justify-content-center align-center">
           비디오 소스가 없습니다.
         </div>
         <div class="d-flex flex-column justify-space-between pl-3">
