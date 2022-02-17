@@ -262,18 +262,16 @@
 **[ FRONT END ]**
 
 - **Vue**
-  * **Swal (Sweet Alert)** -  다양한 기능과 디자인을 가진 Alert창을 구현.
-  * **SplideSlide** - Page를 Swap할때마다 변경되는 페이지.
-  * **carousal** - Main Page에서 다양한 이벤트를 보기 편하게 하기 위해 3D Slide형식으로 넘어가는 컴포넌트 구현.
-  * **apexChart** - 런닝 데이터 분석을 위해 사용하는 분석차트.
-  * **vue-good-table** - 친구 목록이나 다양한 목록을 표현할때 사용되는 검색과 정렬기능, 페이지 기능을 사용.
-  * **vue-moment** - 시간을 DB에 저장하기위해 포맷 형식을 변경 및 DB에서 가져올 때 출력 형식 변경.
+  * **vuetify** - 프론트 화면구성에 필요한 다양한 기능을 담은 UI Framework
+  * **vue-toast-notification** - 여러 알림 및 경고창을 띄우기 위해 활용
+  * **vue-calendar-heatmapt** - 술 커밋 기록을 시각적인 차트로 보여주기 위해 사용.
   * **web-stomp** - 채팅기능을 위한 웹 소켓 프로그래밍, 실시간으로 채팅을 할때 사용.
-- **Vuex** : 여러 페이지에서 공용으로 사용하는 데이터와 함수들을 저장해서 한번에 관리, 추가적으로 JWT토큰을 스토어에 저장하여 Backend와 통신시마다 주고받으며, 2시간이 지나면 토큰이 만료되어 서비스 이용 불가. 
-- **vue apaxcharts** : 러닝 데이터를 효과적으로 시각화할 수 있도록 활용.
-  - axios 통신.
-  - 시각화 자료 이미지 파일로 변환 및 저장.
-  - 활용 사례
+- **Vuex** : 여러 페이지에서 공용으로 사용하는 데이터와 함수들을 저장해서 한번에 관리.
+- **Vue-Router** :  SPA를 제작할 때 유용한 라우팅 라이브러리. 
+- **axios** : 브라우저를 위한 Promise 기반 HTTP 클라이언트. 백엔드와 통신할 때 사용.
+  * **vuex-persistedstate** - 새로고침 시 상태초기화를 방지하기 위해 활용.
+- **Openvidu-browser** : WebRTC를 구현하기 위해 사용한 라이브러리.
+- **firebase** : 1:1 채팅, 친구 추가 등 실시간 알림을 구현하기 위해 사용.
     
 
 **[ TEAM Cooperation ]**
