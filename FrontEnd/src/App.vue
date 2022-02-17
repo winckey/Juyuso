@@ -2,12 +2,12 @@
   <v-app style="background: #1B1B32" >
     <transition 
       name="fade">
-    <NavBar v-if="$route.name != 'Main' && $route.name != 'Login' && $route.name != 'Signup'"/>
+    <NavBar v-if="$route.name != 'Main' && $route.name != 'Login' && $route.name != 'Signup' && $route.name != 'SignupKakao'"/>
     </transition>
-    <transition 
+    <transition
       name="fade"
       mode="out-in">
-    <router-view :class="{'nav-margin' : $route.name != 'Main' && $route.name != 'Table' && $route.name != 'Login' && $route.name != 'Signup'}"></router-view>
+    <router-view :class="{'nav-margin' : $route.name != 'Main' && $route.name != 'Table' && $route.name != 'Login' && $route.name != 'Signup' && $route.name != 'SignupKakao'}"></router-view>
     </transition>
   </v-app>
 </template>
