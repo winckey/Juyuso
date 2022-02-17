@@ -7,7 +7,7 @@
         <v-list-item
           oncontextmenu="return false">
             <v-list-item-avatar size=40>
-              <img src="@/assets/logo.png" style="object-fit: cover">
+              <img :src="imgUrl" style="object-fit: cover">
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>{{ userInfo.nickname }}</v-list-item-title>
@@ -83,8 +83,6 @@
         <v-list @contextmenu.prevent>
           <!-- <v-list-item @click="goNotFriendProfile"><button>프로필 보기</button></v-list-item> -->
           <v-list-item v-if="tab == 2" @click="addFriend"><button>친구추가</button></v-list-item>
-          <v-list-item v-if="tab === 0" @click="showAlert('삭제')"><button>친구삭제</button></v-list-item>
-          <v-list-item v-if="tab === 0" @click="showAlert('차단')"><button>차단</button></v-list-item>
         </v-list>
       </v-menu>
       </div>
@@ -153,14 +151,14 @@ export default {
       if (this.userInfo) {
         return `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
       } else {
-        return require('@/assets/chat.png')
+        return require('@/assets/basic_profile.png')
       }
     },
     notFriendImgUrl:function(){
       if (this.notFriendUserInfo.imgUrl) {
         return `${process.env.VUE_APP_IMG_URL}/${this.notFriendUserInfo.imgUrl}`
       } else {
-        return require('@/assets/chat.png')
+        return require('@/assets/basic_profile.png')
       }
     },
     userNickName: function () {

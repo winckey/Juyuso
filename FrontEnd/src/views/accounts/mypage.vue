@@ -14,7 +14,8 @@
                     <h1 style="font-size: 2rem">주민등록증</h1>
                     <p>별명: {{ user.nickname }}</p>
                     <p>소개: {{ user.description }}</p>
-                    <p>성별: {{ user.gender }}</p>
+                    <p v-if="user.gender === 'F'">성별: 여</p>
+                    <p v-else>성별: 남</p>
                     <p>나이: {{ user.age }}</p>
                   </div>
                 </v-col>
@@ -129,7 +130,7 @@ export default {
 .background {
   background-size : cover;
   height: 100vh;
-  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(http://img1.daumcdn.net/kakaotv/KAKAOACCOUNT/1102861286/thumb/20200201114734);
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://i.pinimg.com/originals/b5/2b/5b/b52b5b29d6acc1c13cc0eb41db6a56c4.jpg);
 }
 
 .wallet-container {

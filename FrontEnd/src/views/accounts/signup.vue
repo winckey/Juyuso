@@ -120,7 +120,7 @@
           <v-btn to="/login" class="mr-3" color="grey" dark rounded>
             취소
           </v-btn>
-          <v-btn @click="onSignup" color="#4DB6AC" dark rounded>
+          <v-btn @click="onSignup" color="indigo lighten-2" dark rounded>
             회원가입
           </v-btn>
         </span>

@@ -2,10 +2,10 @@
   <div>
     <v-navigation-drawer
       v-model="chatBox"
-      :permanent="chatBox"
       app
       overflow
       right
+      temporary
       width="300px"
       class="p-3 chat-box"
     >
@@ -143,8 +143,11 @@ export default {
     color: white;
     font-size: 0.9em;
     padding: 10px 10px 10px 12px;
-    border-radius: 20px;
-    background: rgb(95, 159, 196);
+    border-radius: 15px;
+    /* background: rgb(95, 159, 196); */
+    background: #02AAB0;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #00CDAC, #02AAB0);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #00CDAC, #02AAB0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   }
 
   .my-chat {
@@ -159,7 +162,10 @@ export default {
     font-size: 0.9em;
     padding: 10px 10px 10px 12px;
     border-radius: 20px;
-    background: rgb(196, 136, 219);
+    /* background: rgb(196, 136, 219); */
+    background: #DD5E89;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #F7BB97, #DD5E89);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #F7BB97, #DD5E89); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   }
 
 </style>

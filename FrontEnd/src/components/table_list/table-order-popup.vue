@@ -35,10 +35,10 @@
         <v-form ref="tableOrderForm">
           <v-container class="px-5">
             <v-row>
-              <v-col cols="2">
+              <v-col class="pb-0" cols="3">
                 <v-subheader>방 이름</v-subheader>
               </v-col>
-              <v-col cols="8">
+              <v-col class="pb-0" cols="8">
                 <v-text-field
                   label="방 이름"
                   :rules="rules.nameRule"
@@ -50,11 +50,12 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="2">
+              <v-col cols="3">
                 <v-subheader>비밀방</v-subheader>
               </v-col>
-              <v-col cols="2">
+              <v-col cols="8">
                 <v-switch
+                  class="ml-1 mt-1"
                   v-model="isSecret"
                   inset
                   color= "#4DB6AC"
@@ -63,7 +64,7 @@
               </v-col>
             </v-row>
             <v-row v-show="isSecret">
-              <v-col offset="2" cols="4">
+              <v-col offset="3" cols="4">
                 <v-text-field
                   label="비밀번호"
                   :rules="rules.passwordRule"
@@ -85,7 +86,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="2">
+              <v-col cols="3">
                 <v-subheader>해시태그</v-subheader>
               </v-col>
               <v-col cols="8">
@@ -100,8 +101,8 @@
                 ></v-text-field>
               </v-col>
             </v-row>
-            <v-row>
-              <v-col offset="2" cols="9">
+            <v-row v-if="roomInfo.hashTag.length!=0">
+              <v-col offset="3" cols="8">
                 <v-chip
                   v-for="hashtag in roomInfo.hashTag"
                   :key="hashtag"
@@ -116,7 +117,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="2">
+              <v-col class="pt-0" cols="2">
                 <v-subheader>테마선택</v-subheader>
               </v-col>
             </v-row>
@@ -154,7 +155,6 @@
             dark
             rounded
             @click="[createRoom()]"
-            style="font-size: 1.2rem"
           >
             테이블 예약하기
           </v-btn>
@@ -255,7 +255,7 @@ export default {
       'setTheme',
     ]),
     addHastag: function () {
-      if (this.$refs.tableOrderForm.validate() && this.hashtagInput != '') {
+      if (this.hashtagInput != '') {
         this.roomInfo.hashTag.push(this.hashtagInput)
         this.hashtagInput = ''
       }

@@ -1,7 +1,7 @@
 <template>
   <div v-if="chatFriend">
-    <div style="text-align: center">{{ chatFriend.nickname }} 님과의 채팅방</div>
-    <v-divider></v-divider>
+    <div class="p-1" style="text-align: center; background: #4DB6AC; color: white;" >💬 {{ chatFriend.nickname }}님과의 채팅방</div>
+    <!-- <v-divider></v-divider> -->
     <v-card @scroll="scrollEvent" class="chat-list" :style="{height: height}">
       <!-- 이전 채팅 기록 -->
       <div
@@ -88,7 +88,7 @@ export default {
     ...mapState('friends', ['chatFriend'])
   },
   mounted: function () {
-    this.height = `${window.innerHeight - 520}px`
+    this.height = `${window.innerHeight - 470}px`
     window.addEventListener('resize', this.resizeHeight);
     if (this.chatFriend) {
       this.chatDiv = document.querySelector('.chat-list')
@@ -213,7 +213,7 @@ export default {
 
   .chat-list {
     height: 100%;
-    padding: 5px;
+    padding: 15px;
     max-height: 100%;
     overflow-y: scroll;
   }
@@ -232,8 +232,13 @@ export default {
     color: white;
     font-size: 0.9em;
     padding: 10px 10px 10px 12px;
-    border-radius: 20px;
-    background: rgb(95, 159, 196);
+    border-radius: 15px;
+    /* background: rgb(95, 159, 196); */
+    background: #02AAB0;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #00CDAC, #02AAB0);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #00CDAC, #02AAB0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
   }
 
   .my-chat {
@@ -247,8 +252,15 @@ export default {
     color: white;
     font-size: 0.9em;
     padding: 10px 10px 10px 12px;
-    border-radius: 20px;
-    background: rgb(196, 136, 219);
+    border-radius: 15px;
+    /* background: rgb(196, 136, 219); */
+    background: #DD5E89;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #F7BB97, #DD5E89);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #F7BB97, #DD5E89); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+
+
   }
 
 </style>

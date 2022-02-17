@@ -25,11 +25,10 @@
           required
           @keyup.enter="onLogin"></v-text-field>
         </v-form>
-
         <div>
           <div class="d-flex flex-column my-3">
             <v-btn class="white--text my-2" @click="onLogin" color="#4DB6AC" rounded>로그인</v-btn> 
-            <v-btn class="white--text" @click="$router.push({ name: 'Signup' })" color="indigo lighten-2" rounded>회원가입</v-btn>
+            <v-btn class="white--text" @click="onSignup" color="indigo lighten-2" rounded>회원가입</v-btn>
           </div>
 
           <div style="text-align:center">
@@ -42,8 +41,11 @@
               &nbsp;카카오로 시작하기
             </v-btn>
           </div>
-          <div class="text-center">
-            <router-link class="text-decoration-none font-sm" to="#">비밀번호를 잊으셨나요?</router-link>
+          <div class="text-center pt-6 grey--text" style="font-size: 0.8rem;">
+            <v-icon style="font-size: 1.2rem;">
+              mdi-information
+            </v-icon>
+            사이트 이용을 위해 알림 권한을 허용해 주세요.
           </div>
         </div>
       </div>
@@ -72,7 +74,7 @@
 
 <script>
 import api from '@/common/api'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 const accounts = 'accounts' 
 
@@ -101,20 +103,36 @@ export default {
     authCode && this.kakaoAuth(authCode);
     authCode && (this.isLoading = true);
   },
+  computed: {
+    ...mapGetters(accounts, ['getFcmToken']),
+  },
   methods: {
     ...mapActions(accounts, ['login', 'loginKakao', 'userUpdate']),
     ...mapActions('openviduStore', ['initSession']),
-    onLogin() {
-      if (!this.$refs.loginForm.validate()) {
-        this.$toast.open({
-          position: 'bottom',
-          message: '아이디, 비밀번호를 입력하세요.',
-          type: 'error',
-          duration: 2000,
-        });
+    makeToast(message) {
+      this.$toast.open({
+        position: 'bottom',
+        message,
+        type: 'error',
+        duration: 2500,
+      });
+    },
+    onSignup() {
+      if (this.getFcmToken === '') {
+        this.makeToast('알림을 허용하고 페이지를 새로고침 후 가입해 주세요!');
         return;
       }
-
+      this.$router.push({ name: 'Signup' })
+    },
+    onLogin() {
+      if (!this.$refs.loginForm.validate()) {
+        this.makeToast('아이디, 비밀번호를 입력하세요.');
+        return;
+      }
+      else if (this.getFcmToken === '') {
+        this.makeToast('알림을 허용하고 페이지를 새로고침 후 로그인해 주세요!');
+        return;
+      }
       this.login(this.credentials)
         .then(response => {
           const {
@@ -137,35 +155,24 @@ export default {
           } = response;
 
           if (code === 'USER_NOT_FOUND') {
-            this.$toast.open({
-              position: 'bottom',
-              message: '아이디 또는 비밀번호를 다시 확인하세요.',
-              type: 'error',
-              duration: 2000,
-            });
+            this.makeToast('아이디 또는 비밀번호를 다시 확인하세요.');
           } else {
-            this.$toast.open({
-              position: 'bottom',
-              message: '서버에 문제가 발생하였습니다. 다시 시도하세요.',
-              type: 'error',
-              duration: 2000,
-            });
+            this.makeToast('서버에 문제가 발생하였습니다. 다시 시도하세요.');
           }
         })
     },
-    // goPasswordFind: function () {
-    //   this.$router.push({name:'PasswordFind'})
-    // },
     oAuth() {
+      if (this.getFcmToken === '') {
+        this.makeToast('알림을 허용하고 페이지를 새로고침 후 시작해 주세요!');
+        return;
+      }
       let REST_API_KEY = '54ef6bedc90c5d1d07c7813bdd123278';
-      // let REDIRECT_URI = `http://localhost:3000/login`;
       let REDIRECT_URI = `${process.env.VUE_APP_BASE_URL}/login`;
       window.location.replace(
         `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
       );
     },
     kakaoAuth(authCode) {
-      // api.get(`http://localhost:8080/api/oauth/kakao?code=${authCode}`)
       api.get(`/oauth/kakao?code=${authCode}`)
         .then((response) => {
           const { join, info } = response.data;
@@ -205,16 +212,14 @@ export default {
           } = response;
 
           this.isLoading = false;
-          code === 'OAUTH_EMAIL_DUPLICATE'
-            && confirm('이메일로 가입된 계정이 이미 존재합니다. 아이디로 로그인하세요!')
-              && this.$router.replace({ name: 'Login' });
 
+          if (code === 'OAUTH_EMAIL_DUPLICATE') {
+            this.makeToast('이메일로 가입된 계정이 이미 존재합니다. 아이디로 로그인하세요!');
+          } else {
+            this.makeToast('서버에 문제가 발생하였습니다. 다시 시도하세요.');
+          }
           
-          console.log(response)
-          // 나머지 에러 처리
-          // 오류 발생했다 메시지 띄우고
-          // 로그인 페이지로 리다이렉트
-          
+          this.$router.replace({ name: 'Login' });
         })
     }
   }
