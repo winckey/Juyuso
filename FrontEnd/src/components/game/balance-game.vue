@@ -34,7 +34,7 @@
                       <v-col>
                         <div class="card-box" v-if="balanceGame.isStart">
                           <div
-                            class="question-box a-card">
+                            :class="[{'selected-box': myPickedCard == 0}, {'not-selected-box': myPickedCard == 1}, {'question-box': myPickedCard == null}]">
                             <div
                               @click="[cardCount(0),myPick(0)]"
                               v-if="myPickedCard == null || myPickedCard == 0">
@@ -48,7 +48,7 @@
                             </div>
                           </div>
                           <div 
-                            class="question-box b-card">
+                            :class="[{'selected-box': myPickedCard == 1}, {'not-selected-box': myPickedCard == 0}, {'question-box': myPickedCard == null}]">
                             <div
                               @click="[cardCount(1),myPick(1)]"
                               v-if="myPickedCard == null || myPickedCard == 1">
@@ -233,7 +233,7 @@ export default {
         isWrite: false,
         isStart: false,
         isEnd:false,
-        totalTime: 5,
+        totalTime: 10,
         cardData: [[], []],
         curMember:0,
         members:[],
@@ -277,7 +277,7 @@ export default {
       // 내가 시작버튼을 누른 경우
       else if (!this.balanceGame.isStart && !this.gameStarted) {
         this.balanceGame.curMember = 0
-        this.balanceGame.totalTime = 5,
+        this.balanceGame.totalTime = 10,
         this.balanceGame.isStart = true
         const random = this.makeRandomNum(0, 52)
         this.balanceGame.randomNum = random
@@ -431,6 +431,23 @@ export default {
 .card-box{
   position: relative;
 }
+.selected-box {
+  display: table;
+  width: 300px;
+  height: 150px;
+  text-align: center;
+  position: relative;
+  transform: scale(1.2)
+}
+
+.not-selected-box {
+  display: table;
+  width: 300px;
+  height: 150px;
+  text-align: center;
+  position: relative;
+}
+
 .vs{
   position:absolute;
   vertical-align: middle;
