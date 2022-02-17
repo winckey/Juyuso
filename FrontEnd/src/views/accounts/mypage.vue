@@ -29,7 +29,7 @@
           
           </div>
           <div class="profile-edit-popup my-2">
-            <ProfileEditPopup :user ="user" v-if="user" @changeProfileImage="changeProfileImage"/>
+            <ProfileEditPopup v-if="user"/>
 
           </div>
           <div class="profile-edit-popup my-6" v-if="!isKakao">
@@ -47,7 +47,7 @@
           </div>
 
           <div class="profile-calendar">
-              <CalenderPopup :user="user" v-if="user"/>
+            <CalenderPopup :user="user" v-if="user"/>
           </div>
 
             
@@ -73,7 +73,7 @@ import CalenderPopup from '../../components/accounts/calender-popup.vue'
 import ProfileEditPopup from '@/components/accounts/profile-edit-popup.vue'
 import BlockedFriend from '@/components/accounts/blocked-friend.vue'
 import PasswordChange from '@/components/accounts/password-change.vue'
-import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'MyPage',
@@ -93,33 +93,21 @@ export default {
     goMyData: function () {
       this.$router.push({name: 'MyData', params: {userId: this.user.id, user:this.user}})
     },
-    changeProfileImage: function (image) {
-      this.imgUrl = `${process.env.VUE_APP_IMG_URL}/${image}`
-    }
-   
   },
-  created: function (){
-    axios({
-      method: 'get',
-      url: `${process.env.VUE_APP_API_URL}/users/me`,
-      headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`}
-    })
-      .then(res => {
-        const userInfo = res.data.user
-        this.user = userInfo
-        if (this.user.provider === 'kakao') {
-          this.isKakao = true
-        }
-      })
+  created(){
+    this.user = this.getUser
+    if (this.user.provider === 'kakao') {
+      this.isKakao = true
+    }
   },
   computed: {
+    ...mapGetters('accounts', ['getUser']),
     imgUrl: function () {
       if (this.user.imgUrl) {
         return `${process.env.VUE_APP_IMG_URL}/${this.user.imgUrl}`
       } else {
         return require('@/assets/basic_profile.png')
       }
-
     }
   }
 }
