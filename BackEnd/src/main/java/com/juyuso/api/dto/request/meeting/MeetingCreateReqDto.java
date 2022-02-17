@@ -56,7 +56,7 @@ public class MeetingCreateReqDto {
     public Meeting toEntity(User user) {
         return new Meeting(user, meetingName, meetingPassword,
                 LocalDateTime.now(), LocalDateTime.now(),
-                active, common, img, 1);
+                active, common, img, 0);
     }
 
 
