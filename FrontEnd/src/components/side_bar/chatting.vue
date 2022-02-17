@@ -35,15 +35,16 @@
       </div>
     </v-card>
     <!-- 채팅 보내기 -->
-    <div class="chat-input-box d-flex justify-content-around">
+    <div class="chat-input-box d-flex justify-space-between">
       <textarea
-      placeholder="채팅을 입력해주세요."
-        class="chat-input"
+        placeholder="채팅을 입력해주세요."
+        class="chat-input w-100"
         v-model="chatInput"
         @keyup.enter.exact.prevent="sendMessage"
       ></textarea>
       <v-btn
         dark
+        class="mx-3"
         color="#4DB6AC"
         @click="sendMessage">
         전송
