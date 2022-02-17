@@ -70,12 +70,6 @@ export default {
     roomInfo: Object,
     roomInit: Boolean,
   },
-  created() {
-    console.log('tp created', this.roomInit)
-  },
-  mounted() {
-    console.log('tp mounted', this.roomInit)
-  },
   data: function () {
     return {
       publishInfo: {

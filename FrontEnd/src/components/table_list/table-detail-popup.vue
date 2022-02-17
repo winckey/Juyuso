@@ -119,12 +119,6 @@ export default {
       newRoomInfo: null,
     }
   },
-  created() {
-    console.log('tbp created', this.roomInit)
-  },
-  mounted() {
-    console.log('tbp mounted', this.roomInit)
-  },
   computed:  {
     ...mapState('accounts', [
       'user'
@@ -145,9 +139,6 @@ export default {
     },
   },
   methods: {
-    // ...mapActions('openviduStore', [
-    //   'joinSession'
-    // ]),
     enterRoom: function () {
       if (this.roomInfo.cnt >= 6) {
         this.$toast.open({
@@ -180,6 +171,7 @@ export default {
         this.newRoomInfo = res.data
         this.roomInfo.cnt = this.newRoomInfo.cnt
         this.roomInfo.theme = this.newRoomInfo.theme
+        this.roomInit && this.enterRoom();
       })
     },
     passwordConfirm: function () {
@@ -188,9 +180,7 @@ export default {
   },
   watch: {
     dialog() {
-      if (this.dialog) {
-        this.getRoomInfo()
-      }
+      this.dialog && this.getRoomInfo();
     }
   }
 }
