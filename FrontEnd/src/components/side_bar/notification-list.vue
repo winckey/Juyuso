@@ -59,7 +59,8 @@ export default {
   },
   computed: {
     ...mapState('accounts', ['isLogin']),
-    ...mapState('notification', ['notificationList'])
+    ...mapState('notification', ['notificationList']),
+    ...mapState('friends', ['chatFriend'])
   },
   mounted: function () {
     const messaging = getMessaging();
@@ -80,29 +81,43 @@ export default {
     makeToast(payload) {
       let noti = {}
       noti.message = payload.notification.body
+
       if (payload.notification.title.includes('친구')) {
         this.friendList()
         this.type = 0
         noti.type = 'friend'
+        this.addNotification(noti)
+        this.$toast.open({
+          position: 'top-right',
+          message: payload.notification.body,
+          type: 'info',
+          duration: 2500,
+          onClick: this.openDraw
+        })
       }
       else {
         let data = {
           nickname: payload.data.writerName,
           id: payload.data.writerId
         }
-        this.setChatFriend(data)
-        this.type = 1
-        noti.type = 'chat'
-        noti.data = data
+        if (this.chatFriend && this.chatFriend.id == data.id) {
+          null
+        }
+        else {
+          this.setChatFriend(data)
+          this.type = 1
+          noti.type = 'chat'
+          noti.data = data
+          this.addNotification(noti)
+          this.$toast.open({
+            position: 'top-right',
+            message: payload.notification.body,
+            type: 'info',
+            duration: 2500,
+            onClick: this.openDraw
+          })
+        }
       }
-      this.addNotification(noti)
-      this.$toast.open({
-        position: 'top-right',
-        message: payload.notification.body,
-        type: 'info',
-        duration: 2500,
-        onClick: this.openDraw
-      })
     },
     openDraw() {
       this.changeDialog(true)
