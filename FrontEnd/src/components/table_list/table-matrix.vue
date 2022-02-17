@@ -38,7 +38,8 @@
       <v-col class="h-30" v-for="table in tableList" :key="table.id" cols="12" xs="12" md="6" lg="4" xl="3" align-self="center">
         <v-card class="transparent" outlined>
           <TableDetailPopup
-                :roomInfo="table"/>
+            :roomInfo="table"
+          />
         </v-card>
       </v-col>
     </v-row>

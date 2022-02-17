@@ -34,10 +34,7 @@ export default {
   mounted() {
     this.isLogin ? this.initSession(this.user) : null
     /* firebase fcm token 스토어에 저장 */
-    getFcmToken().then(token => {
-      token && this.setFcmToken(token);
-      console.log('App.vue get fcm token!!', token);
-    })
+    getFcmToken().then(token => token && this.setFcmToken(token))
   }
 };
 </script>

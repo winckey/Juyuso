@@ -70,8 +70,6 @@
           >
             {{ hashtag }}
           </v-chip>
-
-          <!-- <v-divider></v-divider> -->
           <v-card-actions class="enter-btn">
             <v-btn
               color="#4DB6AC"
@@ -96,7 +94,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import TablePreview from '@/components/table_list/table-preview.vue'
 import TablePassword from '@/components/table_list/table-password.vue'
 import axios from 'axios'
@@ -137,9 +135,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('openviduStore', [
-      'joinSession'
-    ]),
     enterRoom: function () {
       if (this.roomInfo.cnt >= 6) {
         this.$toast.open({
@@ -175,9 +170,7 @@ export default {
   },
   watch: {
     dialog() {
-      if (this.dialog) {
-        this.getRoomInfo()
-      }
+      this.dialog && this.getRoomInfo();
     }
   }
 }

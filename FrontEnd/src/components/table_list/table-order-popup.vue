@@ -91,7 +91,7 @@
               </v-col>
               <v-col cols="8">
                 <v-text-field
-                  label="해시태그"
+                  label="키워드를 입력 후 엔터하세요"
                   :rules="rules.hastagRule"
                   v-model="hashtagInput"
                   outlined
@@ -154,7 +154,7 @@
             color="#4DB6AC"
             dark
             rounded
-            @click="[createRoom()]"
+            @click="createRoom()"
           >
             테이블 예약하기
           </v-btn>
@@ -162,23 +162,22 @@
       </v-card>
       
     </v-dialog>
-    <TableDetailPopup
-      ref="detailpopup"
-      :search="true" 
-      :roomInfo="propsRoomInfo"/>
+    <TableOrderPreview
+      ref="preview"
+      :roomInfo="roomInfo"
+    />
   </div>
   
 </template>
 
 <script>
-import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
-import TableDetailPopup from '@/components/table_list/table-detail-popup.vue'
+import TableOrderPreview from '@/components/table_list/table-order-preview'
 
 export default {
   name: 'TableOrderPopup',
   components: {
-    TableDetailPopup
+    TableOrderPreview
   },
   props: [],
   data: function () {
@@ -247,10 +246,6 @@ export default {
     ])
   },
   methods: {
-    ...mapActions('openviduStore', [
-      'joinSession',
-      'leaveSession',
-    ]),
     ...mapActions('table',[
       'setTheme',
     ]),
@@ -274,31 +269,15 @@ export default {
         return { backgroundImage: 'url(' + require(`@/assets/theme/${theme}.jpg`) + ')' }
       }
     },
-    createRoom: function () {
-      if (this.$refs.tableOrderForm.validate()) {
-        this.roomInfo.common = !this.isSecret
-        const token = localStorage.getItem('jwt')
-        axios({
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}`},
-          url: `${process.env.VUE_APP_API_URL}/meeting/create`,
-          data: this.roomInfo,
-        })
-        .then( (res) => {
-          this.dialog = false
-          this.propsRoomInfo = {...this.roomInfo}
-          this.propsRoomInfo.meetingId = res.data.meetingId
-          this.propsRoomInfo.theme = this.roomInfo.img
-          this.propsRoomInfo.meetingTitle = this.roomInfo.meetingName
-          this.propsRoomInfo.hastag = this.roomInfo.hashTag
-          this.propsRoomInfo.nickName = this.user.nickname
-          this.propsRoomInfo.cnt = 0
-          this.propsRoomInfo.userImg = this.user.imgUrl
-          this.$refs.detailpopup.dialog = true
-        })
+    createRoom() {
+      if (!this.$refs.tableOrderForm.validate()) {
+        return;
       }
-    }
-  },
+      this.roomInfo.common = !this.isSecret
+      this.dialog = false
+      this.$refs.preview.dialog = true
+    },
+  }
 }
 </script>
 

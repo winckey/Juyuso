@@ -56,11 +56,11 @@
                     </v-avatar>
                   </div>
                   
-                   <v-file-input
+                  <v-file-input
                     v-model="profileImg"
                     accept="image/*"
                     label="프로필 이미지 업로드"
-                    @change="uploadImage()"
+                    @change="uploadImage"
                     prepend-icon="mdi-camera"
                   ></v-file-input>
                 </v-col>
@@ -159,14 +159,11 @@
 
 <script>
 import axios from 'axios'
-import {mapActions} from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { phoneFormatter } from '@/common/util'
 
 export default {
   name: 'ProfileEditPopup',
-  props: {
-    user: Object
-  },
   data: function () {
     return {
       alertMessage: null,
@@ -215,17 +212,18 @@ export default {
     }
   },
   created: function () {
-    this.userInfo = this.user
+    this.userInfo = this.getUser
     this.myImage = `${process.env.VUE_APP_IMG_URL}/${this.userInfo.imgUrl}`
   },
   computed: {
+    ...mapGetters('accounts', ['getUser']),
     defaultSelected: function () {
       return {region_id: this.userInfo.region.id, name: this.userInfo.region.name }
     },
     
   },
   methods: {
-    ...mapActions('accounts', ['userUpdate']),
+    ...mapActions('accounts', ['userUpdate', 'userImgUpdate']),
     phoneChange: function () {
       this.userInfo.phone = phoneFormatter(this.userInfo.phone)
     },
@@ -279,8 +277,7 @@ export default {
           })
             .then(res => {
               this.myImage = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
-              this.userInfo.imgUrl = `${process.env.VUE_APP_IMG_URL}/${res.data.imgUrl}`
-              this.$emit('changeProfileImage', res.data.imgUrl)
+              this.userImgUpdate(res.data.imgUrl)
             })
       } else {
         this.alertMessage = "이미지 크기가 용량을 초과했습니다!"

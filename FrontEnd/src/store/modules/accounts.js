@@ -25,6 +25,9 @@ const accounts = {
       state.isLogin = true
       jwt.saveToken(payload.accessToken)
     },
+    USER_IMG_UPDATE: (state, payload) => {
+      state.user.imgUrl = payload;
+    },
     USER_UPDATE: (state, userInfo) => {
       state.isLogin = true
       state.user = userInfo
@@ -85,7 +88,10 @@ const accounts = {
         .catch(error => reject(error))
     }),
     userUpdate: ({ commit }, userInfo) => {
-        commit('USER_UPDATE', userInfo)
+      commit('USER_UPDATE', userInfo)
+    },
+    userImgUpdate: ({ commit }, payload) => {
+      commit('USER_IMG_UPDATE', payload)
     },
     logout: ({ commit }) => new Promise(resolve => {
       api

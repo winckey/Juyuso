@@ -20,29 +20,14 @@
         <div class="main-board">
           <img src="@/assets/account_board.png" height="130vh">
         </div>
-          <div class="main-button">
-                    <!-- <div class="d-flex flex-column"> -->
-                    
-                      <!-- <div class="d-flex flex-column" v-if="isJwt">
-                        <v-btn
-                          class="mx-auto my-1"
-                          color="#E6D8B2"
-                          @click="goToLogin"
-                        >로그인</v-btn>
-                        <v-btn 
-                          class="mx-auto my-1"
-                          color="#E6D8B2"
-                          @click="goToSignup"
-                        >회원가입</v-btn>
-                      </div> -->
-                    <!-- </div> -->
-            <div>
-              <v-btn
-                color="#E6D8B2"
-                @click="onLogout"
-              >로그아웃</v-btn>
-            </div>
+        <div class="main-button">
+          <div>
+            <v-btn
+              color="#E6D8B2"
+              @click="onLogout"
+            >로그아웃</v-btn>
           </div>
+        </div>
       </div>
       <div class="align-center" >
         <img src="@/assets/main_ground.png" alt="" height="150vh">
@@ -56,33 +41,12 @@ import {mapActions} from 'vuex'
 
 export default {
   name: 'Main',
-  // data: function () {
-  //   return {
-  //   }
-  // },
-  // computed: {   
-  //   isJwt: function () {
-  //     if (localStorage.getItem('jwt')) {
-  //       console.log(this.isLogin)
-  //       return false
-  //     } else {
-  //       console.log("@")
-  //       return true
-  //     }
-  //   }
-  // },
   methods: {
     ...mapActions('accounts', ['logout']),
     onLogout() {
       this.logout()
         .then(() => this.$router.push({ name: 'Login' }))
     },
-    // goToLogin: function () {
-    //   this.$router.push({ name: 'Login' })
-    // },
-    // goToSignup: function () {
-    //   this.$router.push({ name: 'Signup' })
-    // },
     goToTableList: function () {
       this.$router.push({ name: 'TableList' })
     }
