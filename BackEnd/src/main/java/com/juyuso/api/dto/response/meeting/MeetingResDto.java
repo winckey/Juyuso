@@ -40,6 +40,8 @@ public class MeetingResDto {
         res.setMeetingPassword(meeting.getPassword());
         if(meeting.getOwner().getUserImg() != null) {
             res.setUserImg(meeting.getOwner().getUserImg().getFileUrl());
+        } else {
+            res.setUserImg("default_profile_img.png");
         }
         res.setTheme(meeting.getUrl());
         res.setCnt(meeting.getCnt());
