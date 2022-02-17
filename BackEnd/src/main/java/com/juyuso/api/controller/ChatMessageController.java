@@ -56,7 +56,8 @@ public class ChatMessageController {
         Long receiverId = Long.parseLong(message.getReceiverId());
         User receiver = userRepository.findById(receiverId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if (!receiver.getFcmToken().isEmpty()) {
+        String fcmToken = receiver.getFcmToken();
+        if (fcmToken != null && !fcmToken.isEmpty()) {
             try {
                 firebaseCloudMessageService.sendMessageTo(receiver.getFcmToken(), message.getWriterName(),
                         message.getMessage().length() > 10 ?
