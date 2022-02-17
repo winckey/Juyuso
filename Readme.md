@@ -237,7 +237,7 @@
 
 ## :desktop_computer: 사용된 기술
 
-![](https://images.velog.io/images/upgrademarine5/post/b3c39ee5-acdd-4e05-b1a3-62f6ccef19b3/image.png)
+![](https://images.velog.io/images/upgrademarine5/post/509c635d-32d7-4ea9-b7a1-bc9ef032ea97/image.png)
 
 **[ BACK END ]**
 
