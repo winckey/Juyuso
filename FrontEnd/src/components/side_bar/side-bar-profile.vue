@@ -24,14 +24,28 @@
           <div class="mypage">
             <v-btn @click="goMyPage"
               plain style="font-size: 1.1rem;" >
-              🍀 마이페이지
+              <v-icon
+                class="m-1"
+                color="red"
+                left
+              >
+                mdi-account-box
+              </v-icon>
+               마이페이지
             </v-btn>
           </div>
           <div class="logout">
             <v-btn
               plain
               @click="onLogout" style="font-size: 1.1rem;">
-              🌼 로그아웃
+              <v-icon
+                class="m-1"
+                color="red"
+                left
+              >
+                mdi-logout
+              </v-icon>
+              로그아웃
             </v-btn>
           </div>
         </v-card-actions>
@@ -42,7 +56,7 @@
       class="card-style">
       <v-btn
         class="m-3 p-3"
-        @click="goToLogin">로그인해주세요</v-btn>
+        @click="goToLogin">로그인</v-btn>
     </v-card>
   </div>
 </template>

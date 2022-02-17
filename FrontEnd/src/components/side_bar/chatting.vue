@@ -1,7 +1,7 @@
 <template>
   <div v-if="chatFriend">
-    <div style="text-align: center">{{ chatFriend.nickname }} 님과의 채팅방</div>
-    <v-divider></v-divider>
+    <div class="mt-1 p-1" style="text-align: center; background: #4DB6AC;">{{ chatFriend.nickname }} 님과의 채팅방</div>
+    <!-- <v-divider></v-divider> -->
     <v-card @scroll="scrollEvent" class="chat-list" :style="{height: height}">
       <!-- 이전 채팅 기록 -->
       <div
