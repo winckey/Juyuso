@@ -5,9 +5,9 @@
 
         <div class="d-flex justify-content-between" >
           <!-- <p>{{user.nickname}}</p> -->
-          <h2>음주 기록</h2>
-          <div @click="goMyPage" style="cursor:pointer" v-if="isUser">
-            <h2 style="display:inline">마이 페이지 돌아가기</h2>
+          <h2>{{ userInfo.nickname }}님의 음주 기록</h2>
+          <div @click="goMyPage" style="cursor:pointer">
+            <h2 style="display:inline">돌아가기</h2>
             <v-icon large color="white" class="pb-3">
               mdi-arrow-up-bold
             </v-icon>
@@ -35,7 +35,7 @@
           </div>
         </div>
         
-        <div class="d-flex justify-content-center p-4" v-if="isUser">
+        <div class="d-flex justify-content-center p-4">
           <h1>{{ drinkingMessage }}</h1>   
         </div>
         <div class="d-flex justify-content-center p-3 mx-auto" style="width:100px;" v-if="isUser">
@@ -69,7 +69,11 @@ export default {
   },
   methods: {
     goMyPage: function () {
-      this.$router.push({name: 'MyPage', params: {userId: this.userInfo.id}})
+      if (this.isUser) {
+        this.$router.push({name: 'MyPage', params: {userId: this.userInfo.id}})
+      } else {
+        this.$router.push({name: 'FriendPage', params: {userId: this.userInfo.id}})
+      }
     },
     updateDrinkingInfo: function (item) {
       if (this.date[this.date.length-1]['date'] === this.end_date) {
@@ -101,7 +105,7 @@ export default {
       const dateCount = this.date.length
 
       if (dateCount >= 10) {
-        return '간 meling'
+        return '당신의 간은 melting'
       } else if (dateCount >= 5) {
         return '분발하자'
       } else {
@@ -113,7 +117,6 @@ export default {
     if (this.$route.params.user) {
       this.userInfo = this.$route.params.user
     }
-
     axios({
       method: 'GET',
       url: `${process.env.VUE_APP_API_URL}/drinking/history/${this.userInfo.userId}`,
@@ -122,10 +125,6 @@ export default {
       .then(res => {
         this.date = res.data
       })
-      // .catch(err => {
-      //   console.log(err)
-      // })
-
   }
 }
 </script>

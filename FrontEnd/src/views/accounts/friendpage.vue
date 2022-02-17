@@ -106,7 +106,7 @@ export default {
 
 .background {
   height: 100vh;
-  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(http://img1.daumcdn.net/kakaotv/KAKAOACCOUNT/1102861286/thumb/20200201114734);
+  background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5) ), url(https://i.pinimg.com/originals/b5/2b/5b/b52b5b29d6acc1c13cc0eb41db6a56c4.jpg);
   background-size : cover;
 }
 
