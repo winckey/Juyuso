@@ -17,4 +17,5 @@ public interface UserService {
     String saveImg(User user, MultipartFile multipartFile);
     void saveFcmToken(User user, String fcmToken);
     Boolean checkPw(User userDetails, UserPwReqDto userPwReqDto);
+    void removeFcmToken(User user);
 }

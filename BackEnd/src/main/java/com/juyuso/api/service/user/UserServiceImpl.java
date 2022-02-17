@@ -153,4 +153,10 @@ public class UserServiceImpl implements UserService {
         if (passwordEncoder.matches(userPwReqDto.getPassword(), userDetails.getPassword())) return true;
         else throw new CustomException(ErrorCode.USER_PW_INVALID);
     }
+
+    @Override
+    public void removeFcmToken(User user) {
+        user.setFcmToken(null);
+        userRepository.save(user);
+    }
 }

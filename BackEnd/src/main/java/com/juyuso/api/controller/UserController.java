@@ -75,6 +75,22 @@ public class UserController {
         throw new CustomException(ErrorCode.USER_NOT_FOUND);
     }
 
+    @PostMapping("/logout")
+    @ApiOperation(value = "로그아웃")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LoginResDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> logout(@ApiIgnore Authentication authentication) {
+        User user = (User) authentication.getDetails();
+
+        userService.removeFcmToken(user);
+
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Success"));
+    }
+
     @PostMapping("/social/kakao/login")
     @ApiOperation(value = "카카오(소셜) 로그인")
     @ApiResponses({
