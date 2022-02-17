@@ -140,6 +140,15 @@ export default {
         {region_id: 6, name: '대전'},
         {region_id: 7, name: '울산'},
         {region_id: 8, name: '세종'},
+        {region_id: 9, name: '경기'},
+        {region_id: 10, name: '강원'},
+        {region_id: 11, name: '충북'},
+        {region_id: 12, name: '충남'},
+        {region_id: 13, name: '전북'},
+        {region_id: 14, name: '전남'},
+        {region_id: 15, name: '경북'},
+        {region_id: 16, name: '경남'},
+        {region_id: 17, name: '제주'},
       ],
       rules: {
         emailRule: [
