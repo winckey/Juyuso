@@ -30,7 +30,6 @@
                 label="닉네임"
                 v-model="credentials.nickname"
                 :error-messages="errors.nickname"
-                :disabled="info.nickname!=null"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -87,7 +86,7 @@
               :rules="rules.phoneRule"
               label="휴대전화"
               v-model="credentials.phone"
-              hint="숫자만 입력하세요 (13자리)"
+              hint="숫자만 입력하세요 (11자리)"
               @input="onPhoneChange"
             ></v-text-field>
           </v-row>
