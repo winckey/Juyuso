@@ -56,7 +56,7 @@
           color="#4DB6AC"
           dark
           rounded
-          @click="enterRoom"
+          @click="onEnterRoom"
         >
           입장
         </v-btn>
@@ -67,9 +67,10 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import api from '@/common/api'
 
 export default {
-  name: 'TablePreview',
+  name: 'TableCreatePreview',
   props: {
     roomInfo: Object,
   },
@@ -89,6 +90,7 @@ export default {
       videoDevices: [],
       audioDevices: [],
       videoSrc: undefined,
+      newRoomInfo: {}
     }
   },
   methods: {
@@ -126,7 +128,22 @@ export default {
       })
       
     },
-    enterRoom: function () {
+    onEnterRoom() {
+      api.post('/meeting/create', this.roomInfo)
+        .then(res => {
+          this.newRoomInfo = {...this.roomInfo}
+          this.newRoomInfo.meetingId = res.data.meetingId
+          this.newRoomInfo.theme = this.roomInfo.img
+          this.newRoomInfo.meetingTitle = this.roomInfo.meetingName
+          this.newRoomInfo.hastag = this.roomInfo.hashTag
+          this.newRoomInfo.nickName = this.user.nickname
+          this.newRoomInfo.cnt = 0
+          this.newRoomInfo.userImg = this.user.imgUrl
+
+          this.enterRoom();
+        })
+    },
+    enterRoom() {
       if (!this.videoSrc) {
         this.$toast.open({
           position: 'top',
@@ -137,8 +154,8 @@ export default {
         return
       }
       let roomInfo = {
-        sessionId: String(this.roomInfo.meetingId),
-        isCreate: false,
+        sessionId: String(this.newRoomInfo.meetingId),
+        isCreate: true,
         userName: this.user.nickname,
         publishInfo: this.publishInfo
       }
@@ -149,8 +166,8 @@ export default {
       catch {
         roomInfo
       }
-      this.setTheme(this.roomInfo.theme)
-      this.$router.push({ name: 'Table', params: { roomId: this.roomInfo.meetingId, roomInfo: this.roomInfo }})
+      this.setTheme(this.newRoomInfo.theme)
+      this.$router.push({ name: 'Table', params: { roomId: this.newRoomInfo.meetingId, roomInfo: this.newRoomInfo }})
     }
   },
   computed: {

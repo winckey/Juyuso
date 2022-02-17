@@ -39,7 +39,7 @@
         <v-card class="transparent" outlined>
           <TableDetailPopup
             :roomInfo="table"
-            :roomInit="false"/>
+          />
         </v-card>
       </v-col>
     </v-row>

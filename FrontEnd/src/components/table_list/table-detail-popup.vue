@@ -70,8 +70,6 @@
           >
             {{ hashtag }}
           </v-chip>
-
-          <!-- <v-divider></v-divider> -->
           <v-card-actions class="enter-btn">
             <v-btn
               color="#4DB6AC"
@@ -87,7 +85,6 @@
     </v-dialog>
     <TablePreview
     :roomInfo="roomInfo"
-    :roomInit="roomInit"
     ref="tablepreview"/>
     <TablePassword
     :password="roomInfo.meetingPassword"
@@ -107,7 +104,6 @@ export default {
   props: {
     roomInfo: Object,
     search: Boolean,
-    roomInit: Boolean,
   },
   components: {
     TablePreview,
@@ -149,11 +145,6 @@ export default {
         });
         return
       }
-      if (this.roomInit) {
-        this.$refs.tablepreview.dialog = true
-        return;
-      }
-
       if (!this.roomInfo.common) {
         this.$refs.tablepassword.dialog = true
       }
@@ -171,7 +162,6 @@ export default {
         this.newRoomInfo = res.data
         this.roomInfo.cnt = this.newRoomInfo.cnt
         this.roomInfo.theme = this.newRoomInfo.theme
-        this.roomInit && this.enterRoom();
       })
     },
     passwordConfirm: function () {
