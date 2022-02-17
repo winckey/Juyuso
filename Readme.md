@@ -232,7 +232,6 @@
 * GitLab
 * Jira
 * Jenkins
-* SonarQube
 
 
 ## :desktop_computer: 사용된 기술
