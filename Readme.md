@@ -237,7 +237,7 @@
 
 ## :desktop_computer: 사용된 기술
 
-![TechStack](https://user-images.githubusercontent.com/19357410/100544132-062d1380-3297-11eb-832e-9e1dd8f8da13.png)
+![](https://images.velog.io/images/upgrademarine5/post/b3c39ee5-acdd-4e05-b1a3-62f6ccef19b3/image.png)
 
 **[ BACK END ]**
 
