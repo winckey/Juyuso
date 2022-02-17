@@ -8,7 +8,7 @@ const accounts = {
     user: null,
     token: {
       accessToken: jwt.getToken(),
-      fcmToken: null,
+      fcmToken: '',
     },
     isLogin: !!jwt.getToken(),
   },
@@ -88,10 +88,12 @@ const accounts = {
         commit('USER_UPDATE', userInfo)
     },
     logout: ({ commit }) => new Promise(resolve => {
-      setTimeout(function() {
-        commit('LOGOUT')
-        resolve({})
-      }, 500)
+      api
+        .post('/users/logout')
+        .then(() => {
+          commit('LOGOUT')
+          resolve({})
+        })
     }),
     setFcmToken: ({ commit }, payload) => {
       commit('SET_FCM_TOKEN', payload)
