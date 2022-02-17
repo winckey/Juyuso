@@ -134,12 +134,14 @@ const openviduStore = {
 				data.subscribers.push(subscriber);
         data.wholeSubscribers.push(subscriber);
         commit('SET_WHOLE_SUBSCRIBERS', data)
-        Vue.$toast.open({
-          position: 'bottom',
-          message: `${JSON.parse(subscriber.stream.connection.data).clientData}님이 입장하셨습니다.`,
-          type: 'default',
-          duration: 2500,
-        })
+        if (data.publisher) {
+          Vue.$toast.open({
+            position: 'bottom',
+            message: `${JSON.parse(subscriber.stream.connection.data).clientData}님이 입장하셨습니다.`,
+            type: 'default',
+            duration: 2500,
+          })
+        }
 			});
 			
       // On every Stream destroyed...

@@ -284,9 +284,10 @@ export default {
           url: `${process.env.VUE_APP_API_URL}/meeting/create`,
           data: this.roomInfo,
         })
-        .then( () => {
+        .then( (res) => {
           this.dialog = false
           this.propsRoomInfo = {...this.roomInfo}
+          this.propsRoomInfo.meetingId = res.data.meetingId
           this.propsRoomInfo.theme = this.roomInfo.img
           this.propsRoomInfo.meetingTitle = this.roomInfo.meetingName
           this.propsRoomInfo.hastag = this.roomInfo.hashTag

@@ -7,7 +7,7 @@
       right
       temporary
       width="300px"
-      class="p-3 chat-box"
+      class="chat-box"
     >
       <div class="whole-chat-list d-flex p-2" v-if="Chat_messages.length > 0">
         <div>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- 채팅 목록 -->
-      <div class="chat-list">
+      <div class="chat-list" @scroll="scrollEvent" :style="{height: height}">
         <div
           :key="idx" 
           v-for="(message, idx) in messages">
@@ -67,11 +67,28 @@ export default {
     return {
       chatBox: false,
       chatInput: '',
+      height: 0,
+      chatDiv: null,
     }
+  },
+  mounted: function () {
+    this.height = `${window.innerHeight - 80}px`
+    window.addEventListener('resize', this.resizeHeight);
+    this.chatDiv = document.querySelector('.chat-list')
+    this.chatDiv.scrollTop = this.chatDiv.scrollHeight
+    this.$nextTick (() => {
+      this.chatDiv.scrollTop = this.chatDiv.scrollHeight
+    })
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeHeight);
   },
   methods: {
     toggleChatbox () {
       this.chatBox = !this.chatBox
+    },
+    resizeHeight () {
+      this.height = `${window.innerHeight - 80}px`
     },
     sendMessage() {
       if (this.chatInput.trim() != '') {
@@ -82,6 +99,16 @@ export default {
         })
       }
       this.chatInput=''
+    },
+    scrollEvent() {
+      if(this.chatDiv.scrollHeight - (this.chatDiv.scrollTop + this.chatDiv.clientHeight) < 1){
+        this.bottom_flag = true;
+      }
+      else if(this.pre_diffHeight > this.chatDiv.scrollTop + this.chatDiv.clientHeight ){
+        this.bottom_flag = false;  
+      }  
+
+      this.pre_diffHeight = this.chatDiv.scrollTop + this.chatDiv.clientHeight
     },
   },
   computed: {
@@ -94,6 +121,15 @@ export default {
       'user'
     ])
   },
+  watch: {
+    messages() {
+      this.$nextTick (() => {
+        if (this.bottom_flag) {
+          this.chatDiv.scrollTop = this.chatDiv.scrollHeight
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -111,6 +147,8 @@ export default {
     margin-bottom: 10px;
     background: white;
     position: fixed;
+    left: 50%;
+    transform: translate(-50%);
     bottom: 0;
     /* width: 100% */
   }
@@ -121,12 +159,15 @@ export default {
 
   }
 
+  .chat-box {
+    height: 100%
+  }
   .chat-input {
     resize: none;
   }
 
   .chat-list {
-    height: 85%;
+    overflow-y: scroll;
   }
 
   .other-chat {
