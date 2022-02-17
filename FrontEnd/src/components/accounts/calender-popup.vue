@@ -75,6 +75,7 @@ export default {
     computed: {
         ...mapState('accounts', {stateUser:'user'}),
         isFriend: function () {
+            if (!this.stateUser) return false;
             if (this.user.id != this.stateUser.id) {
                 return true
             } else {
