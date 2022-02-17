@@ -165,7 +165,8 @@
     <TableDetailPopup
       ref="detailpopup"
       :search="true" 
-      :roomInfo="propsRoomInfo"/>
+      :roomInfo="propsRoomInfo"
+      :roomInit="true"/>
   </div>
   
 </template>
@@ -247,10 +248,6 @@ export default {
     ])
   },
   methods: {
-    ...mapActions('openviduStore', [
-      'joinSession',
-      'leaveSession',
-    ]),
     ...mapActions('table',[
       'setTheme',
     ]),

@@ -67,7 +67,14 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'TablePreview',
   props: {
-    roomInfo: Object
+    roomInfo: Object,
+    roomInit: Boolean,
+  },
+  created() {
+    console.log('tp created', this.roomInit)
+  },
+  mounted() {
+    console.log('tp mounted', this.roomInit)
   },
   data: function () {
     return {
@@ -134,7 +141,7 @@ export default {
       }
       let roomInfo = {
         sessionId: String(this.roomInfo.meetingId),
-        isCreate: true,
+        isCreate: this.roomInit,
         userName: this.user.nickname,
         publishInfo: this.publishInfo
       }

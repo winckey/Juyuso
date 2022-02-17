@@ -87,6 +87,7 @@
     </v-dialog>
     <TablePreview
     :roomInfo="roomInfo"
+    :roomInit="roomInit"
     ref="tablepreview"/>
     <TablePassword
     :password="roomInfo.meetingPassword"
@@ -96,7 +97,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import TablePreview from '@/components/table_list/table-preview.vue'
 import TablePassword from '@/components/table_list/table-password.vue'
 import axios from 'axios'
@@ -106,6 +107,7 @@ export default {
   props: {
     roomInfo: Object,
     search: Boolean,
+    roomInit: Boolean,
   },
   components: {
     TablePreview,
@@ -116,6 +118,12 @@ export default {
       dialog: false,
       newRoomInfo: null,
     }
+  },
+  created() {
+    console.log('tbp created', this.roomInit)
+  },
+  mounted() {
+    console.log('tbp mounted', this.roomInit)
   },
   computed:  {
     ...mapState('accounts', [
@@ -137,9 +145,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions('openviduStore', [
-      'joinSession'
-    ]),
+    // ...mapActions('openviduStore', [
+    //   'joinSession'
+    // ]),
     enterRoom: function () {
       if (this.roomInfo.cnt >= 6) {
         this.$toast.open({
@@ -150,6 +158,11 @@ export default {
         });
         return
       }
+      if (this.roomInit) {
+        this.$refs.tablepreview.dialog = true
+        return;
+      }
+
       if (!this.roomInfo.common) {
         this.$refs.tablepassword.dialog = true
       }
