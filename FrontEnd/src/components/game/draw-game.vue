@@ -65,8 +65,8 @@
           </v-btn>
         </template>
 
-        <v-card>
-          <v-slider label="굵기" min="1" max="20" height="12" tick-size="6" class="pt-5 px-3" thumb-label v-model="penWidth"></v-slider>
+        <v-card height="70" class="d-flex align-end">
+          <v-slider label="굵기" min="1" max="20" height="12" tick-size="6" class="pt-5 px-3" thumb-label :thumb-size="24" v-model="penWidth"></v-slider>
         </v-card>
       </v-menu>
       <v-btn

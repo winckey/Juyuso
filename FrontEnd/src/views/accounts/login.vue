@@ -25,7 +25,6 @@
           required
           @keyup.enter="onLogin"></v-text-field>
         </v-form>
-
         <div>
           <div class="d-flex flex-column my-3">
             <v-btn class="white--text my-2" @click="onLogin" color="#4DB6AC" rounded>로그인</v-btn> 

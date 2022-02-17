@@ -2,10 +2,10 @@
   <div>
     <v-navigation-drawer
       v-model="chatBox"
-      :permanent="chatBox"
       app
       overflow
       right
+      temporary
       width="300px"
       class="p-3 chat-box"
     >

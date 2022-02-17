@@ -7,7 +7,7 @@
         <v-list-item
           oncontextmenu="return false">
             <v-list-item-avatar size=40>
-              <img src="@/assets/logo.png" style="object-fit: cover">
+              <img :src="imgUrl" style="object-fit: cover">
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>{{ userInfo.nickname }}</v-list-item-title>
