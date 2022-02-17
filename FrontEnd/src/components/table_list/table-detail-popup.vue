@@ -99,6 +99,7 @@
 import { mapActions, mapState } from 'vuex'
 import TablePreview from '@/components/table_list/table-preview.vue'
 import TablePassword from '@/components/table_list/table-password.vue'
+import axios from 'axios'
 
 export default {
   name: 'TableDetailPopup',
@@ -112,7 +113,8 @@ export default {
   },
   data: function () {
     return {
-      dialog: false
+      dialog: false,
+      newRoomInfo: null,
     }
   },
   computed:  {
@@ -132,7 +134,7 @@ export default {
     },
     userProfileImg: function () {
       return `${process.env.VUE_APP_IMG_URL}/${this.roomInfo.userImg}`
-    }
+    },
   },
   methods: {
     ...mapActions('openviduStore', [
@@ -155,8 +157,27 @@ export default {
         this.$refs.tablepreview.dialog = true
       }
     },
+    getRoomInfo() {
+      axios({
+        method: 'GET',
+        url: `${process.env.VUE_APP_API_URL}/meeting/${this.roomInfo.meetingId}`,
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}`}
+      })
+      .then( res => {
+        this.newRoomInfo = res.data
+        this.roomInfo.cnt = this.newRoomInfo.cnt
+        this.roomInfo.theme = this.newRoomInfo.theme
+      })
+    },
     passwordConfirm: function () {
       this.$refs.tablepreview.dialog = true
+    }
+  },
+  watch: {
+    dialog() {
+      if (this.dialog) {
+        this.getRoomInfo()
+      }
     }
   }
 }
