@@ -91,7 +91,6 @@ export default {
       if(this.Chat_messages.length > 0) {
         this.$nextTick (() => {
           let whole_chat_list = document.querySelector('.whole-chat-list')
-          console.log(whole_chat_list.clientHeight)
           this.height = `${window.innerHeight - 80 - whole_chat_list.clientHeight}px`
         })
       }

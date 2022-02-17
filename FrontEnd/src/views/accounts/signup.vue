@@ -250,7 +250,7 @@ export default {
         position: 'bottom',
         message,
         type: 'error',
-        duration: 2000,
+        duration: 2500,
       });
     },
     onPhoneChange() {
@@ -290,7 +290,10 @@ export default {
                 this.$router.replace({ name : 'Main' });
               }
             })
-          }).catch(error => console.log(error.response))
+          }).catch(error => {
+            this.makeToast('서버에 문제가 발생하였습니다. 다시 시도하세요.');
+            console.log(error.response)
+          })
       }
     },
   }

@@ -194,6 +194,7 @@ export default {
                 this.isLoading = false;
               }
             }).catch(error => {
+                this.makeToast('서버에 문제가 발생하였습니다. 다시 시도하세요.');
                 console.log(error.response);
             })
           : this.$router.push({
