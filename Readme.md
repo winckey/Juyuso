@@ -217,9 +217,9 @@
 
 ## :globe_with_meridians: 지원하는 브라우저
 
-| Chrome | Safari | Edge   | Firefox |
-| ------ | ------ | ------ | ------- |
-| latest | latest | latest | latest  |
+| Chrome |
+| ------ |
+| latest |
 
 ## :hammer_and_wrench: 사용된 도구
 
