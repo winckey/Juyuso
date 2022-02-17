@@ -37,8 +37,14 @@
                             class="question-box a-card">
                             <div
                               @click="[cardCount(0),myPick(0)]"
-                              v-if="myPickedCard == null || myPickedCard == 0">
+                              v-if="myPickedCard == null">
                               <img src="@/assets/Acard.png" alt="" class="card-img">
+                              <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
+                            </div>
+                            <div
+                              @click="[cardCount(0),myPick(0)]"
+                              v-else-if="myPickedCard == 0">
+                              <img src="@/assets/Acard.png" alt="" class="hovering">
                               <p class="question-text">{{balanceGame.gameData[0][balanceGame.randomNum]}}</p>
                             </div>
                             <div
@@ -427,6 +433,9 @@ export default {
 .question-box:hover{
   transform: scale(1.2);
   translate: .3s;
+}
+.hovering{
+  transform: scale(1.2)
 }
 .card-box{
   position: relative;
