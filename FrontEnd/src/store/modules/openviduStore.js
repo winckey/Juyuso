@@ -97,7 +97,7 @@ const openviduStore = {
       data.session.on('exception', ({ exception }) => {
 				console.warn(exception);
 			});
-      dispatch('getToken', '0').then(token => {
+      dispatch('createToken', '0').then(token => {
         data.session.connect(token, { clientData: userInfo.nickname })
         commit('SET_WHOLE_SESSION_INFO', data)
       })
