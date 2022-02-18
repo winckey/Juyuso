@@ -166,40 +166,79 @@
 3. Nginx 환경 설정
 
    ```
-   server {
-   
-           listen 80;
-           listen [::]:80;
-           server_name k3a303.p.ssafy.io;
-           return 301 https://$host$request_uri;
-           
-   }
-   
-   server {
-   
-           listen 443 ssl default_server;
-           listen [::]:443 ssl default_server;
-          
-           root /home/ubuntu/deploy/s03p31a303/frontend/RunWithMe/dist;
-   
-           # Add index.php to the list if you are using PHP
-           index index.html index.htm index.nginx-debian.html;
-   
-           server_name k3a303.p.ssafy.io;
-   
-           location / {
-                   # First attempt to serve request as file, then
-                   # as directory, then fall back to displaying a 404.
-                   try_files $uri $uri/ /index.html;
-           }
-   
-           ssl_certificate /etc/letsencrypt/live/k3a303.p.ssafy.io/fullchain.pem;
-           ssl_certificate_key /etc/letsencrypt/live/k3a303.p.ssafy.io/privkey.pem;
-   
-           access_log /var/log/nginx/proxy/access.log;
-           error_log /var/log/nginx/proxy/error.log;
-           
-   }
+    server {
+            listen 80;
+            server_name i6e101.p.ssafy.io;
+
+            # SSL Redirect
+            return 301 https://$server_name$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name i6e101.p.ssafy.io;
+
+        ssl_certificate /etc/letsencrypt/live/i6e101.p.ssafy.io/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/i6e101.p.ssafy.io/privkey.pem;
+
+        location / {
+                proxy_http_version 1.1;
+                proxy_ssl_server_name on;
+                proxy_pass http://localhost:8080;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_intercept_errors on;
+                error_page 404 = @rewrite_proxy;
+        }
+
+        location @rewrite_proxy {
+                rewrite ^(.*)$ /index.html break;
+                proxy_pass http://localhost:8080;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        location ~ ^/ws {
+                rewrite ^/(.*)/$ /$1 permanent;
+                proxy_http_version 1.1;
+                proxy_pass http://localhost:8800;
+                charset utf-8;
+
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header Host $host;
+        }
+
+        location ~ ^/(api|static|swagger-ui|webjars|configuration|swagger-resources|v2|csrf) {
+                rewrite ^/(.*)/$ /$1 permanent;
+                proxy_http_version 1.1;
+                proxy_pass http://localhost:8800;
+                charset utf-8;
+
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Port $server_port;
+        }
+
+        location /openvidu {
+                rewrite ^/(.*)/$ /$1 permanent;
+                proxy_http_version 1.1;
+                proxy_pass https://localhost:8809;
+                charset utf-8;
+
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Port $server_port;
+        }
+    }
    ```
 
 4. JDK 설치 (환경변수 설정)
