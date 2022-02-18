@@ -118,8 +118,6 @@
 
 1. 데이터베이스를 설정합니다.
 
-   - [RunWithMe_SQL.sql](https://github.com/soohyun0907/RunWithMe/tree/master/doc/ERD/RunWithMe_SQL.sql)을 참고해서 데이터베이스를 생성합니다. ([여기](https://github.com/soohyun0907/RunWithMe/tree/master/doc/ERD/RunWithMe_ERD.png)를 눌러 erd를 확인하세요.)
-
    - `application.yml`에 데이터베이스 설정을 추가합니다.
 
      ```
