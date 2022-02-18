@@ -97,7 +97,7 @@ const openviduStore = {
       data.session.on('exception', ({ exception }) => {
 				console.warn(exception);
 			});
-      dispatch('createToken', '0').then(token => {
+      dispatch('getToken', '0').then(token => {
         data.session.connect(token, { clientData: userInfo.nickname })
         commit('SET_WHOLE_SESSION_INFO', data)
       })
@@ -147,6 +147,7 @@ const openviduStore = {
       // On every Stream destroyed...
 			data.session.on('streamDestroyed', ({ stream }) => {
         const index = data.subscribers.indexOf(stream.streamManager, 0);
+        const whole_index = data.wholeSubscribers.indexOf(stream.streamManager, 0);
         Vue.$toast.open({
           position: 'bottom',
           message: `${JSON.parse(data.subscribers[index].stream.connection.data).clientData}님이 나가셨습니다.`,
@@ -156,6 +157,10 @@ const openviduStore = {
 				if (index >= 0) {
           data.subscribers.splice(index, 1);
 				}
+        if (whole_index >= 0) {
+          data.wholeSubscribers.splice(whole_index, 1);
+        }
+        commit('SET_WHOLE_SUBSCRIBER', data)
 			});
 
       data.session.on('signal:my-chat', (event) => {
@@ -217,8 +222,10 @@ const openviduStore = {
               data.publisher = publisher;
               // --- Publish your stream ---
               data.session.publish(publisher);
+              data.wholeSubscribers.push(publisher)
               dispatch('enterRoom', sessionId)
               commit('SET_SESSION_INFO', data)
+              commit('SET_WHOLE_SUBSCRIBERS', data)
             })
             .catch(error => {
               console.log('There was an error connecting to the session:', error.code, error.message);
