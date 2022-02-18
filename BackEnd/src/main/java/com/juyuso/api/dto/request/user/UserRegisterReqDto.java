@@ -45,7 +45,7 @@ public class UserRegisterReqDto {
     private String phone;
 
     @NotNull
-    @Min(1) @Max(8)
+    @Min(1) @Max(17)
     @ApiModelProperty(name="지역 코드")
     private Long regionId;
 
