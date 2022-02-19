@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class ChatRoom {
 
@@ -27,6 +26,7 @@ public class ChatRoom {
 
     private int headCount;
 
+    public ChatRoom(){
 
-
+    }
 }

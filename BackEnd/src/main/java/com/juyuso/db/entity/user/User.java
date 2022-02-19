@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
-@Data
+@Getter
+@Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -75,7 +76,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FriendBan> Bans = new ArrayList<>();
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
 

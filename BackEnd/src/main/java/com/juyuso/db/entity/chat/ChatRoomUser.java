@@ -43,4 +43,7 @@ public class ChatRoomUser {
         chatRoom.getChatRoomUsers().add(this);
         this.chatRoom = chatRoom;
     }
+
+
+
 }

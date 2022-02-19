@@ -36,12 +36,12 @@ public class Message {
 
     private String message;
 
-    protected void changeUser(User user) {
+    protected void setUser(User user) {
         user.getMessages().add(this);
         this.user = user;
     }
 
-    protected void changeChatRoom(ChatRoom chatRoom) {
+    protected void setChatRoom(ChatRoom chatRoom) {
         chatRoom.getMessages().add(this);
         this.chatRoom = chatRoom;
     }
@@ -49,8 +49,8 @@ public class Message {
 
     @Builder
     public Message(ChatRoom chatRoom, User user, String message) {
-        changeChatRoom(chatRoom);
-        changeUser(user);
+        setChatRoom(chatRoom);
+        setUser(user);
         this.message = message;
     }
 }

@@ -5,8 +5,11 @@ import com.juyuso.common.model.response.BaseResponseBody;
 import com.juyuso.db.entity.user.User;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @ApiModel("User")
 public class UserResDto extends BaseResponseBody {
 
