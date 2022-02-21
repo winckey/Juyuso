@@ -65,7 +65,7 @@ class ChatMessageServiceTests {
         then(message).should(times(1)).builder();
 
     }
-    
+
     @DisplayName("채팅리스트 확인")
     @Test
     public void getMessageList() {
