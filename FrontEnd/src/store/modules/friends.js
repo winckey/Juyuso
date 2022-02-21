@@ -11,7 +11,7 @@ const friends = {
     vuexDialog: false,
   },
   getters: {
-    FriendsData(state){
+    friendsList(state){
       return state.friendsList
     }
   },
