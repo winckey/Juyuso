@@ -12,7 +12,9 @@ import com.juyuso.db.repository.chat.ChatRoomRepository;
 import com.juyuso.db.repository.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotNull;
@@ -22,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-
+@ExtendWith(MockitoExtension.class)
 class ChatMessageServiceTests {
 
 

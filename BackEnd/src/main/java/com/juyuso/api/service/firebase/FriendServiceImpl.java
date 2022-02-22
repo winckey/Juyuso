@@ -34,13 +34,9 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional(readOnly = true)
     public User getFriendInfo(User user, Long friendId) {
-        Optional<Friend> findFriend = friendRepository.findByFromAndToId(user, friendId);
+        friendRepository.findByFromAndToId(user, friendId).orElseThrow(()-> new CustomException(ErrorCode.FRIEND_NOT_FOUND));
 
-        if (findFriend.isPresent()) {
-            return userRepository.findById(friendId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        } else {
-            throw new CustomException(ErrorCode.FRIEND_NOT_FOUND);
-        }
+        return userRepository.findById(friendId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
