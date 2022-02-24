@@ -1,21 +1,13 @@
 package com.juyuso.Friend;
 
 import com.juyuso.api.dto.request.FriendReqDto;
-import com.juyuso.api.dto.request.chat.ChatMessageReqDto;
 import com.juyuso.api.exception.CustomException;
-import com.juyuso.api.exception.ErrorCode;
-import com.juyuso.api.service.chat.ChatMessageService;
-import com.juyuso.api.service.chat.ChatMessageServiceImpl;
 import com.juyuso.api.service.firebase.FriendService;
 import com.juyuso.api.service.firebase.FriendServiceImpl;
-import com.juyuso.db.entity.chat.Message;
 import com.juyuso.db.entity.friend.Friend;
-import com.juyuso.db.entity.friend.FriendBan;
 import com.juyuso.db.entity.friend.FriendRequest;
 import com.juyuso.db.entity.user.User;
 import com.juyuso.db.repository.BanRepository;
-import com.juyuso.db.repository.chat.ChatMessageRepository;
-import com.juyuso.db.repository.chat.ChatRoomRepository;
 import com.juyuso.db.repository.friend.FriendRepository;
 import com.juyuso.db.repository.friend.FriendRequestRepository;
 import com.juyuso.db.repository.user.UserQueryRepository;
@@ -25,29 +17,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 
 
-
 @ExtendWith(MockitoExtension.class)
-class FriendServiceTests {
+class FriendServiceTests2 {
 
 
 
