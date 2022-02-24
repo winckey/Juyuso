@@ -57,7 +57,7 @@
 <script>
 import FriendList from '@/components/side_bar/friend-list.vue'
 import Chatting from '@/components/side_bar/chatting.vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
   name: 'FriendTab',
   components: {
@@ -91,9 +91,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('friends', ['friendsList']),
     ...mapState('friends', [
       'tab',
-      'friendsList',
       'searchList'
     ])
   },

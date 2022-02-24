@@ -100,8 +100,14 @@ const openviduStore = {
       dispatch('createToken', '0').then(token => {
         data.session.connect(token, { clientData: userInfo.nickname })
         commit('SET_WHOLE_SESSION_INFO', data)
+      }).catch(error => {
+        if (error.status === 404) {
+          dispatch('getToken', '0').then(token => {
+            data.session.connect(token, { clientData: userInfo.nickname })
+            commit('SET_WHOLE_SESSION_INFO', data)
+          })
+        }
       })
-
     },
     joinSession: function ({ dispatch, commit }, roomInfo) {
       let isLogin = localStorage.getItem('jwt') ? true : false
