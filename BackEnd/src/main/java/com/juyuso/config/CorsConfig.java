@@ -18,9 +18,13 @@ public class CorsConfig {
         config.addAllowedOriginPattern("*");   // 모든 ip에 응답 허용
         config.addAllowedHeader("*");   // 모든 header에 응답 허용
         config.addExposedHeader(JwtTokenUtil.HEADER_STRING);
-        config.addAllowedMethod("*");   // 모든 post, get, put, delete, patch 요청을 허용
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");   // 모든 post, get, put, delete 요청을 허용
         config.setMaxAge(3600L);
-        source.registerCorsConfiguration("/**", config);
+        //source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);
     }
 }
